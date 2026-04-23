@@ -259,7 +259,8 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label>Search by </label>
-                <select class="form-control" ng-model="IR.SearchBy" ng-change="resetmodel()">
+                <select data-placeholder="Search by" class="form-control select-clear" id="select_searchby" ng-model="IR.SearchBy" ng-change="resetmodel()">
+                    <option></option>
                     <option value="Container" selected>Container Number</option>
                     <option value="Bayan">Bayan Number</option>
                 </select>

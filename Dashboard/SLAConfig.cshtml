@@ -101,10 +101,7 @@
                 <div class="col-md-4">
                     <div class=" form-group">
                         <label class="Starick">Activity</label>                       
-                        <select data-placeholder="Please Select activity" class="form-control select-clear" id="dd1"
-                                ng-model="filter.Activity"
-                                ng-change="ChangeSubCategory(filter.Activity)"
-                                required data-fouc>
+                        <select data-placeholder="Activity" class="form-control select-clear" id="dd1" ng-model="filter.Activity" ng-change="ChangeSubCategory(filter.Activity)" required data-fouc>
                             <option></option>
                             <option ng-repeat="x in ActivityList track by $index" value="{{x.Category}}">{{x.Category}}</option>
                         </select>
@@ -113,7 +110,7 @@
                 <div class="col-md-4" ng-show="SubcategoryList!=null && SubcategoryList.length>0">
                     <div class=" form-group">
                         <label class="Starick">Process</label>
-                        <select data-placeholder="Please select process" class="form-control select-clear" id="dd2" ng-model="filter.process">
+                        <select data-placeholder="Process" class="form-control select-clear" id="dd2" ng-model="filter.process">
                             <option></option>
                             <option ng-repeat="x in subcategorylist track by $index" value="{{x.item}}">{{x.item}}</option>
 
@@ -123,7 +120,7 @@
                 <div class="col-md-4">
                     <div class=" form-group">
                         <label class="Starick">Hours</label>
-                        <select data-placeholder="Please select hours" class="form-control select-clear" id="dd3"  ng-model="filter.Hours">
+                        <select data-placeholder="Hours" class="form-control select-clear" id="dd3" ng-model="filter.Hours">
                             <option></option>
                             <option ng-repeat="x in HoursList track by $index" value="{{x}}">{{x}}</option>
                         </select>
@@ -132,7 +129,7 @@
                 <div class="col-md-4">
                     <div class=" form-group">
                         <label class="Starick">Minutes</label>
-                        <select  data-placeholder="Please select minutes" class="form-control select-clear" id="dd4" ng-model="filter.Minutes">
+                        <select data-placeholder="Minutes" class="form-control select-clear" id="dd4" ng-model="filter.Minutes">
                             <option></option>
                             <option ng-repeat="x in MinutesList track by $index" value="{{x}}">{{x}}</option>
 
@@ -199,7 +196,8 @@
                         <div class="col-md-6">
                             <div class=" form-group">
                                 <label class="Starick">Activity</label>
-                                <select class="form-control" data-placeholder="Select activity" ng-model="SLAObj.Activity" ng-change="ChangeSubCategoryAdd(SLAObj.Activity)">
+                                <select data-placeholder="Activity" class="form-control select-clear" id="select_activity" ng-model="SLAObj.Activity" ng-change="ChangeSubCategoryAdd(SLAObj.Activity)">
+                                    <option></option>
                                     <option selected hidden disabled value="">Select activity</option>
                                     <option ng-repeat="x in ActivityList track by $index" value="{{x.Category}}">{{x.Category}}</option>
                                 </select>
@@ -208,7 +206,8 @@
                         <div class="col-md-6" ng-show="SubcategoryList!=null && SubcategoryList.length>0">
                             <div class=" form-group">
                                 <label class="Starick">Process</label>
-                                <select class="form-control" data-placeholder="Select process" ng-model="SLAObj.Process">
+                                <select data-placeholder="Process" class="form-control select-clear" id="select_process" ng-model="SLAObj.Process">
+                                    <option></option>
                                     <option selected hidden disabled value="">Select process</option>
                                     <option ng-repeat="x in SubcategoryList track by $index" value="{{x.item}}">{{x.item}}</option>
 
@@ -218,7 +217,8 @@
                         <div class="col-md-6">
                             <div class=" form-group">
                                 <label class="Starick">Hours</label>
-                                <select class="form-control" data-placeholder="Select hours" ng-model="SLAObj.Hours">
+                                <select data-placeholder="Hours" class="form-control select-clear" id="select_hours" ng-model="SLAObj.Hours">
+                                    <option></option>
                                     <option selected hidden disabled value="">Select hours</option>
                                     <option ng-repeat="x in HoursList track by $index" value="{{x}}">{{x}}</option>
 
@@ -228,7 +228,8 @@
                         <div class="col-md-6">
                             <div class=" form-group">
                                 <label class="Starick">Minutes</label>
-                                <select class="form-control" data-placeholder="Select minutes" ng-model="SLAObj.Minutes">
+                                <select data-placeholder="Minutes" class="form-control select-clear" id="select_minutes" ng-model="SLAObj.Minutes">
+                                    <option></option>
                                     <option selected hidden disabled value="">Select minutes</option>
                                     <option ng-repeat="x in MinutesList track by $index" value="{{x}}">{{x}}</option>
 
@@ -267,7 +268,8 @@
                         <div class="col-md-6">
                             <div class=" form-group">
                                 <label class="Starick">Activity</label>
-                                <select class="form-control" data-placeholder="Select activity" ng-model="EditSLAObj.Activity" ng-change="ChangeSubCategoryUpdate(EditSLAObj.Activity)">
+                                <select data-placeholder="Activity" class="form-control select-clear" id="select_activity_2" ng-model="EditSLAObj.Activity" ng-change="ChangeSubCategoryUpdate(EditSLAObj.Activity)">
+                                    <option></option>
                                     <option selected hidden disabled value="">Select activity</option>
                                     <option ng-repeat="x in ActivityList track by $index" ng-selected="x.Category==EditSLAObj.Activity" value="{{x.Category}}">{{x.Category}}</option>
                                 </select>
@@ -276,7 +278,8 @@
                         <div class="col-md-6" ng-show="SubcategoryList!=null && SubcategoryList.length>0">
                             <div class=" form-group">
                                 <label class="Starick">Process</label>
-                                <select class="form-control" data-placeholder="Select process" ng-model="EditSLAObj.Process">
+                                <select data-placeholder="Process" class="form-control select-clear" id="select_process_2" ng-model="EditSLAObj.Process">
+                                    <option></option>
                                     <option selected hidden disabled value="">Select process</option>
                                     <option ng-repeat="x in SubcategoryList track by $index" ng-selected="x.item==EditSLAObj.Process" value="{{x.item}}">{{x.item}}</option>
 
@@ -286,7 +289,8 @@
                         <div class="col-md-6">
                             <div class=" form-group">
                                 <label class="Starick">Hours</label>
-                                <select class="form-control" data-placeholder="Select hours" ng-model="EditSLAObj.Hours">
+                                <select data-placeholder="Hours" class="form-control select-clear" id="select_hours_2" ng-model="EditSLAObj.Hours">
+                                    <option></option>
                                     <option selected hidden disabled value="">Select hours</option>
                                     <option ng-repeat="x in HoursList track by $index" ng-selected="x==EditSLAObj.Hours" value="{{x}}">{{x}}</option>
 
@@ -296,7 +300,8 @@
                         <div class="col-md-6">
                             <div class=" form-group">
                                 <label class="Starick">Minutes</label>
-                                <select class="form-control" data-placeholder="Select minutes" ng-model="EditSLAObj.Minutes">
+                                <select data-placeholder="Minutes" class="form-control select-clear" id="select_minutes_2" ng-model="EditSLAObj.Minutes">
+                                    <option></option>
                                     <option selected hidden disabled value="">Select minutes</option>
                                     <option ng-repeat="x in MinutesList track by $index" ng-selected="x==EditSLAObj.Minutes" value="{{x}}">{{x}}</option>
 

@@ -195,7 +195,8 @@
                 <input placeholder="Search Container.." type="text" ng-model="FCntr" ng-keyup="Applyfilter()" />
                 <i class="icon-search4"></i>
                 <div style="width: 200px; float: right; ">
-                    <select id="FCargoType" multiple ng-model="FCargoType" ng-change="Applyfilter()">
+                    <select data-placeholder="Select an option" class="form-control select-clear" id="FCargoType" multiple ng-model="FCargoType" ng-change="Applyfilter()">
+                        <option></option>
                         @*<option ng-repeat="x in HScodegroup" value="{{x.Name}}">{{x.Name}}</option>
                             <option value="N">N</option>*@
                         <option ng-repeat="x in CargoTypeList4DashboardFilter" value="{{x}}">{{x}}</option>

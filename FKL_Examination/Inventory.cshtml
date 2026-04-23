@@ -298,7 +298,8 @@
                             <div class="col-md-12">
                                 <div class=" form-group">
                                     <label class="Starick">Device</label>
-                                    <select data-placeholder="Select area" id="DeviceLOV" ng-model="InventoryObj.Device">
+                                    <select data-placeholder="Device" class="form-control select-clear" id="DeviceLOV" ng-model="InventoryObj.Device">
+                                        <option></option>
                                         <option selected hidden disabled value="">Select area</option>
                                         <option value="{{x.Id}}" ng-repeat="x in DeviceList">{{x.Name}}</option>
                                     </select>
@@ -306,7 +307,8 @@
                             </div><div class="col-md-12">
                                 <div class=" form-group">
                                     <label class="Starick">Operator</label>
-                                    <select data-placeholder="Select area" id="OpertaorLOV" ng-model="InventoryObj.Operator">
+                                    <select data-placeholder="Operator" class="form-control select-clear" id="OpertaorLOV" ng-model="InventoryObj.Operator">
+                                        <option></option>
                                         <option selected hidden disabled value="">Select area</option>
                                         <option value="{{x.Id}}" ng-repeat="x in OperatorList">{{x.EmpId}}-{{x.FullName}}</option>
                                     </select>

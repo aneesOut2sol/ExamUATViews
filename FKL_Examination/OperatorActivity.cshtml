@@ -1677,7 +1677,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="Starick">Strip%</label>
-                            <select data-placeholder="Please Select Strip Percentage" class="form-control select-clear" id="StripPerDD" ng-model="CargoStrip.StripPercentage" required data-fouc>
+                            <select data-placeholder="Strip%" class="form-control select-clear" id="StripPerDD" ng-model="CargoStrip.StripPercentage" required data-fouc>
                                 <option></option>
                                 <option value="0">0</option>
                                 <option value="15">15</option>
@@ -1688,7 +1688,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="Starick">Forklift type</label>
-                            <select data-placeholder="Please Select forklift type" class="form-control select-clear" id="ForkliftutilizedDD" ng-model="CargoStrip.forklifttype" required data-fouc>
+                            <select data-placeholder="Forklift type" class="form-control select-clear" id="ForkliftutilizedDD" ng-model="CargoStrip.forklifttype" required data-fouc>
                                 <option></option>
                                 <option value="No attachment">No attachment</option>
                                 <option value="Push pull">Push pull</option>
@@ -2014,7 +2014,8 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Forklift</label>
-                                <select class="form-control select-clear" ng-model="POWIN.Forklift" ng-change="ResetCheckList(POWIN.Forklift)">
+                                <select data-placeholder="Forklift" class="form-control select-clear" id="select_forklift" ng-model="POWIN.Forklift" ng-change="ResetCheckList(POWIN.Forklift)">
+                                    <option></option>
                                     <option value="">Select forklift</option>
                                     <option ng-repeat="x in ForkliftList" value="{{x.Id}}">{{x.AreaName}}-{{x.Number}}</option>
                                 </select>
@@ -2140,7 +2141,8 @@
                             <div class="form-group">
                                 <label>Forklift</label>
                                 <div class="d-flex align-items-center" ng-show="AllowForkliftSelection == true">
-                                    <select class="" id="Forklift" ng-model="ForkliftObj.Id" ng-change="ResetCheckList(ForkliftObj.Id)">
+                                    <select data-placeholder="Forklift" class="form-control select-clear" id="Forklift" ng-model="ForkliftObj.Id" ng-change="ResetCheckList(ForkliftObj.Id)">
+                                        <option></option>
                                         <option value="">Select forklift</option>
                                         <option ng-repeat="x in ForkliftList" value="{{x.Id}}" ng-disabled="x.Status=='Blocked'">{{x.MasterArea}}({{x.AreaName}})-{{x.Number}} ({{x.Status}})</option>
                                     </select>
@@ -2169,7 +2171,8 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="Starick">Charge Percentage</label>
-                                    <select class="form-control" ng-model="ForkliftObj.ChargePercentage" ng-show="ForkliftObj.Id!=null && ForkliftObj.Id!=''">
+                                    <select data-placeholder="Charge Percentage" class="form-control select-clear" id="select_chargepercentage" ng-model="ForkliftObj.ChargePercentage" ng-show="ForkliftObj.Id!=null && ForkliftObj.Id!=''">
+                                        <option></option>
                                         <option value="" selected disabled hidden>select Charge Percentage</option>
                                         <option value="10%">10%</option>
                                         <option value="20%">20%</option>

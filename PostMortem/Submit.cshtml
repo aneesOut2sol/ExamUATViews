@@ -75,7 +75,7 @@
                 <div class="col-md-6">
                     <label>Vessel</label>
                     <div class="form-group">
-                        <select data-placeholder="Please Select Vessel" id="Vessel" class="form-control select-clear" ng-model="PostMortem.RefNo" required data-fouc>
+                        <select data-placeholder="Vessel" class="form-control select-clear" id="Vessel" ng-model="PostMortem.RefNo" required data-fouc>
                             <option></option>
                             <option ng-repeat="R in VesselList" value="{{R.VisitRefNo}}">{{R.VisitRefNo}}-{{R.VesselName}}</option>
                         </select>

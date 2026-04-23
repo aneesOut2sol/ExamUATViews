@@ -46,7 +46,8 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Handled By</label>
-                                    <select data-placeholder="Handled By" class="form-control select-clear" name="state" ng-model="search.HandledBy">
+                                    <select data-placeholder="Handled By" class="form-control select-clear" id="select_handledby" name="state" ng-model="search.HandledBy">
+                                        <option></option>
                                         <option value="">Select Handle by</option>
                                         <option value="ForkLift">ForkLift</option>
                                         <option value="Crane">Mobile Crane</option>
@@ -57,7 +58,8 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="Starick">Package Type</label>
-                                    <select data-placeholder="Package Type" class="form-control select-clear" name="state" ng-model="search.PackageType">
+                                    <select data-placeholder="Package Type" class="form-control select-clear" id="select_packagetype" name="state" ng-model="search.PackageType">
+                                        <option></option>
                                         <option value="">Select Package Type</option>
                                         <option ng-repeat="item in packageType" value="{{item}}">{{item}}</option>
                                     </select>
@@ -66,7 +68,8 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="Starick">Container Size</label>
-                                    <select data-placeholder="Container Size" class="form-control select-clear" name="state" ng-model="search.CntrSize">
+                                    <select data-placeholder="Container Size" class="form-control select-clear" id="select_cntrsize" name="state" ng-model="search.CntrSize">
+                                        <option></option>
                                         <option value="">Container Size</option>
                                         <option value="20">20</option>
                                         <option value="40">40</option>
@@ -79,7 +82,8 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="Starick">Strip or Stuff</label>
-                                    <select data-placeholder="Strip or Stuff" class="form-control select-clear" name="state" ng-model="search.StripNStuffAction">
+                                    <select data-placeholder="Strip or Stuff" class="form-control select-clear" id="select_stripnstuffaction" name="state" ng-model="search.StripNStuffAction">
+                                        <option></option>
                                         <option value="">Select Strip or Stuff</option>
                                         <option value="Strip">Strip</option>
                                         <option value="Stuff">Stuff</option>
@@ -135,7 +139,7 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Select Rows</label>
-                    <select data-placeholder="Select Rows" name="state" id="maxRows" class="form-control select-clear" data-fouc>
+                    <select data-placeholder="Select Rows" class="form-control select-clear" id="maxRows" name="state" data-fouc>
                         <option></option>
                         <option value="5000">All Rows</option>
                         <option value="4">4</option>

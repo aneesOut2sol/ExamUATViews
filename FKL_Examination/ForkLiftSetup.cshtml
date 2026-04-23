@@ -162,7 +162,8 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>IP Address</label>
-                                <select class="form-control" ng-model="Search.Status">
+                                <select data-placeholder="IP Address" class="form-control select-clear" id="select_status_3" ng-model="Search.Status">
+                                    <option></option>
                                     <option value="" selected hidden disabled>Select Status</option>
                                     <option value="Active">Active</option>
                                     <option value="InActive">InActive</option>
@@ -242,7 +243,7 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Select Rows</label>
-                    <select data-placeholder="Select Rows" name="state" id="maxRows" class="form-control select-clear" data-fouc>
+                    <select data-placeholder="Select Rows" class="form-control select-clear" id="maxRows" name="state" data-fouc>
                         <option></option>
                         <option value="5000">All Rows</option>
                         <option value="4">4</option>
@@ -344,7 +345,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <label class="Starick">Forklift type</label>
-                                <select data-placeholder="Please Select forklift type" class="form-control select-clear" id="AddFkTypeDD" ng-model="ForkliftObj.forklifttype" required data-fouc>
+                                <select data-placeholder="Forklift type" class="form-control select-clear" id="AddFkTypeDD" ng-model="ForkliftObj.forklifttype" required data-fouc>
                                     <option></option>
                                     <option ng-repeat="item in ForkLiftTypeList" value="{{item.Id}}">{{item.Type}}</option>
                                 </select>
@@ -352,7 +353,7 @@
                             <div class="col-md-12 mt-2">
                                 <div class=" form-group">
                                     <label class="Starick">Area</label>
-                                    <select data-placeholder="Please Select area" class="form-control select-clear" id="AddAreaDD" ng-model="ForkliftObj.AreaId" required data-fouc>
+                                    <select data-placeholder="Area" class="form-control select-clear" id="AddAreaDD" ng-model="ForkliftObj.AreaId" required data-fouc>
                                         <option></option>
                                         <option value="{{x.Id}}" ng-repeat="x in AreaList">{{x.Name}}</option>
                                     </select>
@@ -399,7 +400,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <label class="Starick">Forklift type</label>
-                                <select data-placeholder="Please Select forklift type" class="form-control select-clear" id="EditFkTypeDD" ng-model="EditForkLiftObj.TypeId" required data-fouc>
+                                <select data-placeholder="Forklift type" class="form-control select-clear" id="EditFkTypeDD" ng-model="EditForkLiftObj.TypeId" required data-fouc>
                                     <option></option>
                                     <option value="{{item.Id}}" ng-selected="EditForkLiftObj.TypeId==item.Id" ng-repeat="item in ForkLiftTypeList">{{item.Type}}</option>
                                 </select>
@@ -407,7 +408,7 @@
                             <div class="col-md-12 mt-2">
                                 <div class=" form-group">
                                     <label class="Starick">Area</label>
-                                    <select data-placeholder="Please Select area" class="form-control select-clear" id="EditAreaDD" ng-model="EditForkLiftObj.AreaId" required data-fouc>
+                                    <select data-placeholder="Area" class="form-control select-clear" id="EditAreaDD" ng-model="EditForkLiftObj.AreaId" required data-fouc>
                                         <option></option>
                                         <option value="{{x.Id}}" ng-selected="x.Id===EditForkLiftObj.AreaId" ng-repeat="x in AreaList">{{x.Name}}</option>
                                     </select>
@@ -428,7 +429,8 @@
                             <div class="col-md-12">
                                 <div class=" form-group">
                                     <label class="Starick">Status</label>
-                                    <select class="form-control" ng-model="EditForkLiftObj.Status">
+                                    <select data-placeholder="Status" class="form-control select-clear" id="select_status_4" ng-model="EditForkLiftObj.Status">
+                                        <option></option>
                                         <option ng-selected="EditForkLiftObj.Status=='Active'" value="Active">Active</option>
                                         <option ng-selected="EditForkLiftObj.Status=='InActive'" value="InActive">InActive</option>
                                     </select>

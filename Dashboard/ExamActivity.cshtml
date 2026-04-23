@@ -1686,7 +1686,8 @@
                                         <label>Emails</label>
 
                                         @*<input type="text" value="" id="ReportsEmail" data-role="tagsinput" />*@
-                                        <select id="EmployeeData" multiple="multiple" ng-model="ReportsEmail">
+                                        <select data-placeholder="Emails" class="form-control select-clear" id="EmployeeData" multiple="multiple" ng-model="ReportsEmail">
+                                            <option></option>
                                             <option value="{{item}}" ng-repeat="item in EmployeeEmail track by $index">{{item}}</option>
                                         </select>
                                     </div>

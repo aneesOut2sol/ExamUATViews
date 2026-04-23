@@ -183,7 +183,8 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label class="form-label">Search by</label>
-                        <select class="form-control" ng-model="Search.by" ng-change="Search.Bayan = '';Search.Container=''">
+                        <select data-placeholder="Search by" class="form-control select-clear" id="select_by" ng-model="Search.by" ng-change="Search.Bayan = '';Search.Container=''">
+                            <option></option>
                             <option selected disabled hidden value="">select search by</option>
                             <option value="Bayan">Bayan no</option>
                             <option value="Container">Container no</option>
@@ -205,7 +206,8 @@
                 <div class="col-md-4" ng-show="Search.by!=''&&Search.by!=null && Type=='INI'">
                     <div class="form-group">
                         <label class="form-label Starick">Category</label>
-                        <select class="form-control" ng-model="Search.Category">
+                        <select data-placeholder="Category" class="form-control select-clear" id="select_category" ng-model="Search.Category">
+                            <option></option>
                             <option selected disabled hidden value="">select Category</option>
                             <option ng-repeat="x in CategoryList" value="{{x}}">{{x}}</option>
                         </select>

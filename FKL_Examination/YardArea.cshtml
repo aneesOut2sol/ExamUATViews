@@ -119,7 +119,8 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Block</label>
-                            <select id="FilterBlockSelect" class="form-select" ng-model="SearchBlocks" multiple ng-change="FilterBlock(SearchBlocks)">
+                            <select data-placeholder="Block" class="form-control select-clear" id="FilterBlockSelect" ng-model="SearchBlocks" multiple ng-change="FilterBlock(SearchBlocks)">
+                                <option></option>
                                 <option value="{{x.Id}}" ng-repeat="x in BlockList">{{x.Name}}</option>
                             </select>
                         </div>
@@ -198,7 +199,8 @@
                         <div class="col-md-12">
                             <div class=" form-group">
                                 <label class="Starick">Area</label>
-                                <select class="form-control" ng-model="AreaObj.MasterArea">
+                                <select data-placeholder="Area" class="form-control select-clear" id="select_masterarea" ng-model="AreaObj.MasterArea">
+                                    <option></option>
                                     <option selected hidden value="">Enter Area</option>
                                     <option value="{{x}}" ng-repeat="x in YardArea">{{x}}</option>
                                 </select>
@@ -213,7 +215,8 @@
                         <div class="col-md-12">
                             <div class=" form-group">
                                 <label class="Starick">Block</label>
-                                <select id="AddBlockSelect" class="form-select" ng-model="AreaObj.Blocks" multiple>
+                                <select data-placeholder="Block" class="form-control select-clear" id="AddBlockSelect" ng-model="AreaObj.Blocks" multiple>
+                                    <option></option>
                                     <option value="{{x.Id}}" ng-repeat="x in BlockList">{{x.Name}}</option>
                                 </select>
                             </div>
@@ -254,7 +257,8 @@
                         <div class="col-md-12">
                             <div class=" form-group">
                                 <label class="Starick">Area</label>
-                                <select class="form-control" ng-model="EditAreaObj.MasterArea">
+                                <select data-placeholder="Area" class="form-control select-clear" id="select_masterarea_2" ng-model="EditAreaObj.MasterArea">
+                                    <option></option>
                                     <option selected hidden value="">Enter Area</option>
                                     <option value="{{x}}" ng-selected="EditAreaObj.MasterArea==x" ng-repeat="x in YardArea">{{x}}</option>
                                 </select>
@@ -269,7 +273,8 @@
                         <div class="col-md-12">
                             <div class=" form-group">
                                 <label class="Starick">Block</label>
-                                <select id="EditBlockSelect" class="form-select" ng-model="EditAreaObj.Blocks" multiple>
+                                <select data-placeholder="Block" class="form-control select-clear" id="EditBlockSelect" ng-model="EditAreaObj.Blocks" multiple>
+                                    <option></option>
                                     <option value="{{x.Id}}" ng-repeat="x in BlockList" ng-selected="EditAreaObj.Blocks.includes(x.Id)">{{x.Name}}</option>
                                 </select>
 

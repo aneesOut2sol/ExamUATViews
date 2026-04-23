@@ -76,7 +76,7 @@
                         <label class="font-weight-bold text-indigo-800">
                             <i class="icon-user-tie mr-2"></i>Select Senior Supervisor / Supervisor Name:
                         </label>
-                        <select data-placeholder="-- Choose Supervisor --" class="form-control select-clear" id="CHKLST_SPRVSR" ng-model="checkData.assignedSupervisor" required data-fouc>
+                        <select data-placeholder="Select Senior Supervisor / Supervisor Name" class="form-control select-clear" id="CHKLST_SPRVSR" ng-model="checkData.assignedSupervisor" required data-fouc>
                             <option></option>
                             <option ng-repeat="s in supervisorsList" value="{{s.Username}}">{{s.name}} - {{s.role}}</option>
                         </select>

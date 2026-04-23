@@ -172,7 +172,8 @@
                         <div class="form-group">
                             <span style="font-weight:bold;">Type</span>
                             <br />
-                            <select ng-model="search.Type" id="selectElement" class="form-control select-clear">
+                            <select data-placeholder="Select an option" class="form-control select-clear" id="selectElement" ng-model="search.Type">
+                                <option></option>
                                 <option value="" disabled selected>Select Type</option>
                                 <option value="CARTOON">CARTOON</option>
                                 <option value="PALLET">PALLET</option>
@@ -250,7 +251,8 @@
         <div class="col-md-3">
             <div class="form-group ">
                 <span style="font-weight:bold;">Select Rows</span>
-                <select data-placeholder="Select Rows" name="state" id="maxRows" class="form-control select-clear bg-gray" data-fouc>
+                <select data-placeholder="Select an option" class="form-control select-clear" id="maxRows" name="state" data-fouc>
+                    <option></option>
 
                     <option value="{{VesselArrivalForms.length}}">All Rows</option>
                     <option value="4">4</option>

@@ -1836,7 +1836,8 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Emails</label>
-                                    <select id="EmployeeData" multiple="multiple" ng-model="ReportsEmail">
+                                    <select data-placeholder="Emails" class="form-control select-clear" id="EmployeeData" multiple="multiple" ng-model="ReportsEmail">
+                                        <option></option>
                                         <option value="{{item}}" ng-repeat="item in EmployeeEmail track by $index">{{item}}</option>
                                     </select>
                                 </div>

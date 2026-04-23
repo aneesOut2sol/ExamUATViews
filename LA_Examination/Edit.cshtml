@@ -28,7 +28,8 @@
                     <div class="col-md-3 mt-3">
                         <div class="form-group">
                             <label class="Starick">Handled By</label>
-                            <select data-placeholder="Handled By" class="form-control select-clear" name="state" ng-model="La_ExamList.HandledBy">
+                            <select data-placeholder="Handled By" class="form-control select-clear" id="select_handledby_3" name="state" ng-model="La_ExamList.HandledBy">
+                                <option></option>
                                 <option value="ForkLift">ForkLift</option>
                                 <option value="Crane">Mobile Crane</option>
                                 <option value="Labor">Labor</option>
@@ -38,7 +39,8 @@
                     <div class="col-md-3 mt-3">
                         <div class="form-group">
                             <label class="Starick">Size</label>
-                            <select data-placeholder="Size" class="form-control select-clear" name="state" ng-model="La_ExamList.CntrSize">
+                            <select data-placeholder="Size" class="form-control select-clear" id="select_cntrsize_3" name="state" ng-model="La_ExamList.CntrSize">
+                                <option></option>
                                 <option value="20">20</option>
                                 <option value="40">40</option>
                                 <option value="45">45</option>
@@ -48,7 +50,8 @@
                     <div class="col-md-3 mt-3">
                         <div class="form-group">
                             <label class="Starick">Strip or Stuff</label>
-                            <select data-placeholder="Strip or Stuff" class="form-control select-clear" name="state" ng-model="La_ExamList.StripNStuffAction">
+                            <select data-placeholder="Strip or Stuff" class="form-control select-clear" id="select_stripnstuffaction_3" name="state" ng-model="La_ExamList.StripNStuffAction">
+                                <option></option>
                                 <option value="Strip">Strip</option>
                                 <option value="Stuff">Stuff</option>
                             </select>
@@ -58,7 +61,7 @@
                     <div class="col-md-3">
                         <div class="form-group"></div>
                         <label>Package Type</label>
-                        <select data-placeholder="Package Type" class="form-control select-clear" name="state" ng-model="La_ExamList.PackageType">
+                        <select data-placeholder="Package Type" class="form-control select-clear" id="select_packagetype_3" name="state" ng-model="La_ExamList.PackageType">
                             <option value=""></option>
                             <option ng-repeat="item in packageType" value="{{item}}">{{item}}</option>
                         </select>
@@ -76,7 +79,8 @@
                     <div class="col-md-3 mt-3">
                         <div class="form-group">
                             <label class="Starick" for="cntrHrs">Hrs</label>
-                            <select data-placeholder="Select Hours" class="form-control select-clear" name="state" ng-model="La_ExamList.CntrHrs">
+                            <select data-placeholder="Hrs" class="form-control select-clear" id="select_cntrhrs_2" name="state" ng-model="La_ExamList.CntrHrs">
+                                <option></option>
                                 <option value="">Select</option>
                                 <option value="0">0</option>
                                 <option value="1">1</option>
@@ -121,7 +125,8 @@
                     <div class="col-md-3 mt-3">
                         <div class="form-group">
                             <label class="Starick" for="cntrMins">Mins</label>
-                            <select data-placeholder="Select Hours" class="form-control select-clear" name="state" ng-model="La_ExamList.CntrMins">
+                            <select data-placeholder="Mins" class="form-control select-clear" id="select_cntrmins_2" name="state" ng-model="La_ExamList.CntrMins">
+                                <option></option>
                                 <option value="">Select</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
