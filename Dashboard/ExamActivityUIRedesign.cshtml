@@ -449,7 +449,8 @@
                     <i class="icon-search4"></i><input type="text" placeholder="Search Container..." ng-model="FCntr" ng-keyup="Applyfilter()" />
                 </div>
                 <div style="width: 200px;">
-                    <select id="FCargoType" multiple ng-model="FCargoType" ng-change="Applyfilter()">
+                    <select data-placeholder="{{Block.Area}}" class="form-control select-clear" id="FCargoType" multiple ng-model="FCargoType" ng-change="Applyfilter()">
+                        <option></option>
                         @*<option ng-repeat="x in HScodegroup" value="{{x.Name}}">{{x.Name}}</option>
                             <option value="N">N</option>*@
 

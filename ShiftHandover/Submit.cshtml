@@ -100,7 +100,8 @@
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">Shift</label>
-                        <select class="form-control" ng-model="formData.shift.shiftType">
+                        <select data-placeholder="Shift" class="form-control select-clear" id="select_shifttype" ng-model="formData.shift.shiftType">
+                            <option></option>
                             <option>Night</option>
                             <option>Day</option>
                         </select>
@@ -130,9 +131,8 @@
                             <tr>
                                 <td class="w-150"><strong>Available</strong></td>
                                 <td ng-repeat="eq in formData.equipment.equipmentTypes">
-                                    <select class="form-select border-0 w-100 text-center"
-                                            ng-model="eq.available"
-                                            ng-change="updateNotAvailableOptions(eq)">
+                                    <select data-placeholder="Select an option" class="form-control select-clear" id="select_available" ng-model="eq.available" ng-change="updateNotAvailableOptions(eq)">
+                                        <option></option>
                                         <option ng-repeat="n in range(0, eq.max) track by $index">{{n}}</option>
                                     </select>
                                 </td>
@@ -146,9 +146,8 @@
                             <tr>
                                 <td class="w-150"><strong>Reason</strong></td>
                                 <td ng-repeat="eq in formData.equipment.equipmentTypes" class="position-relative">
-                                    <select class="form-select border-0 w-100 text-center"
-                                            ng-model="eq.Reason"
-                                            ng-class="{'is-invalid' : eq.Notavailable >0 && !eq.Reason,'border-danger': eq.Notavailable > 0 && !eq.Reason}" ng-required="eq.Notavailable > 0">
+                                    <select data-placeholder="Select an option" class="form-control select-clear" id="select_reason" ng-model="eq.Reason" ng-class is-invalid : eq Notavailable>
+                                        <option></option>0 && !eq.Reason,'border-danger': eq.Notavailable > 0 && !eq.Reason}" ng-required="eq.Notavailable > 0">
                                         <option value="">-</option>
                                         <option>PM</option>
                                         <option>CM</option>
@@ -194,18 +193,24 @@
                             <tbody>
                                 <tr>
                                     <td>Working</td>
-                                    <td><select class="form-select  border-0 text-center w-100" ng-model="dev.available" ng-options="n for n in range(0, dev.max)"></select></td>
+                                    <td><select data-placeholder="Select an option" class="form-control select-clear" id="select_available_2" ng-model="dev.available" ng-options="n for n in range(0, dev.max)">
+                                        <option></option>
+                                    </select></td>
                                     <td rowspan="4" class="total-cell align-middle text-center fs-5">
                                         {{ (dev.available || 0) + (dev.Notavailable || 0) + (dev.Missing || 0) }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Not working</td>
-                                    <td><select class="form-select  border-0 text-center w-100" ng-model="dev.Notavailable" ng-options="n for n in range(0, dev.max)"></select></td>
+                                    <td><select data-placeholder="Select an option" class="form-control select-clear" id="select_notavailable" ng-model="dev.Notavailable" ng-options="n for n in range(0, dev.max)">
+                                        <option></option>
+                                    </select></td>
                                 </tr>
                                 <tr>
                                     <td>Missing</td>
-                                    <td><select class="form-select  border-0 text-center w-100" ng-model="dev.Missing" ng-options="n for n in range(0, dev.max)"></select></td>
+                                    <td><select data-placeholder="Select an option" class="form-control select-clear" id="select_missing" ng-model="dev.Missing" ng-options="n for n in range(0, dev.max)">
+                                        <option></option>
+                                    </select></td>
                                 </tr>
                                 <tr>
                                     <td>Remarks</td>
@@ -336,7 +341,7 @@
                 <div class="row g-3 mb-4">
                     <div class="col-md-4">
                         <label class="form-label">Employee ID</label>
-                        <select data-placeholder="Please select employee" class="form-control select-clear" id="HandoverEmpDD" ng-model="formData.handover.employeeId" ng-change="updateEmployeeInfo()" required data-fouc>
+                        <select data-placeholder="Employee ID" class="form-control select-clear" id="HandoverEmpDD" ng-model="formData.handover.employeeId" ng-change="updateEmployeeInfo()" required data-fouc>
                             <option></option>
                             <option ng-repeat="emp in EmployeeList" value="{{emp.EmpId}}">{{emp.EmpId}} - {{emp.FullName}}</option>
                         </select>
@@ -351,7 +356,8 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Shift</label>
-                        <select class="form-control" ng-model="formData.handover.shiftType">
+                        <select data-placeholder="Shift" class="form-control select-clear" id="select_shifttype_2" ng-model="formData.handover.shiftType">
+                            <option></option>
                             <option>Night</option>
                             <option>Day</option>
                         </select>

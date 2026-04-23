@@ -259,7 +259,8 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="Starick">HS code group</label>
-                                <select id="HSCodeGroup" ng-model="HSCode.CodeGroup">
+                                <select data-placeholder="HS code group" class="form-control select-clear" id="HSCodeGroup" ng-model="HSCode.CodeGroup">
+                                    <option></option>
                                     <option value="" selected hidden>Select HS code group</option>
                                     <option ng-repeat="x in hsCodeGroups" value="{{x}}">{{x}}</option>
                                 </select>
@@ -320,7 +321,8 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="Starick">HS code group </label>
-                                <select id="EditHSCodeGroup" ng-model="EditHSCodeData.CodeGroup">
+                                <select data-placeholder="HS code group" class="form-control select-clear" id="EditHSCodeGroup" ng-model="EditHSCodeData.CodeGroup">
+                                    <option></option>
                                     <option ng-repeat="x in hsCodeGroups" ng-selected="x==EditHSCodeData.CodeGroup" value="{{x}}">{{x}}</option>
                                 </select>
                             </div>

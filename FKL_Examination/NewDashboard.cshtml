@@ -1087,7 +1087,8 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Operator</label>
-                                <select class="" id="AllOperator" ng-model="OperatorEmpId">
+                                <select data-placeholder="Operator" class="form-control select-clear" id="AllOperator" ng-model="OperatorEmpId">
+                                    <option></option>
                                     <option value="">Select operator</option>
                                     <option ng-repeat="x in ActiveOperator" value="{{x.EmpId}}">{{x.EmpId}}-{{x.Name}}</option>
                                 </select>
@@ -1122,7 +1123,8 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Operator</label>
-                                <select class="" id="AllOperator2" ng-model="ShiftOperatorEmpId">
+                                <select data-placeholder="Operator" class="form-control select-clear" id="AllOperator2" ng-model="ShiftOperatorEmpId">
+                                    <option></option>
                                     <option value="">Select operator</option>
                                     <option ng-repeat="x in ActiveOperator" ng-show="x.EmpId!=CurrentJobOpertaor" value="{{x.EmpId}}">{{x.EmpId}}-{{x.Name}}</option>
                                 </select>

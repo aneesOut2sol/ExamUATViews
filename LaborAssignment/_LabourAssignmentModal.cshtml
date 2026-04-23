@@ -186,7 +186,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="Starick">Strip%</label>
-                        <select data-placeholder="Please Select Strip Percentage" class="form-control select-clear" id="StripPerDD" ng-model="CargoStrip.StripPercentage" required data-fouc>
+                        <select data-placeholder="Strip%" class="form-control select-clear" id="StripPerDD" ng-model="CargoStrip.StripPercentage" required data-fouc>
                             <option></option>
                             <option value="0">0</option>
                             <option value="15">15</option>
@@ -491,7 +491,8 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label class="Starick">Labors</label>
-                            <select id="ManualLaborList" ng-model="ManualLaborIds" multiple>
+                            <select data-placeholder="Labors" class="form-control select-clear" id="ManualLaborList" ng-model="ManualLaborIds" multiple>
+                                <option></option>
                                 <option hidden selected value="">Select labor</option>
                                 <option ng-repeat="x in ManualLaborList" value="{{x.Id}}">{{x.EmpId}}-{{x.EmpName}}</option>
                             </select>
@@ -681,7 +682,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         <label class="Starick">Container</label>
-                        <select id="TransferCntrDD" ng-model="TransferToUnitgkey">
+                        <select data-placeholder="Container" class="form-control select-clear" id="TransferCntrDD" ng-model="TransferToUnitgkey">
+                            <option></option>
                             <option ng-repeat="x in TransferCntrList" value="{{x.Unitgkey}}">{{x.Cntr}}</option>
                         </select>
                     </div>

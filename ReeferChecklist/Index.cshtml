@@ -31,7 +31,7 @@
             <div class="row">
                 <div class="col-md-3 col-lg-3 col-sm-12 form-group">
                     <label>Acivity Move</label>
-                    <select id="rtgEquipmentMoveDD" class="form-select shadow-sm rounded" ng-model="Search.EquipmentMove" aria-label="Default select example">
+                    <select data-placeholder="Acivity Move" class="form-control select-clear" id="rtgEquipmentMoveDD" ng-model="Search.EquipmentMove" aria-label="Default select example">
                         <option data-placeholder="true"></option>
                         <option value="DELIVERY">DELIVERY</option>
                         <option value="RECEIVE">RECEIVE</option>
@@ -39,7 +39,7 @@
                 </div>
                 <div class="col-md-3 col-lg-3 col-sm-12 form-group">
                     <label>RTG Equipment</label>
-                    <select id="rtgEquipmentDD" class="form-select shadow-sm rounded" ng-model="Search.EquipmentName" aria-label="Default select example">
+                    <select data-placeholder="RTG Equipment" class="form-control select-clear" id="rtgEquipmentDD" ng-model="Search.EquipmentName" aria-label="Default select example">
                         <option data-placeholder="true"></option>
                         <option ng-repeat="equip in EquipmentList" value="{{equip.Equipment}}">{{equip.Equipment}}</option>
                     </select>

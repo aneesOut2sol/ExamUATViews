@@ -83,7 +83,8 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label>Type of Cargo</label><span class="text-danger">*</span>
-                                    <select ng-model="Ecargo.Type" id="selectElement" class="form-control select-clear">
+                                    <select data-placeholder="Type of Cargo" class="form-control select-clear" id="selectElement" ng-model="Ecargo.Type">
+                                        <option></option>
                                         <option value="" disabled selected>Select Type</option>
                                         <option value="CARTON - CT">CARTON - CT</option>
                                         <option value="PALLET - PL">PALLET - PL</option>

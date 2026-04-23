@@ -93,7 +93,8 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label>Search by Stage</label>
-                    <select data-placeholder="Stage" multiple="multiple" ng-model="searchStage" class="form-control select" ng-change="SearchByStage(searchStage)" data-fouc>
+                    <select data-placeholder="Search by Stage" class="form-control select-clear" id="select_searchstage" multiple="multiple" ng-model="searchStage" ng-change="SearchByStage(searchStage)" data-fouc>
+                        <option></option>
                         <option value="Waiting for customs seal cut">Waiting for customs seal cut</option>
                         <option value="Cargo strip in progress">Cargo strip in progress</option>
                         <option value="Waiting for customs clearance">Waiting for customs clearance</option>

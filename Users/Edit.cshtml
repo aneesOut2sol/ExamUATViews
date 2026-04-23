@@ -123,7 +123,8 @@
                                                         <div class="col-md-4">
 
                                                             <label>Application Access</label><span class="required-starig">*</span>
-                                                            <select multiple id="UserAppId" ng-model="User.UsersApplication" ng-change="CheckAccessEdit(User.UsersApplication)">
+                                                            <select data-placeholder="Application Access" class="form-control select-clear" id="UserAppId" multiple ng-model="User.UsersApplication" ng-change="CheckAccessEdit(User.UsersApplication)">
+                                                                <option></option>
                                                                 <option ng-repeat="App in AppList"  ng-selected="User.UsersApplication==App.Id" value="{{App.Id}}">{{App.Name}}</option>
                                                             </select>
 
@@ -133,7 +134,8 @@
 
                                                         <div class="col-md-4 form-group">
                                                             <label>Role</label><span class="required-starig">*</span>
-                                                                               <select multiple id="UserRoleId" ng-model="User.UserType" ng-change="RoleCountEdit(User.UserType)">
+                                                                               <select data-placeholder="Role" class="form-control select-clear" id="UserRoleId" multiple ng-model="User.UserType" ng-change="RoleCountEdit(User.UserType)">
+                                                                                   <option></option>
                                                                                    <option ng-selected="User.UserType ==r.Id" ng-repeat="r in Roles" value="{{r.Id}}">{{r.Text}}</option>
                                                                                    @*<optgroup label="Common Role" ng-if="User.UsersApplication!=null && User.UsersApplication!=''">
                                                                                        <option ng-selected="User.UserType =='1'" ng-repeat="r in Roles" ng-if="r.Id==1" value="{{r.Id}}">{{r.Text}}</option>
@@ -154,7 +156,8 @@
 
                                                         <div class="col-md-4 form-group">
                                                             <label>Status</label><span class="required-starig">*</span>
-                                                            <select data-placeholder="Status" class="form-control select-clear" ng-model="User.Status" data-fouc>
+                                                            <select data-placeholder="Status" class="form-control select-clear" id="select_status_7" ng-model="User.Status" data-fouc>
+                                                                <option></option>
                                                                 <option disabled selected>Select Status </option>
                                                                 <option ng-selected="User.Status ==true " ng-value="true">Active</option>
                                                                 <option ng-selected="User.Status == false" ng-value="false">Not Active</option>

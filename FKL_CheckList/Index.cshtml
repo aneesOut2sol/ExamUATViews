@@ -119,7 +119,8 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Answer</label>
-                                <select class="form-control" ng-model="Search.Answer">
+                                <select data-placeholder="Answer" class="form-control select-clear" id="select_answer" ng-model="Search.Answer">
+                                    <option></option>
                                     <option value="" selected hidden disabled>Select Status</option>
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
@@ -129,7 +130,8 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Mandatory</label>
-                                <select class="form-control" ng-model="Search.Required">
+                                <select data-placeholder="Mandatory" class="form-control select-clear" id="select_required" ng-model="Search.Required">
+                                    <option></option>
                                     <option value="" selected hidden disabled>Select Status</option>
                                     <option value="true">Yes</option>
                                     <option value="false">No</option>
@@ -139,7 +141,8 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Photo Upload On</label>
-                                <select class="form-control" ng-model="Search.PhotoUploadOn">
+                                <select data-placeholder="Photo Upload On" class="form-control select-clear" id="select_photouploadon" ng-model="Search.PhotoUploadOn">
+                                    <option></option>
                                     <option value="" selected hidden disabled>Select Status</option>
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>

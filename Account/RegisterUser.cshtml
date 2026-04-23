@@ -131,7 +131,8 @@
                 <div class="form-group col-md-3">
 
                     <label>Employee Id</label><span class="required-starig" ng-show="Register.UsersApplication.includes('5') || Register.UsersApplication.includes('7')">*</span>
-                    <select ng-model="Register.EmpId" ng-show="EmployeeList!=undefined" data-placeholder="Employee Id & Employee Name" ng-change="GetUserDetailsByEmpId(Register.EmpId)" class="form-control select-clear" data-fouc">
+                    <select data-placeholder="Employee Id" class="form-control select-clear" id="select_empid" ng-model="Register.EmpId" ng-show="EmployeeList!=undefined" ng-change="GetUserDetailsByEmpId(Register.EmpId)" data-fouc>
+                        <option></option>
                         <option value="" selected>Please select Employee Id & Employee Name</option>
                         <option ng-repeat="r in EmployeeList" value="{{r.EmpId}}">{{r.EmpId}} - {{r.EmployeeName}}</option>
                     </select>
@@ -173,7 +174,7 @@
 
                 <div class="col-md-3 form-group">
                     <label>Status</label><span class="required-starig">*</span>
-                    <select data-placeholder="Status" class="form-control select-clear" ng-model="Register.Status" data-fouc>
+                    <select data-placeholder="Status" class="form-control select-clear" id="select_status" ng-model="Register.Status" data-fouc>
                         <option></option>
                         <option ng-value="true">Active</option>
                         <option ng-value="false">Not Active</option>
@@ -181,13 +182,15 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label>Application Access</label><span class="required-starig">*</span>
-                    <select multiple="multiple" id="EqType" data-placeholder="Please Select Application" ng-model="Register.UsersApplication" class="form-control select" ng-change="CheckAccess(Register.UsersApplication)" data-fouc>
+                    <select data-placeholder="Application Access" class="form-control select-clear" id="EqType" multiple="multiple" ng-model="Register.UsersApplication" ng-change="CheckAccess(Register.UsersApplication)" data-fouc>
+                        <option></option>
                         <option ng-repeat="App in AppList" value="{{App.Id}}">{{App.Name}}</option>
                     </select>
                 </div>
                 <div class="form-group col-md-3">
                     <label>Role</label><span class="required-starig">*</span>
-                    <select data-placeholder="User Role" multiple="multiple" ng-model="Register.UserType" class="form-control select" ng-change="RoleCount(Register.UserType)" required data-fouc>
+                    <select data-placeholder="Role" class="form-control select-clear" id="select_usertype" multiple="multiple" ng-model="Register.UserType" ng-change="RoleCount(Register.UserType)" required data-fouc>
+                        <option></option>
                         <option ng-repeat="r in Roles" value="{{r.Id}}">{{r.Text}}</option>
                     </select>
                 </div>

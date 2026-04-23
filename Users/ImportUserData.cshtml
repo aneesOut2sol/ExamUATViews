@@ -36,7 +36,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="control-label">User Type</label>
-                                                <select ng-model="Register.UserType" name="UserType" class="form-control">
+                                                <select data-placeholder="User Type" class="form-control select-clear" id="select_usertype_2" ng-model="Register.UserType" name="UserType">
+                                                    <option></option>
                                                     <option value="" selected="">Please select User Type</option>
                                                     <option value="4">SafetyInspecter</option>
                                                     <option value="3">SafetyManager</option>
@@ -47,7 +48,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="control-label">@Content.Organization</label>
-                                                <select ng-model="Register.OrganizationId" name="OrganizationId" ng-change="Enable()" class="form-control">
+                                                <select data-placeholder="@Content.Organization" class="form-control select-clear" id="select_organizationid" ng-model="Register.OrganizationId" name="OrganizationId" ng-change="Enable()">
+                                                    <option></option>
                                                     <option value="" selected>Please select Organization</option>
                                                     <option ng-repeat="r in organization" value="{{r.Id}}">
                                                         {{r.OrganizationName}}
@@ -61,7 +63,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="control-label">@Content.Department</label>
-                                                <select ng-model="Register.DepartmentId" name="DepartmentId" class="form-control">
+                                                <select data-placeholder="@Content.Department" class="form-control select-clear" id="select_departmentid" ng-model="Register.DepartmentId" name="DepartmentId">
+                                                    <option></option>
                                                     <option value="" selected>Please select Department</option>
                                                     <option ng-repeat="r in departments" value="{{r.Id}}">
                                                         {{r.DepartmentName}}
@@ -72,7 +75,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="control-label">Select Location</label>
-                                                <select ng-model="Register.SelectedLocation" name="LocationId" class="form-control">
+                                                <select data-placeholder="Select Location" class="form-control select-clear" id="select_selectedlocation" ng-model="Register.SelectedLocation" name="LocationId">
+                                                    <option></option>
                                                     <option value="" selected>Please select Location</option>
                                                     <option ng-repeat="r in locations" value="{{r.Id}}">
                                                         {{r.LocationName}}

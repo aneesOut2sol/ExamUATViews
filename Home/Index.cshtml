@@ -47,7 +47,7 @@
         <h3 style="text-align: center;font-family: Verdana, Helvetica, Arial, sans-serif;font-size: large; margin-top: inherit; color: #93a092;">Duration Records JIP Exception</h3>
         <div class="col-md-4 mt-2 mb-2">
             <label>Select Vist Refrence No</label>
-            <select data-placeholder="Vist Ref No" ng-change="GetDetails(Refno.List)" ng-model="Refno.List" id="RefNo" class="form-control select-clear">
+            <select data-placeholder="Select Vist Refrence No" class="form-control select-clear" id="RefNo" ng-change="GetDetails(Refno.List)" ng-model="Refno.List">
             <option></option>
             <option ng-repeat="item in RefNoList" value="{{item.RefNo}}">{{item.RefNo}}</option>
             </select>

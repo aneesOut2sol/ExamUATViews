@@ -78,7 +78,7 @@
                 <div class="col-md-3">
                     <label>Module</label>
                     <div class="form-group">
-                        <select data-placeholder="Please Select Module" id="ModuleDD" class="form-control select-clear" ng-model="ReeferModule" data-fouc>
+                        <select data-placeholder="Module" class="form-control select-clear" id="ModuleDD" ng-model="ReeferModule" data-fouc>
                             <option></option>
                             <option ng-repeat="item in ModuleList" value="{{item}}">{{item}}</option>
                         </select>
@@ -87,7 +87,7 @@
                 <div class="col-md-3">
                     <label>Department</label>
                     <div class="form-group">
-                        <select multiple data-placeholder="Please Select department" id="DepartmentDD" class="form-control select-clear" ng-model="ReeferDepartment" data-fouc>
+                        <select data-placeholder="Department" class="form-control select-clear" id="DepartmentDD" multiple ng-model="ReeferDepartment" data-fouc>
                             <option></option>
                             <option ng-repeat="item in DepartmentList" value="{{item.Id}}">{{item.Department}}</option>
                         </select>

@@ -1835,12 +1835,14 @@
                                 <tr ng-repeat="row in GetAdditionalService(service,'service')">
                                     <td width="50%"><span class="pl-15">{{row.field}}</span></td>
                                     <td class="p-0" width="25%">
-                                        <select ng-model="row.NumberUsed" ng-disabled="true">
+                                        <select data-placeholder="Select an option" class="form-control select-clear" id="select_numberused" ng-model="row.NumberUsed" ng-disabled="true">
+                                            <option></option>
                                             <option ng-selected="row.NumberUsed==num" ng-repeat="num in NumberList" value="{{num}}">{{num}}</option>
                                         </select>
                                     </td>
                                     <td class="p-0" width="25%">
-                                        <select ng-model="row.HourUsed" ng-disabled="true">
+                                        <select data-placeholder="Select an option" class="form-control select-clear" id="select_hourused" ng-model="row.HourUsed" ng-disabled="true">
+                                            <option></option>
                                             <option ng-repeat="num in NumberList" ng-selected="row.HourUsed==num" value="{{num}}">{{num}}</option>
                                         </select>
                                     </td>

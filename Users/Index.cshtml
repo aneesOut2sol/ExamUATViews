@@ -64,7 +64,7 @@ table
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Employee ID</label>
-                            <select data-placeholder="Status" class="form-control select-clear" ng-model="search.Status" data-fouc>
+                            <select data-placeholder="Employee ID" class="form-control select-clear" id="select_status_5" ng-model="search.Status" data-fouc>
                                 <option></option>
                                 <option value="true">Active</option>
                                 <option value="false">NotActive</option>
@@ -74,7 +74,7 @@ table
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Status</label>
-                            <select data-placeholder="Status" class="form-control select-clear" ng-model="search.Status" data-fouc>
+                            <select data-placeholder="Status" class="form-control select-clear" id="select_status_6" ng-model="search.Status" data-fouc>
                                 <option></option>
                                 <option value="true">Active</option>
                                 <option value="false">NotActive</option>
@@ -84,7 +84,8 @@ table
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Applications</label>
-                            <select data-placeholder="Applications" class="form-control select-clear" ng-model="search.UsersApplication" data-fouc>
+                            <select data-placeholder="Applications" class="form-control select-clear" id="select_usersapplication" ng-model="search.UsersApplication" data-fouc>
+                                <option></option>
                                 <option hidden disabled selected value="">Select Application</option>
                                 <option ng-repeat="a in AppList" value="{{a.AppName}}">{{a.AppName}}</option>
                             </select>
@@ -93,7 +94,8 @@ table
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>User Role</label>
-                            <select data-placeholder="User Role" ng-model="search.UserType" class="form-control select-clear" required data-fouc>
+                            <select data-placeholder="User Role" class="form-control select-clear" id="select_usertype_3" ng-model="search.UserType" required data-fouc>
+                                <option></option>
                                 <option hidden disabled selected value="">Select User Role</option>
                                 <optgroup label="Common Role">
                                     <option ng-repeat="r in Roles" value="{{r.Text}}">{{r.Text}}</option>
@@ -185,7 +187,7 @@ table
         <div class="col-md-3">
             <div class="form-group">
                 <label>Select Rows</label>
-                <select data-placeholder="Select Rows" name="state" id="maxRows" class="form-control select-clear" data-fouc>
+                <select data-placeholder="Select Rows" class="form-control select-clear" id="maxRows" name="state" data-fouc>
                     <option></option>
                     <option value="5000">All Rows</option>
                     <option value="4">4</option>

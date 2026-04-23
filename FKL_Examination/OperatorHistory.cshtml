@@ -237,7 +237,8 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Activity</label>
-                            <select ng-model="Search.Activity" id="FilterActivity" class="form-control select-clear">
+                            <select data-placeholder="Activity" class="form-control select-clear" id="FilterActivity" ng-model="Search.Activity">
+                                <option></option>
                                 <option value="" selected disabled hidden>Select activity</option>
                                 <option ng-selected="Search.Activity=='Repack'" value="Repack">Repack</option>
                                 <option ng-selected="Search.Activity=='Strip'" value="Strip">Strip</option>
@@ -247,7 +248,8 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Forklift</label>
-                            <select class="form-control select-clear" id="FilterForklift" ng-model="Search.ForkliftId">
+                            <select data-placeholder="Forklift" class="form-control select-clear" id="FilterForklift" ng-model="Search.ForkliftId">
+                                <option></option>
                                 <option value="" selected disabled hidden>Select forklift</option>
                                 <option ng-repeat=" x in ForkliftList" ng-selected="Search.ForkliftId==x.Id" value="{{x.Id}}">{{x.Name}}-{{x.Number}}</option>
                             </select>
@@ -256,7 +258,8 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Operator</label>
-                            <select class="form-control select-clear" id="FilterEMPId" ng-model="Search.EMPId">
+                            <select data-placeholder="Operator" class="form-control select-clear" id="FilterEMPId" ng-model="Search.EMPId">
+                                <option></option>
                                 <option value="" selected disabled hidden>Select operator</option>
                                 <option ng-repeat=" x in OperatorList" ng-selected="Search.EMPId==x.EMPId" value="{{x.EMPId}}">{{x.EMPId}}-{{x.Name}}</option>
                             </select>
