@@ -1,0 +1,290 @@
+﻿
+@{
+    ViewBag.Title = "ExamUploadedFiles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .textAlignLeft {
+        text-align: left !important;
+    }
+
+
+    .CloseModalBtn {
+        background: var( --dpw-bg-color);
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px;
+        padding: 8px;
+        cursor: pointer
+    }
+
+        .CloseModalBtn .fa-times-circle-o {
+            color: #ffff !important;
+        }
+
+    .modal-content {
+        background-color: #fff !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+
+    .modal-title {
+        color: var( --dpw-bg-color);
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+
+    .modal-footer {
+        border-top: none !important;
+        align-content: center;
+        text-align: center;
+    }
+
+
+    .downloadTemplate {
+        padding: 3px 10px !important;
+        margin-top: 0 !important;
+        border: none;
+        background: var( --dpw-bg-color);
+        color: white;
+        border-radius: 2px;
+        line-height: 23px;
+        margin: 10px;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .btnSecondary {
+        padding: 0px 100px;
+        line-height: 30px;
+        border: 1px solid var( --dpw-bg-color);
+        color: var( --dpw-bg-color);
+        border-radius: 5px;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .btnPrimary {
+        padding: 0px 100px;
+        line-height: 32px;
+        border: none;
+        background: var( --dpw-bg-color);
+        color: white;
+        border-radius: 3px;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .buttonrow {
+        margin-top: 11px !important;
+        margin-left: 15px !important;
+    }
+
+    .badge-darkred {
+        background-color: darkred;
+        color: white;
+    }
+
+    .badge-Orange {
+        background-color: darkorange;
+        color: white;
+    }
+
+    .badge-Green {
+        background-color: darkgreen;
+        color: white;
+    }
+
+    .badge-Red {
+        background-color: red;
+        color: white;
+    }
+
+    .Capture-CardFlex {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .Capture-Card {
+        background: #ebebeb;
+        padding: 11px 18px;
+        box-shadow: 1px 1px 2px 1px #80808042 inset;
+        border-radius: 4px;
+        margin-bottom: 17px;
+    }
+
+    .evenetTab {
+        padding: 7px 16px;
+        border-radius: 5px;
+        color: #006517;
+        margin-bottom: 15px;
+        background: #00ad271f;
+        border: 1px solid #006517;
+    }
+
+        .evenetTab span {
+            font-size: 11px;
+        }
+
+        .evenetTab.Canceled {
+            background: #ff04041f;
+            border: 1px solid #b00d0d;
+            color: #6a0707;
+        }
+
+    .evenetTitle {
+        min-width: 11px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 700;
+    }
+
+    span.badge-active.babge-sm {
+        padding: 1px 4px;
+        border-radius: 3px;
+        float: right;
+        line-height: 1.7;
+        font-weight: normal;
+        background: #6a0707 !important;
+    }
+
+
+    .Image-view img {
+        height: 50% !important;
+        width: 50% !important;
+        float: none !important
+    }
+
+    .Image-view {
+        float: none !IMPORTANT;
+        margin: 0 !IMPORTANT;
+        height: auto !IMPORTANT;
+        width: auto !important;
+    }
+    /*Excess cargo styling end*/
+
+    #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #111111de;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+        display: none;
+        overflow: scroll;
+    }
+
+        #overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            transition: transform 0.5s ease;
+        }
+
+    #close-btn {
+        position: absolute;
+        top: 65px;
+        right: 15px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+    }
+</style>
+
+<div ng-controller="ExamUploadedFilesCtrl" ng-cloak class="ng-clock">
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-details mr-2"></i> <span class="font-weight-semibold"><i class="icon-stack-text"></i>&nbsp;Exam Uploaded Files</span></h4>
+            </div>
+            <div class="col-md-6">
+
+            </div>
+        </div>
+    </div>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Container number</label>
+                <input type="text" ng-model="Cntr" class="form-control" value="" />
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <button class="btn btn-primary mt-4" ng-click="SearchContainer(Cntr)">
+                Search
+            </button>
+        </div>
+    </div>
+    <hr />
+
+    <div class="row accordion" id="acc">
+        <div class="col-md-12 Capture-Card" ng-repeat="x in ExmaUploadedFiles">
+            <div class="Capture-CardFlex" data-toggle="collapse" data-target="#col{{$index}}" ng-click="OpenCollapse(x.Action)">
+                <div class="mr-3"><img src="~/Content/images/output-onlinepngtools.png" style="height: 49px;" /></div>
+                <div style=" font-size: 14px; font-weight: 500;" data-toggle="collapse">{{x.Action}}</div>
+                <div class="ml-auto">
+                    <span>
+                        <i ng-show="Currentaction!=x.Action" class="icon-chevron-down"></i>
+                        <i ng-show="Currentaction==x.Action" class="icon-chevron-up"></i>
+                    </span>
+
+                </div>
+            </div>
+            <div class="collapse mt-3" data-parent="#acc" id="col{{$index}}">
+                <div class="row">
+                    <div class="col-md-4" ng-repeat="y in x.Files">
+                        <div class="evenetTab" ng-class="{'Canceled':y.Cancel==true,}">
+                            <span class="crosschild" style="float:right;cursor:pointer;">
+                                <span title="View file" class="ml-1" ng-click="OpenImageView(y.URL, 'EventInfo')">
+                                    <i class="icon-eye"></i>
+                                </span>
+                                <span title="Download" ng-click="DownlaodImage(y.URL)"><i class="icon-download"></i></span>
+                            </span>
+                            <div class="evenetTitle" title="{{y.Label}}">
+                                {{y.Label}}
+                            </div>
+                            <span>{{x.UploadedAt | date:'dd-MM-yyyy HH:mm:ss'}}</span>
+                            <br />
+                            <b>{{x.UploadedBy}}</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div id="overlay">
+        <span id="close-btn" ng-click="closeOverlay()">&#10006;</span>
+        <img src="" id="LargeImageView" alt="Image">
+    </div>
+
+</div>
+

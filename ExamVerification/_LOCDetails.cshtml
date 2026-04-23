@@ -1,0 +1,203 @@
+﻿
+<style>
+    .CloseModalBtn {
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        z-index: 99999999999 !important;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px !important;
+        padding: 8px;
+        cursor: pointer;
+        background: var( --dpw-bg-color);
+        z-index: 99999999999 !important;
+    }
+
+    .close {
+        display: none;
+    }
+
+    .CloseModalBtn .fa-times-circle-o {
+        color: #ffff !important;
+    }
+
+    .modal-content {
+        background-color: #f4f2fa !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+
+    .modal-title {
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+
+    .modal-footer {
+        border-top: none !important;
+        align-content: center;
+        text-align: center;
+    }
+
+    #SealocdetailsModal table {
+        background:#fff;
+        border-radius:8px;
+        margin-bottom:10px;
+    }
+
+    #SealocdetailsModal table tr {
+        border-bottom: 1px solid #0000001c;
+    }
+    #SealocdetailsModal table tr td {
+        background: none;
+    }
+
+    #SealocdetailsModal table tr th, #SealocdetailsModal table tr td{
+        padding:5px;
+        font-family:'Pilat Wide';
+        width:150px;
+        font-size:10px
+    }
+
+
+    #SealocdetailsModal table tr th {
+        font-weight: bold;
+    }
+
+    #SealocdetailsModal table tr td {
+        font-weight: 400 !important;
+    }
+
+
+</style>
+
+<!-- Add Damage--->
+<div class="modal fade" id="SealocdetailsModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">Customs Integration Details</h5>
+            </div>
+            <div class="modal-body" style="max-height:500px;overflow-x:auto;">
+
+                <div class="row p-0">
+                    <div class="col-12 p-0">
+                        <table class="w-100">
+                            <tr>
+                                <th colspan="4" style="background: var( --dpw-bg-color)1c; font-size: 12px ">
+                                    Container Details
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>Container</th>
+                                <td><span>{{SeaLOCCntrDetails.Cntr}}</span></td>
+                                <th>Location</th>
+                                <td><span>{{SeaLOCCntrDetails.Location}}</span></td>
+
+                            </tr>
+                            <tr>
+                                <th>Operation Code</th>
+                                <td><span>{{SeaLOCCntrDetails.OperationCode}}</span></td>
+                                <th>Opr Code DESC</th>
+                                <td>
+                                    <span ng-if="SeaLOCCntrDetails.OperationCode ==1">Move to exam yard</span>
+                                    <span ng-if="SeaLOCCntrDetails.OperationCode ==3">Cargo strip done</span>
+                                    <span ng-if="SeaLOCCntrDetails.OperationCode ==6">Cargo repack done</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Inspection Category</th>
+                                <td><span>{{SeaLOC.inspectionCategory}}</span></td>
+                            </tr>
+                        </table>
+                        <table class="w-100">
+                            <tr>
+                                <th colspan="4" style="background: var( --dpw-bg-color)1c; font-size: 12px ">
+                                    Port Details
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>Reg Port Type</th>
+                                <td><span>{{SeaLOC.regPortType}}</span></td>
+                                <th>Reg Port Code</th>
+                                <td><span>{{SeaLOC.regPortCode}}</span></td>
+                            </tr>
+                            <tr>
+                                <th>Port Contractor Code</th>
+                                <td><span>{{SeaLOC.portContractorCode}}</span></td>
+                                <th>Declaration Account</th>
+                                <td><span>{{SeaLOC.declarationAccount}}</span></td>
+                            </tr>
+
+                        </table>
+                        <table class="w-100">
+                            <tr>
+                                <th colspan="4" style="background: var( --dpw-bg-color)1c; font-size: 12px ">
+                                    Area Details
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>Area Id</th>
+                                <td><span>{{SeaLOC.areaDetails[0].areaID}}</span></td>
+                                <th>Region Id</th>
+                                <td><span>{{SeaLOC.areaDetails[0].regionID}}</span></td>
+                            </tr>
+                            <tr>
+                                <th>X</th>
+                                <td><span>{{SeaLOC.areaDetails[0].containerDetails[0].X}}</span></td>
+                                <th>Y</th>
+                                <td><span>{{SeaLOC.areaDetails[0].containerDetails[0].Y}}</span></td>
+                            </tr>
+                        </table>
+                        <table class="w-100">
+                            <tr>
+                                <th colspan="4" style="background: var( --dpw-bg-color)1c; font-size: 12px ">
+                                    Manifest Details
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>Manifest No</th>
+                                <td><span>{{SeaLOC.areaDetails[0].containerDetails[0].manifestDetails.manifestNo}}</span></td>
+                                <th>Manifest Type</th>
+                                <td><span>{{SeaLOC.areaDetails[0].containerDetails[0].manifestDetails.manifestType}}</span></td>
+                            </tr>
+                            <tr>
+                                <th>Manifest Date</th>
+                                <td><span>{{SeaLOC.areaDetails[0].containerDetails[0].manifestDetails.manifestDate}}</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:end;">
+                        <button class="btn btn-cancel" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Add Damage end--->

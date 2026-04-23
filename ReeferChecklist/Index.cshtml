@@ -1,0 +1,147 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .nowrap {
+        white-space: nowrap !important;
+    }
+</style>
+<div ng-controller="ReeferChecklistCtrl" ng-cloak ng-init="init()">
+    <!-- Page header -->
+    <div class="page-header border-bottom-0 blurbg">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-tree6 mr-2"></i><span class="font-weight-semibold">Reefer Module CE Inspection Checklist</span></h4>
+            </div>
+            <div class="page-title d-flex">
+                <a class="btn btn-primary mr-2" href="/ReeferChecklist/Submit">
+                    <i class="icon-add m-r-5 text-white"></i> Record new checklist
+                </a>
+                @*<input type="button" class="btn btn-secondary  pull-right mr-2" value="Filters" data-toggle="collapse" data-target="#demo" />*@
+            </div>
+        </div>
+    </div>
+    <hr />
+
+    <!--Search Filter Code Start-->
+    <div class="card collapse blurbg" id="demo">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 col-lg-3 col-sm-12 form-group">
+                    <label>Acivity Move</label>
+                    <select id="rtgEquipmentMoveDD" class="form-select shadow-sm rounded" ng-model="Search.EquipmentMove" aria-label="Default select example">
+                        <option data-placeholder="true"></option>
+                        <option value="DELIVERY">DELIVERY</option>
+                        <option value="RECEIVE">RECEIVE</option>
+                    </select>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-12 form-group">
+                    <label>RTG Equipment</label>
+                    <select id="rtgEquipmentDD" class="form-select shadow-sm rounded" ng-model="Search.EquipmentName" aria-label="Default select example">
+                        <option data-placeholder="true"></option>
+                        <option ng-repeat="equip in EquipmentList" value="{{equip.Equipment}}">{{equip.Equipment}}</option>
+                    </select>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-12 form-group">
+                    <label>From</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control date" id="RTGFrom" ng-model="search.From" placeholder="DD/MM/YYYY HH:mm" required readonly>
+                        <span class="input-group-append">
+                            <span class="input-group-text"><i class="icon-calendar"></i></span>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-12 form-group">
+                    <label>To</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control date" id="RTGTo" ng-model="search.To" placeholder="DD/MM/YYYY HH:mm" required readonly>
+                        <span class="input-group-append">
+                            <span class="input-group-text"><i class="icon-calendar"></i></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-lg-12 col-sm-12">
+
+                    <button class="btn btn-reset pull-right" ng-click="ResetFilters()">
+                        Reset
+                    </button>
+                    <button class="btn btn-primary pull-right mr-2" ng-click="SearchRTG(Search)">
+                        Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Search Filter Code End-->
+    <!-- Item Counter -->
+    <div class="row blurbg">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="CounterCard" ng-if="TotalCheckListSubmittted > 20">
+                <b>Total item: </b>  <span id="counts">{{ReeferChecklist.length}}/{{TotalCheckListSubmittted}}</span>
+            </div>
+            <div class="CounterCard" ng-if="TotalCheckListSubmittted <= 20">
+                <b>Total item: </b>  <span id="counts">{{ReeferChecklist.length}}</span>
+            </div>
+        </div>
+    </div>
+    <!-- /Item Counter -->
+
+    <div class="row blurbg">
+        <div class="col-md-12">
+            <div id="tblrep" class="card table-card scrollbar">
+                <table class="table datatable-show-all text-center" id="table-id2">
+                    <thead>
+                        <tr class="table-card-head">
+                            <th>SR#</th>
+                            <th>Department</th>
+                            <th>Module</th>
+                            <th>Yes</th>
+                            <th>No</th>
+                            <th>Checkin Time</th>
+                            <th>Checkin By</th>
+                            <th>Checkout Time</th>
+                            <th>Checkout By</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="row in ReeferChecklist | filter:search">
+                            <td>{{$index+1}}</td>
+                            <td>{{row.Department}}</td>
+                            <td>{{row.Module}}</td>
+                            <td>{{row.TotalYes}}</td>
+                            <td>{{row.TotalNo}}</td>
+                            <td>{{row.CheckinTime | date :'dd/MM/yyyy HH:mm:ss'}}</td>
+                            <td>{{row.CheckinBy}}</td>
+                            <td>{{row.CheckoutTime | date :'dd/MM/yyyy HH:mm:ss'}}</td>
+                            <td>{{row.Checkoutby}}</td>
+                            <td>
+                                <span ng-if="row.Checkoutby == null" class="badge badge-info">New</span>
+                                <span ng-if="row.Checkoutby != null" class="badge badge-dark">Closed</span>
+                            </td>
+                            <td>
+                                <span ng-click="DownloadCheckList(row)"><i class="icon-file-pdf text-danger cursor-pointer"></i></span>
+                                <span ng-click="ViewCheckList(row)"><i class="icon-eye  cursor-pointer"></i></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+                <button class="btn btn-primary pull-right mt-3" ng-click="LoadMore()">Load more</button>
+        </div>
+    </div>
+
+
+
+
+</div>
+<script>
+    var element = document.getElementById('ReeferService');
+    element.classList.add("active");
+</script>

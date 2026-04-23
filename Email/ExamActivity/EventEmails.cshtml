@@ -1,0 +1,57 @@
+﻿
+
+@{
+
+    Layout = "~/Views/Shared/_EmailLayoutUpdated.cshtml";
+}
+
+
+<style>
+    table {
+        border: none;
+        width: 100%;
+    }
+
+    .notification-content {
+        padding: 8px 16px;
+    }
+
+    td {
+        width: 100%;
+        text-align: center;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .english {
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    .arabic {
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .pilatwidefont {
+        font-family: 'Pilat Wide Light';
+    }
+</style>
+<table style="width:100%">
+    <tr>
+
+        <td class="notification-content english" style="font-family: 'Pilat Wide Light';width:50%; ">
+            <div>
+                @Model.EngMessage
+            </div>
+        </td>
+        <td class="notification-content arabic" style="font-family: 'Makdessi Light','Pilat Wide Light';width:50% " lang="ar" dir="rtl">
+            @Model.ArMessage
+        </td>
+    </tr>
+</table>
+
+
+
+
+

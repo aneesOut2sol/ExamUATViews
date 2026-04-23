@@ -1,0 +1,272 @@
+﻿@model ExamPortal.Model.Features.PostMortem.getsubmittedpostmortemResponse
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Reefer Module CE Inspection Checklist</title>
+    <style>
+
+        @@font-face {
+            font-family: 'Lato';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA.woff) format('woff');
+        }
+
+        @@font-face {
+            font-family: 'Lato';
+            font-style: normal;
+            font-weight: 700;
+            src: local('Lato Bold'), local('Lato-Bold'), url(https://fonts.gstatic.com/s/lato/v11/qdgUG4U09HnJwhYI-uK18wLUuEpTyoUstqEm5AMlJo4.woff) format('woff');
+        }
+
+        @@font-face {
+            font-family: 'Lato';
+            font-style: italic;
+            font-weight: 400;
+            src: local('Lato Italic'), local('Lato-Italic'), url(https://fonts.gstatic.com/s/lato/v11/RYyZNoeFgb0l7W3Vu1aSWOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');
+        }
+
+        @@font-face {
+            font-family: 'Lato';
+            font-style: italic;
+            font-weight: 700;
+            src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url(https://fonts.gstatic.com/s/lato/v11/HkF_qI1x_noxlxhrhMQYELO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+        }
+
+
+        * {
+            font-family: 'Lato';
+            font-style: normal;
+            font-weight: 400;
+        }
+
+        @@font-face {
+            font-family: 'pilatwide-demibold';
+            src: url('../../content/dpwfont/pilatwide-demibold.ttf') format('truetype');
+        }
+
+        @@font-face {
+            font-family: 'pilatwide-black';
+            src: url('../../content/dpwfont/pilatwide-black.ttf') format('truetype');
+        }
+
+        @@font-face {
+            font-family: 'pilatwide-bold';
+            src: url('../../content/dpwfont/pilatwide-bold.ttf') format('truetype');
+        }
+
+        @@font-face {
+            font-family: 'pilatwide-book';
+            src: url('../../content/dpwfont/pilatwide-book.ttf') format('truetype');
+        }
+
+        @@font-face {
+            font-family: 'pilatwide-heavy';
+            src: url('../../content/dpwfont/pilatwide-heavy.ttf') format('truetype');
+        }
+
+        @@font-face {
+            font-family: 'pilatwide-regular';
+            src: url('../../content/dpwfont/pilatwide-regular.ttf') format('truetype');
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .header img {
+            height: 40px;
+        }
+
+        .header p {
+            font-family: 'pilatwide-heavy';
+            font-weight: bold;
+            font-size: 24px;
+            color: var( --dpw-bg-color);
+        }
+
+        .header-content {
+            font-family: 'pilatwide-regular';
+            border: 1px solid var( --dpw-bg-color);
+            padding: 0;
+        }
+
+            .header-content th {
+                width: 20%;
+                background: var( --dpw-bg-color);
+                color: #fff;
+                padding: 7px 12px;
+                border: 1px solid #333;
+                text-align: left;
+            }
+
+            .header-content td {
+                width: 30%;
+                color: var( --dpw-bg-color);
+                border: 1px solid #333;
+            }
+
+        .w-50 {
+            width: 50% !important;
+        }
+
+        .w-10 {
+            width: 10% !important;
+        }
+
+        .w-30 {
+            width: 30% !important;
+        }
+
+        .w-40 {
+            width: 40% !important;
+        }
+
+        .bodycontent {
+            font-family: 'pilatwide-regular';
+            border: 1px solid var( --dpw-bg-color);
+            padding: 0;
+        }
+
+            .bodycontent th {
+                background: var( --dpw-bg-color);
+                color: #fff;
+                padding: 7px;
+                border: 1px solid #333;
+            }
+
+            .bodycontent td {
+                color: var( --dpw-bg-color);
+                border: 1px solid #333;
+            }
+
+        input[type="radio"] {
+            transform: scale(1.5);
+        }
+
+            input[type="radio"]:checked {
+                accent-color: var( --dpw-bg-color); /* Change color when checked */
+            }
+
+        .text-center {
+            text-align: center;
+        }
+        .text-left {
+            text-align: left !important;
+        }
+
+        .bodycontent tbody {
+            font-family: 'pilatwide-regular';
+            font-size: 14px;
+        }
+
+        .bodycontent td {
+            padding: 3px 5px;
+        }
+
+        .p-0 {
+            padding: 0 !important;
+        }
+
+        .border-bottom-dashed {
+            border-bottom: 1px dashed var( --dpw-bg-color);
+        }
+
+        .h-20 {
+            height: 25px;
+        }
+
+        .border-none {
+            border: none !important;
+        }
+
+        .bg-none{
+            background:none!important;
+            color:#111 !important;
+        }
+    </style>
+
+</head>
+<body>
+    @if (Model != null && Model.VesselList != null && Model.VesselList.Count > 0)
+    {
+
+
+        <table class="header">
+            <tr>
+                <th><p>Post Mortem Report</p></th>
+                <td>
+                    <img src="~/Content/images/dpworldlogo.png" />
+                </td>
+            </tr>
+        </table>
+        <table class="header-content">
+
+            <tr>
+                <th>Vessel:</th>
+                <td>@Model.VesselList[0].RefNo - @Model.VesselList[0].VesselName</td>
+                <th>Service:</th>
+                <td>@Model.VesselList[0].ServiceName</td>
+            </tr>
+            <tr>
+                <th>Code:</th>
+                <td>@Model.VesselList[0].VesselCode</td>
+                <th>RadioCallSign:</th>
+                <td>@Model.VesselList[0].RadioCallSign</td>
+            </tr>
+            <tr>
+                <th>Date:</th>
+                <td>@Model.VesselList[0].ReportTime.ToString("dd/MM/yyyy HH:mm:ss.fff")</td>
+                <th>Name/ID:</th>
+                <td>@Model.VesselList[0].ReportedBy</td>
+            </tr>
+        </table>
+        <table class="bodycontent">
+            <thead>
+                <tr>
+                    <th class="w-50 text-left" style="font-family: 'pilatwide-heavy';"><b>Comments</b></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ 
+                    var SplittedComments = Model.VesselList[0].Comments.Split('|').ToList();
+                    foreach (var item in SplittedComments)
+                    {
+                        <tr>
+                            <td>@item</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <br />
+        <table class="border-none">
+            <tr>
+                <td class="w-30 border-none"></td>
+                <td class="w-40 border-none text-center">
+                    <div>
+                        <b><u>Supervisor Signature</u></b>
+                    </div>
+                    <div class="border-bottom-dashed h-20 "></div>
+                </td>
+                <td class="w-30 border-none"></td>
+            </tr>
+        </table>
+
+    }
+    else
+    {
+        <div>
+            <h1 style="color: red; font-family: 'pilatwide-heavy';">No Record found!</h1>
+        </div>
+    }
+</body>
+</html>
+

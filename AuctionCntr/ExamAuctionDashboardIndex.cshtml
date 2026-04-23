@@ -1,0 +1,1636 @@
+﻿
+@{
+    ViewBag.Title = "Exam Auction Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .content{padding:0!important}
+    * {
+        --border: #e2e8f0;
+    }
+    /* ========= Theme (Light by default) ========= */
+
+    /* ========= Scoped Theme: Light (default) ========= */
+    .dashboard {
+        /* theme variables only apply inside .dashboard */
+        --bg: #f8fafc; /* slate-50 */
+        --bg-elev: #ffffff;
+        --card: #ffffff;
+        --text: #0f172a;
+        --muted: #475569;
+        --border: #e2e8f0;
+        --import: #16a34a; /* green-600 */
+        --import-weak: #dcfce7;
+        --export: #0ea5e9; /* sky-500 */
+        --export-weak: #e0f2fe;
+        --total: #d97706; /* amber-600 */
+        --total-weak: #fef3c7;
+        --auction: #7c3aed; /* violet-600 */
+        --auction-weak: #ede9fe;
+        background: linear-gradient(180deg, var(--bg) 0%, var(--bg-elev) 100%);
+        color: var(--text);
+        min-height: 100vh;
+        padding: 24px;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    }
+
+        /* ========= Scoped Theme: Dark (toggle this class on .dashboard) ========= */
+        .dashboard.dark {
+            --bg: #0f172a;
+            --bg-elev: #111827;
+            --card: #1f2937;
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --border: #334155;
+            --import: #22c55e;
+            --import-weak: rgba(34,197,94,0.12);
+            --export: #06b6d4;
+            --export-weak: rgba(6,182,212,0.12);
+            --total: #f59e0b;
+            --total-weak: rgba(245,158,11,0.12);
+            --auction: #a855f7;
+            --auction-weak: rgba(168,85,247,0.12);
+        }
+
+    /* (Keep the rest of your existing dashboard styles as-is) */
+    .page-header.blur {
+        /* stays light (or site default) and unaffected by dashboard theme */
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        backdrop-filter: blur(8px);
+        /* optional: use your site’s default colors here, not the dashboard variables */
+        background: #ffffffcc; /* example */
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    /* Print remains scoped too */
+    @@media print {
+        .page-header, .divider, .footer-note, .badge, .pill, .actions {
+            display: none !important;
+        }
+
+        .dashboard {
+            padding: 0;
+            background: #fff;
+            color: #111;
+        }
+
+        .card {
+            box-shadow: none !important;
+            border: 1px solid #ddd;
+            break-inside: avoid;
+            page-break-inside: avoid;
+            margin-bottom: 12px;
+        }
+
+        .grid {
+            display: block;
+        }
+
+        .row {
+            border-color: #ddd;
+        }
+
+        .kpi-row {
+            grid-template-columns: repeat(6, 1fr);
+        }
+    }
+
+
+    .dashboard-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
+
+    .dashboard-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+    }
+
+    .dashboard-subtitle {
+        font-size: 0.95rem;
+        color: var(--muted);
+    }
+
+    .grid {
+        display: grid;
+        gap: 16px;
+    }
+
+    .grid-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @@media (max-width: 1200px) {
+        .grid-4 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @@media (max-width: 900px) {
+        .grid-3, .grid-4 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .grid-2, .grid-3, .grid-4 {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* ========= Card ========= */
+    .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .card-title {
+        font-weight: 600;
+        font-size: 1.05rem;
+    }
+
+    .card-meta {
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+
+    /* ========= Badges ========= */
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.03);
+    }
+
+        .badge .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+    .badge-import {
+        border-color: var(--import);
+        color: var(--import);
+        background: var(--import-weak);
+    }
+
+    .badge-export {
+        border-color: var(--export);
+        color: var(--export);
+        background: var(--export-weak);
+    }
+
+    .badge-total {
+        border-color: var(--total);
+        color: var(--total);
+        background: var(--total-weak);
+    }
+
+    .badge-auction {
+        border-color: var(--auction);
+        color: var(--auction);
+        background: var(--auction-weak);
+    }
+
+    /* ========= KPI ========= */
+    .kpi-row {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+        margin-top: 12px;
+    }
+
+    .kpi {
+        background: rgba(0,0,0,0.03);
+        border: 1px dashed var(--border);
+        border-radius: 12px;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .kpi-label {
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+
+    .kpi-value {
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+
+    .kpi-total .kpi-value {
+        color: var(--total);
+    }
+
+    .kpi-import .kpi-value {
+        color: var(--import);
+    }
+
+    .kpi-export .kpi-value {
+        color: var(--export);
+    }
+
+    /* ========= Data rows ========= */
+    .row {
+        display: grid;
+        grid-template-columns: 1.3fr 0.9fr repeat(5, 1fr);
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.02);
+    }
+
+        .row + .row {
+            margin-top: 8px;
+        }
+
+        .row .label {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+    .pill {
+        font-size: 0.8rem;
+        padding: 4px 10px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+
+    }
+
+    .pill-import {
+        color: var(--import);
+        background: var(--import-weak);
+        border-color: var(--import);
+    }
+
+    .pill-export {
+        color: var(--export);
+        background: var(--export-weak);
+        border-color: var(--export);
+    }
+
+    .value {
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* ========= Divider & actions ========= */
+    .divider {
+        height: 1px;
+        background: var(--border);
+        margin: 16px 0;
+        opacity: 0.8;
+    }
+
+    .footer-note {
+        font-size: 0.8rem;
+        color: var(--muted);
+        text-align: right;
+    }
+
+    .actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+        .actions .btn {
+            padding: 8px 70px;
+            font-size: medium;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+            .actions .btn:hover {
+                filter: brightness(0.95);
+            }
+
+    /* ========= Accessibility ========= */
+    .sr-only {
+        position: absolute !important;
+        height: 1px;
+        width: 1px;
+        overflow: hidden;
+        clip: rect(1px,1px,1px,1px);
+        white-space: nowrap;
+        border: 0;
+        padding: 0;
+        margin: -1px;
+    }
+
+    /* Make the 'Total Containers' cell pop visually */
+    .value-total {
+        font-weight: 800;
+        color: var(--total); /* uses your KPI total color */
+        background: var(--total-weak); /* soft highlight */
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        text-align: center
+    }
+
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+
+/* --- PRINT OVERRIDES: keep 3 cards per row --- */
+@@media print {
+  /* Ensure grid stays a grid in print */
+  .grid {
+    display: grid !important;
+    gap: 16px !important;
+  }
+
+  /* Force 3 columns in print, regardless of page width */
+  .grid-3 {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  /* If you also have 4-col or 2-col sections, you can pin them too */
+  .grid-4 {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+  .grid-2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Prevent items from being split across pages */
+  .card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* If any card has a max-width that causes wrapping, remove it for print */
+  .card { max-width: none !important; }
+
+  /* If you use scaling in the print window, avoid clipping by keeping overflow visible */
+  #print-wrapper { overflow: visible !important; }
+  #print-scale { transform-origin: top left !important; }
+
+
+
+    .pill,
+    .badge {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        padding: 4px 10px !important;
+        border-radius: 12px !important;
+        border: 1px solid var(--border) !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+
+
+    /* Treat dashboard as light theme in print to keep text visible */
+    .dashboard,
+    .dashboard.dark {
+        /* Light palette for print */
+        --bg: #ffffff !important;
+        --bg-elev: #ffffff !important;
+        --card: #ffffff !important;
+        --text: #111111 !important;
+        --muted: #374151 !important;
+        --border: #e5e7eb !important;
+        /* Keep brand accents */
+        --import: #16a34a !important; /* green-600 */
+        --import-weak: #dcfce7 !important;
+        --export: #0ea5e9 !important; /* sky-500 */
+        --export-weak: #e0f2fe !important;
+        --total: #d97706 !important; /* amber-600 */
+        --total-weak: #fef3c7 !important;
+        --auction: #7c3aed !important; /* violet-600 */
+        --auction-weak: #ede9fe !important;
+    }
+
+    /* Ensure actual backgrounds are printed (not gradients that may be dropped) */
+    .dashboard {
+        background: #ffffff !important; /* solid background for print */
+        color: var(--text) !important;
+    }
+
+    /* Cards and text use print-safe colors */
+    .card {
+        background: var(--card) !important;
+        color: var(--text) !important;
+        border: 1px solid var(--border) !important;
+        box-shadow: none !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    /* KPI text should be visible */
+    .kpi-label,
+    .kpi-value,
+    .row .value,
+    .row .label {
+        color: var(--text) !important;
+        text-align:center;
+    }
+
+
+    /* Force dashboard title to be visible and styled for print */
+    .dashboard-title {
+        font-size: 1.8rem !important; /* Slightly larger for print */
+        font-weight: 700 !important; /* Bold for emphasis */
+        color: #111111 !important; /* Dark text for white paper */
+        text-align: left !important; /* Keep alignment consistent */
+        margin-bottom: 12px !important; /* Add spacing before content */
+        background: transparent !important; /* Remove any dark background */
+        -webkit-print-color-adjust: exact; /* Ensure color prints correctly    -webkit-print-color-adjust: exact;  /* Ensure color prints correctly */
+        print-color-adjust: exact;
+    }
+
+}
+    .dashboard .card:hover, .dashboard .kpi:hover {
+        transform: translateY(-2px);
+        transition: transform 200ms ease, box-shadow 220ms ease, border-color 220ms ease;
+        box-shadow: 0 10px 28px color-mix(in srgb, var(--text) 8%, transparent);
+        border-color: color-mix(in srgb, var(--border) 65%, var(--primary, #60a5fa));
+    }
+    .dashboard .row .value:hover {
+        transform: translateY(-2px);
+        transition: transform 200ms ease, box-shadow 220ms ease, border-color 220ms ease;
+        font-weight: bolder;
+    }
+
+
+    /*Change */
+
+    .change-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        /* margin-left: 6px; */
+        /* padding: 2px 6px; */
+        font-size: 0.78rem;
+        /* border-radius: 999px; */
+        /* border: 1px solid var(--border); */
+        /* background: rgba(0, 0, 0, 0.06); */
+        white-space: nowrap;
+    }
+
+/* Color logic: configure what "up" means */
+.change-up {
+  color: var(--import);            /* green tone */
+/*  border-color: var(--import);
+  background: var(--import-weak);*/
+}
+.change-down {
+  color: #ef4444;                  /* red tone */
+/*  border-color: #ef4444;
+  background: rgba(239,68,68,0.12);*/
+}
+.change-flat {
+  color: var(--muted);
+/*  border-color: var(--border);
+  background: rgba(0,0,0,0.04);*/
+}
+
+/* Optional micro-animation on change */
+.change-chip {
+  animation: chip-pop 280ms ease;
+}
+@@keyframes chip-pop {
+  from { opacity: 0; transform: translateY(-2px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* Print: ensure chips show */
+    @@media print {
+        .change-chip {
+            display: inline-flex !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+    }
+
+
+    /*Header row*/
+
+    /* Header Row Styling */
+    .header-row {
+        background-color: #f5f5f5; /* Light gray background for contrast */
+        font-weight: bold; /* Bold text for emphasis */
+        border-bottom: 2px solid #ddd; /* Separator line */
+        /*padding: 8px 0;*/ /* Vertical padding */
+   
+
+    }
+   
+
+        .header-row .label {
+            color: #333; /* Dark text for label */
+            font-size: 14px;
+            text-transform: uppercase; /* Optional: make 'Years' uppercase */
+        }
+
+        .header-row .value {
+            text-align: center; /* Center align year labels */
+            font-size: 13px;
+            color: #555; /* Slightly muted text color */
+            padding: 4px 8px; /* Spacing for readability */
+        }
+
+        /* Optional: Add pill styling for 'Years' */
+        .header-row .pill {
+            background-color: #007bff; /* Blue pill background */
+            color: #fff; /* White text */
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+    .border-radius-bottom-right-left-0 {
+        border-radius: 10px 10px 0px 0px;
+    }
+
+
+    .border-radius-top-right-left-0 {
+        border-radius: 0px 0px 10px 10px;
+    }
+
+</style>
+
+
+
+<div ng-controller="AuctionCntrCtrl" ng-cloak class="ng-cloak AuctionContainerExamDashboardPage" ng-init="GetAuctionDashboardData()">
+    <div class="page-header border-bottom-0 blur">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex align-items-center w-100">
+                <h4 class="mb-0">
+                    @*<i class="icon-details mr-2"></i>
+                    <span class="font-weight-semibold">
+                        <i class="icon-stack-text"></i>&nbsp; Exam Auction Dashboard
+                    </span>*@
+                </h4>
+
+                <!-- Actions: Print / Theme -->
+                <div class="actions ml-auto d-flex">
+                    <button type="button" class="btn" onclick="printDashboard({ fitMode: 'resizePage', margin: '10mm',  landscape: true  })">🖨️ Print</button>
+                    <button type="button" class="btn ml-2" ng-click="toggleTheme()">🌓 Toggle Theme</button>
+                </div>
+                
+
+
+        </div>
+        </div>
+        <hr />
+        <div class="dashboard" id="oc-dashboard" ng-show="years.length > 0" aria-labelledby="oc-title">
+
+            <div class="dashboard-header">
+                <h1 id="oc-title" class="dashboard-title">Overage Containers Dashboard</h1>
+                <div class="dashboard-subtitle">
+                    Summary for {{::yearLabels[0]}}, {{::yearLabels[1]}}, {{::yearLabels[2]}}, {{::yearLabels[3]}}, and Before
+                </div>
+            </div>
+
+            <!-- ===== GRAND TOTALS ===== -->
+            <section class="grid grid-3" aria-label="Grand totals" aria-live="polite">
+
+                <!-- GRAND TOTAL CARD -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Grand Total Containers</div>
+                        <span class="badge badge-total"><span class="dot" style="background: var(--total)"></span>Total</span>
+                    </div>
+
+                    <div class="kpi-row kpi-total">
+                        <!-- Y1 -->
+                        <div class="kpi">
+                            <div class="kpi-label">{{::yearLabels[0]}}</div>
+                            <div class="kpi-value">
+                                {{ sumFields(totalKeys, 'Y1') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(totalKeys,'Y1'), true)">
+                                    {{ formatChange(changeSumFromPrev(totalKeys,'Y1')) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Y2 -->
+                        <div class="kpi">
+                            <div class="kpi-label">{{::yearLabels[1]}}</div>
+                            <div class="kpi-value">
+                                {{ sumFields(totalKeys, 'Y2') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(totalKeys,'Y2'), true)">
+                                    {{ formatChange(changeSumFromPrev(totalKeys,'Y2')) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Y3 -->
+                        <div class="kpi">
+                            <div class="kpi-label">{{::yearLabels[2]}}</div>
+                            <div class="kpi-value">
+                                {{ sumFields(totalKeys, 'Y3') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(totalKeys,'Y3'), true)">
+                                    {{ formatChange(changeSumFromPrev(totalKeys,'Y3')) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Y4 -->
+                        <div class="kpi">
+                            <div class="kpi-label">{{::yearLabels[3]}}</div>
+                            <div class="kpi-value">
+                                {{ sumFields(totalKeys, 'Y4') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(totalKeys,'Y4'), true)">
+                                    {{ formatChange(changeSumFromPrev(totalKeys,'Y4')) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- BeforeY5 -->
+                        <div class="kpi">
+                            <div class="kpi-label">Before</div>
+                            <div class="kpi-value">
+                                {{ sumFields(totalKeys, 'BeforeY5') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(totalKeys,'BeforeY5'), true)">
+                                    {{ formatChange(changeSumFromPrev(totalKeys,'BeforeY5')) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- TotalContainers -->
+                        <div class="kpi">
+                            <div class="kpi-label">Total</div>
+                            <div class="kpi-value">
+                                {{ sumFields(totalKeys, 'TotalContainers') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(totalKeys,'TotalContainers'), true)">
+                                    {{ formatChange(changeSumFromPrev(totalKeys,'TotalContainers')) }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- IMPORT TOTAL CARD -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Import Totals</div>
+                        <span class="badge badge-import"><span class="dot" style="background: var(--import)"></span>Import</span>
+                    </div>
+
+                    <div class="kpi-row kpi-import">
+                        <!-- Y1 -->
+                        <div class="kpi">
+                            <div class="kpi-label">{{::yearLabels[0]}}</div>
+                            <div class="kpi-value">
+                                {{ sumFields(importKeys, 'Y1') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(importKeys,'Y1'), true)">
+                                    {{ formatChange(changeSumFromPrev(importKeys,'Y1')) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Y2 -->
+                        <div class="kpi">
+                            <div class="kpi-label">{{::yearLabels[1]}}</div>
+                            <div class="kpi-value">
+                                {{ sumFields(importKeys, 'Y2') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(importKeys,'Y2'), true)">
+                                    {{ formatChange(changeSumFromPrev(importKeys,'Y2')) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Y3 -->
+                        <div class="kpi">
+                            <div class="kpi-label">{{::yearLabels[2]}}</div>
+                            <div class="kpi-value">
+                                {{ sumFields(importKeys, 'Y3') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(importKeys,'Y3'), true)">
+                                    {{ formatChange(changeSumFromPrev(importKeys,'Y3')) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Y4 -->
+                        <div class="kpi">
+                            <div class="kpi-label">{{::yearLabels[3]}}</div>
+                            <div class="kpi-value">
+                                {{ sumFields(importKeys, 'Y4') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(importKeys,'Y4'), true)">
+                                    {{ formatChange(changeSumFromPrev(importKeys,'Y4')) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- BeforeY5 -->
+                        <div class="kpi">
+                            <div class="kpi-label">Before</div>
+                            <div class="kpi-value">
+                                {{ sumFields(importKeys, 'BeforeY5') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(importKeys,'BeforeY5'), true)">
+                                    {{ formatChange(changeSumFromPrev(importKeys,'BeforeY5')) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- TotalContainers -->
+                        <div class="kpi">
+                            <div class="kpi-label">Total</div>
+                            <div class="kpi-value">
+                                {{ sumFields(importKeys, 'TotalContainers') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(importKeys,'TotalContainers'), true)">
+                                    {{ formatChange(changeSumFromPrev(importKeys,'TotalContainers')) }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- EXPORT TOTAL CARD -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Export Totals</div>
+                        <span class="badge badge-export"><span class="dot" style="background: var(--export)"></span>Export</span>
+                    </div>
+
+                    <div class="kpi-row kpi-export">
+                        <!-- Y1 -->
+                        <div class="kpi">
+                            <div class="kpi-label">{{::yearLabels[0]}}</div>
+                            <div class="kpi-value">
+                                {{ sumFields(exportKeys, 'Y1') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(exportKeys,'Y1'), true)">
+                                    {{ formatChange(changeSumFromPrev(exportKeys,'Y1')) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Y2 -->
+                        <div class="kpi">
+                            <div class="kpi-label">{{::yearLabels[1]}}</div>
+                            <div class="kpi-value">
+                                {{ sumFields(exportKeys, 'Y2') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(exportKeys,'Y2'), true)">
+                                    {{ formatChange(changeSumFromPrev(exportKeys,'Y2')) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Y3 -->
+                        <div class="kpi">
+                            <div class="kpi-label">{{::yearLabels[2]}}</div>
+                            <div class="kpi-value">
+                                {{ sumFields(exportKeys, 'Y3') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(exportKeys,'Y3'), true)">
+                                    {{ formatChange(changeSumFromPrev(exportKeys,'Y3')) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Y4 -->
+                        <div class="kpi">
+                            <div class="kpi-label">{{::yearLabels[3]}}</div>
+                            <div class="kpi-value">
+                                {{ sumFields(exportKeys, 'Y4') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(exportKeys,'Y4'), true)">
+                                    {{ formatChange(changeSumFromPrev(exportKeys,'Y4')) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- BeforeY5 -->
+                        <div class="kpi">
+                            <div class="kpi-label">Before</div>
+                            <div class="kpi-value">
+                                {{ sumFields(exportKeys, 'BeforeY5') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(exportKeys,'BeforeY5'), true)">
+                                    {{ formatChange(changeSumFromPrev(exportKeys,'BeforeY5')) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- TotalContainers -->
+                        <div class="kpi">
+                            <div class="kpi-label">Total</div>
+                            <div class="kpi-value">
+                                {{ sumFields(exportKeys, 'TotalContainers') }}
+                                <span class="change-chip"
+                                      ng-class="changeClass(changeSumFromPrev(exportKeys,'TotalContainers'), true)">
+                                    {{ formatChange(changeSumFromPrev(exportKeys,'TotalContainers')) }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <div class="divider" role="separator" aria-hidden="true"></div>
+
+            <!-- ===== IMPORT AND EXPORT DETAILS ===== -->
+            <section aria-label="Import details" class="grid grid-2">
+
+                <!-- ===== IMPORT DETAILS (Combined: GP + Reefer + DG) ===== -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Import — All Types</div>
+                        <span class="badge badge-import"><span class="dot" style="background: var(--import)"></span>Import</span>
+                    </div>
+
+                    <!-- Header Row -->
+                    <div class="row header-row">
+                        <div class="label"><span class="pill pill-import">Years</span></div>
+                        <div class="value">Total</div>
+                        <div class="value">{{::yearLabels[0]}}</div>
+                        <div class="value">{{::yearLabels[1]}}</div>
+                        <div class="value">{{::yearLabels[2]}}</div>
+                        <div class="value">{{::yearLabels[3]}}</div>
+                        <div class="value">Before</div>
+                    </div>
+
+                    <!-- ================= GP ================= -->
+                    <!-- GP — With Bayan -->
+                    <div class="row">
+                        <div class="label"><span class="pill pill-import">GP — With Bayan</span></div>
+                        <div class="value-total">
+                            {{ (DashboardData.IMPRTGPwithBayan.TotalContainers || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPwithBayan'],'TotalContainers'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPwithBayan'],'TotalContainers')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTGPwithBayan.Y1 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPwithBayan'],'Y1'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPwithBayan'],'Y1')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTGPwithBayan.Y2 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPwithBayan'],'Y2'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPwithBayan'],'Y2')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTGPwithBayan.Y3 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPwithBayan'],'Y3'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPwithBayan'],'Y3')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTGPwithBayan.Y4 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPwithBayan'],'Y4'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPwithBayan'],'Y4')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTGPwithBayan.BeforeY5 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPwithBayan'],'BeforeY5'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPwithBayan'],'BeforeY5')) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- GP — No Bayan -->
+                    <div class="row">
+                        <div class="label"><span class="pill pill-import">GP — No Bayan</span></div>
+                        <div class="value-total">
+                            {{ (DashboardData.IMPRTGPNoBayan.TotalContainers || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPNoBayan'],'TotalContainers'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPNoBayan'],'TotalContainers')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTGPNoBayan.Y1 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPNoBayan'],'Y1'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPNoBayan'],'Y1')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTGPNoBayan.Y2 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPNoBayan'],'Y2'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPNoBayan'],'Y2')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTGPNoBayan.Y3 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPNoBayan'],'Y3'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPNoBayan'],'Y3')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTGPNoBayan.Y4 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPNoBayan'],'Y4'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPNoBayan'],'Y4')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTGPNoBayan.BeforeY5 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPNoBayan'],'BeforeY5'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPNoBayan'],'BeforeY5')) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- ================= Reefer ================= -->
+                    <!-- Reefer — With Bayan -->
+                    <div class="row">
+                        <div class="label"><span class="pill pill-import">Reefer — With Bayan</span></div>
+                        <div class="value-total">
+                            {{ (DashboardData.IMPRTREEFERwithBayan.TotalContainers || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTREEFERwithBayan'],'TotalContainers'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTREEFERwithBayan'],'TotalContainers')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTREEFERwithBayan.Y1 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTREEFERwithBayan'],'Y1'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTREEFERwithBayan'],'Y1')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTREEFERwithBayan.Y2 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTREEFERwithBayan'],'Y2'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTREEFERwithBayan'],'Y2')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTREEFERwithBayan.Y3 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTREEFERwithBayan'],'Y3'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTREEFERwithBayan'],'Y3')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTREEFERwithBayan.Y4 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTREEFERwithBayan'],'Y4'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTREEFERwithBayan'],'Y4')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTREEFERwithBayan.BeforeY5 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTREEFERwithBayan'],'BeforeY5'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTREEFERwithBayan'],'BeforeY5')) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Reefer — No Bayan -->
+                    <div class="row">
+                        <div class="label"><span class="pill pill-import">Reefer — No Bayan</span></div>
+                        <div class="value-total">
+                            {{ (DashboardData.IMPRTREEFERNoBayan.TotalContainers || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTREEFERNoBayan'],'TotalContainers'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTREEFERNoBayan'],'TotalContainers')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTREEFERNoBayan.Y1 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTREEFERNoBayan'],'Y1'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTREEFERNoBayan'],'Y1')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTREEFERNoBayan.Y2 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTREEFERNoBayan'],'Y2'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTREEFERNoBayan'],'Y2')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTREEFERNoBayan.Y3 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTREEFERNoBayan'],'Y3'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTREEFERNoBayan'],'Y3')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTREEFERNoBayan.Y4 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTREEFERNoBayan'],'Y4'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTREEFERNoBayan'],'Y4')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTREEFERNoBayan.BeforeY5 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTREEFERNoBayan'],'BeforeY5'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTREEFERNoBayan'],'BeforeY5')) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- ================= DG ================= -->
+                    <!-- DG — With Bayan -->
+                    <div class="row">
+                        <div class="label"><span class="pill pill-import">DG — With Bayan</span></div>
+                        <div class="value-total">
+                            {{ (DashboardData.IMPRTDGwithBayan.TotalContainers || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTDGwithBayan'],'TotalContainers'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTDGwithBayan'],'TotalContainers')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTDGwithBayan.Y1 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTDGwithBayan'],'Y1'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTDGwithBayan'],'Y1')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTDGwithBayan.Y2 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTDGwithBayan'],'Y2'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTDGwithBayan'],'Y2')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTDGwithBayan.Y3 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTDGwithBayan'],'Y3'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTDGwithBayan'],'Y3')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTDGwithBayan.Y4 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTDGwithBayan'],'Y4'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTDGwithBayan'],'Y4')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTDGwithBayan.BeforeY5 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTDGwithBayan'],'BeforeY5'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTDGwithBayan'],'BeforeY5')) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- DG — No Bayan -->
+                    <div class="row">
+                        <div class="label"><span class="pill pill-import">DG — No Bayan</span></div>
+                        <div class="value-total">
+                            {{ (DashboardData.IMPRTDGNoBayan.TotalContainers || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTDGNoBayan'],'TotalContainers'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTDGNoBayan'],'TotalContainers')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTDGNoBayan.Y1 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTDGNoBayan'],'Y1'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTDGNoBayan'],'Y1')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTDGNoBayan.Y2 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTDGNoBayan'],'Y2'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTDGNoBayan'],'Y2')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTDGNoBayan.Y3 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTDGNoBayan'],'Y3'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTDGNoBayan'],'Y3')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTDGNoBayan.Y4 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTDGNoBayan'],'Y4'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTDGNoBayan'],'Y4')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.IMPRTDGNoBayan.BeforeY5 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTDGNoBayan'],'BeforeY5'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTDGNoBayan'],'BeforeY5')) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- ================= Combined Totals (All Imports) ================= -->
+                    <div class="row total-row">
+                        <div class="label"><span class="pill pill-import">Total (All Imports)</span></div>
+                        <div class="value-total">
+                            {{ sumFields(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'TotalContainers') }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'TotalContainers'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'TotalContainers')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ sumFields(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'Y1') }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'Y1'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'Y1')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ sumFields(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'Y2') }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'Y2'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'Y2')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ sumFields(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'Y3') }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'Y3'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'Y3')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ sumFields(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'Y4') }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'Y4'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'Y4')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ sumFields(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'BeforeY5') }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'BeforeY5'), true)">
+                                {{ formatChange(changeSumFromPrev(['IMPRTGPwithBayan','IMPRTGPNoBayan','IMPRTREEFERwithBayan','IMPRTREEFERNoBayan','IMPRTDGwithBayan','IMPRTDGNoBayan'],'BeforeY5')) }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- ===== EXPORT DETAILS (Combined: GP + Reefer + DG) ===== -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Export — All Types</div>
+                        <span class="badge badge-export"><span class="dot" style="background: var(--export)"></span>Export</span>
+                    </div>
+
+                    <!-- Header Row -->
+                    <div class="row header-row">
+                        <div class="label"><span class="pill pill-export">Years</span></div>
+                        <div class="value">Total</div>
+                        <div class="value">{{::yearLabels[0]}}</div>
+                        <div class="value">{{::yearLabels[1]}}</div>
+                        <div class="value">{{::yearLabels[2]}}</div>
+                        <div class="value">{{::yearLabels[3]}}</div>
+                        <div class="value">Before</div>
+                    </div>
+
+                    <!-- ================= GP ================= -->
+                    <!-- GP — With Bayan -->
+                    <div class="row">
+                        <div class="label"><span class="pill pill-export">GP — With Bayan</span></div>
+                        <div class="value-total">
+                            {{ (DashboardData.EXPRTGPwithBayan.TotalContainers || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPwithBayan'],'TotalContainers'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPwithBayan'],'TotalContainers')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTGPwithBayan.Y1 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPwithBayan'],'Y1'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPwithBayan'],'Y1')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTGPwithBayan.Y2 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPwithBayan'],'Y2'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPwithBayan'],'Y2')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTGPwithBayan.Y3 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPwithBayan'],'Y3'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPwithBayan'],'Y3')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTGPwithBayan.Y4 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPwithBayan'],'Y4'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPwithBayan'],'Y4')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTGPwithBayan.BeforeY5 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPwithBayan'],'BeforeY5'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPwithBayan'],'BeforeY5')) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- GP — No Bayan -->
+                    <div class="row">
+                        <div class="label"><span class="pill pill-export">GP — No Bayan</span></div>
+                        <div class="value-total">
+                            {{ (DashboardData.EXPRTGPNoBayan.TotalContainers || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPNoBayan'],'TotalContainers'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPNoBayan'],'TotalContainers')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTGPNoBayan.Y1 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPNoBayan'],'Y1'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPNoBayan'],'Y1')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTGPNoBayan.Y2 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPNoBayan'],'Y2'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPNoBayan'],'Y2')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTGPNoBayan.Y3 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPNoBayan'],'Y3'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPNoBayan'],'Y3')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTGPNoBayan.Y4 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPNoBayan'],'Y4'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPNoBayan'],'Y4')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTGPNoBayan.BeforeY5 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPNoBayan'],'BeforeY5'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPNoBayan'],'BeforeY5')) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- ================= Reefer ================= -->
+                    <!-- Reefer — With Bayan -->
+                    <div class="row">
+                        <div class="label"><span class="pill pill-export">Reefer — With Bayan</span></div>
+                        <div class="value-total">
+                            {{ (DashboardData.EXPRTREEFERwithBayan.TotalContainers || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTREEFERwithBayan'],'TotalContainers'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTREEFERwithBayan'],'TotalContainers')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTREEFERwithBayan.Y1 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTREEFERwithBayan'],'Y1'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTREEFERwithBayan'],'Y1')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTREEFERwithBayan.Y2 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTREEFERwithBayan'],'Y2'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTREEFERwithBayan'],'Y2')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTREEFERwithBayan.Y3 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTREEFERwithBayan'],'Y3'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTREEFERwithBayan'],'Y3')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTREEFERwithBayan.Y4 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTREEFERwithBayan'],'Y4'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTREEFERwithBayan'],'Y4')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTREEFERwithBayan.BeforeY5 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTREEFERwithBayan'],'BeforeY5'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTREEFERwithBayan'],'BeforeY5')) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Reefer — No Bayan -->
+                    <div class="row">
+                        <div class="label"><span class="pill pill-export">Reefer — No Bayan</span></div>
+                        <div class="value-total">
+                            {{ (DashboardData.EXPRTREEFERNoBayan.TotalContainers || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTREEFERNoBayan'],'TotalContainers'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTREEFERNoBayan'],'TotalContainers')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTREEFERNoBayan.Y1 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTREEFERNoBayan'],'Y1'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTREEFERNoBayan'],'Y1')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTREEFERNoBayan.Y2 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTREEFERNoBayan'],'Y2'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTREEFERNoBayan'],'Y2')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTREEFERNoBayan.Y3 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTREEFERNoBayan'],'Y3'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTREEFERNoBayan'],'Y3')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTREEFERNoBayan.Y4 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTREEFERNoBayan'],'Y4'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTREEFERNoBayan'],'Y4')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTREEFERNoBayan.BeforeY5 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTREEFERNoBayan'],'BeforeY5'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTREEFERNoBayan'],'BeforeY5')) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- ================= DG ================= -->
+                    <!-- DG — With Bayan -->
+                    <div class="row">
+                        <div class="label"><span class="pill pill-export">DG — With Bayan</span></div>
+                        <div class="value-total">
+                            {{ (DashboardData.EXPRTDGwithBayan.TotalContainers || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTDGwithBayan'],'TotalContainers'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTDGwithBayan'],'TotalContainers')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTDGwithBayan.Y1 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTDGwithBayan'],'Y1'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTDGwithBayan'],'Y1')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTDGwithBayan.Y2 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTDGwithBayan'],'Y2'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTDGwithBayan'],'Y2')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTDGwithBayan.Y3 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTDGwithBayan'],'Y3'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTDGwithBayan'],'Y3')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTDGwithBayan.Y4 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTDGwithBayan'],'Y4'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTDGwithBayan'],'Y4')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTDGwithBayan.BeforeY5 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTDGwithBayan'],'BeforeY5'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTDGwithBayan'],'BeforeY5')) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- DG — No Bayan -->
+                    <div class="row">
+                        <div class="label"><span class="pill pill-export">DG — No Bayan</span></div>
+                        <div class="value-total">
+                            {{ (DashboardData.EXPRTDGNoBayan.TotalContainers || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTDGNoBayan'],'TotalContainers'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTDGNoBayan'],'TotalContainers')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTDGNoBayan.Y1 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTDGNoBayan'],'Y1'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTDGNoBayan'],'Y1')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTDGNoBayan.Y2 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTDGNoBayan'],'Y2'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTDGNoBayan'],'Y2')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTDGNoBayan.Y3 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTDGNoBayan'],'Y3'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTDGNoBayan'],'Y3')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTDGNoBayan.Y4 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTDGNoBayan'],'Y4'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTDGNoBayan'],'Y4')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ (DashboardData.EXPRTDGNoBayan.BeforeY5 || 0) }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTDGNoBayan'],'BeforeY5'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTDGNoBayan'],'BeforeY5')) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- ================= Combined Totals (All Exports) ================= -->
+                    <div class="row total-row">
+                        <div class="label"><span class="pill pill-export">Total (All Exports)</span></div>
+                        <div class="value-total">
+                            {{ sumFields(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'TotalContainers') }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'TotalContainers'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'TotalContainers')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ sumFields(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'Y1') }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'Y1'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'Y1')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ sumFields(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'Y2') }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'Y2'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'Y2')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ sumFields(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'Y3') }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'Y3'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'Y3')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ sumFields(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'Y4') }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'Y4'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'Y4')) }}
+                            </span>
+                        </div>
+                        <div class="value">
+                            {{ sumFields(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'BeforeY5') }}
+                            <span class="change-chip"
+                                  ng-class="changeClass(changeSumFromPrev(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'BeforeY5'), true)">
+                                {{ formatChange(changeSumFromPrev(['EXPRTGPwithBayan','EXPRTGPNoBayan','EXPRTREEFERwithBayan','EXPRTREEFERNoBayan','EXPRTDGwithBayan','EXPRTDGNoBayan'],'BeforeY5')) }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+          
+            <div class="divider" role="separator" aria-hidden="true"></div>
+
+            <!-- ===== AUCTIONS ===== -->
+            <section aria-label="Auctions" class="grid grid-2">
+                <div class="card" ng-if="Auction2Data">
+                    <div class="card-header">
+                        <div class="card-title">Overage Container Auction 2</div>
+                        <span class="badge badge-auction"><span class="dot" style="background: var(--auction)"></span>Auction</span>
+                    </div>
+                    <div class="kpi-row">
+                        <div class="kpi"><div class="kpi-label">{{::yearLabels[0]}}</div><div class="kpi-value">{{ Auction2Data.Y1 || 0 }}</div></div>
+                        <div class="kpi"><div class="kpi-label">{{::yearLabels[1]}}</div><div class="kpi-value">{{ Auction2Data.Y2 || 0 }}</div></div>
+                        <div class="kpi"><div class="kpi-label">{{::yearLabels[2]}}</div><div class="kpi-value">{{ Auction2Data.Y3 || 0 }}</div></div>
+                        <div class="kpi"><div class="kpi-label">{{::yearLabels[3]}}</div><div class="kpi-value">{{ Auction2Data.Y4 || 0 }}</div></div>
+                        <div class="kpi"><div class="kpi-label">Before</div><div class="kpi-value">{{ Auction2Data.BeforeY5 || 0 }}</div></div>
+                        <div class="kpi"><div class="kpi-label">Total</div><div class="kpi-value">{{ Auction2Data.TotalContainers || 0 }}</div></div>
+                    </div>
+                </div>
+
+                <div class="card" ng-if="Auction1Data">
+                    <div class="card-header">
+                        <div class="card-title">Overage Container Auction 1</div>
+                        <span class="badge badge-auction"><span class="dot" style="background: var(--auction)"></span>Auction</span>
+                    </div>
+                    <div class="kpi-row">
+                        <div class="kpi"><div class="kpi-label">{{::yearLabels[0]}}</div><div class="kpi-value">{{ Auction1Data.Y1 || 0 }}</div></div>
+                        <div class="kpi"><div class="kpi-label">{{::yearLabels[1]}}</div><div class="kpi-value">{{ Auction1Data.Y2 || 0 }}</div></div>
+                        <div class="kpi"><div class="kpi-label">{{::yearLabels[2]}}</div><div class="kpi-value">{{ Auction1Data.Y3 || 0 }}</div></div>
+                        <div class="kpi"><div class="kpi-label">{{::yearLabels[3]}}</div><div class="kpi-value">{{ Auction1Data.Y4 || 0 }}</div></div>
+                        <div class="kpi"><div class="kpi-label">Before</div><div class="kpi-value">{{ Auction1Data.BeforeY5 || 0 }}</div></div>
+                        <div class="kpi"><div class="kpi-label">Total</div><div class="kpi-value">{{ Auction1Data.TotalContainers || 0 }}</div></div>
+                    </div>
+                </div>
+            </section>
+
+            <p class="footer-note">
+                Data refresh: @DateTime.Now.ToString("dd-MM-yyyy HH:mm")
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+

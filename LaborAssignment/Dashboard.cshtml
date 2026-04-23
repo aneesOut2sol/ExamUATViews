@@ -1,0 +1,623 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/css/DashboardStyle.css" rel="stylesheet" />
+<link href="~/Content/css/ExamCSS.css" rel="stylesheet" />
+<link href="~/Content/css/FilterPanelStyle.css" rel="stylesheet" />
+<div class="DashboardDiv" ng-controller="LAV2_DashboardCtrl" ng-init="init()">
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline" style="padding:0px;">
+            <div class="page-title d-flex w-100">
+                <h4>
+                    <span class="font-weight-semibold">Labor Assignment Dashboard</span>
+
+
+                </h4>
+                <div class="ml-auto cursor-pointer">
+                    <span class="linkstyle pull-right" ng-click="AutoAssign()">Auto Assign</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row d-none">
+        <div class="col-md-12 p-0">
+            <span class="pull-right">
+                <span title="More filters" ng-class="{'Active':FilterApplied==true}" data-toggle="modal" data-target="#filter" class="icon-filter3"></span>
+            </span>
+
+        </div>
+    </div>
+    <br />
+    <style>
+        .textSLA {
+            color: #ff3838 !important;
+        }
+        .BaseFilter input[type="checkbox"] {
+            float: none;
+            margin: 0px;
+        }
+
+        .MissingBadge {
+            background: red;
+            border-radius: 50%;
+            font: 13px;
+            color: white;
+            padding: 2px 3px;
+        }
+
+        @@media (max-width: 576px) {
+            .dashboard-wrapper {
+                height: auto !important;
+                flex-direction: column !important;
+            }
+
+            .custom-table-header {
+                min-height: 100px !important;
+                max-height: 200px !important;
+            }
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
+
+        .DashboardContainersSection .dropdown-menu li {
+            color: #1e1450 !important;
+            font-weight: 700;
+            border-bottom: 1px solid #8080804d;
+        }
+
+            .DashboardContainersSection .dropdown-menu li a {
+                font-weight: 700;
+            }
+
+        .DashboardContainersSection .dropdown-menu .approved {
+            background: white !important;
+            color: #00946b !important;
+        }
+
+        .DashboardContainersSection .dropdown-menu .approvalrequierd {
+            background: white !important;
+            color: #8f8f8f !important;
+            font-weight: 700;
+        }
+
+        .DashboardContainersSection .dropdown-menu .Rejected {
+            background: white !important;
+            color: red !important;
+            font-weight: 700;
+        }
+
+        .stripClr {
+            background: #cbfece !important;
+            accent-color: #cbfece;
+        }
+
+        .repackClr {
+            background: #d8d5ff !important;
+        }
+
+        .LaborCard ul li {
+            list-style: none;
+            background: #ffffff;
+            padding: 10px 10px;
+            margin-bottom: 9px;
+            border-radius: 4px;
+            box-shadow: 5px 12px 25px 0px rgba(0, 0, 0, 0.1);
+            border: 1px dashed #120c3029;
+        }
+
+        .LaborCard ul {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        .icon-more2:before {
+            content: "\ec59";
+            cursor: pointer;
+        }
+
+        .dashboard-wrapper li.p-0 {
+            list-style: none;
+        }
+
+        .dashboard-wrapper a.dropdown-item {
+            font-size: 11px;
+        }
+
+        .dropdown-header {
+            background: #1e1450;
+            color: #ffffff;
+            font-size: 9px;
+        }
+
+        .dashboard-wrapper {
+            display: flex;
+            flex-direction: row;
+            height: 80vh;
+            padding: 10px;
+            gap: 10px;
+            box-sizing: border-box;
+        }
+
+        .dashboard-column {
+            flex: 1; /* Forces all columns to be equal width */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 100%;
+            min-width: 0; /* Important: prevents tables from breaking the flex width */
+        }
+
+        /* 4. Individual Cards */
+        .DashboardContainersSection {
+            flex: 1; /* Forces all cards in a column to be equal height */
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        /* 5. Table Header and Scrollable Body */
+        .custom-table-header {
+            flex: 1; /* Makes table container fill the remaining card height */
+            overflow-y: auto; /* Scroll inside the card if data is long */
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background: #eee;
+            z-index: 10;
+            padding: 8px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        tbody td {
+            padding: 8px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        /* 6. Title and Footer Styling */
+        .Cutsom-Table-title {
+            padding: 6px;
+            font-weight: bold;
+            color: white;
+            font-size: 12px !IMPORTANT;
+            position: relative;
+            border-radius: 0px !important;
+        }
+
+        .RedSection {
+            background-color: #e74c3c;
+        }
+
+        .yellowSection {
+            background-color: #f1c40f;
+            color: #333;
+        }
+
+        .SkySection {
+            background-color: #3a94dc;
+            color: #ffffff;
+        }
+
+        .PrimarySection {
+            background-color: #1e1450;
+            color: #ffffff;
+        }
+
+        .GreenSection {
+            background-color: #2ecc71;
+        }
+
+        .total-container-count-section {
+            padding: 8px 12px;
+            background: #fcfcfc;
+            border-top: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        /* Context Menu Icons */
+        .pull-right {
+            float: right;
+        }
+
+        .contextMenu {
+            cursor: pointer;
+        }
+
+        .badge-Paused {
+            background: #e95700;
+            color: #020202;
+            border-radius: 3px;
+        }
+
+        tr.MissingLaborCntr td {
+            background: #ffd9d9;
+            color: #810808;
+        }
+
+        .PerviousShift {
+            background: #c0c0c0;
+        }
+    </style>
+
+    <div class="dashboard-wrapper">
+        <div class="dashboard-column">
+            @*idle*@
+            <div class="DashboardContainersSection">
+                <div class="text-center Cutsom-Table-title RedSection">
+                    Idle
+                    <div class="pull-right contextMenu"><i class="icon-list2"></i></div>
+                </div>
+                <div class="custom-table-header">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>EmpId</th>
+                                <th>Emp name</th>
+                                <th>Position</th>
+                                <th>DUR</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="x in IdleLabor">
+                            <tr>
+                                <td>
+                                    {{x.EmpId}}
+                                    <span ng-show="x.IsMissing==true" title="Missing" class="MissingBadge">M</span>
+                                </td>
+                                <td>{{x.EmpName}}</td>
+                                <td>{{x.LastLocation}}</td>
+                                <td>{{x.Duration}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-container-count-section">
+                    <b>Total</b> <b class="pull-right">{{IdleLabor.length}}</b>
+                </div>
+            </div>
+            @*Queue*@
+            <div class="DashboardContainersSection">
+                <div class="text-center Cutsom-Table-title PrimarySection">
+                    Queue
+                    <div class="pull-right contextMenu"><i class="icon-list2"></i></div>
+                </div>
+                <div class="custom-table-header">
+                    <table>
+                        <thead>
+                            <tr>
+
+                                <th>Bayan</th>
+                                <th>Container</th>
+                                <th>Elapsed hr </th>
+                                <th>Position</th>
+                                <th>RL</th>
+                                <th>ML</th>
+                                <th>AL</th>
+                                <th>Size</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="x in QueueContaier">
+                            <tr ng-class="{'MissingLaborCntr': x.MissingLabor > 0}">
+                                <td class="BayanClr" ng-class="{'PerviousShift': x.Status == 'ShiftEnded'}">
+                                    <span class="d-inline-block dropdownbutton cursor-pointer" title="Menu" ng-click="toggleMenu('Queue',x.Unitgkey,x)">
+                                        <i class="icon-more2"></i>
+                                    </span>
+
+                                    <span ng-show="x.Bayan.split('-').length>1">{{x.Bayan.split('-')[1]}}</span>
+                                    <span ng-show="x.Bayan.split('-').length!=2">{{x.Bayan.split('-')[0]}}</span>
+                                    <div class="position-relative dropdown">
+                                        <div class="position-absolute dropdown-menu p-0 m-0" id="Queue{{x.Unitgkey}}" ng-class="{'show':x.MenuOpen==true}">
+                                            <div class="dropdown-header m-0">
+                                                <b>{{x.Cntr}} </b>
+                                            </div>
+                                            <ul class="m-0 p-0">
+                                                <li class="p-0" title="manual assignment" ng-click="OpenManualAssignment(x)">
+                                                    <a class=" dropdown-item" href="#"> + Assign Labor</a>
+                                                </li>
+                                                <li class="p-0" ng-show="x.ActivityId!=null && x.ActivityId>0" title="Activity Details" ng-click="GetActivityDetails(x.ActivityId)">
+                                                    <a class="dropdown-item" href="#">Activity detail</a>
+
+                                                </li>
+                                                <li class="p-0" title="Proceed the job" ng-show="x.RequiredLabor>x.AssignedLabor && x.AssignedLabor>0" ng-click="ProceedTheJob(x.ActivityId)">
+                                                    <a class=" dropdown-item" href="#"> Procced the job </a>
+
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+
+
+                                </td>
+                                <td ng-class="{'stripClr':   x.Activity === 'Strip','repackClr':  x.Activity === 'Repack'}">{{x.Cntr}}</td>
+                                <td>{{x.DwellHrs}}</td>
+                                <td>{{x.Location}}</td>
+                                <td class="text-center">{{x.RequiredLabor}}</td>
+                                <td class="text-center">{{x.MissingLabor}}</td>
+                                <td class="text-center">{{x.AssignedLabor}}</td>
+                                <td>{{x.Size}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-container-count-section">
+                    <b>Total</b> <b class="pull-right">{{QueueContaier.length}}</b>
+                </div>
+            </div>
+        </div>
+        @*Arrived*@
+        <div class="dashboard-column">
+
+            <div class="DashboardContainersSection">
+                <div class="text-center Cutsom-Table-title SkySection">
+                    Assigned
+                    <div class="pull-right contextMenu"><i class="icon-list2"></i></div>
+                </div>
+                <div class="custom-table-header">
+                    <table>
+                        <thead>
+                            <tr>
+
+                                <th>Bayan</th>
+                                <th>Container</th>
+                                <th>Elapsed hr </th>
+                                <th>Position</th>
+                                <th>Assigned Labor</th>
+                                <th>Present Labor</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="x in ArrivedContainer">
+                            <tr>
+                                <td class="BayanClr">
+                                    @*<img title="Auto Assignment" ng-show="x.DisplayMode=='Auto'" style="height:14px;" src="~/Content/images/Auto.png" />
+                                        <img title="Manual Assignment" ng-show="x.DisplayMode!='Auto'" style="height:14px;" src="~/Content/images/Manual.png" />*@
+
+                                    <span class="d-inline-block dropdownbutton cursor-pointer" title="Menu" ng-click="toggleMenu('Arrived',x.Unitgkey,x)">
+                                        <i class="icon-more2"></i>
+                                    </span>
+
+                                    <div class="position-absolute dropdown">
+                                        <div class="position-relative dropdown-menu p-0 m-0" id="Arrived{{x.Unitgkey}}" ng-class="{'show':x.MenuOpen==true}">
+
+                                            <div class="dropdown-header m-0">
+                                                <b>{{x.Cntr}} </b>
+                                            </div>
+                                            <ul class="m-0 p-0">
+
+
+                                                <li class="p-0" ng-click="OpenArrivedModel(x)">
+                                                    <a class="dropdown-item">
+                                                        <img src="~/Content/images/LabourIcon.png" alt="Alternate Text" /> Labors
+                                                    </a>
+                                                </li>
+                                                <li class="p-0" title="Activity Details" ng-click="GetActivityDetails(x.ActivityId)">
+                                                    <a class="dropdown-item" href="#">Activity detail</a>
+
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <span ng-show="x.Bayan.split('-').length>1">{{x.Bayan.split('-')[1]}}</span>
+                                    <span ng-show="x.Bayan.split('-').length!=2">{{x.Bayan.split('-')[0]}}</span>
+                                </td>
+                                <td ng-class="{'stripClr':   x.Activity === 'Strip','repackClr':  x.Activity === 'Repack'}">{{x.Cntr}}</td>
+                                <td>{{x.DwellHrs}}</td>
+                                <td>{{x.Location}}</td>
+                                <td class="text-center">{{x.AssignedLabor}}</td>
+                                <td class="text-center">{{x.ArrivedLabor}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-container-count-section">
+                    <b>Total</b> <b class="pull-right">{{ArrivedContainer.length}}</b>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-column">
+            @*inprogress*@
+            <div class="DashboardContainersSection">
+                <div class="text-center Cutsom-Table-title yellowSection">
+                    Inprogress
+                    <div class="pull-right contextMenu"><i class="icon-list2"></i></div>
+                </div>
+                <div class="custom-table-header">
+                    <table>
+                        <thead>
+                            <tr>
+
+                                <th>Bayan</th>
+                                <th>Container</th>
+                                <th>Status</th>
+                                <th>Position</th>
+                                <th>Elapsed hr</th>
+                                <th>DUR</th>
+
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="x in InprogressContainer">
+                            <tr ng-class="{'DelayCntr':x.Delays!=''}">
+
+                                <td class="BayanClr">
+                                    <div class="BayanClr">
+                                        @*<img title="Auto Assignment" ng-show="x.DisplayMode=='Auto'" style="height:14px;" src="~/Content/images/Auto.png" />
+                                            <img title="Manual Assignment" ng-show="x.DisplayMode!='Auto'" style="height:14px;" src="~/Content/images/Manual.png" />*@
+
+                                        <span class="d-inline-block dropdownbutton cursor-pointer" title="Menu" ng-click="toggleMenu('Inprogress',x.Unitgkey,x)">
+                                            <i class="icon-more2"></i>
+                                        </span>
+
+                                        <div class="position-absolute dropdown">
+                                            <div class="position-relative dropdown-menu p-0 m-0" id="Inprogress{{x.Unitgkey}}" ng-class="{'show':x.MenuOpen==true}">
+                                                <div class="dropdown-header m-0">
+                                                    <b>{{x.Cntr}} </b>
+                                                </div>
+                                                <ul class="m-0 p-0">
+                                                    @*<li class="p-0" ng-show="ContainerDetails.Started==true" ng-click="Inspectiondelay(ContainerDetails.InspectionDelayRPT==5||ContainerDetails.InspectionDelayRPT==2||ContainerDetails.InspectionDelayRPT==3,ContainerDetails.Unitgkey,ContainerDetails.Cntr,null,null,ContainerDetails.Location,ContainerDetails.ActivityId)" ng-class="{'approvalrequierd' : ContainerDetails.InspectionDelayRPT==5 ,'approved' : ContainerDetails.InspectionDelayRPT==2,'Rejected':ContainerDetails.InspectionDelayRPT==3 }">
+                                                        <a class="dropdown-item">
+                                                            Inspection Delays
+                                                            <div class="DelayBadge" style="position: absolute; bottom: 20px;" ng-if="GetOverallInspeDelayDuration(ContainerDetails) != '' && ContainerDetails.Started==true">
+                                                                <div ng-class="{'approved' : ContainerDetails.InspectionDelayRPT==2,'Rejected':ContainerDetails.InspectionDelayRPT!=2 }" class="CountBadge">{{GetOverallInspeDelayDuration(ContainerDetails)}}</div>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                    <li class="p-0" ng-show="ContainerDetails.Started==true" ng-click="DamageReport(ContainerDetails.DamageStatus==5 || ContainerDetails.DamageStatus==1,ContainerDetails)" ng-class="{'approvalrequierd' : ContainerDetails.DamageStatus==5 ,'approved' : ContainerDetails.DamageStatus==1,'Rejected':x.DamageStatus==3 }">
+                                                        <a class=" dropdown-item">
+                                                            Cargo Report
+                                                        </a>
+                                                    </li>
+                                                    <li class="p-0" ng-show="ContainerDetails.Started == true" ng-click="OpenAdditionalServices(ContainerDetails.AdditionalServiceStatus == 0 || ContainerDetails.AdditionalServiceStatus == 1,ContainerDetails.Cntr,ContainerDetails.Unitgkey,ContainerDetails.ActivityId)" ng-class="{'approvalrequierd' : ContainerDetails.AdditionalServiceStatus == 0 ,'approved' : ContainerDetails.AdditionalServiceStatus == 1,'Rejected':ContainerDetails.AdditionalServiceStatus==2 }">
+                                                        <a class=" dropdown-item">
+                                                            Additional service
+                                                        </a>
+                                                    </li>
+                                                    <li class="p-0" ng-show="ContainerDetails.Started==false" ng-click="StartActivity(ContainerDetails)">
+                                                        <a class=" dropdown-item">Start Activity</a>
+                                                    </li>
+                                                    <li class="p-0" ng-show="ContainerDetails.Started==true && ContainerDetails.Repack50Done==false && ContainerDetails.Status!='Paused'" ng-click="EndActivity(ContainerDetails)">
+                                                        <a class=" dropdown-item">Repack 50%</a>
+                                                    </li>
+                                                    <li class="p-0" ng-show="ContainerDetails.Started==true && ContainerDetails.Repack50Done==true && ContainerDetails.Status!='Paused'" ng-click="EndActivity(ContainerDetails)">
+                                                        <a class=" dropdown-item">End Activity</a>
+                                                    </li>*@
+                                                    <li class="p-0" title="Activity Details" ng-click="GetActivityDetails(x.ActivityId)">
+                                                        <a class="dropdown-item" href="#">Activity detail</a>
+
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+
+
+                                        <span ng-show="x.Bayan.split('-').length>1">{{x.Bayan.split('-')[1]}}</span>
+                                        <span ng-show="x.Bayan.split('-').length!=2">{{x.Bayan.split('-')[0]}}</span>
+                                    </div>
+                                </td>
+                                <td ng-class="{'stripClr':   x.Activity === 'Strip','repackClr':  x.Activity === 'Repack'}">{{x.Cntr}}</td>
+                                <td><span class="Laborbadge badge-{{x.Status}}">{{x.Status}}</span></td>
+                                <td>{{x.Location.split('.')[0]}} </td>
+                                <td><div class="redClr">{{x.DwellHrs || '-'}}</div></td>
+                                <td><div ng-class="{'textSLA': x.ExceedingSLA}">{{x.Duration || '-'}}</div></td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-container-count-section">
+                    <b>Total</b> <b class="pull-right">{{InprogressContainer.length}}</b>
+                </div>
+            </div>
+            @*Completed*@
+            <div class="DashboardContainersSection">
+                <div class="text-center Cutsom-Table-title GreenSection">
+                    Completed
+                    <div class="pull-right contextMenu"><i class="icon-list2"></i></div>
+                </div>
+                <div class="custom-table-header">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Bayan</th>
+                                <th>Container</th>
+                                <th>Position</th>
+                                <th>Elapsed hr</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="x in CompletedContainer ">
+                            <tr ng-class="{'DelayCntr':x.Delays!=''}">
+                                <td class="BayanClr">
+                                    <div class="BayanClr">
+                                        @*<img title="Auto Assignment" ng-show="x.DisplayMode=='Auto'" style="height: 14px;" src="~/Content/images/Auto.png" />
+                                            <img title="Manual Assignment" ng-show="x.DisplayMode!='Auto'" style="height: 14px;" src="~/Content/images/Manual.png" />*@
+                                        <span class="d-inline-block cursor-pointer" title="Container details" ng-click="GetActivityDetails(x.ActivityId)">
+                                            <i class="icon-info22"></i>
+                                        </span>
+                                        <span ng-click="OpenLabor(x.Labors)"><i class="icon-person"></i></span>
+                                        <span ng-show="x.Bayan.split('-').length>1">{{x.Bayan.split('-')[1]}}</span>
+                                        <span ng-show="x.Bayan.split('-').length!=2">{{x.Bayan.split('-')[0]}}</span>
+                                    </div>
+                                </td>
+                                <td ng-class="{'stripClr':   x.Activity === 'Strip','repackClr':  x.Activity === 'Repack'}">{{x.Cntr}}</td>
+                                <td>{{x.Location.split('.')[0]}}</td>
+                                <td ng-show="Cindex==0" style="border-right: 1px solid #dedede;border-left: 1px solid #dedede; " rowspan="{{grp.li.length}}"><div title="{{x.Operator}}">{{x.EmpId}}</div></td>
+                                <td ng-show="Cindex==0" style="border-right: 1px solid #dedede;" rowspan="{{grp.li.length}}">{{x.Forklift}}</td>
+                                <td><div class="redClr">{{x.DwellHrs || '-'}}</div></td>
+                                <td><div ng-class="{'textSLA': x.ExceedingSLA}">{{x.Duration || '-'}}</div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-container-count-section">
+                    <b>Total</b> <b class="pull-right">{{CompletedContainer.length}}</b>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        input[type=checkbox].MissingLaborClr {
+            background-color: #ed9b9b;
+            accent-color: #ed9b9b;
+        }
+        input[type=checkbox].ShiftEndedClr {
+            background-color: #858585;
+            accent-color: #858585;
+        }
+        input[type=checkbox].ExceedingClr {
+            background-color: #ff3838;
+            accent-color: #ff3838 !important;
+        }
+    </style>
+    <div class="BaseFilter">
+        <div class="row">
+            <div class="col-md-12 p-0">
+                <div>
+                    <input type="checkbox" value="Strip" class="stripClr" /> Strip
+                </div>
+                <div>
+                    <input type="checkbox" value="Repack" class="repackClr" /> Repack
+                </div>
+
+                <div>
+                    <input type="checkbox" class="ShiftEndedClr" value="ShiftEnded" /> Pervious Shift
+                </div>
+                <div>
+                    <input type="checkbox" class="MissingLaborClr" value="MissingLabor" /> Missing labor
+                </div>
+                <div>
+                    <input type="checkbox" class="ExceedingClr" value="ExceedingSLA" /> Exceeding SLA
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("~/Views/ActivityCapture/_DamageReport.cshtml")
+    @Html.Partial("~/Views/ActivityCapture/_InspDelay.cshtml")
+    @Html.Partial("~/Views/ActivityCapture/_RecordEvent_Add.cshtml")
+    @Html.Partial("~/Views/ActivityCapture/_RecordEventDetails.cshtml")
+    @Html.Partial("_LabourAssignmentModal")
+
+</div>
+
+<script src="@Url.Content("~/Scripts/crypto-js.min.js")"></script>
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/webcam.min.js"></script>
+<script src="~/Scripts/SignPadJsCode.js"></script>

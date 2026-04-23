@@ -1,0 +1,230 @@
+﻿
+@{
+    ViewBag.Title = "DamageCodeSetup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+
+    .modal-content {
+        background-color: #fff !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .CloseModalBtn {
+        background: var( --dpw-bg-color);
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px;
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+
+    .modal-title {
+        color: var( --dpw-bg-color);
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+</style>
+<div class="ng-cloak" ng-cloak ng-controller="DamageTypeCtrl" ng-init="init()">
+    <br />
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-stack-text mr-2"></i><span class="font-weight-semibold"> Damage Type</span></h4>
+            </div>
+            <div class="page-title d-flex">
+                <input type="button" class="btn btn-primary  pull-right ml-2" value="Add Damage Type " data-bs-toggle="collapse" data-bs-target="#AddDamageType" />
+                <input type="button" class="btn btn-secondary  pull-right ml-2" value="Filters" data-bs-toggle="collapse" data-bs-target="#demo" />
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="accordian" id="AC">
+        <div class="card collapse" id="demo" data-parent="#AC">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="">Damage Code </label>
+                            <input type="text" onkeypress="return event.charCode>=48 && event.charCode<=57" class="form-control" placeholder="Search Damage Code" ng-model="Search.Code" value="" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="">Damage Type </label>
+                            <input type="text" class="form-control" placeholder="Search Damage Type" ng-model="Search.Damage" value="" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="">Damage Severity </label>
+                            <input type="text" class="form-control" placeholder="Search Damage Severity" ng-model="Search.Severity" value="" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="">Status </label>
+                            <select data-placeholder="Search Status" id="StatusLOvSerach" class="form-control select-clear" ng-model="Search.IsActive" data-fouc>
+                                <option></option>
+                                <option value="true">Active</option>
+                                <option value="false">InActive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="text-align:end">
+                        <button class="btn btn-primary" ng-click="FilterReset()">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card collapse" id="AddDamageType" data-parent="#AC">
+            <div class="card-header" style="background-color:var( --dpw-bg-color) !important; color:#fff; padding:10px;">
+                <h3> Add Damage Type</h3>
+            </div>
+            <div class="card-body mt-3">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="Starick">Damage Code </label>
+                            <input type="text" onkeypress="return event.charCode>=48 && event.charCode<=57" class="form-control" placeholder="Enter Damage Code" ng-model="Damage.Code" value="" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="Starick">Damage Type </label>
+                            <input type="text" class="form-control" placeholder="Enter Damage Type" ng-model="Damage.Type" value="" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="Starick">Damage Severity </label>
+                            <input type="text" class="form-control" placeholder="Enter Damage Severity" ng-model="Damage.Severity" value="" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" style="text-align:end">
+                        <button class="btn btn-secondary" ng-click="AddDamageType(Damage)">Add</button>
+                        <button class="btn btn-primary">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="CounterCard">
+                <b>Total item: </b>  <span id="counts">{{(DamageTypeList | filter :Search).length}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="card table-card scrollbar w-100">
+            <table class="table datatable-show-all" id="Table">
+                <thead>
+                    <tr class="table-card-head">
+
+                        <th class="nowrap">Sr#</th>
+                        <th class="nowrap">Damage Code</th>
+                        <th class="nowrap">Damage Type</th>
+                        <th class="nowrap">Damage Severity</th>
+                        <th class="nowrap">Status</th>
+                        <th class="nowrap">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in DamageTypeList | filter: Search">
+
+                        <td>{{$index+1}}</td>
+                        <td style="text-align:left;">{{item.Code}}</td>
+                        <td style="text-align:left;">{{item.Damage}}</td>
+                        <td style="text-align:left;">{{item.Severity}}</td>
+                        <td>
+                            <span ng-show="item.IsActive==true" class="badge badge-success">Active</span>
+                            <span ng-show="item.IsActive==false||item.IsActive==null" class="badge badge-danger">InActive</span>
+                        </td>
+                        <td style="text-align:left;" ng-click="EditDamagetype(item)"><span><i class="icon-pencil5"></i></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div data-backdrop="static" data-bs-keyboard="false" class="modal fade" id="EditModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" ng-click="CloseManualEventModal()">
+                    <button class="d-none" id="CloseIMPRTID" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Update Damage Type</h5>
+                </div>
+                <div class="modal-body" style=" letter-spacing: 0.8px;overflow:auto;">
+                    <div class="HaulierView container">
+                        <div class="row FormsIcon gy-2 gx-3 align-items-center">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="Starick">Damage Code </label>
+                                    <input type="text" onkeypress="return event.charCode>=48 && event.charCode<=57" class="form-control" placeholder="Enter Damage Code" ng-model="EditDamage.Code" value="" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="Starick">Damage Type </label>
+                                    <input type="text" class="form-control" placeholder="Enter Damage Type" ng-model="EditDamage.Damage" value="" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="Starick">Damage Severity </label>
+                                    <input type="text" class="form-control" placeholder="Enter Damage Severity" ng-model="EditDamage.Severity" value="" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+
+                                    <label class="Starick">Damage Status </label>
+                                    <select data-placeholder="Select Status" id="StatusLOv" class="form-control select-clear" ng-model="EditDamage.IsActive" data-fouc>
+                                        <option></option>
+                                        <option ng-selected="EditDamage.IsActive=='true'" value="true">Active</option>
+                                        <option ng-selected="EditDamage.IsActive!='true'" value="false">InActive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row mt-2 buttonrow">
+                            <div class="col-12 col-md-12 mt-2">
+                                <button class="btn btn-secondary" ng-click="UpdateDamageType(EditDamage)">Update</button>
+                                <button type="submit" class="btn btn-primary" ng-click="CloseManualEventModal()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Update Page End--->
+    </div>
+</div>
+

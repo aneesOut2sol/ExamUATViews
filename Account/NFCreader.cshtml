@@ -1,0 +1,196 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFC Fill Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #2d1b69 0%, #1a103f 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            color: #e2e8f0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 85%;
+            max-width: 320px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+            input::placeholder {
+                color: rgba(255, 255, 255, 0.5);
+            }
+
+            input:focus {
+                border-color: #8b5cf6;
+            }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 12px;
+        }
+
+        .btn-primary {
+            background: #8b5cf6;
+            color: white;
+        }
+
+            .btn-primary:active {
+                background: #7c3aed;
+            }
+
+        .btn-nfc {
+            background: #a3e9d1;
+            border: 2px solid #006644;
+            color: #045c3e;
+        }
+
+            .btn-nfc:active {
+                background: rgba(16, 185, 129, 0.1);
+            }
+
+        #status {
+            margin-top: 10px;
+            font-size: 14px;
+            min-height: 20px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="loginView">
+        <h2>System Login</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+
+        <button class="btn-primary" onclick="performLogin()">Login</button>
+        <button class="btn-nfc" onclick="scanNFC()">Scan NFC to Fill</button>
+
+        <div id="status">Waiting for action...</div>
+    </div>
+
+    <div class="card" id="successView" style="display: none;">
+        <span class="success-icon">✅</span>
+        <h2>Login Successful</h2>
+        <p style="color: #94a3b8; margin-bottom: 30px;">Welcome to the dashboard, <br><strong style="color: white;" id="displayUser">User</strong></p>
+        <button class="btn-primary" onclick="location.reload()">Log Out / Restart Demo</button>
+    </div>
+
+    <script>
+        async function scanNFC() {
+            const statusEl = document.getElementById('status');
+
+            if (!("NDEFReader" in window)) {
+                statusEl.innerText = "Web NFC unsupported here.";
+                statusEl.style.color = "#ef4444";
+                return;
+            }
+
+            try {
+                const ndef = new NDEFReader();
+                await ndef.scan();
+                statusEl.innerText = "Scanning... Tap your card.";
+                statusEl.style.color = "#8b5cf6";
+
+                ndef.onreading = event => {
+                    let tagId = event.serialNumber;
+
+                    console.log("Scanned Tag Serial Number:", tagId);
+
+                    for (const record of event.message.records) {
+                        if (record.recordType === "text") {
+                            const decoder = new TextDecoder(record.encoding);
+                            tagId = decoder.decode(record.data);
+                            break;
+                        }
+                    }
+
+                    document.getElementById('username').value = tagId;
+                    statusEl.innerText = "Filled successfully! Click login.";
+                    statusEl.style.color = "#10b981";
+                };
+            } catch (error) {
+                statusEl.innerText = "Scan failed. Try again.";
+                statusEl.style.color = "#ef4444";
+            }
+        }
+
+        async function performLogin() {
+            const userVal = document.getElementById('username').value;
+            const statusEl = document.getElementById('status');
+
+            if (!userVal) {
+                statusEl.innerText = "Please enter a username first.";
+                statusEl.style.color = "#ef4444";
+                return;
+            }
+
+            statusEl.innerText = "Authenticating with server...";
+            statusEl.style.color = "#8b5cf6";
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tag_id: userVal })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.status === 'success') {
+                    document.getElementById('loginView').style.display = 'none';
+                    document.getElementById('successView').style.display = 'block';
+                    document.getElementById('displayUser').innerText = userVal;
+                } else {
+                    statusEl.innerText = result.message;
+                    statusEl.style.color = "#ef4444";
+                }
+            } catch (err) {
+                statusEl.innerText = "Server connection failed.";
+                statusEl.style.color = "#ef4444";
+            }
+        }
+    </script>
+</body>
+</html>

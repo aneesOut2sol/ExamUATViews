@@ -1,0 +1,203 @@
+﻿
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<style>
+    span.badge.badge-Active {
+        background: #00946b;
+        color: white;
+    }
+
+    span.badge.badge-InActive {
+        background: #cd0202;
+        color: white;
+    }
+
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .add-button {
+        background-color: var( --dpw-bg-color);
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+    }
+
+    .CloseModalBtn {
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        z-index: 99999999999 !important;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px !important;
+        padding: 8px;
+        cursor: pointer;
+        background: var( --dpw-bg-color);
+        z-index: 99999999999 !important;
+    }
+
+    .close {
+        display: none;
+    }
+
+    .CloseModalBtn .fa-times-circle-o {
+        color: #ffff !important;
+    }
+
+    .modal-content {
+        background-color: #f4f2fa !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+
+    .modal-title {
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+
+    .modal-footer {
+        border-top: none !important;
+        align-content: center;
+        text-align: center;
+    }
+</style>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+</head>
+<body>
+    <div class="ng-cloak" ng-cloak ng-controller="FKL_CheckListCtrl" ng-init="init()">
+        <div class="card mt-2 d-flex">
+            <div class="card-body">
+                <div class="header-row">
+                    <h2>Checklist</h2>
+                    <div>
+                        <input type="button" class="btn btn-secondary" value="Filters" data-toggle="collapse" data-target="#demo" />
+                        <button class="add-button" onclick="window.open('/FKL_CheckList/Add','_self')"><i class="icon-add m-r-5 text-white"></i> Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Search Filter Code Start-->
+        <div class="card collapse" id="demo">
+            <div class="card-body">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Question</label>
+                                <input type="text" class="form-control" ng-model="Search.Question" placeholder="Enter name" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Answer</label>
+                                <select class="form-control" ng-model="Search.Answer">
+                                    <option value="" selected hidden disabled>Select Status</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Mandatory</label>
+                                <select class="form-control" ng-model="Search.Required">
+                                    <option value="" selected hidden disabled>Select Status</option>
+                                    <option value="true">Yes</option>
+                                    <option value="false">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Photo Upload On</label>
+                                <select class="form-control" ng-model="Search.PhotoUploadOn">
+                                    <option value="" selected hidden disabled>Select Status</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mt-4">
+
+                            <button class="btn btn-secondary pull-right mr-2" ng-click="ClearFilter(Search)">Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="row">
+            <div id="tblrep" class="card table-card scrollbar">
+                <table class="table datatable-show-all text-center" id="table-id">
+                    <thead>
+                        <tr class="table-card-head">
+                            <th>SR#</th>
+                            <th>Question</th>
+                            <th>Answer</th>
+                            <th>Mandatory</th>
+                            <th>Photo on</th>
+                            <th>Created At</th>
+                            <th>Created By</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="ng-cloak" ng-cloak>
+                        <tr ng-repeat="item in QuestionList | filter:Search">
+                            <td>{{$index+1}}</td>
+                            <td>{{item.Question}}</td>
+                            <td>{{item.Answer}}</td>
+                            <td>
+                            <span class="text-success" ng-show="item.Required==true">
+                                <i class="icon-check"></i>
+                            </span>
+                            <span class="text-danger" ng-show="item.Required==false">
+                                <i class="icon-cross"></i>
+                            </span>
+                            </td>
+                            <td>{{item.PhotoUploadOn}}</td>
+                            <td>{{item.CreatedAt | date :'dd/MM/yyyy HH:mm:ss'}}</td>
+                            <td>{{item.CreatedBy}}</td>
+                            <td><i class="icon-pencil" title="Click to Update" ng-click="OpenEditQuestion(item.Id)"></i></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

@@ -1,0 +1,52 @@
+﻿@model ExamPortal.Model.Features.FKL_Examinxation.Runner.FKLMissingOperatorResponse
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_EmailLayoutUpdated.cshtml";
+    var index = 0;
+}
+
+<div style=" text-align:left;">
+    <b>
+        Dear Supervisor,
+    </b>
+
+    <p>
+        The following operator were marked as missing by the runner during the drop-off at the assigned work area on <b>@DateTime.Now.ToString("dd-MM-yyyy")</b> at <b>@DateTime.Now.ToString("HH:mm:ss")</b>.
+    </p>
+</div>
+
+<table border="1" style="border-collapse:collapse;width:100%">
+    <thead style="background-color: var( --dpw-bg-color)">
+        <tr style="background-color: var( --dpw-bg-color)">
+            <th style="background-color: var( --dpw-bg-color);color:white;">Sr.No</th>
+            <th style="background-color: var( --dpw-bg-color);color:white;">Operator Id</th>
+            <th style="background-color: var( --dpw-bg-color);color:white;">Opertaor Name</th>
+            <th style="background-color: var( --dpw-bg-color);color:white;">Opertaor Phone</th>
+            <th style="background-color: var( --dpw-bg-color);color:white;">Container</th>
+            <th style="background-color: var( --dpw-bg-color);color:white;">Activity</th>
+            <th style="background-color: var( --dpw-bg-color);color:white;">Location</th>
+            <th style="background-color: var( --dpw-bg-color);color:white;">Assigned Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.li)
+        {
+            { index++; }
+
+            <tr>
+                <td>@index</td>
+                <td>@item.EmpId</td>
+                <td>@item.Name</td>
+                <td>@item.Phone</td>
+                <td>@item.Cntr</td>
+                <td>@item.Activity</td>
+                <td>@item.Location</td>
+                <td>@item.AssignedDate.Value.ToString("dd-MM-yyyy HH:mm:ss")</td>
+            </tr>
+        }
+    </tbody>
+
+
+</table>
+<b>Reported By: </b> @Model.li[0].RunnerName
+

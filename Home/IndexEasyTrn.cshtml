@@ -1,0 +1,332 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/DatePicker/bootstrap-datepicker.js"></script>
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.standalone.css" rel="stylesheet" />
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.css" rel="stylesheet" />
+
+<link href="~/Scripts/AnyChart/anychart-font.min.css" rel="stylesheet" />
+<link href="~/Scripts/AnyChart/anychart-ui.min.css" rel="stylesheet" />
+<script src="~/Scripts/AnyChart/anychart-base.min.js"></script>
+<script src="~/Scripts/AnyChart/anychart-data-adapter.min.js"></script>
+<script src="~/Scripts/AnyChart/anychart-exports.min.js"></script>
+<script src="~/Scripts/AnyChart/anychart-gantt.min.js"></script>
+<script src="~/Scripts/AnyChart/anychart-ui.min.js"></script>
+
+<!--Slim Select Start-->
+
+<link href="~/Scripts/SlimSelect/SlimSelectCustomStyle.css" rel="stylesheet" />
+<link href="~/Scripts/SlimSelect/slimselect.min.css" rel="stylesheet" />
+<script src="~/Scripts/SlimSelect/slimselect.min.js"></script>
+<!--Slim Select End-->
+
+<style>
+    .row {
+        width: 100% !important;
+    }
+
+    html,
+    body,
+    #LineChart, #BarChart {
+        width: 100%;
+        margin: 0;
+        height:370px!important;
+        padding: 0;
+    }
+    #DonutChart{
+         height:300px!important;
+    }
+    p {
+        font-size: 13px !important;
+    }
+
+    .card-body {
+        padding: 10px !important;
+    }
+
+    .flex-item img {
+        position: relative;
+        top: 10px;
+    }
+
+    .flex-container {
+        display: inline-flex;
+        margin-right: 10px;
+        width: 46%;
+    }
+
+    .anychart-credits-text, .anychart-credits-logo {
+        display: none;
+    }
+
+    .flex-container > .flex-item {
+        padding: 5px;
+        font-size: 15px;
+    }
+
+        .flex-container > .flex-item h5 {
+            margin-bottom: 0px !important;
+        }
+
+    h4, p {
+        margin-bottom: 0px !important;
+    }
+
+    hr {
+        margin-top: 0.25rem ;
+            margin-bottom: 0.25rem;
+    }
+    .click{
+        cursor:pointer;
+    }
+    .active{
+        background-color:#00be5e;
+    }
+</style>
+
+<div ng-controller="HomeCtrl" ng-init="HomeInit()" class="ng-cloak" ng-cloak>
+
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4>
+                    <i class="icon-home mr-2"></i>
+                    <span class="font-weight-semibold">Dashboard </span>
+                </h4>
+            </div>
+            <div class="col-md-6 col-lg-6 col-sm-12">
+                <input style="margin-top:2px" type="button" class="btn btn-primary mr-2 pull-right" value="Filters" data-toggle="collapse" data-target="#demo" />
+                
+                
+            </div>
+        </div>
+    </div><hr />
+  
+
+
+    <div class="row">
+      <div class="col-lg-12">
+          <!-- Filter Section -->
+          <div class="card collapse" id="demo">
+
+              <div class="card-body">
+                  <div class="row">
+
+                      <div class="col-md-3">
+                          <div class="form-group">
+                              <span>Date From</span>
+                              <div id="sandbox-container">
+                                  <div class="input-group date">
+                                      <input type="text" class="form-control  from" id="StartDate" placeholder="dd/mm/yyyy"><span class="input-group-addon"><i class="icon-calendar"></i></span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-3">
+                          <div class="form-group">
+                              <span>Date To</span>
+                              <div id="sandbox-container">
+                                  <div class="input-group date">
+                                      <input type="text" class="form-control  from" id="EndDate" placeholder="dd/mm/yyyy"><span class="input-group-addon"><i class="icon-calendar"></i></span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="col-md-3">
+                          <div class="form-group">
+                              <span>Trainer</span>
+                              <select ng-model="TrainerId" class="input displaySelect" id="trainerid">
+                                  <option data-placeholder="true"></option>
+                                  <option ng-repeat="r in TrainerList" value="{{r.TrainerId}}">{{r.TrainerName }}- {{r.TrainerEmpId}}</option>
+                              </select>
+                          </div>
+                      </div>
+
+                      <div class="col-md-3">
+                          <div class="form-group mt-3">
+                              <input ng-click="SearchDashboard()" type="button" class="btn btn btn-primary mr-2 pull-right" name="name" value="Search" />
+                              <input ng-click="ResetDashboard()" type="button" class="btn btn-theme-gray mr-2 pull-right" name="name" value="Reset" />
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Filter Section End-->
+      </div>
+     
+    </div>
+
+    <div class="row">
+    
+          
+            <div class="col-md-5 col-lg-5 col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                <h4 class="text-center">Alert Section</h4><hr />
+                                <div class="flex-container ">
+                                    <div ng-click="License('ExpiredLicense')" class="flex-item click"><img src="~/Content/images/icons/ExpiredLisence.png" height="30px" /></div>
+                                    <div class="flex-item">
+                                        <h5><b>{{ExpiredLicense}}</b></h5>
+                                        <p>Expired License</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex-container ">
+                                    <div ng-click="License('ExpiredCertificate')" class="flex-item click"><img src="~/Content/images/icons/Expired.png" height="30px" /></div>
+                                    <div class="flex-item">
+                                        <h5><b>{{ExpiredCertificate}}</b></h5>
+                                        <p>Expired Certificate</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex-container ">
+                                    <div ng-click="NewViolation()" class="flex-item click"><img src="~/Content/images/icons/NewViolation.png" height="30px" /></div>
+                                    <div class="flex-item">
+                                        <h5><b>{{NewViolations}}</b></h5>
+                                        <p>New Violations</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex-container ">
+                                    <div ng-click="Renew()" class="flex-item click"><img src="~/Content/images/icons/DocRenw.png" height="30px" /></div>
+                                    <div class="flex-item">
+                                        <h5><b>{{DocRenew}}</b></h5>
+                                        <p>DOC Renew</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex-container ">
+                                    <div ng-click="NewAssesment()" class="flex-item click"><img src="~/Content/images/icons/Assesment.png" height="30px" /></div>
+                                    <div class="flex-item">
+                                        <h5><b>{{NewAssessments}}</b></h5>
+                                        <p>New Assessments</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex-container ">
+                                    <div ng-click="License('LicenseGoingtoExpire')" class="flex-item click"><img src="~/Content/images/icons/LisenceGoing.png" height="30px" /></div>
+                                    <div class="flex-item">
+                                        <h5><b>{{LicenseGoingtoExpire}}</b></h5>
+                                        <p>License Going to Expire</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                <h4 class="text-center">Notification Center</h4><hr />
+                                <div class="flex-container ">
+                                    <div ng-click="TrainingClick(0)" class="flex-item click"><img src="~/Content/images/icons/inProgress.png" height="30px" /></div>
+                                    <div class="flex-item">
+                                        <h5><b>{{InProgressTraining}}</b></h5>
+                                        <p>InProgress Training </p>
+                                    </div>
+                                </div>
+
+                                <div class="flex-container ">
+                                    <div ng-click="Module()" class="flex-item click"><img src="~/Content/images/icons/inProgressModules.png" height="30px" /></div>
+                                    <div class="flex-item">
+                                        <h5><b>{{InProgressTrainingModules}}</b></h5>
+                                        <p>InProgress Training Modules</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex-container ">
+                                    <div ng-click="FailedAssessment()" class="flex-item click"><img src="~/Content/images/icons/FailedAssesment.png" height="35px" /></div>
+                                    <div class="flex-item">
+                                        <h5><b>{{FailAssessments}}</b></h5>
+                                        <p>Failed Assessment</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex-container ">
+                                    <div ng-click="TrainingClick(1)" class="flex-item click"><img src="~/Content/images/icons/Hold-Training.png" height="30px" /></div>
+                                    <div class="flex-item">
+                                        <h5><b>{{HoldTraining}}</b></h5>
+                                        <p>Hold Training</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex-container">
+                                    <div ng-click="TrainingClick(2)" class="flex-item click"><img src="~/Content/images/icons/TrainingComplete.png" height="35px" /></div>
+                                    <div class="flex-item">
+                                        <h5><b>{{TrainingCompleted}}</b></h5>
+                                        <p>Training Completed</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex-container ">
+                                    <div ng-click="NewHired()" class="flex-item click"><img src="~/Content/images/icons/NewHiredEmployee.png" height="30px" /></div>
+                                    <div class="flex-item">
+                                        <h5><b>{{NewEmployee}}</b></h5>
+                                        <p>New Hired Employee</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                <h4 class="text-center">Training Completed in  @DateTime.Now.ToString("yyyy")</h4><hr />
+                                <div id="DonutChart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7 col-lg-7 col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                <h4 class="text-center">Trainer Completed Training in  @DateTime.Now.ToString("yyyy")</h4><hr />
+                                <div id="LineChart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 col-sm-12">
+                                <h4 class="text-center">Yearly Completed Training </h4><hr />
+                                <div id="BarChart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+
+                                                            $('#sandbox-container .input-group.date').datepicker({
+                                                                format: "dd/mm/yyyy",
+                                                                autoclose: true,
+                                                                todayBtn: "linked",
+                                                                todayHighlight: true,
+                                                                forceParse: true,
+                                                               // startDate: new Date()
+                                                            });
+    </script>
+</div>
+
+<script>
+    var element= document.getElementById('dash');
+    element.classList.add("active");
+</script>
+
+
+

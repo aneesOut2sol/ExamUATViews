@@ -1,0 +1,247 @@
+﻿	            		
+
+@using ExamPortal.Model.Resources
+@using ExamPortal.Model.EntityModel.Enums
+@{
+    ViewBag.Title = "Register User";
+}
+<style>
+    .required-starig {
+        color: red;
+    }
+
+    #progress {
+        height: 34px;
+        margin-bottom: 0px;
+        margin-right: 0px;
+    }
+
+    #progress-bar {
+        width: 0;
+        height: 100%;
+        font-size: 11px;
+        background: var( --dpw-bg-color) !important;
+    }
+</style>
+<script src="~/Scripts/jquery.min.js"></script>
+<div class="ng-cloak" ng-controller="AccountCtr" ng-init="init()" ng-cloak>
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline py-2">
+            <div class="page-title d-flex p-0">
+                <h4><i class="icon-user mr-2"></i> <span class="font-weight-semibold">Add User</span></h4>
+                <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+            </div>
+            <div>
+                <button class="btn btn-secondary" data-toggle="modal" data-target="#AddVesselModal">Import User</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade ng-scope in" id="AddVesselModal" style="position:absolute" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+        <div class="modal-dialog" style="width:30%;">
+            <div class="modal-content">
+
+                @*Modal Header*@
+                <div class="modal-header border pb-2">
+                    <h4 class="modal-title"><b>Import Data</b></h4>
+                    <button type="button" id="modal_close_sign" class="close" data-dismiss="modal" ng-click="ReferenceNo=null">&times;</button>
+                </div>
+
+                @*Modal body*@
+                <div class="modal-body" style="padding: 10px;">
+
+                    <div class="row">
+                        <div class="col-md-12 d-flex">
+                        </div>
+                        <div class="col-md-12" style="margin-top: 0px 10px 10px 10px;">
+                            <div class="form-group row" style="display:flex;flex-direction:column;  ">
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+                                    <label class="control-label" style="display: flex; justify-content: left; align-items: center; padding: 0px; margin: 0px; align-self: flex-end;">Upload File</label>
+                                    <button id="modal_dowload_project_template_btn" ng-click="DownloadProjectTemplate()" class="btn btn-primary">Download Template</button>
+                                </div>
+                                <input class="form-control" required style="width: 100%; padding: 8px 0px 34px 12px; " type="file" accept=".xlsx" ng-model="Equipment.file" id="FileUpload" name="file">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style=" display: flex; justify-content: space-between; align-items: end;margin-top:5px;">
+                            <div id="loader_wrapper" style="display: flex; flex-direction: column;width:100%;display:none;">
+                                <div id="progress" class="progress">
+                                    <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">1%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @*Modal footer*@
+                @*<div class="modal-footer border">
+                        <button type="button" class="btn btn-theme-gray mt-3" data-dismiss="modal" ng-click="ReferenceNo=null">Close</button>
+                    </div>*@
+                <div class="modal-footer border pt-2">
+                    <button type="button" class="btn btn-secondary" id="modal_close_btn" data-dismiss="modal">Close</button>
+                    <input id="modal_save_btn" style="font-size:14px !important;" type="submit" class="btn btn-primary" ng-click="ImportUser()" value="save">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="AddVesselModal123" style="position:absolute">
+        <div class="modal-dialog" style="width:500px">
+            <div class="modal-content">
+
+                Modal Header
+                <div class="modal-header border">
+                    <h4 class="modal-title">
+                        <i class="icon-ship onhover list-icons-item" title="Vessel Details" style="font-size:x-large"></i> Add Vessel Manually
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" ng-click="ReferenceNo=null">&times;</button>
+                </div>
+
+                Modal body
+                <div class="modal-body">
+                    <div class="row">
+                        <p class="text-danger" ng-show="ButtonText=='Loading'">Note: Please Don't Reload the page when loading is in-progress!</p>
+                        <div class="col-md-8">
+                            <label>Enter Reference No</label><span class="text-danger">*</span>
+                            <input type="text" class="form-control" ng-model="ReferenceNo" placeholder="Reference No" />
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-success pull-right ml-3" style="margin-top:25px" ng-disabled="ButtonText=='Loading'" ng-click="CheckAndPushVessel(ReferenceNo)"><span ng-if="ButtonText=='Loading'">Loading..</span> <span ng-if="ButtonText=='Search'">Search</span></button>
+                        </div>
+                    </div>
+
+                </div>
+
+                Modal footer
+                <div class="modal-footer border">
+                    <button type="button" class="btn btn-theme-gray mt-3" data-dismiss="modal" ng-click="ReferenceNo=null">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <hr />
+    <div class="card">
+        <div class="card-body">
+
+            <div class="row">
+                <div class="form-group col-md-3">
+
+                    <label>Employee Id</label><span class="required-starig" ng-show="Register.UsersApplication.includes('5') || Register.UsersApplication.includes('7')">*</span>
+                    <select ng-model="Register.EmpId" ng-show="EmployeeList!=undefined" data-placeholder="Employee Id & Employee Name" ng-change="GetUserDetailsByEmpId(Register.EmpId)" class="form-control select-clear" data-fouc">
+                        <option value="" selected>Please select Employee Id & Employee Name</option>
+                        <option ng-repeat="r in EmployeeList" value="{{r.EmpId}}">{{r.EmpId}} - {{r.EmployeeName}}</option>
+                    </select>
+
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="">Email</label><span class="required-starig">*</span>
+                    <input type="text" class="form-control" placeholder="Enter Email" ng-model="Register.Email" name="Email" required />
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Login Id</label><span class="required-starig">*</span>
+                    <input type="text" class="form-control" placeholder="Enter Username" ng-model="Register.Username" name="Username" required />
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Full Name</label><span class="required-starig">*</span>
+                    <input type="text" class="form-control" placeholder="Enter FullName" ng-model="Register.FullName" name="FullName" required />
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label>Phone</label><span class="required-starig">*</span>
+                    <input type="text" class="form-control" id="phone" placeholder="Enter Number" ng-model="Register.Phone" name="Phone" required />
+
+                </div>
+                <div class="form-group col-md-3" ng-show="Register.EmpId!=null">
+                    <label class="">Position</label><span class="required-starig" ng-show="Register.EmpId!=null">*</span>
+                    <span class="form-control">{{Register.Position}}</span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Password</label><span class="required-starig">*</span>
+                    <input type="password" class="form-control" placeholder="Enter Password" ng-model="Register.Password" name="Password" required />
+                    <small class="text-muted">
+                        Min. 6 characters: must include 1 uppercase, 1 lowercase, 1 digit, and 1 special character.
+                    </small>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Confirm Password</label><span class="required-starig">*</span>
+                    <input type="password" class="form-control" placeholder="Confrim Password" ng-model="Register.ConfirmPassword" name="Password" />
+                </div>
+
+                <div class="col-md-3 form-group">
+                    <label>Status</label><span class="required-starig">*</span>
+                    <select data-placeholder="Status" class="form-control select-clear" ng-model="Register.Status" data-fouc>
+                        <option></option>
+                        <option ng-value="true">Active</option>
+                        <option ng-value="false">Not Active</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Application Access</label><span class="required-starig">*</span>
+                    <select multiple="multiple" id="EqType" data-placeholder="Please Select Application" ng-model="Register.UsersApplication" class="form-control select" ng-change="CheckAccess(Register.UsersApplication)" data-fouc>
+                        <option ng-repeat="App in AppList" value="{{App.Id}}">{{App.Name}}</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Role</label><span class="required-starig">*</span>
+                    <select data-placeholder="User Role" multiple="multiple" ng-model="Register.UserType" class="form-control select" ng-change="RoleCount(Register.UserType)" required data-fouc>
+                        <option ng-repeat="r in Roles" value="{{r.Id}}">{{r.Text}}</option>
+                    </select>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label>NFC Tag</label>
+                    <input type="text" placeholder="Enter NFC Tag" ng-model="Register.NFC_Tag" class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 ">
+                    <div class="form-group">
+                        <button class="btn btn-primary  m-t-19 pull-right" ng-click="RegisterUser(Register)">Register</button>
+                        <a href="/Users" class="btn btn-theme-gray m-t-19 pull-right">Cancel</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script src="@Url.Content("~/Scripts/crypto-js.min.js")">
+</script>
+
+
+<script type="text/javascript">
+
+    // Start phone Number Validation
+    function phoneFormatter() {
+        $('#phone').on('input', function () {
+            var number = $(this).val().replace(/[^+\d]/g, '')
+
+            $(this).val(number);
+            if (number.length == 17) {
+                $(this).val(null);
+                toastr.error('max limit 17 digit only');
+                return false;
+            }
+
+        });
+    };
+    $(phoneFormatter());
+
+    // End phone Number Validation
+    //auto refresh
+    function CheckPageVersion() {
+        return "AccountRegisterUserVersion," + "1";
+
+    }
+</script>
+
+
+
+
+

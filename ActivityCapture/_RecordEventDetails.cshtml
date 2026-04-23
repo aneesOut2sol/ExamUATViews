@@ -1,0 +1,1843 @@
+﻿<!--Record Damage-->
+<div class="modal fade" id="DamageReports" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    {{DamageCntr}}
+                </h5>
+
+            </div>
+            <div class="modal-body">
+                <div class="row text-center mb-2" ng-repeat="x in DamageReports">
+                    <div class="card" style=" border-radius: 7px; overflow: hidden;">
+                        <table class="detailstable">
+                            <tr>
+                                <th>Seq.No</th>
+                                <th>{{$index+1}}</th>
+                            </tr>
+                            <tr ng-if="x.bl_nbr != null">
+                                <th>B/L</th>
+                                <th>{{x.bl_nbr}}</th>
+                            </tr>
+                            <tr>
+                                <th>Capture date</th>
+                                <th>{{x.CreatedAt |date:'dd/MM/yyyy HH:mm:ss'}}</th>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <th>
+                                    <span class="badge approvedStatus " ng-show="x.Status==2">Approved</span>
+                                    <span class="badge waitingForApprovalStatus" ng-show="x.Status==5||x.Status==1">Waiting for approval </span>
+                                    <span class="badge rejectStatus" ng-show="x.Status==3">Rejected</span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>Action</th>
+                                <th>
+                                    <span ng-click="PrintDamage(x.Id)" class="mr-2" ng-show="x.Status==2"><i class="icon-printer"></i></span>
+                                    <span ng-click="ShowDamageOnCntrById(x.Id)" class="mr-2"><i class="icon-info22"></i></span>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:end;">
+                        <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                        <span class="btn btn-primary pull-right ml-2" ng-click="AddDamage(DamageCntr)">Record Damage</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Record Damage-->
+<!--Show Damage--->
+<div class="modal fade" id="ShowDamage" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" ng-click="closeDamageModel()" aria-label="Close">
+                <button class="close" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Cargo report
+                    <span title="Print report" ng-show="ApproveStatus == 2" class="printBdage">
+                        <a target="_blank" href="{{ShowDamageData.ReportLink}}">
+                            <i class="icon-printer"></i>
+                        </a>
+                    </span>
+                </h5>
+
+            </div>
+            <div class="modal-body">
+                <table style="width: 100%; border: none !important;">
+                    <tr ng-if="ShowDamageData.bl_nbr != null">
+                        <th class="p-2">B/L</th>
+                        <td class="p-2">{{ShowDamageData.bl_nbr}}</td>
+                    </tr>
+                    <tr>
+                        <th class="p-2">Damage By</th>
+                        <td class="p-2">{{ShowDamageData.DamageBy}}</td>
+                    </tr>
+                    <tr ng-if="!stringNullorEmpty(ShowDamageData.DamageByReason)">
+                        <th class="p-2">Terminal (INCIDENT) Reason</th>
+                        <td class="p-2">{{ShowDamageData.DamageByReason}}</td>
+                    </tr>
+                    <tr>
+                        <th class="p-2">Damage Type</th>
+                        <td class="p-2">{{ShowDamageData.DamageType}}</td>
+                    </tr>
+                    <tr ng-if="ApproveStatus !=1">
+                        <th class="p-2">Approved By</th>
+                        <td class="p-2">{{ShowDamageData.UpdatedBy}}</td>
+                    </tr>
+                    <tr ng-if="ShowDamageData.CargoType !=null && ShowDamageData.CargoType !=''">
+                        <th class="p-2">Cargo type </th>
+                        <td class="p-2">{{ShowDamageData.CargoType}}</td>
+                    </tr>
+                    <tr ng-if="ShowDamageData.CargoQuantity !=null && ShowDamageData.CargoQuantity !=''">
+                        <th class="p-2">Cargo Quantity </th>
+                        <td class="p-2">{{ShowDamageData.CargoQuantity}}</td>
+                    </tr>
+                    <tr>
+                        <th class="p-2">Status</th>
+                        <td class="p-2">
+                            <b ng-show="ApproveStatus == 0" class="badge inProgressStatus">InProgress</b>
+                            <b ng-show="ApproveStatus == 1" class="badge waitingForApprovalStatus">Waiting for approval</b>
+                            <b ng-show="ApproveStatus == 2" class="badge approvedStatus">Approved</b>
+                            <b ng-show="ApproveStatus == 3" class="badge rejectStatus">Rejected</b>
+                        </td>
+                    </tr>
+                </table>
+                <div class="row">
+                    <div class="col-md-6" ng-repeat="c in ShowDamageData.Images">
+                        <div class="imageBox">
+                            <div class="Imgheader" title="{{c.Label}}">
+                                <b>{{c.Label}}</b>
+                            </div>
+                            <div class="ImgContent" ng-click="OpenImageView(c.Url,'ShowDamage')">
+                                <img src="{{c.Url}}" style="height:50px!important;cursor:pointer" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" style="text-align:end">
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:end;">
+
+
+                        @if (User.IsInRole(ExamPortal.Model.EntityModel.Enums.UserRole.Admin.ToString()) || User.IsInRole(ExamPortal.Model.EntityModel.Enums.UserRole.ExamSuperVisor.ToString()))
+                        {
+                            <button ng-show="ApproveStatus == 1" class="btn btn-danger" data-dismiss="modal" ng-click="ShowConfirmation(ShowDamageData,false)">Reject</button>
+                            <button ng-show="ApproveStatus == 1" class="btn btn-success" data-dismiss="modal" ng-click="ShowConfirmation(ShowDamageData,true)">Approve</button>
+
+                        }
+                        <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Show Damage end--->
+<!--Damage History-->
+<div class="modal fade" id="ShowDamageHistory" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">Damage History</h5>
+            </div>
+            <div class="modal-body">
+                <table ng-repeat="x in ConatinerDamageDataList">
+                    <tr class="border-bottom">
+                        <td class="font-weight-bold">Status</td>
+                        <td><span class="badge rejectStatus" style="width:100px !important">Rejected</span></td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <td class="font-weight-bold">Rejected Reason</td>
+                        <td>{{x.RejectedRemarks}}</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <td class="font-weight-bold">Rejected At</td>
+                        <td>{{x.UpdatedAt}}</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <td class="font-weight-bold">Rejected By</td>
+                        <td>{{x.UpdatedBy}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:end">
+                        <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Damage History end-->
+<!--Captured Event History-->
+<div class="modal fade" id="EventInfo" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <i data-dismiss="modal" class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <div class="w-100">
+                    <h5 class="modal-title">
+                        #{{EventInfo.Cntr}}
+                        <span ng-if="currentCapturedRecord.ApproveStatus == 0 && !currentCapturedRecord.PartialRejected" class="PendingApprovalEvent pull-right">Pending for approval</span>
+                        <span ng-if="currentCapturedRecord.ApproveStatus == 1" class="Approvebadge pull-right">Approved</span>
+                        <span ng-if="currentCapturedRecord.ApproveStatus == 2" class="RejectedApprovalEvent pull-right">Rejected</span>
+                        <span ng-if="currentCapturedRecord.ApproveStatus == 0 && currentCapturedRecord.PartialRejected" class="RejectedApprovalEvent pull-right">Partial Rejected</span>
+                    </h5>
+                    <span class="modal-title-description">{{EventDetails}}</span>
+                </div>
+            </div>
+            <div class="modal-body" style=" letter-spacing: 0.8px; max-height: 500px; overflow:auto">
+                <div class="row">
+                    <table class="DetailsTable">
+                        <tr ng-if="!stringNullorEmpty(EventInfo.StripStatus)">
+                            <th>Stripping Status</th>
+                            <td>
+                                <span ng-if="EventInfo.StripStatus == 'Inprocess'" class="PendingApprovalEvent">Inprocess</span>
+                                <span ng-if="EventInfo.StripStatus == 'Completed'" class="Approvebadge">Completed</span>
+                            </td>
+                        </tr>
+                        <tr ng-if="!stringNullorEmpty(EventInfo.StuffStatus)">
+                            <th>Stripping Status</th>
+                            <td>
+                                <span ng-if="EventInfo.StuffStatus == 'Inprocess'" class="PendingApprovalEvent">Inprocess</span>
+                                <span ng-if="EventInfo.StuffStatus == 'Completed'" class="Approvebadge">Completed</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Container</th>
+                            <td><span>{{EventInfo.Cntr}}</span></td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.RiskType)">
+                            <th>Risk Type</th>
+                            <td><span>{{EventInfo.RiskType}}</span></td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.Sealcut_HighRiskReason)">
+                            <th>High risk Type</th>
+                            <td><span>{{EventInfo.Sealcut_HighRiskReason}}</span></td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.Handleby)">
+                            <th>Handle by</th>
+                            <td><span>{{EventInfo.Handleby}}</span></td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.LaborHandling)">
+                            <th>Labor handling</th>
+                            <td><span>{{EventInfo.LaborHandling}}</span></td>
+                        </tr>
+                        <tr>
+                            <th>Recorded by</th>
+                            <td><span>{{EventInfo.CreatedBy}}</span></td>
+                        </tr>
+                        <tr>
+                            <th>Recorded At</th>
+                            <td><span>{{EventInfo.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</span></td>
+                        </tr>
+                        <tr ng-if="EventInfo.ApproveStatus == 1">
+                            <th>Approved by</th>
+                            <td><span>{{EventInfo.UpdatedBy}}</span></td>
+                        </tr>
+                        <tr ng-if="EventInfo.ApproveStatus == 1">
+                            <th>Approved At</th>
+                            <td><span>{{EventInfo.UpdatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</span></td>
+                        </tr>
+
+                        <tr ng-show="!stringNullorEmpty(EventInfo.UpdatedBy) && !currentCapturedRecord.PartialRejected">
+                            <th>Updated by</th>
+                            <td><span>{{EventInfo.UpdatedBy}}</span></td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.UpdatedAt) && !currentCapturedRecord.PartialRejected">
+                            <th>Updated At</th>
+                            <td><span>{{EventInfo.UpdatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</span></td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.UpdatedBy) && currentCapturedRecord.PartialRejected">
+                            <th>Rejected by</th>
+                            <td><span>{{EventInfo.UpdatedBy}}</span></td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.UpdatedAt) && currentCapturedRecord.PartialRejected">
+                            <th>Rejected At</th>
+                            <td><span>{{EventInfo.UpdatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</span></td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.RejectReason) && currentCapturedRecord.PartialRejected">
+                            <th ng-class="{'partialrejected_th':currentCapturedRecord.PartialRejected}">Reject Reason</th>
+                            <td><span class="text-danger">{{EventInfo.RejectReason}}</span></td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.StripNStuffBy)">
+                            <th ng-if="EventInfo.EventName == 'EXAM_CARGOSTRIP'">Stipped by</th>
+                            <th ng-if="EventInfo.EventName != 'EXAM_CARGOSTRIP'" ng-class="{'partialrejected_th':Repack_Partial_Rejected_Fields.includes('Stuffed By')}">Stuffed by</th>
+                            <td><span>{{EventInfo.StripNStuffBy}}</span></td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.forklifttype)">
+                            <!---V.5.8-->
+                            <th>Forklift Type</th>
+                            <td><span>{{EventInfo.forklifttype}}</span></td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.Contractor)">
+                            <th>Contractor</th>
+                            <td><span>{{EventInfo.Contractor}}</span></td>
+                        </tr>
+                        <tr ng-show="EventInfo.StripRepackLaborList.length>0">
+                            <th>Labor</th>
+                            <td>
+                                <ul ng-if="EventInfo.StripRepackLaborList.length >1">
+                                    <li ng-repeat="x in EventInfo.StripRepackLaborList">
+                                        <span ng-if="x.EmpId != '0'">{{x.EmpId}}-</span>{{x.EmpName}}
+                                    </li>
+                                </ul>
+                                <span ng-if="EventInfo.StripRepackLaborList.length ==1" ng-repeat="x in EventInfo.StripRepackLaborList">
+                                    <span ng-if="x.EmpId != '0'">{{x.EmpId}}-</span>{{x.EmpName}}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.CargoStripDuration)">
+                            <th>Stripping Duration</th>
+                            <td><span>{{EventInfo.CargoStripDuration}}</span></td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.CargoStuffDuration)">
+                            <th>Repacking Duration</th>
+                            <td><span>{{EventInfo.CargoStuffDuration}}</span></td>
+                        </tr>
+                        <tr ng-show="EventInfo.Sealnumber!=null && EventInfo.Sealnumber!='' && EventInfo.Sealnumber!=undefined">
+                            <th>Seal number</th>
+                            <td>
+                                <span>{{EventInfo.Sealnumber}}</span>
+                            </td>
+                        </tr>
+                        <tr ng-if="EventInfo.AdditionalServiceRequired == true && EventInfo.EventName != 'EXAM_CARGOSTUFFED' &&  EventInfo.EventName != 'EXAM_CARGOSTRIP'">
+                            <th>Additional Service Status</th>
+                            <td>
+                                <span ng-if="EventInfo.EXAM_INSEPCTED_SRVC_Status == 0" class="PendingApprovalEvent">Pending for approval</span>
+                                <span ng-if="EventInfo.EXAM_INSEPCTED_SRVC_Status == 1" class="Approvebadge">Approved</span>
+                                <span ng-if="EventInfo.EXAM_INSEPCTED_SRVC_Status == 2" class="RejectedApprovalEvent">Rejected</span>
+                            </td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.EXAM_INSEPCTED_SRVC_RecordedAt)">
+                            <th>Additional service reported at</th>
+                            <td><span>{{EventInfo.EXAM_INSEPCTED_SRVC_RecordedAt | date:'dd/MM/yyyy HH:mm:ss'}}</span></td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.EXAM_INSEPCTED_SRVC_Recordedby)">
+                            <th>Additional service reported by</th>
+                            <td><span>{{EventInfo.EXAM_INSEPCTED_SRVC_Recordedby}}</span></td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.EXAM_INSEPCTED_SRVC_ActionTakeAt)">
+                            <th>Additional service approved at</th>
+                            <td><span>{{EventInfo.EXAM_INSEPCTED_SRVC_ActionTakeAt | date:'dd/MM/yyyy HH:mm:ss'}}</span></td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(EventInfo.EXAM_INSEPCTED_SRVC_ActionTakenby)">
+                            <th>Additional service reported by</th>
+                            <td><span>{{EventInfo.EXAM_INSEPCTED_SRVC_ActionTakenby}}</span></td>
+                        </tr>
+
+                        <tr ng-show="EventInfo.RepackPhotoLibrary!=null && EventInfo.RepackPhotoLibrary!=undefined && EventInfo.RepackPhotoLibrary.length > 0" ng-repeat="Libphoto in EventInfo.RepackPhotoLibrary track by $index">
+                            <!---V.5.8.1-->
+                            <th>{{Libphoto.Label}}</th>
+                            <td ng-show="Libphoto.Url!='Required'">
+                                <div ng-click="OpenImageView(Libphoto.Url, 'EventInfo')" class="viewImag d-inline-block"><i class="icon-eye"></i> View </div>
+                            </td>
+                        </tr>
+                        <tr ng-show="EventInfo.PhotoLibrary!=null && EventInfo.PhotoLibrary!=undefined && EventInfo.PhotoLibrary.length > 0" ng-repeat="Libphoto in EventInfo.PhotoLibrary track by $index">
+                            <!---V.5.8-->
+                            <th>{{Libphoto.Label}}</th>
+                            <td ng-show="Libphoto.Url!='Required'">
+                                <div ng-click="OpenImageView(Libphoto.Url, 'EventInfo')" class="viewImag d-inline-block"><i class="icon-eye"></i> View </div>
+                                <span class="pull-right text-danger cursor-pointer" ng-if="EventInfo.ApproveStatus!=1" title="Delete Image" ng-click="RemoveEventImage('PhotoLibrary',$index)"><i class="icon-bin"></i>Delete</span>
+                            </td>
+                            <td ng-show="Libphoto.Url=='Required'">
+                                <div class="Icon">
+                                    <label title="Upload Image" style="margin:0px;">
+                                        <span><i class="icon-images2"></i></span>
+                                        <input type="file" style="display:none" accept="image/*" Photoindex="{{$index}}" id="UploadEvent_Library{{$index}}" name="pic" accept="image/*" onchange="angular.element(this).scope().EventImagesReplacement(this, 'EventInfo', 'PhotoLibrary')">
+                                    </label>
+
+                                </div>
+                            </td>
+                        </tr>
+                        <tr ng-show="EventInfo.Sealphoto!=null && EventInfo.Sealphoto!='' && EventInfo.Sealphoto!=undefined">
+                            <th>Seal Photo</th>
+                            <td ng-show="EventInfo.Sealphoto!='Required'">
+                                <div ng-click="OpenImageView(EventInfo.Sealphoto, 'EventInfo')" class="viewImag d-inline-block"><i class="icon-eye"></i> View </div>
+                                <span class="pull-right text-danger cursor-pointer" ng-if="EventInfo.ApproveStatus!=1" title="Delete Image" ng-click="RemoveEventImage('Sealphoto')"><i class="icon-bin"></i>Delete</span>
+                            </td>
+                            <td ng-show="EventInfo.Sealphoto=='Required'">
+                                <div class="Icon">
+                                    <label title="Upload Image" style="margin:0px;">
+                                        <span><i class="icon-images2"></i></span>
+                                        <input type="file" style="display:none" accept="image/*" id="UploadEvent_Sealphoto" name="pic" accept="image/*" onchange="angular.element(this).scope().EventImagesReplacement(this, 'EventInfo', 'Sealphoto')">
+                                    </label>
+
+                                </div>
+                            </td>
+                        </tr>
+                        <tr ng-show="EventInfo.DoorAfterSeal!=null && EventInfo.DoorAfterSeal!='' && EventInfo.DoorAfterSeal!=undefined">
+                            <th>Door after seal cut</th>
+                            <td ng-show="EventInfo.DoorAfterSeal!='Required'">
+                                <div ng-click="OpenImageView(EventInfo.DoorAfterSeal, 'EventInfo')" class="viewImag d-inline-block"><i class="icon-eye"></i> View </div>
+
+                                <span class="pull-right text-danger cursor-pointer" ng-if="EventInfo.ApproveStatus!=1" title="Delete Image" ng-click="RemoveEventImage('DoorAfterSeal')"><i class="icon-bin"></i>Delete</span>
+                            </td>
+                            <td ng-show="EventInfo.DoorAfterSeal=='Required'">
+                                <div class="Icon">
+                                    <label title="Upload Image" style="margin:0px;">
+                                        <span><i class="icon-images2"></i></span>
+                                        <input type="file" style="display:none" accept="image/*" id="UploadEvent_DoorAfterSeal" name="pic" accept="image/*" onchange="angular.element(this).scope().EventImagesReplacement(this,'EventInfo','DoorAfterSeal')">
+                                    </label>
+
+                                </div>
+                            </td>
+                        </tr>
+                        <tr ng-show="EventInfo.CargoFrontView!=null && EventInfo.CargoFrontView!='' && EventInfo.CargoFrontView!=undefined">
+                            <th>Front view of the cargo</th>
+                            <td ng-show="EventInfo.CargoFrontView!='Required'">
+                                <div ng-click="OpenImageView(EventInfo.CargoFrontView, 'EventInfo')" class="viewImag d-inline-block"><i class="icon-eye"></i> View </div>
+                                <span class="pull-right text-danger cursor-pointer" ng-if="EventInfo.ApproveStatus!=1" title="Delete Image" ng-click="RemoveEventImage('CargoFrontView')"><i class="icon-bin"></i>Delete</span>
+                            </td>
+                            <td ng-show="EventInfo.CargoFrontView=='Required'">
+                                <div class="Icon">
+                                    <label title="Upload Image" style="margin:0px;">
+                                        <span><i class="icon-images2"></i></span>
+                                        <input type="file" style="display:none" accept="image/*" id="UploadEvent_CargoFrontView" name="pic" accept="image/*" onchange="angular.element(this).scope().EventImagesReplacement(this,'EventInfo','CargoFrontView')">
+                                    </label>
+
+                                </div>
+                            </td>
+                        </tr>
+                        <tr ng-show="EventInfo.ContainerImage!=null && EventInfo.ContainerImage!='' && EventInfo.ContainerImage!=undefined">
+                            <th ng-class="{'partialrejected_th':Repack_Partial_Rejected_Fields.includes('Attachments') && currentCapturedRecord.PartialRejected}">
+                                <span ng-if="EventInfo.RepackPhotoLibrary!=null && EventInfo.RepackPhotoLibrary!=undefined && EventInfo.RepackPhotoLibrary.length > 0">Repack </span>
+                                Container number
+                            </th>
+                            <td ng-show="EventInfo.ContainerImage!='Required'">
+                                <div ng-click="OpenImageView(EventInfo.ContainerImage, 'EventInfo')" class="viewImag d-inline-block"><i class="icon-eye"></i> View </div>
+                                <span class="pull-right text-danger cursor-pointer" ng-if="EventInfo.ApproveStatus!=1" title="Delete Image" ng-click="RemoveEventImage('ContainerImage')"><i class="icon-bin"></i>Delete</span>
+                            </td>
+                            <td ng-show="EventInfo.ContainerImage=='Required'">
+                                <div class="Icon">
+                                    <label title="Upload Image" style="margin:0px;">
+                                        <span><i class="icon-images2"></i></span>
+                                        <input type="file" style="display:none" accept="image/*" id="UploadEvent_ContainerImage" name="pic" accept="image/*" onchange="angular.element(this).scope().EventImagesReplacement(this,'EventInfo','ContainerImage')">
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr ng-show="EventInfo.CargoImage!=null && EventInfo.CargoImage!='' && EventInfo.CargoImage!=undefined">
+                            <th ng-class="{'partialrejected_th':Repack_Partial_Rejected_Fields.includes('Attachments') && currentCapturedRecord.PartialRejected}">
+                                <span ng-if="EventInfo.RepackPhotoLibrary!=null && EventInfo.RepackPhotoLibrary!=undefined && EventInfo.RepackPhotoLibrary.length > 0">Repack </span>
+                                Cargo
+                            </th>
+                            <td ng-show="EventInfo.CargoImage!='Required'">
+                                <div ng-click="OpenImageView(EventInfo.CargoImage, 'EventInfo')" class="viewImag d-inline-block"><i class="icon-eye"></i> View </div>
+
+                                <span class="pull-right text-danger cursor-pointer" ng-if="EventInfo.ApproveStatus!=1" title="Delete Image" ng-click="RemoveEventImage('CargoImage')"><i class="icon-bin"></i>Delete</span>
+                            </td>
+                            <td ng-show="EventInfo.CargoImage=='Required'">
+                                <div class="Icon">
+                                    <label title="Upload Image" style="margin:0px;">
+                                        <span><i class="icon-images2"></i></span>
+                                        <input type="file" style="display:none" accept="image/*" id="UploadEvent_CargoImage" name="pic" accept="image/*" onchange="angular.element(this).scope().EventImagesReplacement(this,'EventInfo','CargoImage')">
+                                    </label>
+
+                                </div>
+                            </td>
+                        </tr>
+                        <tr ng-show="EventInfo.CargoRearSide!=null && EventInfo.CargoRearSide!='' && EventInfo.CargoRearSide!=undefined">
+                            <th>Cargo rear side</th>
+                            <td ng-show="EventInfo.CargoRearSide!='Required'">
+                                <div ng-click="OpenImageView(EventInfo.CargoRearSide, 'EventInfo')" class="viewImag d-inline-block"><i class="icon-eye"></i> View </div>
+                                <span class="pull-right text-danger cursor-pointer" ng-if="EventInfo.ApproveStatus!=1" title="Delete Image" ng-click="RemoveEventImage('CargoRearSide')"><i class="icon-bin"></i>Delete</span>
+                            </td>
+                            <td ng-show="EventInfo.CargoRearSide=='Required'">
+                                <div class="Icon">
+                                    <label title="Upload Image" style="margin:0px;">
+                                        <span><i class="icon-images2"></i></span>
+                                        <input type="file" style="display:none" accept="image/*" id="UploadEvent_CargoRearSide" name="pic" accept="image/*" onchange="angular.element(this).scope().EventImagesReplacement(this,'EventInfo','CargoRearSide')">
+                                    </label>
+
+                                </div>
+                            </td>
+                        </tr>
+                        <tr ng-show="EventInfo.CargoLeftSide!=null && EventInfo.CargoLeftSide!='' && EventInfo.CargoLeftSide!=undefined">
+                            <th>Cargo left side</th>
+                            <td ng-show="EventInfo.CargoLeftSide!='Required'">
+                                <div ng-click="OpenImageView(EventInfo.CargoLeftSide, 'EventInfo')" class="viewImag d-inline-block"><i class="icon-eye"></i> View </div>
+                                <span class="pull-right text-danger cursor-pointer" ng-if="EventInfo.ApproveStatus!=1" title="Delete Image" ng-click="RemoveEventImage('CargoLeftSide')"><i class="icon-bin"></i>Delete</span>
+                            </td>
+                            <td ng-show="EventInfo.CargoLeftSide=='Required'">
+                                <div class="Icon">
+                                    <label title="Upload Image" style="margin:0px;">
+                                        <span><i class="icon-images2"></i></span>
+                                        <input type="file" style="display:none" accept="image/*" id="UploadEvent_CargoLeftSide" name="pic" accept="image/*" onchange="angular.element(this).scope().EventImagesReplacement(this,'EventInfo','CargoLeftSide')">
+                                    </label>
+
+                                </div>
+                            </td>
+                        </tr>
+                        <tr ng-show="EventInfo.CargoRightSide!=null && EventInfo.CargoRightSide!='' && EventInfo.CargoRightSide!=undefined">
+                            <th>Cargo right side</th>
+                            <td ng-show="EventInfo.CargoRightSide!='Required'">
+                                <div ng-click="OpenImageView(EventInfo.CargoRightSide, 'EventInfo')" class="viewImag d-inline-block"><i class="icon-eye"></i> View </div>
+                                <span class="pull-right text-danger cursor-pointer" ng-if="EventInfo.ApproveStatus!=1" title="Delete Image" ng-click="RemoveEventImage('CargoRightSide')"><i class="icon-bin"></i>Delete</span>
+                            </td>
+                            <td ng-show="EventInfo.CargoRightSide=='Required'">
+                                <div class="Icon">
+                                    <label title="Upload Image" style="margin:0px;">
+                                        <span><i class="icon-images2"></i></span>
+                                        <input type="file" style="display:none" accept="image/*" id="UploadEvent_CargoRightSide" name="pic" accept="image/*" onchange="angular.element(this).scope().EventImagesReplacement(this,'EventInfo','CargoRightSide')">
+                                    </label>
+
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="LCL_strip_container" ng-if="CurrentCntrFreight_kind == 'LCL'">
+                    <div class="LCL_strip_card_grid">
+                        <div class="LCL_strip_card" ng-repeat="x in LCL_BL_List_eventbase">
+                            <input type="checkbox" id="dtl_check_{{$index}}" class="LCL_strip_toggle_input" hidden>
+
+                            <label for="dtl_check_{{$index}}" class="LCL_strip_card_header">
+                                <div class="LCL_strip_header_content">
+                                    <span class="LCL_strip_bl_label">B/L Number</span>
+                                    <h3 class="LCL_strip_bl_number">{{x.bl_nbr}}</h3>
+                                </div>
+                                <div class="LCL_strip_arrow">
+                                    <i class="icon-chevron-down"></i>
+                                </div>
+                            </label>
+
+                            <div class="LCL_strip_card_body">
+                                <div class="LCL_strip_photo_section">
+                                    <div class="LCL_strip_photo_item" ng-repeat="y in x.Cargo_Photo_List">
+                                        <div class="LCL_strip_photo_info">
+                                            <span class="LCL_strip_label_text">{{y.Label}}</span>
+                                            <button class="LCL_strip_view_btn" title="View Image" ng-click="OpenImageView(y.Url,'EventInfo')">
+                                                <i class="icon-eye"></i> View
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="LCL_strip_card_footer">
+                                    <div class="LCL_strip_meta_item">
+                                        <i class="icon-user"></i>
+                                        <div>
+                                            <small>Recorded by</small>
+                                            <p>{{x.Cargo_Photo_List[0].createdby || 'N/A'}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="LCL_strip_meta_item">
+                                        <i class="icon-clock"></i>
+                                        <div>
+                                            <small>Recorded at</small>
+                                            <p>{{x.Cargo_Photo_List[0].createdAt | date:'dd/MM/yyyy HH:mm:ss'}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-show="!stringNullorEmpty(EventInfo.RepackCheckList) && EventInfo.EventName =='EXAM_CARGOSTUFFED' && EventInfo.RepackCheckList.length>0">
+                    <div class="col-md-12">
+                        <!-- === REPACK CHECKLIST COMPONENT === -->
+                        <div class="repack-checklist">
+                            <h3>Repack Verification Checklist</h3>
+                            <div ng-repeat="item in EventInfo.RepackCheckList"
+                                 class="repack-item"
+                                 ng-class="{ 'required-missing': item.yesnoMandatory && item.selectedAnswer === null }">
+                                <div class="repack-question">
+
+                                    <div class="row">
+                                        <div class="col-6 p-0">
+                                            {{item.question}}
+                                        </div>
+                                        <div class="col-6 p-0 text-right" dir="rtl">
+                                            {{item.arquestion}}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="repack-radio-group">
+                                    <label class="repack-radio">
+                                        <input type="radio"
+                                               ng-model="item.selectedAnswer"
+                                               ng-value="true"
+                                               disabled>
+                                        <span>Yes</span>
+                                    </label>
+                                    <label class="repack-radio">
+                                        <input type="radio"
+                                               ng-model="item.selectedAnswer"
+                                               ng-value="false"
+                                               disabled>
+                                        <span>No</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-show="EventInfo.AdditionalServiceRequired == true">
+                    <div class="col-md-12 col-sm-12 col-lg-12">
+                        <div class="AdditionalServiceSection" ng-class="{'partialrejected_additionalService':Repack_Partial_Rejected_Fields.includes('Additional Service') && EventInfo.PartialRejected==true}">
+                            <table class="table text-center" ng-repeat="service in AdditionalServices">
+                                <thead>
+                                    <tr class="">
+                                        <th>{{GetAdditionalService(service,'field')}}</th>
+                                        <th>NUMBERS USED</th>
+                                        <th>HOURS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="row in GetAdditionalService(service,'service')">
+                                        <td width="50%"><span class="pl-15">{{row.field}}</span></td>
+                                        <td class="p-0" width="25%">
+                                            <select ng-model="row.NumberUsed" ng-disabled="row.disable">
+                                                <option  ng-repeat="num in NumberList" ng-value="{{num}}">{{num}}</option>
+                                            </select>
+                                        </td>
+                                        <td class="p-0" width="25%">
+                                            <select ng-model="row.HourUsed"  ng-disabled="row.disable">
+                                                <option ng-repeat="num in NumberList" ng-value="{{num}}">{{num}}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-if="togglePRArea()">
+                    <div class="col-md-12">
+                        <div class="partial-rejection mt-2">
+                            <div class="main-container">
+                                <div class="checkbox-group">
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="stuffed_by" ng-model="checked.stuffed_by" ng-change="updateSelected()">
+                                        <span class="custom-checkbox"></span>
+                                        <span class="checkbox-label">Stuffed By</span>
+                                    </label>
+                                    <label class="checkbox-item">
+                                        <input type="checkbox" name="attachments" ng-model="checked.attachments" ng-change="updateSelected()">
+                                        <span class="custom-checkbox"></span>
+                                        <span class="checkbox-label">Attachments</span>
+                                    </label>
+                                    <label class="checkbox-item" ng-if="EventInfo.AdditionalServiceRequired == true">
+                                        <input type="checkbox" name="additional_service" ng-model="checked.additional_service" ng-change="updateSelected()">
+                                        <span class="custom-checkbox"></span>
+                                        <span class="checkbox-label">Additional Service</span>
+                                    </label>
+                                </div>
+                                <div class="partition"></div>
+                                <div class="note-container">
+                                    <div class="note">
+                                        If you want to reject any of the details mentioned in request please use partial rejection option.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style=" padding: 9px; ">
+                @*<button class="btn btn-danger" ng-show="CheckSuperVisorSubmission(currentCapturedRecord,'@System.Configuration.ConfigurationManager.AppSettings["Exam_BayanLevelApproval"]')" ng-click="ApproveRejectEvent(currentCapturedRecord,'Reject')" data-dismiss="modal">Reject</button>
+        <button class="btn btn-primary" ng-show="CheckSuperVisorSubmission(currentCapturedRecord,'@System.Configuration.ConfigurationManager.AppSettings["Exam_BayanLevelApproval"]')" ng-click="ApproveRejectEvent(currentCapturedRecord,'Approve')" data-dismiss="modal">Approve</button>*@
+
+                <div ng-show="currentCapturedRecord.approvalRequired == true && currentCapturedRecord.ApproveStatus ==0 && ( !_currentUser.UserType.includes('TallyClerk') || _currentUser.UserType.includes('Admin'))">
+                    <div ng-if="EventInfo.EventName != 'EXAM_CARGOSTRIP'">
+                        <div class="d-inline-block"  ng-if="CheckSuperVisorSubmission(currentCapturedRecord,'@System.Configuration.ConfigurationManager.AppSettings["Exam_BayanLevelApproval"]')">
+                            
+                            <div class="d-inline-block" ng-show="EventInfo.EventName == 'EXAM_CARGOSTUFFED'">
+                                <button class="btn btn-danger" ng-show="selectedOptions.length>0" ng-click="PartialRejection(currentCapturedRecord,EventInfo)">Partial Reject</button>
+                                <button class="btn btn-secondary" ng-show="selectedOptions.length==0 && currentCapturedRecord.ExcessCargoId>0" ng-click="ViewExcessCargoReport(currentCapturedRecord.ExcessCargoId)">View Excess Cargo Report</button>
+                            </div>
+
+                            <div class="d-inline-block"  ng-show="selectedOptions.length==0">
+                                <button class="btn btn-danger" ng-click="ApproveRejectEvent(currentCapturedRecord,'Reject')" data-dismiss="modal"   ng-disabled="disableApproveRejectForXS">Reject</button>
+                                <button class="btn btn-primary" ng-click="ApproveRejectEvent(currentCapturedRecord,'Approve')" data-dismiss="modal" ng-disabled="disableApproveRejectForXS">Approve</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+                <div ng-show="currentCapturedRecord.approvalRequired == true && currentCapturedRecord.ApproveStatus ==0 && CheckSuperVisorSubmission(currentCapturedRecord) && currentCapturedRecord.PartialRejected">
+                    <button class="btn btn-primary" ng-click="openresubmitPartialRequestmodal(EventInfo,currentCapturedRecord)" data-dismiss="modal">Resubmit request</button>
+                </div>
+
+                <button class="btn btn-reset" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Captured Event History end-->
+<!--Çontainer Details-->
+<div class="modal fade " id="ContainerDetails" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Container Details
+                </h5>
+            </div>
+            <div class="modal-body">
+                <table class="ScanTable">
+                    <tr>
+                        <th>ISO code</th>
+                        <td>{{ContainerDetails.ISO_Code}}</td>
+                    </tr>
+                    <tr>
+                        <th>Inspection type </th>
+                        <td>{{ContainerDetails.Inspection_type}}</td>
+                    </tr>
+                    <tr>
+                        <th>Customs Inspection Status </th>
+                        <td>{{ContainerDetails.Inspection_Status}}</td>
+                    </tr>
+                    <tr>
+                        <th>Xray Inspection Status</th>
+                        <td>{{ContainerDetails.Xray_status}}</td>
+                    </tr>
+                    <tr>
+                        <th>Unit notes</th>
+                        <td>{{ContainerDetails.Unit_notes}}</td>
+                    </tr>
+                    <tr>
+                        <th>Commodity</th>
+                        <td>{{ContainerDetails.commodity}}</td>
+                    </tr>
+                    <tr>
+                        <th>Category</th>
+                        <td>{{ContainerDetails.category}}</td>
+                    </tr>
+                    <tr ng-if="ContainerDetails.StripPercent != null && ContainerDetails.StripPercent != 0">
+                        <th>Stripping percentage</th>
+                        <td>{{ContainerDetails.StripPercent}}</td>
+                    </tr>
+                    <tr ng-if="!stringNullorEmpty(ContainerDetails.reexamreason)">
+                        <th>RE-Exam Reason</th>
+                        <td>{{ContainerDetails.reexamreason}}</td>
+                    </tr>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--Çontainer Details-->
+<!--Show BadStowage --->
+<div class="modal fade" id="ShowBadStowage" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Bad Stowage
+                    <span title="Print report" ng-show="BadStowageData.ApproveStatus == 2" class="printBdage">
+                        <a target="_blank" href="{{BadStowageData.ReportLink}}">
+                            <i class="icon-printer"></i>
+                        </a>
+                    </span>
+                </h5>
+
+            </div>
+            <div class="modal-body">
+                <table style="width:100%;border:none !important;">
+
+                    @*<tr>
+                            <th class="p-2">Severity</th>
+                            <td class="p-2">{{BadStowageData.BadStowage_Severity}}</td>
+                        </tr>*@
+                    @*<tr>
+                            <th class="p-2">Stripping Percentage</th>
+                            <td class="p-2">{{BadStowageData.strippingPercent}}</td>
+                        </tr>*@
+                    <tr ng-if="BadStowageData.ApproveStatus ==2">
+                        <th class="p-2">Recorded By</th>
+                        <td class="p-2">{{BadStowageData.CreatedBy}}</td>
+                    </tr>
+                    <tr ng-if="BadStowageData.ApproveStatus ==2">
+                        <th class="p-2">Recorded At</th>
+                        <td class="p-2">{{BadStowageData.CreatedAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                    </tr>
+                    <tr ng-if="BadStowageData.ApproveStatus ==2">
+                        <th class="p-2">Approved By</th>
+                        <td class="p-2">{{BadStowageData.UpdatedBy}}</td>
+                    </tr>
+                    <tr ng-if="BadStowageData.ApproveStatus ==2">
+                        <th class="p-2">Approved At</th>
+                        <td class="p-2">{{BadStowageData.UpdatedAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                    </tr>
+                    <tr>
+                        <th class="p-2">Status</th>
+                        <td class="p-2">
+                            <b ng-show="BadStowageData.ApproveStatus == 0" class="badge inProgressStatus">Inprogress</b>
+                            <b ng-show="BadStowageData.ApproveStatus == 1" class="badge waitingForApprovalStatus">Waiting for approval</b>
+                            <b ng-show="BadStowageData.ApproveStatus == 2" class="badge approvedStatus">Approved</b>
+                            <b ng-show="BadStowageData.ApproveStatus == 3" class="badge rejectStatus">Rejected</b>
+                        </td>
+                    </tr>
+                </table>
+                <div class="row">
+                    <div class="col-md-6" ng-repeat="c in BadStowageData.Images">
+                        <div class="imageBox">
+                            <div class="Imgheader" title="{{c.Label}}">
+                                <b>{{c.Label}}</b>
+                            </div>
+                            <div class="ImgContent" ng-click="OpenImageView(c.Url,'ShowBadStowage')">
+                                <img src="{{c.Url}}" style="height:50px!important" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:end;">
+
+                        @if (User.IsInRole(ExamPortal.Model.EntityModel.Enums.UserRole.Admin.ToString()) || User.IsInRole(ExamPortal.Model.EntityModel.Enums.UserRole.ExamSuperVisor.ToString()))
+                        {
+                            <button ng-show="BadStowageData.ApproveStatus == 1" class="btn btn-danger" data-dismiss="modal" ng-click="BadStowageApproveAction(BadStowageData,false)">Reject</button>
+                            <button ng-show="BadStowageData.ApproveStatus == 1" class="btn btn-success" data-dismiss="modal" ng-click="BadStowageApproveAction(BadStowageData,true)">Approve</button>
+                        }
+                        <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Show BadStowage end--->
+<!--Request Technician -->
+<div class="modal fade" id="ShowRequestTechnician" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">Technician Request</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 disgnerLabel">
+                        <label>
+                            Container #
+                        </label>
+                        <b style="float:right;" class="ng-binding">{{ShowRequestTechnician.Cntr}}</b>
+                    </div>
+                    <div class="col-md-12 disgnerLabel" ng-if="ShowRequestTechnician.bl_nbr != null">
+                        <label>
+                            B/L
+                        </label>
+                        <b style="float:right;" class="ng-binding">{{ShowRequestTechnician.bl_nbr}}</b>
+                    </div>
+                    <div class="col-md-12 disgnerLabel">
+                        <label>
+                            Remraks
+                        </label>
+                        <b style="float:right;" class="ng-binding"> {{ShowRequestTechnician.Remarks}}</b>
+                    </div>
+                    <div class="col-md-12 disgnerLabel" ng-show="ShowRequestTechnician.Status == 2">
+                        <label>
+                            Approved at
+                        </label>
+                        <b style="float:right;" class="ng-binding"> {{ShowRequestTechnician.ApprovedAt | date:'dd/MM/yyyy HH:mm:ss'}}</b>
+                    </div>
+                    <div class="col-md-12 disgnerLabel" ng-show="ShowRequestTechnician.Status == 2">
+                        <label>
+                            Approved by
+                        </label>
+                        <b style="float:right;" class="ng-binding"> {{ShowRequestTechnician.ApprovedBy}}</b>
+                    </div>
+                    <div class="col-md-12 disgnerLabel">
+                        <label>
+                            Created at
+                        </label>
+                        <b style="float:right;" class="ng-binding"> {{ShowRequestTechnician.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</b>
+                    </div>
+                    <div class="col-md-12 disgnerLabel">
+                        <label>
+                            Created by
+                        </label>
+                        <b style="float:right;" class="ng-binding"> {{ShowRequestTechnician.CreatedBy}}</b>
+                    </div>
+                    <div class="col-md-12 disgnerLabel">
+                        <label>
+                            Technician expected date
+                        </label>
+                        <b style="float:right;" class="ng-binding"> {{ShowRequestTechnician.TechnicianExDate | date:'dd/MM/yyyy HH:mm:ss'}}</b>
+                    </div>
+                    <div class="col-md-12 disgnerLabel">
+                        <label>
+                            Technician phone number
+                        </label>
+                        <b style="float:right;" class="ng-binding"> {{ShowRequestTechnician.Techniciannumber}}</b>
+                    </div>
+                    <div class="col-md-12 disgnerLabel">
+                        <label>Status</label>
+                        <b ng-show="ShowRequestTechnician.Status == 0" style="float:right;" class="badge inProgressStatus ng-hide">Inprogress</b>
+                        <b ng-show="ShowRequestTechnician.Status == 1" style="float:right;" class="badge waitingForApprovalStatus ng-hide">Waiting for approval</b>
+                        <b ng-show="ShowRequestTechnician.Status == 2" style="float: right;" class="badge approvedStatus ng-hide">Approved</b>
+                        <b ng-show="ShowRequestTechnician.Status == 3" style="float: right;" class="badge rejectStatus ng-hide">Rejected</b>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6" ng-repeat="c in ShowRequestTechnician.Images">
+                        <div class="imageBox">
+                            <div class="Imgheader" title="{{c.Label}}">
+                                <b>{{c.Label}}</b>
+                            </div>
+                            <div class="ImgContent">
+                                <div ng-click="OpenImageView(c.Url,'ShowRequestTechnician')">  <img src="{{c.Url}}" style="height:50px!important" /></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:end;">
+                        @if (User.IsInRole(ExamPortal.Model.EntityModel.Enums.UserRole.Admin.ToString()) || User.IsInRole(ExamPortal.Model.EntityModel.Enums.UserRole.ExamSuperVisor.ToString()))
+                        {
+                            <button ng-show="ShowRequestTechnician.Status == 1" class="btn btn-danger" data-dismiss="modal" ng-click="ShowConfirmationRequestTechnician(ShowRequestTechnician,false,false)">Reject</button>
+                            <button ng-show="ShowRequestTechnician.Status == 1" class="btn btn-success" data-dismiss="modal" ng-click="ShowConfirmationRequestTechnician(ShowRequestTechnician,true,false)">Approve</button>
+                        }
+                        <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Request Technician end-->
+<!--SHow difficult to strip-->
+<div class="modal fade" id="ShowDifficultStrip" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Difficult to strip
+                    <span title="Print report" class="printBdage">
+                        <a ng-click="openDifficultStrip(DifficultStripData.Id)">
+                            <i class="icon-printer"></i>
+                        </a>
+                    </span>
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 disgnerLabel">
+                        <label>
+                            Container #
+                        </label>
+                        <b style="float:right;" class="ng-binding">{{DifficultStripData.Container}}</b>
+                    </div>
+                    <div class="col-md-12 disgnerLabel" ng-if="DifficultStripData.bl_nbr != null">
+                        <label>
+                            B/L
+                        </label>
+                        <b style="float:right;" class="ng-binding">{{DifficultStripData.bl_nbr}}</b>
+                    </div>
+                    <div class="col-md-12 disgnerLabel">
+                        <label>
+                            Stripping Percenatge
+                        </label>
+                        <b style="float:right;" class="ng-binding">{{DifficultStripData.StrippingPercenatge}}</b>
+                    </div>
+                    <div class="col-md-12 disgnerLabel">
+                        <label>
+                            Created at
+                        </label>
+                        <b style="float:right;" class="ng-binding"> {{DifficultStripData.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</b>
+                    </div>
+                    <div class="col-md-12 disgnerLabel">
+                        <label>
+                            Created by
+                        </label>
+                        <b style="float:right;" class="ng-binding"> {{DifficultStripData.CreatedBy}}</b>
+                    </div>
+                    <div class="col-md-12 disgnerLabel">
+                        <label>Status</label>
+                        <b ng-show="DifficultStripData.Status == 0" style="float:right;" class="badge inProgressStatus ng-hide">Inprogress</b>
+                        <b ng-show="DifficultStripData.Status == 1" style="float:right;" class="badge waitingForApprovalStatus ng-hide">Waiting for approval</b>
+                        <b ng-show="DifficultStripData.Status == 2" style="float: right;" class="badge approvedStatus ng-hide">Approved</b>
+                        <b ng-show="DifficultStripData.Status == 3" style="float: right;" class="badge rejectStatus ng-hide">Rejected</b>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6" ng-repeat="c in DifficultStripData.Images">
+                        <div class="imageBox">
+                            <div class="Imgheader" title="{{c.Label}}">
+                                <b>{{c.Label}}</b>
+                            </div>
+                            <div class="ImgContent">
+                                <div ng-click="OpenImageView(c.Url,'ShowDifficultStrip')">  <img src="{{c.Url}}" style="height:50px!important" /></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:end;">
+                        @if (User.IsInRole(ExamPortal.Model.EntityModel.Enums.UserRole.Admin.ToString()) || User.IsInRole(ExamPortal.Model.EntityModel.Enums.UserRole.ExamSuperVisor.ToString()))
+                        {
+                            <button ng-show="DifficultStripData.Status == 1" class="btn btn-danger" data-dismiss="modal" ng-click="ShowConfirmationRequestTechnician(ShowRequestTechnician,false,false)">Reject</button>
+                            <button ng-show="DifficultStripData.Status == 1" class="btn btn-success" data-dismiss="modal" ng-click="ShowConfirmationRequestTechnician(ShowRequestTechnician,true,false)">Approve</button>
+                        }
+                        <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Diffcult to Strip end-->
+<!--Excess cargo report-->
+<div class="modal fade" id="ExcessCargo" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Excess cargo report
+                    <span title="Print report" ng-show="ShowExcessCargoData.ApprovalStatus==2" class="printBdage">
+                        <a target="_blank" href="{{ShowExcessCargoData.ReportLink}}">
+                            <i class="icon-printer"></i>
+                        </a>
+                    </span>
+                </h5>
+
+
+
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Container</label>
+                            <input type="text" ng-model="ShowExcessCargoData.Container" disabled class="form-control" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6" ng-if="ShowExcessCargoData.bl_nbr != null">
+                        <div class="form-group">
+                            <label>B/L</label>
+                            <input type="text" ng-model="ShowExcessCargoData.bl_nbr" disabled class="form-control" readonly value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Container Location</label>
+                            <input type="text" readonly ng-model="ShowExcessCargoData.Loaction" disabled class="form-control" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+
+                            <label>Broker Number</label>
+                            <input type="text" disabled id="BrokerNumb" ng-model="ShowExcessCargoData.BrokerNumb" class="form-control" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Broker  Name</label>
+                            <input type="text" disabled ng-model="ShowExcessCargoData.BrokerName" class="form-control" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Type of Cargo</label>
+                            <input type="text" disabled ng-model="ShowExcessCargoData.Type" class="form-control" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Quantity of Cargo</label>
+                            <input class="form-control" ng-model="ShowExcessCargoData.Quantity" disabled type="text" name="name" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Excess Cargo Reason</label>
+                            <input class="form-control" ng-model="ShowExcessCargoData.ExcessCargoReason" disabled type="text" name="name" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6" ng-if="ShowExcessCargoData.ApprovalStatus == 2">
+                        <div class="form-group">
+                            <label>Approved by</label>
+                            <input class="form-control" ng-model="ShowExcessCargoData.UpdatedBy" disabled type="text" name="name" value="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Status</label><br />
+                            <b ng-show="ShowExcessCargoData.ApprovalStatus == 0" class="badge inProgressStatus ng-hide">Inprogress</b>
+                            <b ng-show="ShowExcessCargoData.ApprovalStatus == 1" class="badge waitingForApprovalStatus ng-hide">Waiting for approval</b>
+                            <b ng-show="ShowExcessCargoData.ApprovalStatus == 2" class="badge approvedStatus ng-hide">Approved</b>
+                            <b ng-show="ShowExcessCargoData.ApprovalStatus == 3" class="badge rejectStatus ng-hide">Rejected</b>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6" ng-repeat="c in ShowExcessCargoData.Images">
+                        <div class="imageBox">
+                            <div class="Imgheader" title="{{c.Label}}">
+                                <b>{{c.Label}}</b>
+                            </div>
+                            <div class="ImgContent" ng-click="OpenImageView(c.Url,'ExcessCargo')">
+                                <img ng-show="c.Url!='' && c.Url!=null" src="{{c.Url}}" style="height:50px!important" />
+                                <div ng-show="c.Url=='' || c.Url==null" src="{{c.Url}}">N/A</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-lg-12">
+                        <div class="AdditionalServiceSection">
+                            <table class="table text-center" ng-repeat="service in AdditionalServices">
+                                <thead>
+                                    <tr class="">
+                                        <th>{{GetAdditionalService(service,'field')}}</th>
+                                        <th>NUMBERS USED</th>
+                                        <th>HOURS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="row in GetAdditionalService(service,'service')">
+                                        <td width="50%"><span class="pl-15">{{row.field}}</span></td>
+                                        <td class="p-0" width="25%">
+                                            <select ng-model="row.NumberUsed"  ng-disabled="row.disable">
+                                                <option ng-repeat="num in NumberList" ng-value="{{num}}">{{num}}</option>
+                                            </select>
+                                        </td>
+                                        <td class="p-0" width="25%">
+                                            <select ng-model="row.HourUsed" ng-disabled="row.disable">
+                                                <option ng-repeat="num in NumberList" ng-value="{{num}}">{{num}}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:end;">
+                        @if (User.IsInRole(ExamPortal.Model.EntityModel.Enums.UserRole.Admin.ToString()) || User.IsInRole(ExamPortal.Model.EntityModel.Enums.UserRole.ExamSuperVisor.ToString())|| User.IsInRole(ExamPortal.Model.EntityModel.Enums.UserRole.SeniorSuperVisor.ToString()))
+                        {
+                            <button ng-disabled="ShowExcessCargoData.ApprovalStatus != 2" ng-if="ShowExcessCargoData.ContainerDelivery==false" class="btn btn-secondary" data-dismiss="modal" ng-click="ShowDeliveryModal(ShowExcessCargoData)">
+                                Update Delivery
+                            </button>
+                            <button ng-show="ShowExcessCargoData.ApprovalStatus == 1" class="btn btn-danger" data-dismiss="modal" ng-click="ShowConfirmationExsCargo(ShowExcessCargoData,false)">Reject</button>
+                            <button ng-show="ShowExcessCargoData.ApprovalStatus == 1" class="btn btn-success" data-dismiss="modal" ng-click="ShowConfirmationExsCargo(ShowExcessCargoData,true)">Approve</button>
+                        }
+                        @*<button ng-show="ShowExcessCargoData.TruckNo==null && ShowExcessCargoData.ApprovalStatus==2" class="btn btn-primary mr-2" ng-click="UpdateTruckNo(TruckNo,ShowExcessCargoData.Container)">Update</button>*@
+                        <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--Excess cargo report end-->
+<!--Additional Service Modal-->
+<div class="modal fade" id="ShowAdditionalServiceModal" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="overflow:visible !important">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">Additional services while inspection</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="DetailsTable">
+                            <tr>
+                                <th>Container#</th>
+                                <td>{{AdditionalServiceReport.Cntr}}</td>
+                            </tr>
+                            <tr ng-if="AdditionalServiceReport.bl_nbr != null">
+                                <th>B/L</th>
+                                <td>{{AdditionalServiceReport.bl_nbr}}</td>
+                            </tr>
+                            <tr>
+                                <th>Created By</th>
+                                <td>{{AdditionalServiceReport.CreatedBy}}</td>
+                            </tr>
+                            <tr>
+                                <th>Created At</th>
+                                <td>{{AdditionalServiceReport.CreatedAt | date:'dd/MM/yyyy HH:mm'}}</td>
+                            </tr>
+                            <tr>
+                                <th>Status</th>
+                                <td>
+                                    <span ng-if="AdditionalServiceReport.ApproveStatus == 0" class="PendingApprovalEvent">Pending for approval</span>
+                                    <span ng-if="AdditionalServiceReport.ApproveStatus == 1" class="Approvebadge">Approved</span>
+                                    <span ng-if="AdditionalServiceReport.ApproveStatus == 2" class="RejectedApprovalEvent">Rejected</span>
+                                </td>
+                            </tr>
+                            <tr ng-if="AdditionalServiceReport.ApproveStatus != 0">
+                                <th ng-if="AdditionalServiceReport.ApproveStatus == 1">Approved At</th>
+                                <th ng-if="AdditionalServiceReport.ApproveStatus == 2">Rejected At</th>
+                                <td>{{AdditionalServiceReport.UpdatedAt | date:'dd/MM/yyyy HH:mm'}}</td>
+                            </tr>
+                            <tr ng-if="AdditionalServiceReport.ApproveStatus != 0">
+                                <th ng-if="AdditionalServiceReport.ApproveStatus == 1">Approved By</th>
+                                <th ng-if="AdditionalServiceReport.ApproveStatus == 2">Rejected By</th>
+                                <td>{{AdditionalServiceReport.UpdatedBy}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="AdditionalServiceSection">
+                    <table class="table text-center" ng-repeat="service in AdditionalServices">
+                        <thead>
+                            <tr class="">
+                                <th>{{GetAdditionalService(service,'field')}}</th>
+                                <th>NUMBERS USED</th>
+                                <th>HOURS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="row in GetAdditionalService(service,'service')">
+                                <td width="50%"><span class="pl-15">{{row.field}}</span></td>
+                                <td class="p-0" width="25%">
+                                    
+                                    <select ng-model="row.NumberUsed" ng-disabled="row.disable">
+                                        <option ng-repeat="num in NumberList" ng-value="{{num}}">{{num}}</option>
+                                    </select>
+                                </td>
+                                <td class="p-0" width="25%">
+                                    <select ng-model="row.HourUsed" ng-disabled="row.disable">
+                                        <option ng-repeat="num in NumberList" ng-value="{{num}}">{{num}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:end;">
+                        <button class="btn btn-primary"
+                                ng-show="AdditionalServiceReport.ApproveStatus == 1 &&
+                                (EXAM_INSPECTED_SERVICE == false || EXAM_INSPECTED_SERVICE==undefined) &&
+                                (pendingScreenForAdditionalSrvice==false || pendingScreenForAdditionalSrvice==undefined)"
+                                ng-click="RecordAgainAdditionalService(AdditionalServiceReport)">
+                            Record new service
+                        </button>
+                        <button class="btn btn-danger"
+                                ng-show="CheckApproveBtnDisplayCondition(AdditionalServiceReport)"
+                                ng-click="ApproveAdditionalServiceReport(AdditionalServiceReport,'Reject')">
+                            Reject
+                        </button>
+                        <button class="btn btn-success"
+                                ng-show="CheckApproveBtnDisplayCondition(AdditionalServiceReport)"
+                                ng-click="ApproveAdditionalServiceReport(AdditionalServiceReport,'Approve')">
+                            Approve
+                        </button>
+                        <button class="btn btn-cancel" data-dismiss="modal" ng-click="getadditionalServiceHistory(AdditionalServiceReport)" ng-if="AdditionalServiceReport.HistoryAvaialable">History</button>
+                        <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ShowAdditionalServiceHistoryModal" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:65% !important" role="document">
+        <div class="modal-content" style="overflow:visible !important">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">{{AdditionalServiceReport.Cntr}} Additional services History</h5>
+            </div>
+            <div class="modal-body">
+                <div class="historyModaltable">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Created At</th>
+                                <th>Created By</th>
+                                <th>Status</th>
+                                <th>Updated At</th>
+                                <th>Updated By</th>
+                                <th>Services</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in AdditionalServiceReportHistory">
+                                <td>{{$index+1}}</td>
+                                <td>{{item.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                <td>{{item.CreatedBy}}</td>
+                                <td>
+                                    <span ng-if="item.ApproveStatus == 0" class="PendingApprovalEvent">Pending for approval</span>
+                                    <span ng-if="item.ApproveStatus == 1" class="Approvebadge">Approved</span>
+                                    <span ng-if="item.ApproveStatus == 2" class="RejectedApprovalEvent">Rejected</span>
+                                </td>
+                                <td>{{item.UpdatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                <td>{{item.UpdatedBy}}</td>
+                                <td>
+                                    <ul class="text-left">
+                                        <li ng-repeat="service in item.AdditionalService">
+                                            {{service.field}}
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:end;">
+                        <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Additional Service Modal end-->
+
+
+<div class="modal fade" id="ShowRiskTypeModel" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <i data-dismiss="modal" class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <div class="w-100">
+                    <h5 class="modal-title">
+                        #{{RiskReport.Cntr}} Risk Report
+                        <span ng-if="RiskReport.ApproveStatus == 1" class="PendingApprovalEvent pull-right">Pending for approval</span>
+                        <span ng-if="RiskReport.ApproveStatus == 2" class="Approvebadge pull-right">Approved</span>
+                        <span ng-if="RiskReport.ApproveStatus == 3" class="RejectedApprovalEvent pull-right">Rejected</span>
+                    </h5>
+                    <span class="modal-title-description">{{EventDetails}}</span>
+                </div>
+            </div>
+            <div class="modal-body" style=" letter-spacing: 0.8px; max-height: 500px; overflow:auto">
+                <div class="row">
+                    <table class="DetailsTable">
+                        <tr>
+                            <th>Container</th>
+                            <td><span>{{RiskReport.Cntr}}</span></td>
+                        </tr>
+                        <tr>
+                            <th>Risk Type</th>
+                            <td>
+                                <span ng-if="RiskReport.RiskType == 'Low'" class="Approvebadge">Low</span>
+                                <span ng-if="RiskReport.RiskType == 'High'" class="RejectedApprovalEvent">High</span>
+                            </td>
+                        </tr>
+                        <tr ng-show="!stringNullorEmpty(RiskReport.RiskReason)">
+                            <th>High risk Type</th>
+                            <td><span>{{RiskReport.RiskReason}}</span></td>
+                        </tr>                       
+                        <tr>
+                            <th>Recorded by</th>
+                            <td><span>{{RiskReport.CreatedBy}}</span></td>
+                        </tr>
+                        <tr>
+                            <th>Recorded At</th>
+                            <td><span>{{RiskReport.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</span></td>
+                        </tr>
+                        <tr ng-if="RiskReport.ApproveStatus != 1">
+                            <th>
+                                <span ng-if="RiskReport.ApproveStatus==2">Approved by</span>
+                                <span ng-if="RiskReport.ApproveStatus==3">Rejected by</span>
+                            </th>
+                            <td><span>{{RiskReport.UpdatedBy}}</span></td>
+                        </tr>
+                        <tr ng-if="RiskReport.ApproveStatus != 1">
+                            <th>
+                                <span ng-if="RiskReport.ApproveStatus==2">Approved At</span>
+                                <span ng-if="RiskReport.ApproveStatus==3">Rejected At</span>
+                            </th>
+                            <td><span>{{RiskReport.UpdatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</span></td>
+                        </tr>        
+                        <tr ng-repeat="Libphoto in RiskReport.PhotoLibrary track by $index">
+                            <th>{{Libphoto.Label}}</th>
+                            <td ng-show="Libphoto.Url!='Required'">
+                                <div ng-click="OpenImageView(Libphoto.Url, 'ShowRiskTypeModel')" class="viewImag d-inline-block"><i class="icon-eye"></i> View </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer" style=" padding: 9px; ">
+                <div ng-show="RiskReport.ApproveStatus == 1 && (!_currentUser.UserType.includes('TallyClerk') || _currentUser.UserType.includes('Admin'))">
+
+                    <button class="btn btn-danger mr-2" ng-click="ApproveRejectRiskReport(RiskReport,'Reject')" data-dismiss="modal">Reject</button>
+                    <button class="btn btn-primary" ng-click="ApproveRejectRiskReport(RiskReport,'Approve')" data-dismiss="modal">Approve</button>
+
+                </div>
+                <button class="btn btn-primary" data-dismiss="modal" ng-click="openReRecordRiskReportModal(RiskReport)"  ng-if="RiskReport.ApproveStatus == 2">New</button>
+                <button class="btn btn-secondary" data-dismiss="modal" ng-click="openRiskReportHistory(RiskReport.unit_gkey)" ng-if="RiskReport.HistoryCount > 1">History</button>
+                <button class="btn btn-reset" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="RiskReportHistoryModel" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <i data-dismiss="modal" class="icon-cross"></i>
+            </div>
+            <div class="modal-header bg-indigo-800 text-white">
+                <h6 class="modal-title"><i class="icon-history mr-2"></i> #{{RiskReportHistory[0].Cntr}} Risk Report History</h6>               
+            </div>
+            <div class="modal-body" style=" letter-spacing: 0.8px; max-height: 500px; overflow:auto">
+                <div class="card-group-control card-group-control-right" id="history-accordion">
+
+                    <div class="card border-left-3 border-left-indigo" ng-repeat="log in RiskReportHistory">
+                        <div class="card-header bg-light">
+                            <h6 class="card-title">
+                                <a data-toggle="collapse" class="text-default d-flex justify-content-between align-items-center w-100 collapsed" href="#log_{{$index}}">
+
+                                    <div class="row w-100">
+                                        <div class="col-md-4">
+                                            <i class="icon-calendar3 mr-2 text-indigo-400"></i>
+                                            <span class="font-weight-semibold">{{log.CreatedAt | date:'dd-MMM-yyyy HH:mm'}}</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <i class="icon-user mr-2 text-muted"></i>
+                                            <span>{{log.CreatedBy}}</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span ng-if="log.ApproveStatus == 1" class="PendingApprovalEvent pull-right">Pending for approval</span>
+                                            <span ng-if="log.ApproveStatus == 2" class="Approvebadge pull-right">Approved</span>
+                                            <span ng-if="log.ApproveStatus == 3" class="RejectedApprovalEvent pull-right">Rejected</span>
+                                        </div>
+                                    </div>
+
+                                </a>
+                            </h6>
+                        </div>
+
+                        <div id="log_{{$index}}" class="collapse" data-parent="#history-accordion">
+                            <div class="card-body border-top-1 border-light bg-white">
+                                <div class="card">
+
+                                    <table class="DetailsTable">
+                                        <tr>
+                                            <th>Container</th>
+                                            <td><span>{{log.Cntr}}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Risk Type</th>
+                                            <td>
+                                                <span ng-if="log.RiskType == 'Low'" class="Approvebadge">Low</span>
+                                                <span ng-if="log.RiskType == 'High'" class="RejectedApprovalEvent">High</span>
+                                            </td>
+                                        </tr>
+                                        <tr ng-show="!stringNullorEmpty(log.RiskReason)">
+                                            <th>High risk Type</th>
+                                            <td><span>{{log.RiskReason}}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Recorded by</th>
+                                            <td><span>{{log.CreatedBy}}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Recorded At</th>
+                                            <td><span>{{log.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</span></td>
+                                        </tr>
+                                        <tr ng-if="log.ApproveStatus != 1">
+                                            <th>
+                                                <span ng-if="log.ApproveStatus==2">Approved by</span>
+                                                <span ng-if="log.ApproveStatus==3">Rejected by</span>
+                                            </th>
+                                            <td><span>{{log.UpdatedBy}}</span></td>
+                                        </tr>
+                                        <tr ng-if="log.ApproveStatus != 1">
+                                            <th>
+                                                <span ng-if="log.ApproveStatus==2">Approved At</span>
+                                                <span ng-if="log.ApproveStatus==3">Rejected At</span>
+                                            </th>
+                                            <td><span>{{log.UpdatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</span></td>
+                                        </tr>
+                                        <tr ng-repeat="Libphoto in log.PhotoLibrary track by $index">
+                                            <th>{{Libphoto.Label}}</th>
+                                            <td ng-show="Libphoto.Url!='Required'">
+                                                <div ng-click="OpenImageView(Libphoto.Url, 'RiskReportHistoryModel')" class="viewImag d-inline-block"><i class="icon-eye"></i> View </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="RiskReportHistory.length === 0" class="text-center py-4">
+                        <i class="icon-database-empty icon-3x text-muted opacity-25 mb-2"></i>
+                        <p class="text-muted">No history found for this container.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link text-indigo-800" data-dismiss="modal">Close History</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="overlay" style="flex-direction:column">
+    @*<span id="close-btn" style=" top: 70px;" ng-click="closeOverlay()">&#10006;</span>
+        <div style="height:90vh;overflow:auto;width:100%;text-align:center;">
+            <img src="" id="LargeImageView" alt="Image">
+        </div>*@
+    <div id="zoomContainer">
+        <img id="zoomImg" src="" alt="Zoomable" />
+        <span id="close-btn" ng-click="closeOverlay()">&#10006;</span>
+        <div class="zoom-controls">
+            <button id="zoomIn">+</button>
+            <button id="zoomOut">−</button>
+            <button id="zoomReset">Reset</button>
+        </div>
+    </div>
+    <br />
+    <table class="sliderNav" ng-show="currentmodalId=='cargostuffedConfrimation'">
+        <tr>
+            <td ng-show="Cargostuffed.ContainerNumberImage!=null && Cargostuffed.ContainerNumberImage !='' && Cargostuffed.ContainerNumberImage !=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == Cargostuffed.ContainerNumberImage}"
+                     ng-click="OpenImageView(Cargostuffed.ContainerNumberImage, 'cargostuffedConfrimation')"
+                     src="{{Cargostuffed.ContainerNumberImage}}"
+                     alt="Seal Number"
+                     class="thumbnail" />
+                <div class="image-name">Container number</div>
+            </td>
+            <td ng-show="Cargostuffed.CargoImage!=null && Cargostuffed.CargoImage !='' && Cargostuffed.CargoImage !=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == Cargostuffed.CargoImage}"
+                     ng-click="OpenImageView(Cargostuffed.CargoImage, 'cargostuffedConfrimation')"
+                     src="{{Cargostuffed.CargoImage}}"
+                     alt="Seal Number"
+                     class="thumbnail" />
+                <div class="image-name">Cargo</div>
+            </td>
+
+            <td ng-repeat="x in EventInfo.RepackPhotoLibrary" ng-show="x.Url!=null && x.Url !='' && x.Url!=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == x.Url}"
+                     ng-click="OpenImageView(x.Url, 'cargostuffedConfrimation')"
+                     src="{{x.Url}}"
+                     alt="Seal Number"
+                     class="thumbnail" />
+                <div class="image-name">{{x.Label}}</div>
+            </td>
+
+        </tr>
+    </table>
+    <table class="sliderNav" ng-show="currentmodalId=='SealCutConfrimation'">
+        <tr>
+            <td ng-show="Sealcut.DoorAfterSeal!=null && Sealcut.DoorAfterSeal !='' && Sealcut.DoorAfterSeal !=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == Sealcut.DoorAfterSeal}"
+                     ng-click="OpenImageView(Sealcut.DoorAfterSeal, 'SealCutConfrimation')"
+                     src="{{Sealcut.DoorAfterSeal}}"
+                     alt="Seal Number"
+                     class="thumbnail" />
+                <div class="image-name">Door after seal cut</div>
+            </td>
+            <td ng-show="Sealcut.CargoFront!=null && Sealcut.CargoFront !='' && Sealcut.CargoFront !=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == Sealcut.CargoFront}"
+                     ng-click="OpenImageView(Sealcut.CargoFront, 'SealCutConfrimation')"
+                     src="{{Sealcut.CargoFront}}"
+                     alt="Seal Number"
+                     class="thumbnail" />
+                <div class="image-name">Front view of the cargo</div>
+            </td>
+
+        </tr>
+    </table>
+    <table class="sliderNav" ng-show="currentmodalId=='cargostripConfrimation'">
+        <tr>
+
+            <td ng-show="SealCutDetails.DoorAfterSeal!=null && SealCutDetails.DoorAfterSeal !='' && SealCutDetails.DoorAfterSeal !=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == SealCutDetails.DoorAfterSeal}"
+                     ng-click="OpenImageView(SealCutDetails.DoorAfterSeal, 'cargostripConfrimation')"
+                     src="{{SealCutDetails.DoorAfterSeal}}"
+                     alt="Seal Number"
+                     class="thumbnail" />
+                <div class="image-name">Door after seal</div>
+            </td>
+            <td ng-show="SealCutDetails.CargoFrontView!=null && SealCutDetails.CargoFrontView !='' && SealCutDetails.CargoFrontView !=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == SealCutDetails.CargoFrontView}"
+                     ng-click="OpenImageView(SealCutDetails.CargoFrontView, 'cargostripConfrimation')"
+                     src="{{SealCutDetails.CargoFrontView}}"
+                     alt="Seal Number"
+                     class="thumbnail" />
+                <div class="image-name">Cargo front view</div>
+            </td>
+            <td ng-repeat="x in CargoStrip.PhotoLibrary" ng-show="x.Url!=null && x.Url !='' && x.Url!=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == x.Url}"
+                     ng-click="OpenImageView(x.Url, 'cargostripConfrimation')"
+                     src="{{x.Url}}"
+                     alt="Seal Number"
+                     class="thumbnail" />
+                <div class="image-name">{{x.Label}}</div>
+            </td>
+        </tr>
+    </table>
+    <table class="sliderNav" ng-show="currentmodalId=='EventInfo'">
+
+        <tr>
+
+            <td ng-show="EventInfo.Sealnumber!=null && EventInfo.Sealnumber!='' && EventInfo.Sealnumber!=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == EventInfo.Sealnumber}"
+                     ng-click="OpenImageView(EventInfo.Sealnumber, 'EventInfo')"
+                     src="{{EventInfo.Sealphoto}}"
+                     alt="Seal Number"
+                     class="thumbnail" />
+                <div class="image-name">Seal Number</div>
+            </td>
+            <td ng-show="EventInfo.Sealphoto!=null && EventInfo.Sealphoto!='' && EventInfo.Sealphoto!=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == EventInfo.Sealphoto}"
+                     ng-click="OpenImageView(EventInfo.Sealphoto, 'EventInfo')"
+                     src="{{EventInfo.Sealphoto}}"
+                     alt="Seal Photo"
+                     class="thumbnail" />
+                <div class="image-name">Seal Photo</div>
+            </td>
+            <td ng-show="EventInfo.DoorAfterSeal!=null && EventInfo.DoorAfterSeal!='' && EventInfo.DoorAfterSeal!=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == EventInfo.DoorAfterSeal}"
+                     ng-click="OpenImageView(EventInfo.DoorAfterSeal, 'EventInfo')"
+                     src="{{EventInfo.DoorAfterSeal}}"
+                     alt="Door After Seal"
+                     class="thumbnail" />
+                <div class="image-name">Door After Seal</div>
+            </td>
+            <td ng-show="EventInfo.CargoFrontView!=null && EventInfo.CargoFrontView!='' && EventInfo.CargoFrontView!=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == EventInfo.CargoFrontView}"
+                     ng-click="OpenImageView(EventInfo.CargoFrontView, 'EventInfo')"
+                     src="{{EventInfo.CargoFrontView}}"
+                     alt="Cargo Front View"
+                     class="thumbnail" />
+                <div class="image-name">Cargo Front View</div>
+            </td>
+            <td ng-show="EventInfo.ContainerImage!=null && EventInfo.ContainerImage!='' && EventInfo.ContainerImage!=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == EventInfo.ContainerImage}"
+                     ng-click="OpenImageView(EventInfo.ContainerImage, 'EventInfo')"
+                     src="{{EventInfo.ContainerImage}}"
+                     alt="Container Image"
+                     class="thumbnail" />
+                <div class="image-name">Container Image</div>
+            </td>
+            <td ng-show="EventInfo.CargoImage!=null && EventInfo.CargoImage!='' && EventInfo.CargoImage!=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == EventInfo.CargoImage}"
+                     ng-click="OpenImageView(EventInfo.CargoImage, 'EventInfo')"
+                     src="{{EventInfo.CargoImage}}"
+                     alt="Cargo Image"
+                     class="thumbnail" />
+                <div class="image-name">Cargo Image</div>
+            </td>
+            <td ng-show="EventInfo.CargoRearSide!=null && EventInfo.CargoRearSide!='' && EventInfo.CargoRearSide!=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == EventInfo.CargoRearSide}"
+                     ng-click="OpenImageView(EventInfo.CargoRearSide, 'EventInfo')"
+                     src="{{EventInfo.CargoRearSide}}"
+                     alt="Cargo Rear Side"
+                     class="thumbnail" />
+                <div class="image-name">Cargo Rear Side</div>
+            </td>
+            <td ng-show="EventInfo.CargoLeftSide!=null && EventInfo.CargoLeftSide!='' && EventInfo.CargoLeftSide!=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == EventInfo.CargoLeftSide}"
+                     ng-click="OpenImageView(EventInfo.CargoLeftSide, 'EventInfo')"
+                     src="{{EventInfo.CargoLeftSide}}"
+                     alt="Cargo Left Side"
+                     class="thumbnail" />
+                <div class="image-name">Cargo Left Side</div>
+            </td>
+            <td ng-show="EventInfo.CargoRightSide!=null && EventInfo.CargoRightSide!='' && EventInfo.CargoRightSide!=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == EventInfo.CargoRightSide}"
+                     ng-click="OpenImageView(EventInfo.CargoRightSide, 'EventInfo')"
+                     src="{{EventInfo.CargoRightSide}}"
+                     alt="Cargo Right Side"
+                     class="thumbnail" />
+                <div class="image-name">Cargo Right Side</div>
+            </td>
+            <td ng-repeat="x in EventInfo.PhotoLibrary" ng-show="x.Url!=null && x.Url !='' && x.Url!=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == x.Url}"
+                     ng-click="OpenImageView(x.Url, 'EventInfo')"
+                     src="{{x.Url}}"
+                     alt="Seal Number"
+                     class="thumbnail" />
+                <div class="image-name">{{x.Label}}</div>
+            </td>
+
+            <td ng-repeat="x in EventInfo.RepackPhotoLibrary" ng-show="x.Url!=null && x.Url !='' && x.Url!=undefined">
+                <img ng-class="{'Active': CurrentopenUrl == x.Url}"
+                     ng-click="OpenImageView(x.Url, 'EventInfo')"
+                     src="{{x.Url}}"
+                     alt="Seal Number"
+                     class="thumbnail" />
+                <div class="image-name">{{x.Label}}</div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+
+<div class="modal fade" id="ResubmitPartialRequestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="overflow:visible !important">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <div class="w-100">
+                    <h5 class="modal-title">
+                        #{{EventInfo.Cntr}}
+                        <span ng-if="EventInfo.ApproveStatus == 0 && !EventInfo.PartialRejected" class="PendingApprovalEvent pull-right">Pending for approval</span>
+                        <span ng-if="EventInfo.ApproveStatus == 1" class="Approvebadge pull-right">Approved</span>
+                        <span ng-if="EventInfo.ApproveStatus == 2" class="RejectedApprovalEvent pull-right">Rejected</span>
+                        <span ng-if="EventInfo.ApproveStatus == 0 && EventInfo.PartialRejected" class="RejectedApprovalEvent pull-right">Partial Rejected</span>
+                    </h5>
+                    <span class="modal-title-description">Resubmit cargo repack rejected fields</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row" ng-show="Repack_Partial_Rejected_Fields.includes('Stuffed By')">
+                    <div class="col-md-12">
+                        <label>Stuffed by</label><br />
+                        <select data-placeholder="Please Select stuffed by" class="form-control select-clear" id="PR_stuffedby" ng-model="PR_OBJ.StripNStuffBy" required data-fouc>
+                            <option></option>
+                            <option value="Labour">Labor</option>
+                            <option value="Forklift">Forklift</option>
+                            <option value="MobileCrane">Mobile Crane</option>
+                            <option value="NoRepack">No repack</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row" ng-if="Repack_Partial_Rejected_Fields.includes('Attachments')">
+                    <div class="col-md-12">
+                        <br />
+                        <label>Attachments</label>
+                        <ul class="Damage_Images">
+                            <li ng-repeat="x in PR_OBJ.PhotoLibrary">
+                                <b>{{x.Label}}<span ng-if="x.required" class="Starick"></span> </b>
+                                <div class="Icon" ng-show="x.Url==null || x.Url==''">
+                                    <label title="Upload Image" style="margin:0px;">
+                                        <span><i class="icon-images2"></i></span>
+                                        <input type="file" style="display:none" accept="image/*" id="{{x.Id}}" index="{{$index}}" name="pic" accept="image/*" onchange="angular.element(this).scope().PR_PhotoLibraryUpload(this)">
+                                    </label>
+                                </div>
+                                <div class="Icon" ng-show="x.Url!=null && x.Url!=''">
+                                    <a title="View Image" ng-click="OpenImageView(x.Url,'ResubmitPartialRequestModal')"><span><i class="icon-eye"></i></span></a>
+                                    <span title="Delete Image" ng-click="PR_RemovePhotoFromLibrary($index)"><i class="icon-bin"></i></span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row" ng-if="Repack_Partial_Rejected_Fields.includes('Additional Service')">
+                    <div class="col-md-12 col-sm-12 col-lg-12">
+                        <div class="AdditionalServiceSection partialrejected_additionalService">
+                            <table class="table text-center" ng-repeat="service in AdditionalServices">
+                                <thead>
+                                    <tr class="">
+                                        <th>{{GetAdditionalService(service,'field')}}</th>
+                                        <th>NUMBERS USED</th>
+                                        <th>HOURS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="row in GetAdditionalService(service,'service')">
+                                        <td width="50%"><span class="pl-15">{{row.field}}</span></td>
+                                        <td class="p-0" width="25%">
+                                            <select ng-model="row.NumberUsed">
+                                                <option ng-repeat="num in NumberList" ng-value="{{num}}">{{num}}</option>
+                                            </select>
+                                        </td>
+                                        <td class="p-0" width="25%">
+                                            <select ng-model="row.HourUsed">
+                                                <option ng-if="row.EventName =='MATERIAL_SUPPLY_CAR' && row.NumberUsed>0" ng-value="1">1</option>
+                                                <option ng-selected="row.HourUsed==num" ng-repeat="num in NumberList" ng-show="row.EventName !='MATERIAL_SUPPLY_CAR'" ng-value="{{num}}">{{num}}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:end;">
+                        <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" ng-click="PR_resubmit(PR_OBJ)">Resubmit request</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Content/ZoomInOut/ZoomInOut.js"></script>

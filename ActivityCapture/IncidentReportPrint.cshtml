@@ -1,0 +1,360 @@
+﻿@model ExamPortal.Model.Features.AcitvityCapture.GetIncidentReprotResponse
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Report Print</title>
+    <style>
+        /* --- General Setup --- */
+        body {
+           
+            margin: 0;
+            padding: 2rem;
+            background-color: white;
+        }
+        @@font-face {
+            font-family: "Pilat Wide Demi";
+            src: url("https://test-dpwops.dpworld.sa/Content/DPWFont/Pilat-Demi.ttf");
+        }
+        @@font-face {
+            font-family: "Pilat Wide";
+            src: url("https://test-dpwops.dpworld.sa/Content/DPWFont/PilatWide-Regular.ttf");
+        }
+
+        th {
+            font-family: "Pilat Wide Demi";
+        }
+        td {
+            font-family: "Pilat Wide";
+        }
+        .incident-report-container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            box-shadow: none;
+            background-color: white;
+            table-layout: fixed;
+        }
+
+        /* --- Print-Specific Styles --- */
+        @@media print {
+            body {
+                margin: 0 !important;
+                padding: 1.5rem;
+            }
+
+            .incident-report-container {
+                box-shadow: none !important;
+                border: none !important;
+                width: 100% !important;
+            }
+        }
+        @@page{
+            size:A4;
+            margin:0;
+        }
+
+       
+
+        /* --- Existing/Required Layout Styles --- */
+
+        /* Header Styling */
+        .header-row th {
+            background-color: #004d66;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: 1px solid #c0c0c0;
+        }
+
+        /* Section Header Styling (Matching the PDF's second-level blue) */
+        .section-header th {
+            background-color: #004d66;
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #c0c0c0;
+        }
+
+        /* General Table Cell Styling */
+        .incident-report-container td, .incident-report-container th {
+            border: 1px solid #004d66;
+            padding: 5px 8px;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
+        /* Style for the labels (first column - using th for labels) */
+        .label-cell {
+            background-color: #e9ecef;
+            font-weight: bold;
+            width: 20%;
+        }
+
+        /* Style for the input/data cells */
+        .data-cell {
+            width: 30%;
+            min-height: 25px;
+        }
+
+        /* Style for the "Yes/No" cells which have a data entry */
+        .data-entry {
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .photo-container {
+            display: inline-block;
+            margin-right: 10px;
+            border: 1px solid #c0c0c0;
+            padding: 5px;
+            text-align: center;
+            background-color: #f8f9fa;
+        }
+
+            .photo-container a {
+                text-decoration: none;
+                color: #004d66;
+                font-size: 1.5em;
+            }
+
+        /* Specific styles for the bottom verified by row */
+        .verified-row th {
+            text-align: right;
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+
+    <table class="incident-report-container">
+        <thead>
+            <tr class="header-row">
+                <th colspan="6">Incident Report</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="label-cell">Date:</td>
+                <td class="data-cell">@Model.Data.CreatedAt.ToString("dd/MM/yyyy")</td>
+                <td class="label-cell">Time:</td>
+                <td class="data-cell" colspan="3">@Model.Data.CreatedAt.ToString("HH:mm")</td>
+            </tr>
+            <tr>
+                <td class="label-cell">Incident type:</td>
+                <td class="data-cell">@Model.Data.ReportType</td>
+                <td class="label-cell">Sub Category:</td>
+                <td class="data-cell" colspan="3">@Model.Data.SubCategory</td>
+            </tr>
+            <tr>
+                <td class="label-cell">Sub Category:</td>
+                <td class="data-cell">Other</td>
+                <td class="label-cell"></td>
+                <td class="data-cell" colspan="3"></td>
+            </tr>
+
+            <tr class="section-header">
+                <th colspan="6">Reported By</th>
+            </tr>
+
+            <tr>
+                <td class="label-cell" style="width: 16.6%;">Employee ID:</td>
+                <td class="data-cell" style="width: 16.6%;">@Model.Data.Submittor_EmpId</td>
+                <td class="label-cell" style="width: 16.6%;">Name:</td>
+                <td class="data-cell" style="width: 16.6%;">@Model.Data.SubmittorFullName</td>
+                <td style="width: 16.6%;"></td>
+                <td style="width: 16.6%;"></td>
+            </tr>
+            <tr>
+                <td class="label-cell">Job Title:</td>
+                <td class="data-cell">@Model.Data.Submittor_JobTitle</td>
+                <td class="label-cell">Shift:</td>
+                <td class="data-cell">@Model.Data.Shift</td>
+                <td class="label-cell">Group:</td>
+                <td class="data-cell">@Model.Data.Group</td>
+            </tr>
+
+            <tr class="section-header">
+                <th colspan="6">Incident Details</th>
+            </tr>
+
+            <tr>
+                <td class="label-cell">Date:</td>
+                <td class="data-cell">@Model.Data.IncidentDatetime.ToString("dd/MM/yyyy")</td>
+                <td class="label-cell">Time:</td>
+                <td class="data-cell" colspan="3">@Model.Data.IncidentDatetime.ToString("HH:mm")</td>
+            </tr>
+            <tr>
+                <td class="label-cell">Location:</td>
+                <td class="data-cell">@Model.Data.Block</td>
+                <td class="label-cell">Sub Location:</td>
+                <td class="data-cell" colspan="3">@Model.Data.SubLocation</td>
+            </tr>
+            <tr>
+                <td class="label-cell">DPW Employee:</td>
+                <td class="data-cell data-entry">
+                    @if (Model.Data.DPWEmployee)
+                    {
+                        <span>YES</span>
+                    }
+                    else
+                    {
+                        <span>NO</span>
+                    }
+                </td>
+                <td class="label-cell">Contractor Name:</td>
+                <td class="data-cell" colspan="3">@Model.Data.Contractor</td>
+            </tr>
+            <tr>
+                <td class="label-cell">Involved Person ID / Iqama / Name:</td>
+                <td class="data-cell" colspan="5">@Model.Data.InvolvePersonIqamaId | @Model.Data.InvovledPersonName </td>               
+            </tr>
+            <tr>
+                <td class="label-cell">Position:</td>
+                <td class="data-cell" colspan="5">@Model.Data.InvovledPersonPosition</td>
+            </tr>
+            <tr>
+                <td class="label-cell">Were there any human injuries?</td>
+                <td class="data-cell data-entry">
+                    @if (Model.Data.HumanInjury)
+                    {
+                        <span>YES</span>
+                    }
+                    else
+                    {
+                        <span>NO</span>
+                    }
+                </td>
+                <td class="label-cell">First aid provided?</td>
+                <td class="data-cell data-entry" colspan="3">
+                    @if (Model.Data.FirstAid)
+                    {
+                        <span>YES</span>
+                    }
+                    else
+                    {
+                        <span>NO</span>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="label-cell">Describe the injuries:</td>
+                <td class="data-cell" colspan="5">@Model.Data.InjuriesDESC</td>
+            </tr>
+            <tr>
+                <td class="label-cell">Were there any damages?</td>
+                <td class="data-cell data-entry">
+                    @if (Model.Data.AnyDamage)
+                    {
+                        <span>YES</span>
+                    }
+                    else
+                    {
+                        <span>NO</span>
+                    }
+                </td>
+                <td class="label-cell">Identify the damages:</td>
+                <td class="data-cell" colspan="3">@Model.Data.DamageType</td>
+            </tr>
+            <tr>
+                <td class="label-cell">Describe the damages:</td>
+                <td class="data-cell" colspan="5">@Model.Data.DamageDESC</td>
+            </tr>
+            <tr>
+                <td class="label-cell">WI / SOP Available?</td>
+                <td class="data-cell data-entry">
+                    @if (Model.Data.WI_SOP_Available)
+                    {
+                        <span>YES</span>
+                    }
+                    else
+                    {
+                        <span>NO</span>
+                    }
+                </td>
+                <td class="label-cell">Remark:</td>
+                <td class="data-cell" colspan="3">@Model.Data.WI_SOP_Remarks</td>
+            </tr>
+            <tr>
+                <td class="label-cell">WI / SOP Followed ?</td>
+                <td class="data-cell data-entry">
+                    @if (Model.Data.WI_SOP_Followed)
+                    {
+                        <span>YES</span>
+                    }
+                    else
+                    {
+                        <span>NO</span>
+                    }
+                </td>
+                <td class="label-cell">Remark:</td>
+                <td class="data-cell" colspan="3">@Model.Data.WI_SOP_Followed_Remarks</td>
+            </tr>
+
+            <tr>
+                <td class="label-cell">Incident Description:</td>
+                <td class="data-cell" colspan="5">@Model.Data.IncidentDESC</td>
+            </tr>
+
+            <tr>
+                <td class="label-cell">Photos:</td>
+                <td class="data-cell" colspan="5">
+                    @foreach (var item in Model.Data.IR_PhotoLibrary)
+                    {
+                        <div class="photo-container">
+                            <a href="@item" target="_blank" title="View Photo">👁️</a>
+                        </div>
+                    }
+                </td>
+            </tr>
+
+            <tr>
+                <td class="label-cell">Actions Taken:</td>
+                <td class="data-cell" colspan="5">@Model.Data.ActionTaken</td>
+            </tr>
+
+            <tr>
+                <td class="label-cell">Initial Impact on Operation:</td>
+                <td class="data-cell" colspan="5">@Model.Data.InitalImpact</td>
+            </tr>
+
+            <tr>
+                <td class="label-cell">Involved Person Statement:</td>
+                <td class="data-cell" colspan="5">
+                    @if (!string.IsNullOrEmpty(Model.Data.StatementPhoto))
+                    {
+                        <div class="photo-container">
+                            <a href="@Model.Data.StatementPhoto" target="_blank" title="View Statement Photo">👁️</a>
+                        </div>
+                    }
+                </td>
+            </tr>
+
+            <tr>
+                <td class="label-cell">Person In Charge Statement:</td>
+                <td class="data-cell" colspan="5">@Model.Data.InchargeStatement</td>
+            </tr>
+
+            <tr>
+                <td class="label-cell">Witnesses:</td>
+                <td class="data-cell" colspan="5">@Model.Data.Witnesses</td>
+            </tr>
+
+            <tr class="verified-row">
+                <th colspan="5" style="border-right: none;">Verified by:</th>
+                <td class="data-cell" style="width: 20%; border-left: none;">@Model.Data.VerifiedBy</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

@@ -1,0 +1,417 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    .pagination {
+        display: inline-block;
+        padding-left: 0;
+        margin: 20px 0;
+        border-radius: 4px;
+    }
+
+        .pagination > li {
+            display: inline;
+        }
+
+    .nav {
+        display: block;
+    }
+
+    .pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+        z-index: 2;
+        color: #fff;
+        cursor: default;
+        background-color: var( --dpw-bg-color);
+        border-color: var( --dpw-bg-color);
+    }
+
+    .pagination > li > span:hover {
+        color: lightgrey;
+        cursor: grab;
+    }
+
+    .pagination > li > a, .pagination > li > span {
+        position: relative;
+        float: left;
+        padding: 6px 12px;
+        margin-left: -1px;
+        line-height: 1.428571429;
+        text-decoration: none;
+        background-color: #fff;
+        border: 1px solid #ddd;
+    }
+
+    .pagination > li:first-child > span {
+        margin-left: 0;
+        border-bottom-left-radius: 4px;
+        border-top-left-radius: 4px;
+    }
+
+    .customOption {
+        width: auto;
+        display: initial;
+        margin-left: 15px;
+        border: 2px solid #bdc3c7;
+        color: #34495e;
+        font-family: Lato,Helvetica,Arial,sans-serif;
+        font-size: 15px;
+        line-height: 1.467;
+        padding: 8px 12px;
+        height: 42px;
+        -webkit-appearance: listitem;
+        border-radius: 6px;
+        margin-bottom: 10px;
+    }
+
+    td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    tr td:nth-child(2) {
+        text-align: left;
+    }
+
+    tr {
+        transition: 0.5s;
+    }
+
+        tr:hover {
+            background-color: lightgrey;
+        }
+
+    .CloseModalBtn {
+        background: var( --dpw-bg-color);
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px;
+        padding: 8px;
+        cursor: pointer
+    }
+
+        .CloseModalBtn .fa-times-circle-o {
+            color: #ffff !important;
+        }
+
+    .modal-title {
+        color: var( --dpw-bg-color);
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+</style>
+<script src="~/Scripts/DatePicker/jquery.min.js"></script>
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.css" rel="stylesheet" />
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.standalone.css" rel="stylesheet" />
+<script src="~/Scripts/DatePicker/bootstrap-datepicker.js"></script>
+<div class="page-header border-bottom-0 blur">
+    <div class="page-header-content header-elements-md-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-details mr-2"></i> <span class="font-weight-semibold"><i class="icon-stack-text"></i>&nbsp; Excess Cargo</span></h4>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <input type="button" class="btn btn-secondary  m-t-19 pull-right" value="Filters" data-toggle="collapse" data-target="#demo" />
+                <input type="button" class="btn btn-primary  m-t-19 pull-right" value="New Form" onclick="window.open('/ExcessCargo/Add','_self')" />
+
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
+<div ng-controller="ExcessCargonCtrl" ng-init="init()" ng-cloak class="ng-cloak ">
+
+    <!--Search Filter Code Start-->
+    <div class="collapse blur" id="demo">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+
+                            <span style="font-weight:bold;">Container</span>
+                            <br />
+                            <input type="search" placeholder="Search" onkeyup="TableRowsCount()" id="SearchVessel" ng-model="search.Container" class="form-control search-input" data-table="customers-list" />
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span style="font-weight:bold;">Broker Name</span>
+                            <br />
+                            <input type="search" placeholder="Search" onkeyup="TableRowsCount()" id="SearchVessel" ng-model="search.BrokerName" class="form-control search-input" data-table="customers-list" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span style="font-weight:bold;">Truck No</span>
+                            <br />
+                            <input type="search" placeholder="Search" onkeyup="TableRowsCount()" id="SearchVessel" ng-model="search.TruckNo" class="form-control search-input" data-table="customers-list" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <span style="font-weight:bold;">Type</span>
+                            <br />
+                            <select ng-model="search.Type" id="selectElement" class="form-control select-clear">
+                                <option value="" disabled selected>Select Type</option>
+                                <option value="CARTOON">CARTOON</option>
+                                <option value="PALLET">PALLET</option>
+                                <option value="BUNDLE">BUNDLE</option>
+                                <option value="PIECES">PIECES</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @*<input type="button" class="btn btn-secondary col-md-4 ml-3 mt-3" value="Search" ng-click="VAFFilter2(search)" />*@
+
+                            <input type="button" class="btn btn-theme-gray pull-right" value="Reset" ng-click="Reset()" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Search Filter End -->
+    <!--counter Start-->
+    <div class="row blur">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="CounterCard">
+                <b>Total item: </b>  <span id="counts">{{(CargoFormList|filter:search).length}}</span>
+            </div>
+        </div>
+    </div>
+    <!--counter End-->
+    <!--Table Start-->
+    <div class="card table-card scrollbar blur">
+        <table class="table datatable-show-all customers-list" id="table-id">
+            <thead>
+                <tr class="table-card-head" style="text-align:center;height:50px;">
+                    <th>SR#</th>
+                    <th>Container</th>
+                    <th>Broker Name</th>
+                    <th>Location</th>
+                    <th>Type</th>
+                    <th>Quantity</th>
+                    <th>Cargo Status</th>
+                    <th>Truck No</th>
+                    <th>Created At</th>
+                    <th>Created By</th>
+                    <th>Action</th>
+                </tr>
+                <tr ng-show="CargoFormList.length>0 && CargoFormList!=null" ng-repeat="x in CargoFormList|filter:search | orderBy:'-Id'">
+                    <td>{{$index+1}}</td>
+                    <td>{{x.Container}}</td>
+                    <td>{{x.BrokerName}}</td>
+                    <td>{{x.Loaction}}</td>
+                    <td>{{x.Type}}</td>
+                    <td>{{x.Quantity}}</td>
+                    <td>{{x.Status}}</td>
+                    <td>{{x.TruckNo}}</td>
+                    <td>{{x.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                    <td>{{x.CreatedBy}}</td>
+                    <td style="white-space:nowrap !important">
+                        <span ng-click="PrintExcessCargo(x.Id)"><i class="icon-printer2" title="Print"></i></span>
+                        <span ng-click="DownloadExcessCargo(x.Id)"><i class="icon-file-download" title="download form"></i></span>
+                    </td>
+                </tr>
+                <tr ng-show="CargoFormList.length==0 || CargoFormList==null">
+                    <td colspan="12">No Data Found</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div class="row blur">
+        <div class="col-md-3">
+            <div class="form-group ">
+                <span style="font-weight:bold;">Select Rows</span>
+                <select data-placeholder="Select Rows" name="state" id="maxRows" class="form-control select-clear bg-gray" data-fouc>
+
+                    <option value="{{VesselArrivalForms.length}}">All Rows</option>
+                    <option value="4">4</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+
+                </select>
+            </div>
+        </div>
+        <div class='pagination-container' style="position: absolute;right: 25px;">
+            <nav>
+                <ul class="pagination">
+
+                    <li data-page="prev">
+                        <span> < <span class="sr-only">(current)</span></span>
+                    </li>
+                    <!--	Here the JS Function Will Add the Rows -->
+                    <li data-page="next" id="prev">
+                        <span> > <span class="sr-only">(current)</span></span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!--Table End-->
+    <div data-keyboard="false" data-backdrop="static" class="modal" id="MaintenanceModal" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="background:#f9f9f9;">
+                <div class="CloseModalBtn" ng-click="CloseMaintenanceModal()">
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h2><b>Upload Excess Cargo Form</b></h2>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="image-upload image-upload-submit mb-1" style="width: 50%; padding: 5px; border-radius: 8px;">
+                                <label for="Doc" style="font-size: 15px !important;">
+                                    <i class="icon-file-upload2" title="Upload Attachment" style=" color: #011c33; font-size: 16px;"></i>
+                                    Upload Doc
+                                </label>
+                                <input type="file" id="Doc" name="pic" onchange="angular.element(this).scope().UploadDoc('Doc','AddImg')">
+                                <input type="hidden" ng-model="Attachment" />
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button class="btn btn-primary ml-2 pull-right" ng-click="CloseMaintenanceModal()">Cancel</button>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+  
+</div>
+<script src="@Url.Content("~/Scripts/crypto-js.min.js")"></script>
+<script src="~/Scripts/DatePicker/CustomIntilizeJS.js"></script>
+<script src="~/Scripts/jquery.min.js"></script>
+
+<script>
+    //Signatutre
+
+
+    //Select Box
+
+
+    //Datepciker Start
+
+
+
+    //Pagination
+    $(document).ready(function () {
+        getPagination('#table-id');
+
+    });
+    function getPagination(table) {
+
+        var lastPage = 1;
+
+        $('#maxRows').on('change', function (evt) {
+            //$('.paginationprev').html('');						// reset pagination
+
+
+
+            lastPage = 1;
+            $('.pagination').find("li").slice(1, -1).remove();
+            var trnum = 0;									// reset tr counter
+            var maxRows = parseInt($(this).val());			// get Max Rows from select option
+
+            if (maxRows == 5000) {
+
+                $('.pagination').hide();
+            } else {
+
+                $('.pagination').show();
+            }
+
+            var totalRows = $(table + ' tbody tr').length;		// numbers of rows
+            $(table + ' tr:gt(0)').each(function () {			// each TR in  table and not the header
+                trnum++;									// Start Counter
+                if (trnum > maxRows) {						// if tr number gt maxRows
+
+                    $(this).hide();							// fade it out
+                } if (trnum <= maxRows) { $(this).show(); }// else fade in Important in case if it ..
+            });											//  was fade out to fade it in
+            if (totalRows > maxRows) {						// if tr total rows gt max rows option
+                var pagenum = Math.ceil(totalRows / maxRows);	// ceil total(rows/maxrows) to get ..
+                //	numbers of pages
+                for (var i = 1; i <= pagenum;) {			// for each page append pagination li
+                    $('.pagination #prev').before('<li data-page="' + i + '">\
+                                      <span>'+ i++ + '<span class="sr-only">(current)</span></span>\
+                                    </li>').show();
+                }											// end for i
+            } 												// end if row count > max rows
+            $('.pagination [data-page="1"]').addClass('active'); // add active class to the first li
+            $('.pagination li').on('click', function (evt) {		// on click each page
+                evt.stopImmediatePropagation();
+                evt.preventDefault();
+                var pageNum = $(this).attr('data-page');	// get it's number
+
+                var maxRows = parseInt($('#maxRows').val());			// get Max Rows from select option
+
+                if (pageNum == "prev") {
+                    if (lastPage == 1) { return; }
+                    pageNum = --lastPage;
+                }
+                if (pageNum == "next") {
+                    if (lastPage == ($('.pagination li').length - 2)) { return; }
+                    pageNum = ++lastPage;
+                }
+
+                lastPage = pageNum;
+                var trIndex = 0;							// reset tr counter
+                $('.pagination li').removeClass('active');	// remove active class from all li
+                $('.pagination [data-page="' + lastPage + '"]').addClass('active');// add active class to the clicked
+                // $(this).addClass('active');					// add active class to the clicked
+                $(table + ' tr:gt(0)').each(function () {		// each tr in table not the header
+                    trIndex++;								// tr index counter
+                    // if tr index gt maxRows*pageNum or lt maxRows*pageNum-maxRows fade if out
+                    if (trIndex > (maxRows * pageNum) || trIndex <= ((maxRows * pageNum) - maxRows)) {
+                        $(this).hide();
+                    } else { $(this).show(); } 				//else fade in
+                }); 										// end of for each tr in table
+            });										// end of on click pagination list
+
+        }).val(5000).change();
+
+        // end of on select change
+
+
+
+        // END OF PAGINATION
+    }
+</script>

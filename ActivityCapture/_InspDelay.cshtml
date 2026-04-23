@@ -1,0 +1,2724 @@
+﻿<style>
+
+    /*Inspection delay css*/
+
+    #ShowInspectionDelayModel .tabs, #ReReportInspectionDelayModel .tabs,
+    #ShowBlockInspectionDelayModel .tabs, #ReReportBlockInspectionDelayModel .tabs {
+        display: flex;
+        position: relative;
+        background-color: #fff;
+        box-shadow: 0 0 1px 0 rgba(24, 94, 224, 0.15), 0 6px 12px 0 rgba(24, 94, 224, 0.15);
+        padding: 5px 10px;
+        border-radius: 90px;
+        align-items: center;
+        vertical-align: middle;
+    }
+
+        #ShowInspectionDelayModel .tabs *, #ReReportInspectionDelayModel .tabs *,
+        #ShowBlockInspectionDelayModel .tabs *, #ReReportBlockInspectionDelayModel .tabs * {
+            z-index: 2;
+        }
+
+    #ShowInspectionDelayModel .container input[type="radio"], #ReReportInspectionDelayModel .container input[type="radio"],
+    #ShowBlockInspectionDelayModel .container input[type="radio"], #ReReportBlockInspectionDelayModel .container input[type="radio"] {
+        display: none;
+    }
+
+    #ShowInspectionDelayModel .tab, #ReReportInspectionDelayModel .tab,
+    #ShowBlockInspectionDelayModel .tab, #ReReportBlockInspectionDelayModel .tab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+        width: 160px;
+        font-size: .8rem;
+        color: black;
+        font-weight: 500;
+        border-radius: 99px;
+        cursor: pointer;
+        transition: color 0.15s ease-in;
+        margin: 0;
+    }
+
+    #ShowInspectionDelayModel .table td, #ShowInspectionDelayModel .table tr, #ShowInspectionDelayModel .table th,
+    #ReReportInspectionDelayModel .table td, #ReReportInspectionDelayModel .table tr, #ReReportInspectionDelayModel .table th,
+    #ShowBlockInspectionDelayModel .table td, #ShowBlockInspectionDelayModel .table tr, #ShowBlockInspectionDelayModel .table th,
+    #ReReportBlockInspectionDelayModel .table td, #ReReportBlockInspectionDelayModel .table tr, #ReReportBlockInspectionDelayModel .table th {
+        border: none !important;
+    }
+
+
+    #ShowInspectionDelayModel .container input[type="radio"]:checked + label,
+    #ReReportInspectionDelayModel .container input[type="radio"]:checked + label,
+    #ShowBlockInspectionDelayModel .container input[type="radio"]:checked + label,
+    #ReReportBlockInspectionDelayModel .container input[type="radio"]:checked + label {
+        color: #185ee0;
+    }
+
+        #ShowInspectionDelayModel .container input[type="radio"]:checked + label > .notification,
+        #ReReportInspectionDelayModel .container input[type="radio"]:checked + label > .notification,
+        #ShowBlockInspectionDelayModel .container input[type="radio"]:checked + label > .notification,
+        #ReReportBlockInspectionDelayModel .container input[type="radio"]:checked + label > .notification {
+            background-color: #185ee0;
+            color: #fff;
+            margin: 0px;
+        }
+
+    #ShowInspectionDelayModel .container input[id="radio-4"]:checked ~ .glider,
+    #ReReportInspectionDelayModel .container input[id="radio-7"]:checked ~ .glider,
+    #ShowBlockInspectionDelayModel .container input[id="radio-4"]:checked ~ .glider,
+    #ReReportBlockInspectionDelayModel .container input[id="radio-7"]:checked ~ .glider {
+        transform: translateX(0);
+    }
+
+    #ShowInspectionDelayModel .container input[id="radio-5"]:checked ~ .glider,
+    #ReReportInspectionDelayModel .container input[id="radio-8"]:checked ~ .glider,
+    #ShowBlockInspectionDelayModel .container input[id="radio-5"]:checked ~ .glider,
+    #ReReportBlockInspectionDelayModel .container input[id="radio-8"]:checked ~ .glider {
+        transform: translateX(100%);
+    }
+
+    #ShowInspectionDelayModel .container input[id="radio-6"]:checked ~ .glider,
+    #ReReportInspectionDelayModel .container input[id="radio-9"]:checked ~ .glider,
+    #ShowBlockInspectionDelayModel .container input[id="radio-6"]:checked ~ .glider,
+    #ReReportBlockInspectionDelayModel .container input[id="radio-9"]:checked ~ .glider {
+        transform: translateX(200%);
+    }
+
+    #ShowInspectionDelayModel .glider, #ReReportInspectionDelayModel .glider,
+    #ShowBlockInspectionDelayModel .glider, #ReReportBlockInspectionDelayModel .glider {
+        position: absolute;
+        display: flex;
+        height: 30px;
+        width: 160px;
+        background-color: #e6eef9;
+        z-index: 1;
+        border-radius: 99px;
+        transition: 0.25s ease-out;
+    }
+
+    @@media(max-width: 700px) {
+        #ShowInspectionDelayModel .tabs, #ReReportInspectionDelayModel .tabs,
+        #ShowBlockInspectionDelayModel .tabs, #ReReportBlockInspectionDelayModel .tabs {
+            transform: scale(0.6);
+        }
+    }
+
+
+
+
+    .ReportInspectionDelayModelCard {
+        padding: 14px 20px;
+        border-radius: 14px;
+        margin-top: 20px;
+    }
+
+        .ReportInspectionDelayModelCard .dpx {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .ReportInspectionDelayModelCard label {
+            display: block;
+        }
+
+        .ReportInspectionDelayModelCard .option-input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -ms-appearance: none;
+            -o-appearance: none;
+            appearance: none;
+            position: relative;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            transition: all 0.15s ease-out 0s;
+            background: #cbd1d8;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 0.5rem;
+            outline: none;
+            position: relative;
+            z-index: 1000;
+            vertical-align: middle
+        }
+
+            .ReportInspectionDelayModelCard .option-input:hover {
+                background: #9faab7;
+            }
+
+            .ReportInspectionDelayModelCard .option-input:checked {
+                background: var( --dpw-bg-color);
+            }
+
+                .ReportInspectionDelayModelCard .option-input:checked::before {
+                    width: 20px;
+                    height: 20px;
+                    display: flex;
+                    content: "\ed6f";
+                    font-size: 13px;
+                    font-weight: bold;
+                    position: absolute;
+                    align-items: center;
+                    justify-content: center;
+                    font-family: icomoon !important;
+                    font-weight: 900;
+                }
+
+                .ReportInspectionDelayModelCard .option-input:checked::after {
+                    -webkit-animation: click-wave 0.65s;
+                    -moz-animation: click-wave 0.65s;
+                    animation: click-wave 0.65s;
+                    background: var( --dpw-bg-color);
+                    content: '';
+                    display: block;
+                    position: relative;
+                    z-index: 100;
+                }
+
+            .ReportInspectionDelayModelCard .option-input:disabled {
+                cursor: not-allowed;
+                opacity: 0.6;
+            }
+
+                .ReportInspectionDelayModelCard .option-input:disabled::after {
+                    background: #333 !important;
+                }
+
+
+            .ReportInspectionDelayModelCard .option-input.radio {
+                border-radius: 50%;
+            }
+
+                .ReportInspectionDelayModelCard .option-input.radio::after {
+                    border-radius: 50%;
+                }
+
+
+
+    /*Inspection delay css end*/
+
+    #ReportInspectionDelayModel .tabs,
+    #ReportBlockInspectionDelayModel .tabs {
+        display: flex;
+        position: relative;
+        background-color: #fff;
+        box-shadow: 0 0 1px 0 rgba(24, 94, 224, 0.15), 0 6px 12px 0 rgba(24, 94, 224, 0.15);
+        padding: 5px 10px;
+        border-radius: 90px;
+        align-items: center;
+        vertical-align: middle;
+    }
+
+        #ReportInspectionDelayModel .tabs *,
+        #ReportBlockInspectionDelayModel .tabs * {
+            z-index: 2;
+        }
+
+    #ReportInspectionDelayModel .container input[type="radio"],
+    #ReportBlockInspectionDelayModel .container input[type="radio"] {
+        display: none;
+    }
+
+    #ReportInspectionDelayModel .tab,
+    #ReportBlockInspectionDelayModel .tab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+        width: 160px;
+        font-size: .8rem;
+        color: black;
+        font-weight: 500;
+        border-radius: 99px;
+        cursor: pointer;
+        transition: color 0.15s ease-in;
+        margin: 0;
+    }
+
+
+
+    #ReportInspectionDelayModel .container input[type="radio"]:checked + label,
+    #ReportBlockInspectionDelayModel .container input[type="radio"]:checked + label {
+        color: #185ee0;
+    }
+
+        #ReportInspectionDelayModel .container input[type="radio"]:checked + label > .notification,
+        #ReportBlockInspectionDelayModel .container input[type="radio"]:checked + label > .notification {
+            background-color: #185ee0;
+            color: #fff;
+            margin: 0px;
+        }
+
+    #ReportInspectionDelayModel .container input[id="radio-1"]:checked ~ .glider,
+    #ReportBlockInspectionDelayModel .container input[id="Blockradio-1"]:checked ~ .glider {
+        transform: translateX(0);
+    }
+
+    #ReportInspectionDelayModel .container input[id="radio-2"]:checked ~ .glider,
+    #ReportBlockInspectionDelayModel .container input[id="Blockradio-2"]:checked ~ .glider {
+        transform: translateX(100%);
+    }
+
+    #ReportInspectionDelayModel .container input[id="radio-3"]:checked ~ .glider,
+    #ReportBlockInspectionDelayModel .container input[id="Blockradio-3"]:checked ~ .glider {
+        transform: translateX(200%);
+    }
+
+    #ReportInspectionDelayModel .glider,
+    #ReportBlockInspectionDelayModel .glider {
+        position: absolute;
+        display: flex;
+        height: 30px;
+        width: 160px;
+        background-color: #e6eef9;
+        z-index: 1;
+        border-radius: 99px;
+        transition: 0.25s ease-out;
+    }
+
+    @@media(max-width: 700px) {
+        #ReportInspectionDelayModel .tabs,
+        #ReportBlockInspectionDelayModel .tabs {
+            transform: scale(0.6);
+        }
+    }
+
+    @@keyframes click-wave {
+        0% {
+            height: 20px;
+            width: 20px;
+            opacity: 0.35;
+            position: relative;
+        }
+
+        100% {
+            height: 100px;
+            width: 100px;
+            margin-left: -40px;
+            margin-top: -40px;
+            opacity: 0;
+        }
+    }
+
+    .InspDelayDtlsHeader .Approvebadge {
+        background: #00946b1f !important;
+        border: 1px solid #00946b !important;
+        padding: 4px;
+        border-radius: 6px;
+    }
+
+    .InspDelayDtlsHeader .PendingApprovalEvent {
+        background: #ffa5001a !important;
+        border: 1px solid orange !important;
+        padding: 4px;
+        border-radius: 6px;
+    }
+
+    .InspDelayDtlsHeader .RejectedApprovalEvent {
+        background: #ff00001c !important;
+        border: 1px solid red !important;
+        padding: 4px;
+        border-radius: 6px;
+    }
+
+    .activeglider {
+        background-color: #e6eef9 !important;
+    }
+
+    .departtable {
+        border: none !important;
+        border-bottom: 1px solid #333;
+        margin-top: 10px;
+    }
+
+    .text-left {
+        text-align: left !important;
+    }
+
+    .dark-header {
+        background: #80a4c338 !important;
+    }
+
+    .light-header {
+        background: #001b3205 !important;
+    }
+
+    .font-size-10 {
+        font-size: 10px !important;
+    }
+
+    .w-150 {
+        width: 150px;
+    }
+
+    .departtable .Approvebadge {
+        background: #33333317 !important;
+        border: 1px solid #111 !important;
+        padding: 1px 8px;
+    }
+
+    .departtable .RejectedApprovalEvent, .departtable .PendingApprovalEvent {
+        padding: 1px 8px;
+    }
+</style>
+
+@*Inspection delays*@
+<div ng-controller="InspDelayRPTCtrl">
+
+
+
+    <div class="modal fade" id="ReportInspectionDelayModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{InspDelay.Cntr}} Inspection Delays</h5>
+                </div>
+                <div class="modal-body" style="max-height:400px;overflow-x:auto;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="container">
+                                <div class="tabs">
+                                    <input type="radio" id="radio-1" name="tabs" checked="" onchange="angular.element(this).scope().InspectionDelayTabChange(this)">
+                                    <label class="tab" for="radio-1">Operational Delays</label>
+
+                                    <input type="radio" id="radio-2" name="tabs" onchange="angular.element(this).scope().InspectionDelayTabChange(this)">
+                                    <label class="tab" for="radio-2">Custom Delays</label>
+
+                                    <input type="radio" id="radio-3" name="tabs" onchange="angular.element(this).scope().InspectionDelayTabChange(this)">
+                                    <label class="tab" for="radio-3">Other</label>
+                                    <span class="glider"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card ReportInspectionDelayModelCard">
+                                <div class="dpx">
+                                    <div class='py cursor-pointer'>
+                                        <label ng-repeat="item in InspectionDelayDD">
+                                            <input type="checkbox" class="option-input radio" name="pyradio" value="{{item.Content}}" ng-model="item.action" />
+                                            {{item.Content}}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-success" ng-click="SubmitInspectionDelays()">Submit</button>
+                            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ShowInspectionDelayModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{InspdelayRecord.Cntr}} <span ng-if="InspdelayRecord.bl_nbr != null">({{InspdelayRecord.bl_nbr}})</span> Inspection Delays</h5>
+                </div>
+                <div class="modal-body" style="max-height:400px;overflow-x:auto;">
+
+                    <div id="accordion" ng-if="InspdelayRecordList.length > 1">
+                        <div class="card" ng-repeat="MultiItem in InspdelayRecordList">
+                            <div class="card-header InspDelayDtlsHeader" id="heading{{$index}}" data-toggle="collapse" data-target="#Inspcollapse{{$index}}" aria-expanded="true" aria-controls="collapseOne">
+                                <div class="d-inline-block" style="line-height: 8px;">
+                                    <p> {{MultiItem.Createdby}} </p>
+                                    <small class="text-grey">{{MultiItem.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</small>
+                                </div>
+                                <div class="pull-right">
+                                    <span ng-if="MultiItem.ApproveStatus == 1 || MultiItem.ApproveStatus == 0" class="PendingApprovalEvent pull-right">Pending for approval</span>
+                                    <span ng-if="MultiItem.ApproveStatus == 2" class="Approvebadge pull-right">Approved</span>
+                                    <span ng-if="MultiItem.ApproveStatus == 3" class="RejectedApprovalEvent pull-right">Rejected</span>
+                                </div>
+
+                            </div>
+
+                            <div id="Inspcollapse{{$index}}" class="collapse" ng-class="{'show' : $index==0}" aria-labelledby="heading{{$index}}" data-parent="#accordion">
+                                <div class="card-body">
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="container">
+                                                <div class="tabs">
+                                                    <input type="radio" id="radio-{{$index+1}}" name="tabs" checked="" disabled>
+                                                    <label class="tab" for="radio-{{$index+1}}" ng-class="{'activeglider': MultiItem.DelayType=='operational'}">Operational Delays</label>
+
+                                                    <input type="radio" id="radio-{{$index+2}}" name="tabs" disabled>
+                                                    <label class="tab" for="radio-{{$index+2}}" ng-class="{'activeglider': MultiItem.DelayType=='Customs'}">Custom Delays</label>
+
+                                                    <input type="radio" id="radio-{{$index+3}}" name="tabs" disabled>
+                                                    <label class="tab" for="radio-{{$index+3}}" ng-class="{'activeglider': MultiItem.DelayType=='Others'}">Other</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card ReportInspectionDelayModelCard">
+                                                <div class="dpx">
+                                                    <div class='py cursor-pointer w-100'>
+                                                        <table class="table departtable" ng-repeat="item in MultiItem.DelayReasons">
+                                                            <thead class="thead-light" ng-if="item.DepartInvloved==true">
+                                                                <tr>
+                                                                    <th colspan="4" class="light-header">
+                                                                        <label class="text-left">
+                                                                            <input type="checkbox" class="option-input radio" name="pyradio" checked="true" disabled readonly />
+                                                                            {{item.Reason}} <span class="pull-right">({{getReasonDelayDuaration(item.DepartmentStatusList,MultiItem,item)}})</span>
+                                                                        </label>
+                                                                    </th>
+                                                                </tr>
+                                                                <tr ng-show="CheckApproveDisplay(item)">
+                                                                    <td colspan="4">
+                                                                        <button class="btn-sm pull-right btn btn-danger" ng-click="ApproveRejectDepartNotifiyAll(item,false)">Reject</button>
+                                                                        <button class="btn-sm pull-right mr-2 btn btn-success" ng-click="ApproveRejectDepartNotifiyAll(item,true)">Approve</button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr ng-show="CheckCloseDisplay(item)">
+                                                                    <td colspan="4">
+                                                                        <button class="btn-sm pull-right btn btn-danger" ng-click="CloseRejectDepartAll(item,false)">Reject</button>
+                                                                        <button class="btn-sm pull-right mr-2 btn btn-success" ng-click="CloseRejectDepartAll(item,true)">Close</button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr ng-if="item.DepartmentStatusList != null && item.DepartmentStatusList.length>0">
+                                                                    <th class="text-left dark-header   font-size-10 w-150">Department</th>
+                                                                    <th class="text-center dark-header font-size-10 w-150">Status</th>
+                                                                    <th class="text-center dark-header font-size-10">Emails</th>
+                                                                    <th class="text-center dark-header font-size-10" ng-if="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') &&  !_currentUser.UserType.includes('FK_DTSOperator')">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <thead class="thead-light" ng-if="item.DepartInvloved!=true">
+                                                                <tr>
+                                                                    <th class="light-header">
+                                                                        <label class="text-left">
+                                                                            <input type="checkbox" class="option-input radio" name="pyradio" checked="true" disabled readonly />
+                                                                            {{item.Reason}}
+                                                                        </label>
+                                                                    </th>
+                                                                    <td>
+                                                                        <span class="pull-right">({{getReasonDelayDuaration(item.DepartmentStatusList,MultiItem,item)}})</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span ng-show="item.DepartmentStatusList.length == 0">
+                                                                            <span class="PendingApprovalEvent" ng-show="( item.SprVSAction==null ||item.SprVSAction=='') &&( item.SnrSprAction==null ||item.SnrSprAction=='')">Pending</span>
+                                                                            <span class="PendingApprovalEvent" ng-show="( item.SprVSAction!=null && item.SprVSAction!='') &&( item.SnrSprAction==null ||item.SnrSprAction=='')">Inprogress</span>
+                                                                            <span class="Approvebadge" ng-show="item.SnrSprAction!=null && item.SnrSprAction!=''">Closed</span>
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span ng-show="CheckDirectApproveReject(item)" ng-click="ApproveRejectNOdepartDelay(item,'Reject')"><i class="icon-close2 text-danger"></i></span>
+                                                                        <span ng-show="CheckDirectApproveReject(item)" ng-click="ApproveRejectNOdepartDelay(item,'Approve')"><i class="icon-check text-success"></i></span>
+                                                                    </td>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody ng-if="item.DepartmentStatusList != null && item.DepartmentStatusList.length>0">
+                                                                <tr ng-repeat="dep in item.DepartmentStatusList">
+                                                                    <td class="text-left font-size-10">{{dep.Department}}</td>
+                                                                    <td class="font-size-10">
+                                                                        <span ng-if="dep.DepartmentStatus == 'PENDING'"
+                                                                              class="PendingApprovalEvent">
+                                                                            PENDING
+                                                                        </span>
+                                                                        <span ng-if="dep.DepartmentStatus == 'NOTIFIED'"
+                                                                              class="PendingApprovalEvent"
+                                                                              title="Notified Time:{{dep.NotifiedTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Notified By: {{dep.NotifiedBy}}">
+                                                                            Waiting for Dep closure
+                                                                        </span>
+                                                                        <span ng-if="dep.DepartmentStatus == 'RESOLVED'"
+                                                                              class="Approvebadge"
+                                                                              title="Resolved Time:{{dep.DepartmentActionTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Resolved By: {{dep.DepartmentActionBy}}">
+                                                                            Resolved by Dep
+                                                                        </span>
+                                                                        <span ng-if="dep.DepartmentStatus == 'APPROVED'"
+                                                                              class="Approvebadge"
+                                                                              title="Approved Time:{{dep.ActionTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Approved By: {{dep.ActionBy}}">
+                                                                            Closed
+                                                                        </span>
+                                                                        <span ng-if="dep.DepartmentStatus == 'REJECTED AND NOTIFIED'" class="RejectedApprovalEvent"
+                                                                              title="Rejected/Notified Time:{{dep.NotifiedTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Rejected/Notified By: {{dep.NotifiedBy}}">Rejected & Notified</span>
+                                                                    </td>
+                                                                    <td class="font-size-10">
+                                                                        <i class="icon-user" title="{{dep.Emails}}"></i>
+                                                                    </td>
+                                                                    <td class="font-size-10">
+                                                                        <i class="icon-close2 text-danger"
+                                                                           ng-if="dep.DepartmentStatus != 'APPROVED'"
+                                                                           ng-show="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')"
+                                                                           ng-click="ApproveRejectdepartDelay(dep,false,item)" title="Reject">
+
+                                                                        </i>
+                                                                        <i class="icon-check text-success"
+                                                                           ng-if="dep.DepartmentStatus != 'APPROVED'"
+                                                                           ng-show="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')"
+                                                                           ng-click="ApproveRejectdepartDelay(dep,true,item)" title="{{dep.DepartmentStatus == 'PENDING'?'Approve':'Close'}}">
+                                                                        </i>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card mb-3 shadow-sm" style="border-radius:15px;">
+                                                <div class="card-body">
+                                                    <table class="table" style="border: none !important;">
+                                                        <tr>
+                                                            <th>Status</th>
+                                                            <td class="text-right">
+                                                                <span ng-if="MultiItem.ApproveStatus == 1 || MultiItem.ApproveStatus == 0" class="PendingApprovalEvent">Pending for approval</span>
+                                                                <span ng-if="MultiItem.ApproveStatus == 2" class="Approvebadge">Approved</span>
+                                                                <span ng-if="MultiItem.ApproveStatus == 3" class="RejectedApprovalEvent">Rejected</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Created By</th>
+                                                            <td class="text-right">{{MultiItem.Createdby}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Created At</th>
+                                                            <td class="text-right">{{MultiItem.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                        </tr>
+                                                        <tr ng-if="MultiItem.UpdatedBy != null">
+                                                            <th>Updated By</th>
+                                                            <td class="text-right">{{MultiItem.UpdatedBy}}</td>
+                                                        </tr>
+                                                        <tr ng-if="MultiItem.UpdatedAt != null">
+                                                            <th>Updated At</th>
+                                                            <td class="text-right">{{MultiItem.UpdatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12" style="text-align:end;">
+                                            <button class="btn btn-danger"
+                                                    ng-show="InspDelayBtnsVerification(MultiItem)"
+                                                    ng-click="ApproveRejectInspectionDelay(MultiItem,false)">
+                                                Reject all delays
+                                            </button>
+                                            <button class="btn btn-success"
+                                                    ng-show="InspDelayBtnsVerification(MultiItem)"
+                                                    ng-click="ApproveRejectInspectionDelay(MultiItem,true)">
+                                                Close delays
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="InspdelayRecordList.length ==1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="container">
+                                    <div class="tabs">
+                                        <input type="radio" id="radio-4" name="tabs" checked="" disabled>
+                                        <label class="tab" for="radio-4" ng-class="{'activeglider': InspdelayRecord.DelayType=='operational'}">Operational Delays</label>
+
+                                        <input type="radio" id="radio-5" name="tabs" disabled>
+                                        <label class="tab" for="radio-5" ng-class="{'activeglider': InspdelayRecord.DelayType=='Customs'}">Custom Delays</label>
+
+                                        <input type="radio" id="radio-6" name="tabs" disabled>
+                                        <label class="tab" for="radio-6" ng-class="{'activeglider': InspdelayRecord.DelayType=='Others'}">Other</label>
+                                        @*<span class="glider"></span>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card ReportInspectionDelayModelCard">
+                                    <div class="dpx">
+                                        <div class='py cursor-pointer w-100'>
+                                            <table class="table departtable" ng-repeat="item in InspdelayRecord.DelayReasons">
+                                                <thead class="thead-light" ng-if="item.DepartInvloved==true">
+                                                    <tr>
+                                                        <th colspan="4" class="light-header">
+                                                            <label class="text-left">
+                                                                <input type="checkbox" class="option-input radio" name="pyradio" checked="true" disabled readonly />
+                                                                {{item.Reason}}
+                                                                <span class="pull-right">({{getReasonDelayDuaration(item.DepartmentStatusList,InspdelayRecord,item)}})</span>
+                                                            </label>
+                                                        </th>
+                                                    </tr>
+                                                    <tr ng-show="CheckApproveDisplay(item)">
+                                                        <td colspan="4">
+                                                            <button class="btn-sm pull-right btn btn-danger" ng-click="ApproveRejectDepartNotifiyAll(item,false)">Reject</button>
+                                                            <button class="btn-sm pull-right mr-2 btn btn-success" ng-click="ApproveRejectDepartNotifiyAll(item,true)">Approve</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr ng-show="CheckCloseDisplay(item)">
+                                                        <td colspan="4">
+                                                            <button class="btn-sm pull-right btn btn-danger" ng-click="CloseRejectDepartAll(item,false)">Reject</button>
+                                                            <button class="btn-sm pull-right mr-2 btn btn-success" ng-click="CloseRejectDepartAll(item,true)">Close</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr ng-if="item.DepartmentStatusList != null && item.DepartmentStatusList.length>0">
+                                                        <th class="text-left dark-header   font-size-10 w-150">Department</th>
+                                                        <th class="text-center dark-header font-size-10 w-150">Status</th>
+                                                        <th class="text-center dark-header font-size-10">Emails</th>
+                                                        <th class="text-center dark-header font-size-10" ng-if="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <thead class="thead-light" ng-if="item.DepartInvloved!=true">
+                                                    <tr>
+                                                        <th class="light-header">
+                                                            <label class="text-left">
+                                                                <input type="checkbox" class="option-input radio" name="pyradio" checked="true" disabled readonly />
+                                                                {{item.Reason}}
+                                                            </label>
+                                                        </th>
+                                                        <td>
+                                                            <span class="pull-right">({{getReasonDelayDuaration(item.DepartmentStatusList,InspdelayRecord,item)}})</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-show="item.DepartmentStatusList.length == 0">
+                                                                <span class="PendingApprovalEvent" ng-show="( item.SprVSAction==null ||item.SprVSAction=='') &&( item.SnrSprAction==null ||item.SnrSprAction=='')">Pending</span>
+                                                                <span class="PendingApprovalEvent" ng-show="( item.SprVSAction!=null && item.SprVSAction!='') &&( item.SnrSprAction==null ||item.SnrSprAction=='')">Inprogress</span>
+                                                                <span class="Approvebadge" ng-show="item.SnrSprAction!=null && item.SnrSprAction!=''">Closed</span>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-show="CheckDirectApproveReject(item)" ng-click="ApproveRejectNOdepartDelay(item,'Reject')"><i class="icon-close2 text-danger"></i></span>
+                                                            <span ng-show="CheckDirectApproveReject(item)" ng-click="ApproveRejectNOdepartDelay(item,'Approve')"><i class="icon-check text-success"></i></span>
+                                                        </td>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-if="item.DepartmentStatusList != null && item.DepartmentStatusList.length>0">
+                                                    <tr ng-repeat="dep in item.DepartmentStatusList">
+                                                        <td class="text-left font-size-10">{{dep.Department}}</td>
+                                                        <td class="font-size-10">
+                                                            <span ng-if="dep.DepartmentStatus == 'PENDING'"
+                                                                  class="PendingApprovalEvent">
+                                                                PENDING
+                                                            </span>
+                                                            <span ng-if="dep.DepartmentStatus == 'NOTIFIED'"
+                                                                  class="PendingApprovalEvent"
+                                                                  title="Notified Time:{{dep.NotifiedTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Notified By: {{dep.NotifiedBy}}">
+                                                                Waiting for Dep closure
+                                                            </span>
+                                                            <span ng-if="dep.DepartmentStatus == 'RESOLVED'"
+                                                                  class="Approvebadge"
+                                                                  title="Resolved Time:{{dep.DepartmentActionTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Resolved By: {{dep.DepartmentActionBy}}">
+                                                                Resolved by Dep
+                                                            </span>
+                                                            <span ng-if="dep.DepartmentStatus == 'APPROVED'"
+                                                                  class="Approvebadge"
+                                                                  title="Approved Time:{{dep.ActionTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Approved By: {{dep.ActionBy}}">
+                                                                Closed
+                                                            </span>
+                                                            <span ng-if="dep.DepartmentStatus == 'REJECTED AND NOTIFIED'" class="RejectedApprovalEvent"
+                                                                  title="Rejected/Notified Time:{{dep.NotifiedTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Rejected/Notified By: {{dep.NotifiedBy}}">Rejected & Notified</span>
+                                                        </td>
+                                                        <td class="font-size-10">
+                                                            <i class="icon-user" title="{{dep.Emails}}"></i>
+                                                        </td>
+                                                        <td class="font-size-10">
+                                                            <i class="icon-close2 text-danger"
+                                                               ng-if="dep.DepartmentStatus != 'APPROVED'"
+                                                               ng-show="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')"
+                                                               ng-click="ApproveRejectdepartDelay(dep,false,item)" title="Reject">
+
+                                                            </i>
+                                                            <i class="icon-check text-success"
+                                                               ng-if="dep.DepartmentStatus != 'APPROVED'"
+                                                               ng-show="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')"
+                                                               ng-click="ApproveRejectdepartDelay(dep,true,item)" title="{{dep.DepartmentStatus == 'PENDING'?'Approve':'Close'}}">
+                                                            </i>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card mb-3 shadow-sm" style="border-radius:15px;">
+                                    <div class="card-body">
+                                        <table class="table" style="border: none !important;">
+                                            <tr>
+                                                <th>Status</th>
+                                                <td class="text-right">
+                                                    <span ng-if="InspdelayRecord.ApproveStatus == 1 || InspdelayRecord.ApproveStatus == 0" class="PendingApprovalEvent">Pending for approval</span>
+                                                    <span ng-if="InspdelayRecord.ApproveStatus == 2" class="Approvebadge">Approved</span>
+                                                    <span ng-if="InspdelayRecord.ApproveStatus == 3" class="RejectedApprovalEvent">Rejected</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Delay Start Time</th>
+                                                <td class="text-right">{{InspdelayRecord.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Duration</th>
+                                                <td class="text-right">{{getInspecDelayDuaration(InspdelayRecord)}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Delay closed Time</th>
+                                                <td class="text-right" ng-if="InspdelayRecord.UpdatedAt == null">N/A</td>
+                                                <td class="text-right" ng-if="InspdelayRecord.UpdatedAt != null">{{InspdelayRecord.UpdatedAt  | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Delay reported by</th>
+                                                <td class="text-right">{{InspdelayRecord.Createdby}}</td>
+                                            </tr>
+                                            <tr ng-if="InspdelayRecord.UpdatedBy != null">
+                                                <th>Delay approved by</th>
+                                                <td class="text-right">{{InspdelayRecord.UpdatedBy}}</td>
+                                            </tr>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-primary"
+                                    @*ng-show="InspdelayRecord.ApproveStatus == 2"*@
+                                    ng-click="RecordAgainDelay(InspdelayRecordList[0],true)">
+                                Record new delay
+                            </button>
+                            <button class="btn btn-danger"
+                                    ng-if="CheckApproveRejectAll(InspdelayRecordList)"
+                                    ng-show="InspDelayBtnsVerification(InspdelayRecord)"
+                                    ng-click="ApproveRejectInspectionDelay(InspdelayRecord,false)">
+                                Reject all delays
+                            </button>
+                            <button class="btn btn-success"
+                                    ng-if="CheckApproveRejectAll(InspdelayRecordList)"
+                                    ng-show="InspDelayBtnsVerification(InspdelayRecord)"
+                                    ng-click="ApproveRejectInspectionDelay(InspdelayRecord,true)">
+                                Close delays
+                            </button>
+                            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--//UD-->
+    <div class="modal fade" id="ReportBlockInspectionDelayModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{BlockInspDelay.Block}} Inspection Delays</h5>
+                </div>
+                <div class="modal-body" style="max-height:400px;overflow-x:auto;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="container">
+                                <div class="tabs">
+                                    <input type="radio" id="Blockradio-1" name="tabs" checked="" onchange="angular.element(this).scope().BlockInspectionDelayTabChange(this)">
+                                    <label class="tab" for="Blockradio-1">Operational Delays</label>
+                                    <input type="radio" id="Blockradio-2" name="tabs" onchange="angular.element(this).scope().BlockInspectionDelayTabChange(this)">
+                                    <label class="tab" for="Blockradio-2">Custom Delays</label>
+                                    <input type="radio" id="Blockradio-3" name="tabs" onchange="angular.element(this).scope().BlockInspectionDelayTabChange(this)">
+                                    <label class="tab" for="Blockradio-3">Other</label>
+                                    <span class="glider"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card ReportInspectionDelayModelCard">
+                                <div class="dpx">
+                                    <div class='py cursor-pointer'>
+                                        <label ng-repeat="item in InspectionDelayDD">
+                                            <input type="checkbox" class="option-input radio" name="pyradio" value="{{item.Content}}" ng-model="item.action" />
+                                            {{item.Content}}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-success" ng-click="SubmitBlockInspectionDelays()">Submit</button>
+                            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ShowBlockInspectionDelayModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{InspdelayRecord.Cntr}} Inspection Delays</h5>
+                </div>
+                <div class="modal-body" style="max-height:400px;overflow-x:auto;">
+
+                    <div id="accordion" ng-if="InspdelayRecordList.length > 1">
+                        <div class="card" ng-repeat="MultiItem in InspdelayRecordList">
+                            <div class="card-header InspDelayDtlsHeader" id="heading{{$index}}" data-toggle="collapse" data-target="#Inspcollapse{{$index}}" aria-expanded="true" aria-controls="collapseOne">
+                                <div class="d-inline-block" style="line-height: 8px;">
+                                    <p> {{MultiItem.Createdby}} </p>
+                                    <small class="text-grey">{{MultiItem.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</small>
+                                </div>
+                                <div class="pull-right">
+                                    <span ng-if="MultiItem.ApproveStatus == 1 || MultiItem.ApproveStatus == 0" class="PendingApprovalEvent pull-right">Pending for approval</span>
+                                    <span ng-if="MultiItem.ApproveStatus == 2" class="Approvebadge pull-right">Approved</span>
+                                    <span ng-if="MultiItem.ApproveStatus == 3" class="RejectedApprovalEvent pull-right">Rejected</span>
+                                </div>
+
+                            </div>
+
+                            <div id="Inspcollapse{{$index}}" class="collapse" ng-class="{'show' : $index==0}" aria-labelledby="heading{{$index}}" data-parent="#accordion">
+                                <div class="card-body">
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="container">
+                                                <div class="tabs">
+                                                    <input type="radio" id="radio-{{$index+1}}" name="tabs" checked="" disabled>
+                                                    <label class="tab" for="radio-{{$index+1}}" ng-class="{'activeglider': MultiItem.DelayType=='operational'}">Operational Delays</label>
+
+                                                    <input type="radio" id="radio-{{$index+2}}" name="tabs" disabled>
+                                                    <label class="tab" for="radio-{{$index+2}}" ng-class="{'activeglider': MultiItem.DelayType=='Customs'}">Custom Delays</label>
+
+                                                    <input type="radio" id="radio-{{$index+3}}" name="tabs" disabled>
+                                                    <label class="tab" for="radio-{{$index+3}}" ng-class="{'activeglider': MultiItem.DelayType=='Others'}">Other</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card ReportInspectionDelayModelCard">
+                                                <div class="dpx">
+                                                    <div class='py cursor-pointer w-100'>
+                                                        <table class="table departtable" ng-repeat="item in MultiItem.DelayReasons">
+                                                            <thead class="thead-light" ng-if="item.DepartInvloved==true">
+                                                                <tr>
+                                                                    <th colspan="4" class="light-header">
+                                                                        <label class="text-left">
+                                                                            <input type="checkbox" class="option-input radio" name="pyradio" checked="true" disabled readonly />
+                                                                            {{item.Reason}} <span class="pull-right">({{getReasonDelayDuaration(item.DepartmentStatusList,MultiItem,item)}})</span>
+                                                                        </label>
+                                                                    </th>
+                                                                </tr>
+                                                                <tr ng-show="CheckApproveDisplay(item)">
+                                                                    <td colspan="4">
+                                                                        <button class="btn-sm pull-right btn btn-danger" ng-click="ApproveRejectBlockDepartNotifiyAll(item,false)">Reject</button>
+                                                                        <button class="btn-sm pull-right mr-2 btn btn-success" ng-click="ApproveRejectBlockDepartNotifiyAll(item,true)">Approve</button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr ng-show="CheckCloseDisplay(item)">
+                                                                    <td colspan="4">
+                                                                        <button class="btn-sm pull-right btn btn-danger" ng-click="CloseRejectBlockDepartAll(item,false)">Reject</button>
+                                                                        <button class="btn-sm pull-right mr-2 btn btn-success" ng-click="CloseRejectBlockDepartAll(item,true)">Close</button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr ng-if="item.DepartmentStatusList != null && item.DepartmentStatusList.length>0">
+                                                                    <th class="text-left dark-header   font-size-10 w-150">Department</th>
+                                                                    <th class="text-center dark-header font-size-10 w-150">Status</th>
+                                                                    <th class="text-center dark-header font-size-10">Emails</th>
+                                                                    <th class="text-center dark-header font-size-10" ng-if="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <thead class="thead-light" ng-if="item.DepartInvloved!=true">
+                                                                <tr>
+                                                                    <th class="light-header">
+                                                                        <label class="text-left">
+                                                                            <input type="checkbox" class="option-input radio" name="pyradio" checked="true" disabled readonly />
+                                                                            {{item.Reason}}
+                                                                        </label>
+                                                                    </th>
+                                                                    <td>
+                                                                        <span class="pull-right">({{getReasonDelayDuaration(item.DepartmentStatusList,MultiItem,item)}})</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span ng-show="item.DepartmentStatusList.length == 0">
+                                                                            <span class="PendingApprovalEvent" ng-show="( item.SprVSAction==null ||item.SprVSAction=='') &&( item.SnrSprAction==null ||item.SnrSprAction=='')">Pending</span>
+                                                                            <span class="PendingApprovalEvent" ng-show="( item.SprVSAction!=null && item.SprVSAction!='') &&( item.SnrSprAction==null ||item.SnrSprAction=='')">Inprogress</span>
+                                                                            <span class="Approvebadge" ng-show="item.SnrSprAction!=null && item.SnrSprAction!=''">Closed</span>
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span ng-show="CheckDirectApproveReject(item)" ng-click="ApproveRejectBlockNOdepartDelay(item,'Reject')"><i class="icon-close2 text-danger"></i></span>
+                                                                        <span ng-show="CheckDirectApproveReject(item)" ng-click="ApproveRejectBlockNOdepartDelay(item,'Approve')"><i class="icon-check text-success"></i></span>
+                                                                    </td>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody ng-if="item.DepartmentStatusList != null && item.DepartmentStatusList.length>0">
+                                                                <tr ng-repeat="dep in item.DepartmentStatusList">
+                                                                    <td class="text-left font-size-10">{{dep.Department}}</td>
+                                                                    <td class="font-size-10">
+                                                                        <span ng-if="dep.DepartmentStatus == 'PENDING'"
+                                                                              class="PendingApprovalEvent">
+                                                                            PENDING
+                                                                        </span>
+                                                                        <span ng-if="dep.DepartmentStatus == 'NOTIFIED'"
+                                                                              class="PendingApprovalEvent"
+                                                                              title="Notified Time:{{dep.NotifiedTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Notified By: {{dep.NotifiedBy}}">
+                                                                            Waiting for Dep closure
+                                                                        </span>
+                                                                        <span ng-if="dep.DepartmentStatus == 'RESOLVED'"
+                                                                              class="Approvebadge"
+                                                                              title="Resolved Time:{{dep.DepartmentActionTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Resolved By: {{dep.DepartmentActionBy}}">
+                                                                            Resolved by Dep
+                                                                        </span>
+                                                                        <span ng-if="dep.DepartmentStatus == 'APPROVED'"
+                                                                              class="Approvebadge"
+                                                                              title="Approved Time:{{dep.ActionTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Approved By: {{dep.ActionBy}}">
+                                                                            Closed
+                                                                        </span>
+                                                                        <span ng-if="dep.DepartmentStatus == 'REJECTED AND NOTIFIED'" class="RejectedApprovalEvent"
+                                                                              title="Rejected/Notified Time:{{dep.NotifiedTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Rejected/Notified By: {{dep.NotifiedBy}}">Rejected & Notified</span>
+                                                                    </td>
+                                                                    <td class="font-size-10">
+                                                                        <i class="icon-user" title="{{dep.Emails}}"></i>
+                                                                    </td>
+                                                                    <td class="font-size-10">
+                                                                        <i class="icon-close2 text-danger"
+                                                                           ng-if="dep.DepartmentStatus != 'APPROVED'"
+                                                                           ng-show="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')"
+                                                                           ng-click="ApproveRejectBlockdepartDelay(dep,false,item)" title="Reject">
+
+                                                                        </i>
+                                                                        <i class="icon-check text-success"
+                                                                           ng-if="dep.DepartmentStatus != 'APPROVED'"
+                                                                           ng-show="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')"
+                                                                           ng-click="ApproveRejectBlockdepartDelay(dep,true,item)" title="{{dep.DepartmentStatus == 'PENDING'?'Approve':'Close'}}">
+                                                                        </i>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card mb-3 shadow-sm" style="border-radius:15px;">
+                                                <div class="card-body">
+                                                    <table class="table" style="border: none !important;">
+                                                        <tr>
+                                                            <th>Status</th>
+                                                            <td class="text-right">
+                                                                <span ng-if="MultiItem.ApproveStatus == 1 || MultiItem.ApproveStatus == 0" class="PendingApprovalEvent">Pending for approval</span>
+                                                                <span ng-if="MultiItem.ApproveStatus == 2" class="Approvebadge">Approved</span>
+                                                                <span ng-if="MultiItem.ApproveStatus == 3" class="RejectedApprovalEvent">Rejected</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Created By</th>
+                                                            <td class="text-right">{{MultiItem.Createdby}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Created At</th>
+                                                            <td class="text-right">{{MultiItem.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                        </tr>
+                                                        <tr ng-if="MultiItem.UpdatedBy != null">
+                                                            <th>Updated By</th>
+                                                            <td class="text-right">{{MultiItem.UpdatedBy}}</td>
+                                                        </tr>
+                                                        <tr ng-if="MultiItem.UpdatedAt != null">
+                                                            <th>Updated At</th>
+                                                            <td class="text-right">{{MultiItem.UpdatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12" style="text-align:end;">
+                                            <button class="btn btn-danger"
+                                                    ng-show="InspDelayBtnsVerification(MultiItem)"
+                                                    ng-click="ApproveRejectBlockInspectionDelay(MultiItem,false)">
+                                                Reject all delays
+                                            </button>
+                                            <button class="btn btn-success"
+                                                    ng-show="InspDelayBtnsVerification(MultiItem)"
+                                                    ng-click="ApproveRejectBlockInspectionDelay(MultiItem,true)">
+                                                Close delays
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="InspdelayRecordList.length ==1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="container">
+                                    <div class="tabs">
+                                        <input type="radio" id="radio-4" name="tabs" checked="" disabled>
+                                        <label class="tab" for="radio-4" ng-class="{'activeglider': InspdelayRecord.DelayType=='operational'}">Operational Delays</label>
+
+                                        <input type="radio" id="radio-5" name="tabs" disabled>
+                                        <label class="tab" for="radio-5" ng-class="{'activeglider': InspdelayRecord.DelayType=='Customs'}">Custom Delays</label>
+
+                                        <input type="radio" id="radio-6" name="tabs" disabled>
+                                        <label class="tab" for="radio-6" ng-class="{'activeglider': InspdelayRecord.DelayType=='Others'}">Other</label>
+                                        @*<span class="glider"></span>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card ReportInspectionDelayModelCard">
+                                    <div class="dpx">
+                                        <div class='py cursor-pointer w-100'>
+                                            <table class="table departtable" ng-repeat="item in InspdelayRecord.DelayReasons">
+                                                <thead class="thead-light" ng-if="item.DepartInvloved==true">
+                                                    <tr>
+                                                        <th colspan="4" class="light-header">
+                                                            <label class="text-left">
+                                                                <input type="checkbox" class="option-input radio" name="pyradio" checked="true" disabled readonly />
+                                                                {{item.Reason}}
+                                                                <span class="pull-right">({{getReasonDelayDuaration(item.DepartmentStatusList,InspdelayRecord,item)}})</span>
+                                                            </label>
+                                                        </th>
+                                                    </tr>
+                                                    <tr ng-show="CheckApproveDisplay(item)">
+                                                        <td colspan="4">
+                                                            <button class="btn-sm pull-right btn btn-danger" ng-click="ApproveRejectBlockDepartNotifiyAll(item,false)">Reject</button>
+                                                            <button class="btn-sm pull-right mr-2 btn btn-success" ng-click="ApproveRejectBlockDepartNotifiyAll(item,true)">Approve</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr ng-show="CheckCloseDisplay(item)">
+                                                        <td colspan="4">
+                                                            <button class="btn-sm pull-right btn btn-danger" ng-click="CloseRejectBlockDepartAll(item,false)">Reject</button>
+                                                            <button class="btn-sm pull-right mr-2 btn btn-success" ng-click="CloseRejectBlockDepartAll(item,true)">Close</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr ng-if="item.DepartmentStatusList != null && item.DepartmentStatusList.length>0">
+                                                        <th class="text-left dark-header   font-size-10 w-150">Department</th>
+                                                        <th class="text-center dark-header font-size-10 w-150">Status</th>
+                                                        <th class="text-center dark-header font-size-10">Emails</th>
+                                                        <th class="text-center dark-header font-size-10" ng-if="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <thead class="thead-light" ng-if="item.DepartInvloved!=true">
+                                                    <tr>
+                                                        <th class="light-header">
+                                                            <label class="text-left">
+                                                                <input type="checkbox" class="option-input radio" name="pyradio" checked="true" disabled readonly />
+                                                                {{item.Reason}}
+                                                            </label>
+                                                        </th>
+                                                        <td>
+                                                            <span class="pull-right">({{getReasonDelayDuaration(item.DepartmentStatusList,InspdelayRecord,item)}})</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-show="item.DepartmentStatusList.length == 0">
+                                                                <span class="PendingApprovalEvent" ng-show="( item.SprVSAction==null ||item.SprVSAction=='') &&( item.SnrSprAction==null ||item.SnrSprAction=='')">Pending</span>
+                                                                <span class="PendingApprovalEvent" ng-show="( item.SprVSAction!=null && item.SprVSAction!='') &&( item.SnrSprAction==null ||item.SnrSprAction=='')">Inprogress</span>
+                                                                <span class="Approvebadge" ng-show="item.SnrSprAction!=null && item.SnrSprAction!=''">Closed</span>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-show="CheckDirectApproveReject(item)" ng-click="ApproveRejectBlockNOdepartDelay(item,'Reject')"><i class="icon-close2 text-danger"></i></span>
+                                                            <span ng-show="CheckDirectApproveReject(item)" ng-click="ApproveRejectBlockNOdepartDelay(item,'Approve')"><i class="icon-check text-success"></i></span>
+                                                        </td>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-if="item.DepartmentStatusList != null && item.DepartmentStatusList.length>0">
+                                                    <tr ng-repeat="dep in item.DepartmentStatusList">
+                                                        <td class="text-left font-size-10">{{dep.Department}}</td>
+                                                        <td class="font-size-10">
+                                                            <span ng-if="dep.DepartmentStatus == 'PENDING'"
+                                                                  class="PendingApprovalEvent">
+                                                                PENDING
+                                                            </span>
+                                                            <span ng-if="dep.DepartmentStatus == 'NOTIFIED'"
+                                                                  class="PendingApprovalEvent"
+                                                                  title="Notified Time:{{dep.NotifiedTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Notified By: {{dep.NotifiedBy}}">
+                                                                Waiting for Dep closure
+                                                            </span>
+                                                            <span ng-if="dep.DepartmentStatus == 'RESOLVED'"
+                                                                  class="Approvebadge"
+                                                                  title="Resolved Time:{{dep.DepartmentActionTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Resolved By: {{dep.DepartmentActionBy}}">
+                                                                Resolved by Dep
+                                                            </span>
+                                                            <span ng-if="dep.DepartmentStatus == 'APPROVED'"
+                                                                  class="Approvebadge"
+                                                                  title="Approved Time:{{dep.ActionTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Approved By: {{dep.ActionBy}}">
+                                                                Closed
+                                                            </span>
+                                                            <span ng-if="dep.DepartmentStatus == 'REJECTED AND NOTIFIED'" class="RejectedApprovalEvent"
+                                                                  title="Rejected/Notified Time:{{dep.NotifiedTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Rejected/Notified By: {{dep.NotifiedBy}}">Rejected & Notified</span>
+                                                        </td>
+                                                        <td class="font-size-10">
+                                                            <i class="icon-user" title="{{dep.Emails}}"></i>
+                                                        </td>
+                                                        <td class="font-size-10">
+                                                            <i class="icon-close2 text-danger"
+                                                               ng-if="dep.DepartmentStatus != 'APPROVED'"
+                                                               ng-show="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')"
+                                                               ng-click="ApproveRejectBlockdepartDelay(dep,false,item)" title="Reject">
+
+                                                            </i>
+                                                            <i class="icon-check text-success"
+                                                               ng-if="dep.DepartmentStatus != 'APPROVED'"
+                                                               ng-show="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')"
+                                                               ng-click="ApproveRejectBlockdepartDelay(dep,true,item)" title="{{dep.DepartmentStatus == 'PENDING'?'Approve':'Close'}}">
+                                                            </i>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card mb-3 shadow-sm" style="border-radius:15px;">
+                                    <div class="card-body">
+                                        <table class="table" style="border: none !important;">
+                                            <tr>
+                                                <th>Status</th>
+                                                <td class="text-right">
+                                                    <span ng-if="InspdelayRecord.ApproveStatus == 1 || InspdelayRecord.ApproveStatus == 0" class="PendingApprovalEvent">Pending for approval</span>
+                                                    <span ng-if="InspdelayRecord.ApproveStatus == 2" class="Approvebadge">Approved</span>
+                                                    <span ng-if="InspdelayRecord.ApproveStatus == 3" class="RejectedApprovalEvent">Rejected</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Delay Start Time</th>
+                                                <td class="text-right">{{InspdelayRecord.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Duration</th>
+                                                <td class="text-right">{{getInspecDelayDuaration(InspdelayRecord)}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Delay closed Time</th>
+                                                <td class="text-right" ng-if="InspdelayRecord.UpdatedAt == null">N/A</td>
+                                                <td class="text-right" ng-if="InspdelayRecord.UpdatedAt != null">{{InspdelayRecord.UpdatedAt  | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Delay reported by</th>
+                                                <td class="text-right">{{InspdelayRecord.Createdby}}</td>
+                                            </tr>
+                                            <tr ng-if="InspdelayRecord.UpdatedBy != null">
+                                                <th>Delay approved by</th>
+                                                <td class="text-right">{{InspdelayRecord.UpdatedBy}}</td>
+                                            </tr>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-primary"
+                                    @*ng-show="InspdelayRecord.ApproveStatus == 2"*@
+                                    ng-click="RecordAgainDelay(InspdelayRecordList[0],true)">
+                                Record new delay
+                            </button>
+                            <button class="btn btn-danger"
+                                    ng-if="CheckApproveRejectAll(InspdelayRecordList)"
+                                    ng-show="InspDelayBtnsVerification(InspdelayRecord)"
+                                    ng-click="ApproveRejectBlockInspectionDelay(InspdelayRecord,false)">
+                                Reject all delays
+                            </button>
+                            <button class="btn btn-success"
+                                    ng-if="CheckApproveRejectAll(InspdelayRecordList)"
+                                    ng-show="InspDelayBtnsVerification(InspdelayRecord)"
+                                    ng-click="ApproveRejectBlockInspectionDelay(InspdelayRecord,true)">
+                                Close delays
+                            </button>
+                            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="ReReportInspectionDelayModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{InspDelay.Cntr}} Inspection Delays</h5>
+                </div>
+                <div class="modal-body" style="max-height:500px;overflow-x:auto;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="container">
+                                <div class="tabs">
+                                    <input type="radio" id="radio-7" name="tabs" checked="" onchange="angular.element(this).scope().InspectionDelayTabChange(this,true)">
+                                    <label class="tab" for="radio-7">Operational Delays</label>
+
+                                    <input type="radio" id="radio-8" name="tabs" onchange="angular.element(this).scope().InspectionDelayTabChange(this,true)">
+                                    <label class="tab" for="radio-8">Custom Delays</label>
+
+                                    <input type="radio" id="radio-9" name="tabs" onchange="angular.element(this).scope().InspectionDelayTabChange(this,true)">
+                                    <label class="tab" for="radio-9">Other</label>
+                                    <span class="glider"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card ReportInspectionDelayModelCard">
+                                <div class="dpx">
+                                    <div class='py cursor-pointer'>
+                                        <label ng-repeat="item in InspectionDelayDD">
+                                            <input type="checkbox"
+                                                   ng-checked="item.disable"
+                                                   ng-disabled="item.disable"
+                                                   ng-class="{'active' : B.BlockNumber == CurrentBlock.BlockNumber }"
+                                                   class="option-input radio"
+                                                   name="pyradio"
+                                                   value="{{item.Content}}"
+                                                   title="Already Reported"
+                                                   ng-model="item.action" />
+                                            {{item.Content}}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-success" ng-click="SubmitInspectionDelays()">Submit</button>
+                            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Inspection delays end*@
+<style>
+
+    /*Inspection delay css*/
+
+    #ShowInspectionDelayModel .tabs, #ReReportInspectionDelayModel .tabs,
+    #ShowBlockInspectionDelayModel .tabs, #ReReportBlockInspectionDelayModel .tabs {
+        display: flex;
+        position: relative;
+        background-color: #fff;
+        box-shadow: 0 0 1px 0 rgba(24, 94, 224, 0.15), 0 6px 12px 0 rgba(24, 94, 224, 0.15);
+        padding: 5px 10px;
+        border-radius: 90px;
+        align-items: center;
+        vertical-align: middle;
+    }
+
+        #ShowInspectionDelayModel .tabs *, #ReReportInspectionDelayModel .tabs *,
+        #ShowBlockInspectionDelayModel .tabs *, #ReReportBlockInspectionDelayModel .tabs * {
+            z-index: 2;
+        }
+
+    #ShowInspectionDelayModel .container input[type="radio"], #ReReportInspectionDelayModel .container input[type="radio"],
+    #ShowBlockInspectionDelayModel .container input[type="radio"], #ReReportBlockInspectionDelayModel .container input[type="radio"] {
+        display: none;
+    }
+
+    #ShowInspectionDelayModel .tab, #ReReportInspectionDelayModel .tab,
+    #ShowBlockInspectionDelayModel .tab, #ReReportBlockInspectionDelayModel .tab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+        width: 160px;
+        font-size: .8rem;
+        color: black;
+        font-weight: 500;
+        border-radius: 99px;
+        cursor: pointer;
+        transition: color 0.15s ease-in;
+        margin: 0;
+    }
+
+    #ShowInspectionDelayModel .table td, #ShowInspectionDelayModel .table tr, #ShowInspectionDelayModel .table th,
+    #ReReportInspectionDelayModel .table td, #ReReportInspectionDelayModel .table tr, #ReReportInspectionDelayModel .table th,
+    #ShowBlockInspectionDelayModel .table td, #ShowBlockInspectionDelayModel .table tr, #ShowBlockInspectionDelayModel .table th,
+    #ReReportBlockInspectionDelayModel .table td, #ReReportBlockInspectionDelayModel .table tr, #ReReportBlockInspectionDelayModel .table th {
+        border: none !important;
+    }
+
+
+    #ShowInspectionDelayModel .container input[type="radio"]:checked + label,
+    #ReReportInspectionDelayModel .container input[type="radio"]:checked + label,
+    #ShowBlockInspectionDelayModel .container input[type="radio"]:checked + label,
+    #ReReportBlockInspectionDelayModel .container input[type="radio"]:checked + label {
+        color: #185ee0;
+    }
+
+        #ShowInspectionDelayModel .container input[type="radio"]:checked + label > .notification,
+        #ReReportInspectionDelayModel .container input[type="radio"]:checked + label > .notification,
+        #ShowBlockInspectionDelayModel .container input[type="radio"]:checked + label > .notification,
+        #ReReportBlockInspectionDelayModel .container input[type="radio"]:checked + label > .notification {
+            background-color: #185ee0;
+            color: #fff;
+            margin: 0px;
+        }
+
+    #ShowInspectionDelayModel .container input[id="radio-4"]:checked ~ .glider,
+    #ReReportInspectionDelayModel .container input[id="radio-7"]:checked ~ .glider,
+    #ShowBlockInspectionDelayModel .container input[id="radio-4"]:checked ~ .glider,
+    #ReReportBlockInspectionDelayModel .container input[id="radio-7"]:checked ~ .glider {
+        transform: translateX(0);
+    }
+
+    #ShowInspectionDelayModel .container input[id="radio-5"]:checked ~ .glider,
+    #ReReportInspectionDelayModel .container input[id="radio-8"]:checked ~ .glider,
+    #ShowBlockInspectionDelayModel .container input[id="radio-5"]:checked ~ .glider,
+    #ReReportBlockInspectionDelayModel .container input[id="radio-8"]:checked ~ .glider {
+        transform: translateX(100%);
+    }
+
+    #ShowInspectionDelayModel .container input[id="radio-6"]:checked ~ .glider,
+    #ReReportInspectionDelayModel .container input[id="radio-9"]:checked ~ .glider,
+    #ShowBlockInspectionDelayModel .container input[id="radio-6"]:checked ~ .glider,
+    #ReReportBlockInspectionDelayModel .container input[id="radio-9"]:checked ~ .glider {
+        transform: translateX(200%);
+    }
+
+    #ShowInspectionDelayModel .glider, #ReReportInspectionDelayModel .glider,
+    #ShowBlockInspectionDelayModel .glider, #ReReportBlockInspectionDelayModel .glider {
+        position: absolute;
+        display: flex;
+        height: 30px;
+        width: 160px;
+        background-color: #e6eef9;
+        z-index: 1;
+        border-radius: 99px;
+        transition: 0.25s ease-out;
+    }
+
+    @@media(max-width: 700px) {
+        #ShowInspectionDelayModel .tabs, #ReReportInspectionDelayModel .tabs,
+        #ShowBlockInspectionDelayModel .tabs, #ReReportBlockInspectionDelayModel .tabs {
+            transform: scale(0.6);
+        }
+    }
+
+
+
+
+    .ReportInspectionDelayModelCard {
+        padding: 14px 20px;
+        border-radius: 14px;
+        margin-top: 20px;
+    }
+
+        .ReportInspectionDelayModelCard .dpx {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .ReportInspectionDelayModelCard label {
+            display: block;
+        }
+
+        .ReportInspectionDelayModelCard .option-input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -ms-appearance: none;
+            -o-appearance: none;
+            appearance: none;
+            position: relative;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            transition: all 0.15s ease-out 0s;
+            background: #cbd1d8;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 0.5rem;
+            outline: none;
+            position: relative;
+            z-index: 1000;
+            vertical-align: middle
+        }
+
+            .ReportInspectionDelayModelCard .option-input:hover {
+                background: #9faab7;
+            }
+
+            .ReportInspectionDelayModelCard .option-input:checked {
+                background: var( --dpw-bg-color);
+            }
+
+                .ReportInspectionDelayModelCard .option-input:checked::before {
+                    width: 20px;
+                    height: 20px;
+                    display: flex;
+                    content: "\ed6f";
+                    font-size: 13px;
+                    font-weight: bold;
+                    position: absolute;
+                    align-items: center;
+                    justify-content: center;
+                    font-family: icomoon !important;
+                    font-weight: 900;
+                }
+
+                .ReportInspectionDelayModelCard .option-input:checked::after {
+                    -webkit-animation: click-wave 0.65s;
+                    -moz-animation: click-wave 0.65s;
+                    animation: click-wave 0.65s;
+                    background: var( --dpw-bg-color);
+                    content: '';
+                    display: block;
+                    position: relative;
+                    z-index: 100;
+                }
+
+            .ReportInspectionDelayModelCard .option-input:disabled {
+                cursor: not-allowed;
+                opacity: 0.6;
+            }
+
+                .ReportInspectionDelayModelCard .option-input:disabled::after {
+                    background: #333 !important;
+                }
+
+
+            .ReportInspectionDelayModelCard .option-input.radio {
+                border-radius: 50%;
+            }
+
+                .ReportInspectionDelayModelCard .option-input.radio::after {
+                    border-radius: 50%;
+                }
+
+
+
+    /*Inspection delay css end*/
+
+    #ReportInspectionDelayModel .tabs,
+    #ReportBlockInspectionDelayModel .tabs {
+        display: flex;
+        position: relative;
+        background-color: #fff;
+        box-shadow: 0 0 1px 0 rgba(24, 94, 224, 0.15), 0 6px 12px 0 rgba(24, 94, 224, 0.15);
+        padding: 5px 10px;
+        border-radius: 90px;
+        align-items: center;
+        vertical-align: middle;
+    }
+
+        #ReportInspectionDelayModel .tabs *,
+        #ReportBlockInspectionDelayModel .tabs * {
+            z-index: 2;
+        }
+
+    #ReportInspectionDelayModel .container input[type="radio"],
+    #ReportBlockInspectionDelayModel .container input[type="radio"] {
+        display: none;
+    }
+
+    #ReportInspectionDelayModel .tab,
+    #ReportBlockInspectionDelayModel .tab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+        width: 160px;
+        font-size: .8rem;
+        color: black;
+        font-weight: 500;
+        border-radius: 99px;
+        cursor: pointer;
+        transition: color 0.15s ease-in;
+        margin: 0;
+    }
+
+
+
+    #ReportInspectionDelayModel .container input[type="radio"]:checked + label,
+    #ReportBlockInspectionDelayModel .container input[type="radio"]:checked + label {
+        color: #185ee0;
+    }
+
+        #ReportInspectionDelayModel .container input[type="radio"]:checked + label > .notification,
+        #ReportBlockInspectionDelayModel .container input[type="radio"]:checked + label > .notification {
+            background-color: #185ee0;
+            color: #fff;
+            margin: 0px;
+        }
+
+    #ReportInspectionDelayModel .container input[id="radio-1"]:checked ~ .glider,
+    #ReportBlockInspectionDelayModel .container input[id="Blockradio-1"]:checked ~ .glider {
+        transform: translateX(0);
+    }
+
+    #ReportInspectionDelayModel .container input[id="radio-2"]:checked ~ .glider,
+    #ReportBlockInspectionDelayModel .container input[id="Blockradio-2"]:checked ~ .glider {
+        transform: translateX(100%);
+    }
+
+    #ReportInspectionDelayModel .container input[id="radio-3"]:checked ~ .glider,
+    #ReportBlockInspectionDelayModel .container input[id="Blockradio-3"]:checked ~ .glider {
+        transform: translateX(200%);
+    }
+
+    #ReportInspectionDelayModel .glider,
+    #ReportBlockInspectionDelayModel .glider {
+        position: absolute;
+        display: flex;
+        height: 30px;
+        width: 160px;
+        background-color: #e6eef9;
+        z-index: 1;
+        border-radius: 99px;
+        transition: 0.25s ease-out;
+    }
+
+    @@media(max-width: 700px) {
+        #ReportInspectionDelayModel .tabs,
+        #ReportBlockInspectionDelayModel .tabs {
+            transform: scale(0.6);
+        }
+    }
+
+    @@keyframes click-wave {
+        0% {
+            height: 20px;
+            width: 20px;
+            opacity: 0.35;
+            position: relative;
+        }
+
+        100% {
+            height: 100px;
+            width: 100px;
+            margin-left: -40px;
+            margin-top: -40px;
+            opacity: 0;
+        }
+    }
+
+    .InspDelayDtlsHeader .Approvebadge {
+        background: #00946b1f !important;
+        border: 1px solid #00946b !important;
+        padding: 4px;
+        border-radius: 6px;
+    }
+
+    .InspDelayDtlsHeader .PendingApprovalEvent {
+        background: #ffa5001a !important;
+        border: 1px solid orange !important;
+        padding: 4px;
+        border-radius: 6px;
+    }
+
+    .InspDelayDtlsHeader .RejectedApprovalEvent {
+        background: #ff00001c !important;
+        border: 1px solid red !important;
+        padding: 4px;
+        border-radius: 6px;
+    }
+
+    .activeglider {
+        background-color: #e6eef9 !important;
+    }
+
+    .departtable {
+        border: none !important;
+        border-bottom: 1px solid #333;
+        margin-top: 10px;
+    }
+
+    .text-left {
+        text-align: left !important;
+    }
+
+    .dark-header {
+        background: #80a4c338 !important;
+    }
+
+    .light-header {
+        background: #001b3205 !important;
+    }
+
+    .font-size-10 {
+        font-size: 10px !important;
+    }
+
+    .w-150 {
+        width: 150px;
+    }
+
+    .departtable .Approvebadge {
+        background: #33333317 !important;
+        border: 1px solid #111 !important;
+        padding: 1px 8px;
+    }
+
+    .departtable .RejectedApprovalEvent, .departtable .PendingApprovalEvent {
+        padding: 1px 8px;
+    }
+</style>
+
+@*Inspection delays*@
+<div ng-controller="InspDelayRPTCtrl">
+
+
+
+    <div class="modal fade" id="ReportInspectionDelayModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{InspDelay.Cntr}} Inspection Delays</h5>
+                </div>
+                <div class="modal-body" style="max-height:400px;overflow-x:auto;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="container">
+                                <div class="tabs">
+                                    <input type="radio" id="radio-1" name="tabs" checked="" onchange="angular.element(this).scope().InspectionDelayTabChange(this)">
+                                    <label class="tab" for="radio-1">Operational Delays</label>
+
+                                    <input type="radio" id="radio-2" name="tabs" onchange="angular.element(this).scope().InspectionDelayTabChange(this)">
+                                    <label class="tab" for="radio-2">Custom Delays</label>
+
+                                    <input type="radio" id="radio-3" name="tabs" onchange="angular.element(this).scope().InspectionDelayTabChange(this)">
+                                    <label class="tab" for="radio-3">Other</label>
+                                    <span class="glider"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card ReportInspectionDelayModelCard">
+                                <div class="dpx">
+                                    <div class='py cursor-pointer'>
+                                        <label ng-repeat="item in InspectionDelayDD">
+                                            <input type="checkbox" class="option-input radio" name="pyradio" value="{{item.Content}}" ng-model="item.action" />
+                                            {{item.Content}}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-success" ng-click="SubmitInspectionDelays()">Submit</button>
+                            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ShowInspectionDelayModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{InspdelayRecord.Cntr}} Inspection Delays</h5>
+                </div>
+                <div class="modal-body" style="max-height:400px;overflow-x:auto;">
+
+                    <div id="accordion" ng-if="InspdelayRecordList.length > 1">
+                        <div class="card" ng-repeat="MultiItem in InspdelayRecordList">
+                            <div class="card-header InspDelayDtlsHeader" id="heading{{$index}}" data-toggle="collapse" data-target="#Inspcollapse{{$index}}" aria-expanded="true" aria-controls="collapseOne">
+                                <div class="d-inline-block" style="line-height: 8px;">
+                                    <p> {{MultiItem.Createdby}} </p>
+                                    <small class="text-grey">{{MultiItem.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</small>
+                                </div>
+                                <div class="pull-right">
+                                    <span ng-if="MultiItem.ApproveStatus == 1 || MultiItem.ApproveStatus == 0" class="PendingApprovalEvent pull-right">Pending for approval</span>
+                                    <span ng-if="MultiItem.ApproveStatus == 2" class="Approvebadge pull-right">Approved</span>
+                                    <span ng-if="MultiItem.ApproveStatus == 3" class="RejectedApprovalEvent pull-right">Rejected</span>
+                                </div>
+
+                            </div>
+
+                            <div id="Inspcollapse{{$index}}" class="collapse" ng-class="{'show' : $index==0}" aria-labelledby="heading{{$index}}" data-parent="#accordion">
+                                <div class="card-body">
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="container">
+                                                <div class="tabs">
+                                                    <input type="radio" id="radio-{{$index+1}}" name="tabs" checked="" disabled>
+                                                    <label class="tab" for="radio-{{$index+1}}" ng-class="{'activeglider': MultiItem.DelayType=='operational'}">Operational Delays</label>
+
+                                                    <input type="radio" id="radio-{{$index+2}}" name="tabs" disabled>
+                                                    <label class="tab" for="radio-{{$index+2}}" ng-class="{'activeglider': MultiItem.DelayType=='Customs'}">Custom Delays</label>
+
+                                                    <input type="radio" id="radio-{{$index+3}}" name="tabs" disabled>
+                                                    <label class="tab" for="radio-{{$index+3}}" ng-class="{'activeglider': MultiItem.DelayType=='Others'}">Other</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card ReportInspectionDelayModelCard">
+                                                <div class="dpx">
+                                                    <div class='py cursor-pointer w-100'>
+                                                        <table class="table departtable" ng-repeat="item in MultiItem.DelayReasons">
+                                                            <thead class="thead-light" ng-if="item.DepartInvloved==true">
+                                                                <tr>
+                                                                    <th colspan="4" class="light-header">
+                                                                        <label class="text-left">
+                                                                            <input type="checkbox" class="option-input radio" name="pyradio" checked="true" disabled readonly />
+                                                                            {{item.Reason}} <span class="pull-right">({{getReasonDelayDuaration(item.DepartmentStatusList,MultiItem,item)}})</span>
+                                                                        </label>
+                                                                    </th>
+                                                                </tr>
+                                                                <tr ng-show="CheckApproveDisplay(item)">
+                                                                    <td colspan="4">
+                                                                        <button class="btn-sm pull-right btn btn-danger" ng-click="ApproveRejectDepartNotifiyAll(item,false)">Reject</button>
+                                                                        <button class="btn-sm pull-right mr-2 btn btn-success" ng-click="ApproveRejectDepartNotifiyAll(item,true)">Approve</button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr ng-show="CheckCloseDisplay(item)">
+                                                                    <td colspan="4">
+                                                                        <button class="btn-sm pull-right btn btn-danger" ng-click="CloseRejectDepartAll(item,false)">Reject</button>
+                                                                        <button class="btn-sm pull-right mr-2 btn btn-success" ng-click="CloseRejectDepartAll(item,true)">Close</button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr ng-if="item.DepartmentStatusList != null && item.DepartmentStatusList.length>0">
+                                                                    <th class="text-left dark-header   font-size-10 w-150">Department</th>
+                                                                    <th class="text-center dark-header font-size-10 w-150">Status</th>
+                                                                    <th class="text-center dark-header font-size-10">Emails</th>
+                                                                    <th class="text-center dark-header font-size-10" ng-if="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <thead class="thead-light" ng-if="item.DepartInvloved!=true">
+                                                                <tr>
+                                                                    <th class="light-header">
+                                                                        <label class="text-left">
+                                                                            <input type="checkbox" class="option-input radio" name="pyradio" checked="true" disabled readonly />
+                                                                            {{item.Reason}}
+                                                                        </label>
+                                                                    </th>
+                                                                    <td>
+                                                                        <span class="pull-right">({{getReasonDelayDuaration(item.DepartmentStatusList,MultiItem,item)}})</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span ng-show="item.DepartmentStatusList.length == 0">
+                                                                            <span class="PendingApprovalEvent" ng-show="( item.SprVSAction==null ||item.SprVSAction=='') &&( item.SnrSprAction==null ||item.SnrSprAction=='')">Pending</span>
+                                                                            <span class="PendingApprovalEvent" ng-show="( item.SprVSAction!=null && item.SprVSAction!='') &&( item.SnrSprAction==null ||item.SnrSprAction=='')">Inprogress</span>
+                                                                            <span class="Approvebadge" ng-show="item.SnrSprAction!=null && item.SnrSprAction!=''">Closed</span>
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span ng-show="CheckDirectApproveReject(item)" ng-click="ApproveRejectNOdepartDelay(item,'Reject')"><i class="icon-close2 text-danger"></i></span>
+                                                                        <span ng-show="CheckDirectApproveReject(item)" ng-click="ApproveRejectNOdepartDelay(item,'Approve')"><i class="icon-check text-success"></i></span>
+                                                                    </td>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody ng-if="item.DepartmentStatusList != null && item.DepartmentStatusList.length>0">
+                                                                <tr ng-repeat="dep in item.DepartmentStatusList">
+                                                                    <td class="text-left font-size-10">{{dep.Department}}</td>
+                                                                    <td class="font-size-10">
+                                                                        <span ng-if="dep.DepartmentStatus == 'PENDING'"
+                                                                              class="PendingApprovalEvent">
+                                                                            PENDING
+                                                                        </span>
+                                                                        <span ng-if="dep.DepartmentStatus == 'NOTIFIED'"
+                                                                              class="PendingApprovalEvent"
+                                                                              title="Notified Time:{{dep.NotifiedTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Notified By: {{dep.NotifiedBy}}">
+                                                                            Waiting for Dep closure
+                                                                        </span>
+                                                                        <span ng-if="dep.DepartmentStatus == 'RESOLVED'"
+                                                                              class="Approvebadge"
+                                                                              title="Resolved Time:{{dep.DepartmentActionTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Resolved By: {{dep.DepartmentActionBy}}">
+                                                                            Resolved by Dep
+                                                                        </span>
+                                                                        <span ng-if="dep.DepartmentStatus == 'APPROVED'"
+                                                                              class="Approvebadge"
+                                                                              title="Approved Time:{{dep.ActionTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Approved By: {{dep.ActionBy}}">
+                                                                            Closed
+                                                                        </span>
+                                                                        <span ng-if="dep.DepartmentStatus == 'REJECTED AND NOTIFIED'" class="RejectedApprovalEvent"
+                                                                              title="Rejected/Notified Time:{{dep.NotifiedTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Rejected/Notified By: {{dep.NotifiedBy}}">Rejected & Notified</span>
+                                                                    </td>
+                                                                    <td class="font-size-10">
+                                                                        <i class="icon-user" title="{{dep.Emails}}"></i>
+                                                                    </td>
+                                                                    <td class="font-size-10">
+                                                                        <i class="icon-close2 text-danger"
+                                                                           ng-if="dep.DepartmentStatus != 'APPROVED'"
+                                                                           ng-show="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')"
+                                                                           ng-click="ApproveRejectdepartDelay(dep,false,item)" title="Reject">
+
+                                                                        </i>
+                                                                        <i class="icon-check text-success"
+                                                                           ng-if="dep.DepartmentStatus != 'APPROVED'"
+                                                                           ng-show="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')"
+                                                                           ng-click="ApproveRejectdepartDelay(dep,true,item)" title="{{dep.DepartmentStatus == 'PENDING'?'Approve':'Close'}}">
+                                                                        </i>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card mb-3 shadow-sm" style="border-radius:15px;">
+                                                <div class="card-body">
+                                                    <table class="table" style="border: none !important;">
+                                                        <tr>
+                                                            <th>Status</th>
+                                                            <td class="text-right">
+                                                                <span ng-if="MultiItem.ApproveStatus == 1 || MultiItem.ApproveStatus == 0" class="PendingApprovalEvent">Pending for approval</span>
+                                                                <span ng-if="MultiItem.ApproveStatus == 2" class="Approvebadge">Approved</span>
+                                                                <span ng-if="MultiItem.ApproveStatus == 3" class="RejectedApprovalEvent">Rejected</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Created By</th>
+                                                            <td class="text-right">{{MultiItem.Createdby}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Created At</th>
+                                                            <td class="text-right">{{MultiItem.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                        </tr>
+                                                        <tr ng-if="MultiItem.UpdatedBy != null">
+                                                            <th>Updated By</th>
+                                                            <td class="text-right">{{MultiItem.UpdatedBy}}</td>
+                                                        </tr>
+                                                        <tr ng-if="MultiItem.UpdatedAt != null">
+                                                            <th>Updated At</th>
+                                                            <td class="text-right">{{MultiItem.UpdatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12" style="text-align:end;">
+                                            <button class="btn btn-danger"
+                                                    ng-show="InspDelayBtnsVerification(MultiItem)"
+                                                    ng-click="ApproveRejectInspectionDelay(MultiItem,false)">
+                                                Reject all delays
+                                            </button>
+                                            <button class="btn btn-success"
+                                                    ng-show="InspDelayBtnsVerification(MultiItem)"
+                                                    ng-click="ApproveRejectInspectionDelay(MultiItem,true)">
+                                                Close delays
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="InspdelayRecordList.length ==1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="container">
+                                    <div class="tabs">
+                                        <input type="radio" id="radio-4" name="tabs" checked="" disabled>
+                                        <label class="tab" for="radio-4" ng-class="{'activeglider': InspdelayRecord.DelayType=='operational'}">Operational Delays</label>
+
+                                        <input type="radio" id="radio-5" name="tabs" disabled>
+                                        <label class="tab" for="radio-5" ng-class="{'activeglider': InspdelayRecord.DelayType=='Customs'}">Custom Delays</label>
+
+                                        <input type="radio" id="radio-6" name="tabs" disabled>
+                                        <label class="tab" for="radio-6" ng-class="{'activeglider': InspdelayRecord.DelayType=='Others'}">Other</label>
+                                        @*<span class="glider"></span>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card ReportInspectionDelayModelCard">
+                                    <div class="dpx">
+                                        <div class='py cursor-pointer w-100'>
+                                            <table class="table departtable" ng-repeat="item in InspdelayRecord.DelayReasons">
+                                                <thead class="thead-light" ng-if="item.DepartInvloved==true">
+                                                    <tr>
+                                                        <th colspan="4" class="light-header">
+                                                            <label class="text-left">
+                                                                <input type="checkbox" class="option-input radio" name="pyradio" checked="true" disabled readonly />
+                                                                {{item.Reason}}
+                                                                <span class="pull-right">({{getReasonDelayDuaration(item.DepartmentStatusList,InspdelayRecord,item)}})</span>
+                                                            </label>
+                                                        </th>
+                                                    </tr>
+                                                    <tr ng-show="CheckApproveDisplay(item)">
+                                                        <td colspan="4">
+                                                            <button class="btn-sm pull-right btn btn-danger" ng-click="ApproveRejectDepartNotifiyAll(item,false)">Reject</button>
+                                                            <button class="btn-sm pull-right mr-2 btn btn-success" ng-click="ApproveRejectDepartNotifiyAll(item,true)">Approve</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr ng-show="CheckCloseDisplay(item)">
+                                                        <td colspan="4">
+                                                            <button class="btn-sm pull-right btn btn-danger" ng-click="CloseRejectDepartAll(item,false)">Reject</button>
+                                                            <button class="btn-sm pull-right mr-2 btn btn-success" ng-click="CloseRejectDepartAll(item,true)">Close</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr ng-if="item.DepartmentStatusList != null && item.DepartmentStatusList.length>0">
+                                                        <th class="text-left dark-header   font-size-10 w-150">Department</th>
+                                                        <th class="text-center dark-header font-size-10 w-150">Status</th>
+                                                        <th class="text-center dark-header font-size-10">Emails</th>
+                                                        <th class="text-center dark-header font-size-10" ng-if="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <thead class="thead-light" ng-if="item.DepartInvloved!=true">
+                                                    <tr>
+                                                        <th class="light-header">
+                                                            <label class="text-left">
+                                                                <input type="checkbox" class="option-input radio" name="pyradio" checked="true" disabled readonly />
+                                                                {{item.Reason}}
+                                                            </label>
+                                                        </th>
+                                                        <td>
+                                                            <span class="pull-right">({{getReasonDelayDuaration(item.DepartmentStatusList,InspdelayRecord,item)}})</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-show="item.DepartmentStatusList.length == 0">
+                                                                <span class="PendingApprovalEvent" ng-show="( item.SprVSAction==null ||item.SprVSAction=='') &&( item.SnrSprAction==null ||item.SnrSprAction=='')">Pending</span>
+                                                                <span class="PendingApprovalEvent" ng-show="( item.SprVSAction!=null && item.SprVSAction!='') &&( item.SnrSprAction==null ||item.SnrSprAction=='')">Inprogress</span>
+                                                                <span class="Approvebadge" ng-show="item.SnrSprAction!=null && item.SnrSprAction!=''">Closed</span>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-show="CheckDirectApproveReject(item)" ng-click="ApproveRejectNOdepartDelay(item,'Reject')"><i class="icon-close2 text-danger"></i></span>
+                                                            <span ng-show="CheckDirectApproveReject(item)" ng-click="ApproveRejectNOdepartDelay(item,'Approve')"><i class="icon-check text-success"></i></span>
+                                                        </td>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-if="item.DepartmentStatusList != null && item.DepartmentStatusList.length>0">
+                                                    <tr ng-repeat="dep in item.DepartmentStatusList">
+                                                        <td class="text-left font-size-10">{{dep.Department}}</td>
+                                                        <td class="font-size-10">
+                                                            <span ng-if="dep.DepartmentStatus == 'PENDING'"
+                                                                  class="PendingApprovalEvent">
+                                                                PENDING
+                                                            </span>
+                                                            <span ng-if="dep.DepartmentStatus == 'NOTIFIED'"
+                                                                  class="PendingApprovalEvent"
+                                                                  title="Notified Time:{{dep.NotifiedTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Notified By: {{dep.NotifiedBy}}">
+                                                                Waiting for Dep closure
+                                                            </span>
+                                                            <span ng-if="dep.DepartmentStatus == 'RESOLVED'"
+                                                                  class="Approvebadge"
+                                                                  title="Resolved Time:{{dep.DepartmentActionTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Resolved By: {{dep.DepartmentActionBy}}">
+                                                                Resolved by Dep
+                                                            </span>
+                                                            <span ng-if="dep.DepartmentStatus == 'APPROVED'"
+                                                                  class="Approvebadge"
+                                                                  title="Approved Time:{{dep.ActionTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Approved By: {{dep.ActionBy}}">
+                                                                Closed
+                                                            </span>
+                                                            <span ng-if="dep.DepartmentStatus == 'REJECTED AND NOTIFIED'" class="RejectedApprovalEvent"
+                                                                  title="Rejected/Notified Time:{{dep.NotifiedTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Rejected/Notified By: {{dep.NotifiedBy}}">Rejected & Notified</span>
+                                                        </td>
+                                                        <td class="font-size-10">
+                                                            <i class="icon-user" title="{{dep.Emails}}"></i>
+                                                        </td>
+                                                        <td class="font-size-10">
+                                                            <i class="icon-close2 text-danger"
+                                                               ng-if="dep.DepartmentStatus != 'APPROVED'"
+                                                               ng-show="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')"
+                                                               ng-click="ApproveRejectdepartDelay(dep,false,item)" title="Reject">
+
+                                                            </i>
+                                                            <i class="icon-check text-success"
+                                                               ng-if="dep.DepartmentStatus != 'APPROVED'"
+                                                               ng-show="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')"
+                                                               ng-click="ApproveRejectdepartDelay(dep,true,item)" title="{{dep.DepartmentStatus == 'PENDING'?'Approve':'Close'}}">
+                                                            </i>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card mb-3 shadow-sm" style="border-radius:15px;">
+                                    <div class="card-body">
+                                        <table class="table" style="border: none !important;">
+                                            <tr>
+                                                <th>Status</th>
+                                                <td class="text-right">
+                                                    <span ng-if="InspdelayRecord.ApproveStatus == 1 || InspdelayRecord.ApproveStatus == 0" class="PendingApprovalEvent">Pending for approval</span>
+                                                    <span ng-if="InspdelayRecord.ApproveStatus == 2" class="Approvebadge">Approved</span>
+                                                    <span ng-if="InspdelayRecord.ApproveStatus == 3" class="RejectedApprovalEvent">Rejected</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Delay Start Time</th>
+                                                <td class="text-right">{{InspdelayRecord.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Duration</th>
+                                                <td class="text-right">{{getInspecDelayDuaration(InspdelayRecord)}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Delay closed Time</th>
+                                                <td class="text-right" ng-if="InspdelayRecord.UpdatedAt == null">N/A</td>
+                                                <td class="text-right" ng-if="InspdelayRecord.UpdatedAt != null">{{InspdelayRecord.UpdatedAt  | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Delay reported by</th>
+                                                <td class="text-right">{{InspdelayRecord.Createdby}}</td>
+                                            </tr>
+                                            <tr ng-if="InspdelayRecord.UpdatedBy != null">
+                                                <th>Delay approved by</th>
+                                                <td class="text-right">{{InspdelayRecord.UpdatedBy}}</td>
+                                            </tr>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-primary"
+                                    @*ng-show="InspdelayRecord.ApproveStatus == 2"*@
+                                    ng-click="RecordAgainDelay(InspdelayRecordList[0],true)">
+                                Record new delay
+                            </button>
+                            <button class="btn btn-danger"
+                                    ng-if="CheckApproveRejectAll(InspdelayRecordList)"
+                                    ng-show="InspDelayBtnsVerification(InspdelayRecord)"
+                                    ng-click="ApproveRejectInspectionDelay(InspdelayRecord,false)">
+                                Reject all delays
+                            </button>
+                            <button class="btn btn-success"
+                                    ng-if="CheckApproveRejectAll(InspdelayRecordList)"
+                                    ng-show="InspDelayBtnsVerification(InspdelayRecord)"
+                                    ng-click="ApproveRejectInspectionDelay(InspdelayRecord,true)">
+                                Close delays
+                            </button>
+                            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--//UD-->
+    <div class="modal fade" id="ReportBlockInspectionDelayModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{BlockInspDelay.Block}} Inspection Delays</h5>
+                </div>
+                <div class="modal-body" style="max-height:400px;overflow-x:auto;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="container">
+                                <div class="tabs">
+                                    <input type="radio" id="Blockradio-1" name="tabs" checked="" onchange="angular.element(this).scope().BlockInspectionDelayTabChange(this)">
+                                    <label class="tab" for="Blockradio-1">Operational Delays</label>
+                                    <input type="radio" id="Blockradio-2" name="tabs" onchange="angular.element(this).scope().BlockInspectionDelayTabChange(this)">
+                                    <label class="tab" for="Blockradio-2">Custom Delays</label>
+                                    <input type="radio" id="Blockradio-3" name="tabs" onchange="angular.element(this).scope().BlockInspectionDelayTabChange(this)">
+                                    <label class="tab" for="Blockradio-3">Other</label>
+                                    <span class="glider"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card ReportInspectionDelayModelCard">
+                                <div class="dpx">
+                                    <div class='py cursor-pointer'>
+                                        <label ng-repeat="item in InspectionDelayDD">
+                                            <input type="checkbox" class="option-input radio" name="pyradio" value="{{item.Content}}" ng-model="item.action" />
+                                            {{item.Content}}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-success" ng-click="SubmitBlockInspectionDelays()">Submit</button>
+                            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ShowBlockInspectionDelayModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{InspdelayRecord.Cntr}} Inspection Delays</h5>
+                </div>
+                <div class="modal-body" style="max-height:400px;overflow-x:auto;">
+
+                    <div id="accordion" ng-if="InspdelayRecordList.length > 1">
+                        <div class="card" ng-repeat="MultiItem in InspdelayRecordList">
+                            <div class="card-header InspDelayDtlsHeader" id="heading{{$index}}" data-toggle="collapse" data-target="#Inspcollapse{{$index}}" aria-expanded="true" aria-controls="collapseOne">
+                                <div class="d-inline-block" style="line-height: 8px;">
+                                    <p> {{MultiItem.Createdby}} </p>
+                                    <small class="text-grey">{{MultiItem.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</small>
+                                </div>
+                                <div class="pull-right">
+                                    <span ng-if="MultiItem.ApproveStatus == 1 || MultiItem.ApproveStatus == 0" class="PendingApprovalEvent pull-right">Pending for approval</span>
+                                    <span ng-if="MultiItem.ApproveStatus == 2" class="Approvebadge pull-right">Approved</span>
+                                    <span ng-if="MultiItem.ApproveStatus == 3" class="RejectedApprovalEvent pull-right">Rejected</span>
+                                </div>
+
+                            </div>
+
+                            <div id="Inspcollapse{{$index}}" class="collapse" ng-class="{'show' : $index==0}" aria-labelledby="heading{{$index}}" data-parent="#accordion">
+                                <div class="card-body">
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="container">
+                                                <div class="tabs">
+                                                    <input type="radio" id="radio-{{$index+1}}" name="tabs" checked="" disabled>
+                                                    <label class="tab" for="radio-{{$index+1}}" ng-class="{'activeglider': MultiItem.DelayType=='operational'}">Operational Delays</label>
+
+                                                    <input type="radio" id="radio-{{$index+2}}" name="tabs" disabled>
+                                                    <label class="tab" for="radio-{{$index+2}}" ng-class="{'activeglider': MultiItem.DelayType=='Customs'}">Custom Delays</label>
+
+                                                    <input type="radio" id="radio-{{$index+3}}" name="tabs" disabled>
+                                                    <label class="tab" for="radio-{{$index+3}}" ng-class="{'activeglider': MultiItem.DelayType=='Others'}">Other</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card ReportInspectionDelayModelCard">
+                                                <div class="dpx">
+                                                    <div class='py cursor-pointer w-100'>
+                                                        <table class="table departtable" ng-repeat="item in MultiItem.DelayReasons">
+                                                            <thead class="thead-light" ng-if="item.DepartInvloved==true">
+                                                                <tr>
+                                                                    <th colspan="4" class="light-header">
+                                                                        <label class="text-left">
+                                                                            <input type="checkbox" class="option-input radio" name="pyradio" checked="true" disabled readonly />
+                                                                            {{item.Reason}} <span class="pull-right">({{getReasonDelayDuaration(item.DepartmentStatusList,MultiItem,item)}})</span>
+                                                                        </label>
+                                                                    </th>
+                                                                </tr>
+                                                                <tr ng-show="CheckApproveDisplay(item)">
+                                                                    <td colspan="4">
+                                                                        <button class="btn-sm pull-right btn btn-danger" ng-click="ApproveRejectBlockDepartNotifiyAll(item,false)">Reject</button>
+                                                                        <button class="btn-sm pull-right mr-2 btn btn-success" ng-click="ApproveRejectBlockDepartNotifiyAll(item,true)">Approve</button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr ng-show="CheckCloseDisplay(item)">
+                                                                    <td colspan="4">
+                                                                        <button class="btn-sm pull-right btn btn-danger" ng-click="CloseRejectBlockDepartAll(item,false)">Reject</button>
+                                                                        <button class="btn-sm pull-right mr-2 btn btn-success" ng-click="CloseRejectBlockDepartAll(item,true)">Close</button>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr ng-if="item.DepartmentStatusList != null && item.DepartmentStatusList.length>0">
+                                                                    <th class="text-left dark-header   font-size-10 w-150">Department</th>
+                                                                    <th class="text-center dark-header font-size-10 w-150">Status</th>
+                                                                    <th class="text-center dark-header font-size-10">Emails</th>
+                                                                    <th class="text-center dark-header font-size-10" ng-if="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <thead class="thead-light" ng-if="item.DepartInvloved!=true">
+                                                                <tr>
+                                                                    <th class="light-header">
+                                                                        <label class="text-left">
+                                                                            <input type="checkbox" class="option-input radio" name="pyradio" checked="true" disabled readonly />
+                                                                            {{item.Reason}}
+                                                                        </label>
+                                                                    </th>
+                                                                    <td>
+                                                                        <span class="pull-right">({{getReasonDelayDuaration(item.DepartmentStatusList,MultiItem,item)}})</span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span ng-show="item.DepartmentStatusList.length == 0">
+                                                                            <span class="PendingApprovalEvent" ng-show="( item.SprVSAction==null ||item.SprVSAction=='') &&( item.SnrSprAction==null ||item.SnrSprAction=='')">Pending</span>
+                                                                            <span class="PendingApprovalEvent" ng-show="( item.SprVSAction!=null && item.SprVSAction!='') &&( item.SnrSprAction==null ||item.SnrSprAction=='')">Inprogress</span>
+                                                                            <span class="Approvebadge" ng-show="item.SnrSprAction!=null && item.SnrSprAction!=''">Closed</span>
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span ng-show="CheckDirectApproveReject(item)" ng-click="ApproveRejectBlockNOdepartDelay(item,'Reject')"><i class="icon-close2 text-danger"></i></span>
+                                                                        <span ng-show="CheckDirectApproveReject(item)" ng-click="ApproveRejectBlockNOdepartDelay(item,'Approve')"><i class="icon-check text-success"></i></span>
+                                                                    </td>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody ng-if="item.DepartmentStatusList != null && item.DepartmentStatusList.length>0">
+                                                                <tr ng-repeat="dep in item.DepartmentStatusList">
+                                                                    <td class="text-left font-size-10">{{dep.Department}}</td>
+                                                                    <td class="font-size-10">
+                                                                        <span ng-if="dep.DepartmentStatus == 'PENDING'"
+                                                                              class="PendingApprovalEvent">
+                                                                            PENDING
+                                                                        </span>
+                                                                        <span ng-if="dep.DepartmentStatus == 'NOTIFIED'"
+                                                                              class="PendingApprovalEvent"
+                                                                              title="Notified Time:{{dep.NotifiedTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Notified By: {{dep.NotifiedBy}}">
+                                                                            Waiting for Dep closure
+                                                                        </span>
+                                                                        <span ng-if="dep.DepartmentStatus == 'RESOLVED'"
+                                                                              class="Approvebadge"
+                                                                              title="Resolved Time:{{dep.DepartmentActionTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Resolved By: {{dep.DepartmentActionBy}}">
+                                                                            Resolved by Dep
+                                                                        </span>
+                                                                        <span ng-if="dep.DepartmentStatus == 'APPROVED'"
+                                                                              class="Approvebadge"
+                                                                              title="Approved Time:{{dep.ActionTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Approved By: {{dep.ActionBy}}">
+                                                                            Closed
+                                                                        </span>
+                                                                        <span ng-if="dep.DepartmentStatus == 'REJECTED AND NOTIFIED'" class="RejectedApprovalEvent"
+                                                                              title="Rejected/Notified Time:{{dep.NotifiedTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Rejected/Notified By: {{dep.NotifiedBy}}">Rejected & Notified</span>
+                                                                    </td>
+                                                                    <td class="font-size-10">
+                                                                        <i class="icon-user" title="{{dep.Emails}}"></i>
+                                                                    </td>
+                                                                    <td class="font-size-10">
+                                                                        <i class="icon-close2 text-danger"
+                                                                           ng-if="dep.DepartmentStatus != 'APPROVED'"
+                                                                           ng-show="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')"
+                                                                           ng-click="ApproveRejectBlockdepartDelay(dep,false,item)" title="Reject">
+
+                                                                        </i>
+                                                                        <i class="icon-check text-success"
+                                                                           ng-if="dep.DepartmentStatus != 'APPROVED'"
+                                                                           ng-show="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')"
+                                                                           ng-click="ApproveRejectBlockdepartDelay(dep,true,item)" title="{{dep.DepartmentStatus == 'PENDING'?'Approve':'Close'}}">
+                                                                        </i>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card mb-3 shadow-sm" style="border-radius:15px;">
+                                                <div class="card-body">
+                                                    <table class="table" style="border: none !important;">
+                                                        <tr>
+                                                            <th>Status</th>
+                                                            <td class="text-right">
+                                                                <span ng-if="MultiItem.ApproveStatus == 1 || MultiItem.ApproveStatus == 0" class="PendingApprovalEvent">Pending for approval</span>
+                                                                <span ng-if="MultiItem.ApproveStatus == 2" class="Approvebadge">Approved</span>
+                                                                <span ng-if="MultiItem.ApproveStatus == 3" class="RejectedApprovalEvent">Rejected</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Created By</th>
+                                                            <td class="text-right">{{MultiItem.Createdby}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Created At</th>
+                                                            <td class="text-right">{{MultiItem.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                        </tr>
+                                                        <tr ng-if="MultiItem.UpdatedBy != null">
+                                                            <th>Updated By</th>
+                                                            <td class="text-right">{{MultiItem.UpdatedBy}}</td>
+                                                        </tr>
+                                                        <tr ng-if="MultiItem.UpdatedAt != null">
+                                                            <th>Updated At</th>
+                                                            <td class="text-right">{{MultiItem.UpdatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12" style="text-align:end;">
+                                            <button class="btn btn-danger"
+                                                    ng-show="InspDelayBtnsVerification(MultiItem)"
+                                                    ng-click="ApproveRejectBlockInspectionDelay(MultiItem,false)">
+                                                Reject all delays
+                                            </button>
+                                            <button class="btn btn-success"
+                                                    ng-show="InspDelayBtnsVerification(MultiItem)"
+                                                    ng-click="ApproveRejectBlockInspectionDelay(MultiItem,true)">
+                                                Close delays
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="InspdelayRecordList.length ==1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="container">
+                                    <div class="tabs">
+                                        <input type="radio" id="radio-4" name="tabs" checked="" disabled>
+                                        <label class="tab" for="radio-4" ng-class="{'activeglider': InspdelayRecord.DelayType=='operational'}">Operational Delays</label>
+
+                                        <input type="radio" id="radio-5" name="tabs" disabled>
+                                        <label class="tab" for="radio-5" ng-class="{'activeglider': InspdelayRecord.DelayType=='Customs'}">Custom Delays</label>
+
+                                        <input type="radio" id="radio-6" name="tabs" disabled>
+                                        <label class="tab" for="radio-6" ng-class="{'activeglider': InspdelayRecord.DelayType=='Others'}">Other</label>
+                                        @*<span class="glider"></span>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card ReportInspectionDelayModelCard">
+                                    <div class="dpx">
+                                        <div class='py cursor-pointer w-100'>
+                                            <table class="table departtable" ng-repeat="item in InspdelayRecord.DelayReasons">
+                                                <thead class="thead-light" ng-if="item.DepartInvloved==true">
+                                                    <tr>
+                                                        <th colspan="4" class="light-header">
+                                                            <label class="text-left">
+                                                                <input type="checkbox" class="option-input radio" name="pyradio" checked="true" disabled readonly />
+                                                                {{item.Reason}}
+                                                                <span class="pull-right">({{getReasonDelayDuaration(item.DepartmentStatusList,InspdelayRecord,item)}})</span>
+                                                            </label>
+                                                        </th>
+                                                    </tr>
+                                                    <tr ng-show="CheckApproveDisplay(item)">
+                                                        <td colspan="4">
+                                                            <button class="btn-sm pull-right btn btn-danger" ng-click="ApproveRejectBlockDepartNotifiyAll(item,false)">Reject</button>
+                                                            <button class="btn-sm pull-right mr-2 btn btn-success" ng-click="ApproveRejectBlockDepartNotifiyAll(item,true)">Approve</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr ng-show="CheckCloseDisplay(item)">
+                                                        <td colspan="4">
+                                                            <button class="btn-sm pull-right btn btn-danger" ng-click="CloseRejectBlockDepartAll(item,false)">Reject</button>
+                                                            <button class="btn-sm pull-right mr-2 btn btn-success" ng-click="CloseRejectBlockDepartAll(item,true)">Close</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr ng-if="item.DepartmentStatusList != null && item.DepartmentStatusList.length>0">
+                                                        <th class="text-left dark-header   font-size-10 w-150">Department</th>
+                                                        <th class="text-center dark-header font-size-10 w-150">Status</th>
+                                                        <th class="text-center dark-header font-size-10">Emails</th>
+                                                        <th class="text-center dark-header font-size-10" ng-if="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <thead class="thead-light" ng-if="item.DepartInvloved!=true">
+                                                    <tr>
+                                                        <th class="light-header">
+                                                            <label class="text-left">
+                                                                <input type="checkbox" class="option-input radio" name="pyradio" checked="true" disabled readonly />
+                                                                {{item.Reason}}
+                                                            </label>
+                                                        </th>
+                                                        <td>
+                                                            <span class="pull-right">({{getReasonDelayDuaration(item.DepartmentStatusList,InspdelayRecord,item)}})</span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-show="item.DepartmentStatusList.length == 0">
+                                                                <span class="PendingApprovalEvent" ng-show="( item.SprVSAction==null ||item.SprVSAction=='') &&( item.SnrSprAction==null ||item.SnrSprAction=='')">Pending</span>
+                                                                <span class="PendingApprovalEvent" ng-show="( item.SprVSAction!=null && item.SprVSAction!='') &&( item.SnrSprAction==null ||item.SnrSprAction=='')">Inprogress</span>
+                                                                <span class="Approvebadge" ng-show="item.SnrSprAction!=null && item.SnrSprAction!=''">Closed</span>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-show="CheckDirectApproveReject(item)" ng-click="ApproveRejectBlockNOdepartDelay(item,'Reject')"><i class="icon-close2 text-danger"></i></span>
+                                                            <span ng-show="CheckDirectApproveReject(item)" ng-click="ApproveRejectBlockNOdepartDelay(item,'Approve')"><i class="icon-check text-success"></i></span>
+                                                        </td>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody ng-if="item.DepartmentStatusList != null && item.DepartmentStatusList.length>0">
+                                                    <tr ng-repeat="dep in item.DepartmentStatusList">
+                                                        <td class="text-left font-size-10">{{dep.Department}}</td>
+                                                        <td class="font-size-10">
+                                                            <span ng-if="dep.DepartmentStatus == 'PENDING'"
+                                                                  class="PendingApprovalEvent">
+                                                                PENDING
+                                                            </span>
+                                                            <span ng-if="dep.DepartmentStatus == 'NOTIFIED'"
+                                                                  class="PendingApprovalEvent"
+                                                                  title="Notified Time:{{dep.NotifiedTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Notified By: {{dep.NotifiedBy}}">
+                                                                Waiting for Dep closure
+                                                            </span>
+                                                            <span ng-if="dep.DepartmentStatus == 'RESOLVED'"
+                                                                  class="Approvebadge"
+                                                                  title="Resolved Time:{{dep.DepartmentActionTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Resolved By: {{dep.DepartmentActionBy}}">
+                                                                Resolved by Dep
+                                                            </span>
+                                                            <span ng-if="dep.DepartmentStatus == 'APPROVED'"
+                                                                  class="Approvebadge"
+                                                                  title="Approved Time:{{dep.ActionTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Approved By: {{dep.ActionBy}}">
+                                                                Closed
+                                                            </span>
+                                                            <span ng-if="dep.DepartmentStatus == 'REJECTED AND NOTIFIED'" class="RejectedApprovalEvent"
+                                                                  title="Rejected/Notified Time:{{dep.NotifiedTime | date:'dd/MM/yyyy HH:mm:ss'}}&#10;Rejected/Notified By: {{dep.NotifiedBy}}">Rejected & Notified</span>
+                                                        </td>
+                                                        <td class="font-size-10">
+                                                            <i class="icon-user" title="{{dep.Emails}}"></i>
+                                                        </td>
+                                                        <td class="font-size-10">
+                                                            <i class="icon-close2 text-danger"
+                                                               ng-if="dep.DepartmentStatus != 'APPROVED'"
+                                                               ng-show="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')"
+                                                               ng-click="ApproveRejectBlockdepartDelay(dep,false,item)" title="Reject">
+
+                                                            </i>
+                                                            <i class="icon-check text-success"
+                                                               ng-if="dep.DepartmentStatus != 'APPROVED'"
+                                                               ng-show="!_currentUser.UserType.includes('TallyClerk') && !_currentUser.UserType.includes('ForkliftOperator') && !_currentUser.UserType.includes('FK_DTSOperator')"
+                                                               ng-click="ApproveRejectBlockdepartDelay(dep,true,item)" title="{{dep.DepartmentStatus == 'PENDING'?'Approve':'Close'}}">
+                                                            </i>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card mb-3 shadow-sm" style="border-radius:15px;">
+                                    <div class="card-body">
+                                        <table class="table" style="border: none !important;">
+                                            <tr>
+                                                <th>Status</th>
+                                                <td class="text-right">
+                                                    <span ng-if="InspdelayRecord.ApproveStatus == 1 || InspdelayRecord.ApproveStatus == 0" class="PendingApprovalEvent">Pending for approval</span>
+                                                    <span ng-if="InspdelayRecord.ApproveStatus == 2" class="Approvebadge">Approved</span>
+                                                    <span ng-if="InspdelayRecord.ApproveStatus == 3" class="RejectedApprovalEvent">Rejected</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Delay Start Time</th>
+                                                <td class="text-right">{{InspdelayRecord.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Duration</th>
+                                                <td class="text-right">{{getInspecDelayDuaration(InspdelayRecord)}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Delay closed Time</th>
+                                                <td class="text-right" ng-if="InspdelayRecord.UpdatedAt == null">N/A</td>
+                                                <td class="text-right" ng-if="InspdelayRecord.UpdatedAt != null">{{InspdelayRecord.UpdatedAt  | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Delay reported by</th>
+                                                <td class="text-right">{{InspdelayRecord.Createdby}}</td>
+                                            </tr>
+                                            <tr ng-if="InspdelayRecord.UpdatedBy != null">
+                                                <th>Delay approved by</th>
+                                                <td class="text-right">{{InspdelayRecord.UpdatedBy}}</td>
+                                            </tr>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-primary"
+                                    @*ng-show="InspdelayRecord.ApproveStatus == 2"*@
+                                    ng-click="RecordAgainDelay(InspdelayRecordList[0],true)">
+                                Record new delay
+                            </button>
+                            <button class="btn btn-danger"
+                                    ng-if="CheckApproveRejectAll(InspdelayRecordList)"
+                                    ng-show="InspDelayBtnsVerification(InspdelayRecord)"
+                                    ng-click="ApproveRejectBlockInspectionDelay(InspdelayRecord,false)">
+                                Reject all delays
+                            </button>
+                            <button class="btn btn-success"
+                                    ng-if="CheckApproveRejectAll(InspdelayRecordList)"
+                                    ng-show="InspDelayBtnsVerification(InspdelayRecord)"
+                                    ng-click="ApproveRejectBlockInspectionDelay(InspdelayRecord,true)">
+                                Close delays
+                            </button>
+                            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="ReReportInspectionDelayModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{InspDelay.Cntr}} Inspection Delays</h5>
+                </div>
+                <div class="modal-body" style="max-height:500px;overflow-x:auto;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="container">
+                                <div class="tabs">
+                                    <input type="radio" id="radio-7" name="tabs" checked="" onchange="angular.element(this).scope().InspectionDelayTabChange(this,true)">
+                                    <label class="tab" for="radio-7">Operational Delays</label>
+
+                                    <input type="radio" id="radio-8" name="tabs" onchange="angular.element(this).scope().InspectionDelayTabChange(this,true)">
+                                    <label class="tab" for="radio-8">Custom Delays</label>
+
+                                    <input type="radio" id="radio-9" name="tabs" onchange="angular.element(this).scope().InspectionDelayTabChange(this,true)">
+                                    <label class="tab" for="radio-9">Other</label>
+                                    <span class="glider"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card ReportInspectionDelayModelCard">
+                                <div class="dpx">
+                                    <div class='py cursor-pointer'>
+                                        <label ng-repeat="item in InspectionDelayDD">
+                                            <input type="checkbox"
+                                                   ng-checked="item.disable"
+                                                   ng-disabled="item.disable"
+                                                   ng-class="{'active' : B.BlockNumber == CurrentBlock.BlockNumber }"
+                                                   class="option-input radio"
+                                                   name="pyradio"
+                                                   value="{{item.Content}}"
+                                                   title="Already Reported"
+                                                   ng-model="item.action" />
+                                            {{item.Content}}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-success" ng-click="SubmitInspectionDelays()">Submit</button>
+                            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Inspection delays end*@

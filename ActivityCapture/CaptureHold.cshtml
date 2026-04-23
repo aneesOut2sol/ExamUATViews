@@ -1,0 +1,205 @@
+﻿
+@{
+    ViewBag.Title = "CaptureHold";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/BootsrapDatetime/icon.css" rel="stylesheet" />
+<link href="~/Content/BootsrapDatetime/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+<link href="~/Content/BootsrapDatetime/css.css" rel="stylesheet" />
+
+<script src="~/Scripts/jquery.min.js"></script>
+@*<script src="~/Content/BootsrapDatetime/ripples.min.js"></script>
+    <script src="~/Content/BootsrapDatetime/material.min.js"></script>*@
+
+<script src="~/Scripts/js/plugins/moment/moment_locales.min.js"></script>
+@*<script src="~/Content/BootsrapDatetime/bootstrap-material-datetimepicker.js"></script>*@
+
+
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.css" rel="stylesheet" />
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.standalone.css" rel="stylesheet" />
+<script src="~/Scripts/DatePicker/bootstrap-datepicker.js"></script>
+
+
+<script src="~/Content/BootsrapDatetime/ripples.min.js"></script>
+<script src="~/Content/BootsrapDatetime/material.min.js"></script>
+<style>
+    .Capture-CardFlex {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .Capture-Card {
+        background: #ebebeb;
+        padding: 11px 18px;
+        box-shadow: 1px 1px 2px 1px #80808042 inset;
+        border-radius: 4px;
+        margin-bottom: 17px;
+    }
+
+    .evenetTab {
+        padding: 7px 16px;
+        border-radius: 5px;
+        color: #006517;
+        margin-bottom: 15px;
+        background: #00ad271f;
+        border: 1px solid #006517;
+    }
+
+
+
+        .evenetTab span {
+            font-size: 11px;
+        }
+
+        .evenetTab.Canceled {
+            background: #ff04041f;
+            border: 1px solid #b00d0d;
+            color: #6a0707;
+        }
+
+    .evenetTitle {
+        min-width: 11px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 700;
+    }
+
+    span.badge-active.babge-sm {
+        padding: 1px 4px;
+        border-radius: 3px;
+        float: right;
+        line-height: 1.7;
+        font-weight: normal;
+        background: #6a0707 !important;
+    }
+</style>
+<script src="~/Content/BootsrapDatetime/bootstrap-material-datetimepicker.js"></script>
+<div ng-controller="CaptureCustomHoldCtrl" ng-init="Init()">
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-stack-text mr-2"></i><span class="font-weight-semibold">Captured Holds</span></h4>
+                <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+            </div>
+            <div class="page-title d-flex">
+
+                <input type="button" class="btn btn-secondary  pull-right ml-2" value="Filters" data-toggle="collapse" data-target="#demo" />
+            </div>
+        </div>
+    </div><hr />
+
+    <!--Search Filter Code Start-->
+    <div class="card collapse" id="demo">
+        <div class="card-body">
+            <div class="col-md-12  border-bottom">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Container #</label>
+                            <input type="text" maxlength="200" onkeyup="TableRowsCount()" min="1" class="form-control" placeholder="Search Container.." ng-model="Search.Cntr" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Hold Name</label>
+                            <input type="text" maxlength="200" min="1" class="form-control" placeholder="Search Event Name.." ng-model="Search.HoldName" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>From Date</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control date" id="FromDate" placeholder="DD/MM/YYYY HH:mm">
+                                <span class="input-group-append">
+                                    <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label>To Date</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control date" id="ToDate" placeholder="DD/MM/YYYY HH:mm">
+                                <span class="input-group-append">
+                                    <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8 mt-3" style="text-align:end;">
+                        <button class="btn btn-success pull-right mr-2" ng-click="SearchCaptureHold()">Search</button>
+                        <button class="btn btn-primary pull-right mr-2" ng-click="ClearFilter()">Clear</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--Search Filter Code End-->
+
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="CounterCard">
+                <b>Total item: </b>  <span id="counts">{{CaptureHoldList.length}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="row accordion" id="acc">
+        <div class="col-md-12 Capture-Card" ng-repeat="x in CaptureHoldList">
+            <div class="Capture-CardFlex" data-toggle="collapse" data-target="#{{x.Cntr}}col" ng-click="OpenCollapse(x.Cntr)">
+                <div class="mr-3"><img src="~/Content/images/output-onlinepngtools.png" style="height: 49px;" /></div>
+                <div style=" font-size: 14px; font-weight: 500;">{{x.Cntr}}</div>
+                <div class="ml-auto">
+                    <span>
+                        <i ng-show="CurrentCntr!=x.Cntr" class="icon-chevron-down"></i>
+                        <i ng-show="CurrentCntr==x.Cntr" class="icon-chevron-up"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="collapse mt-3" data-parent="#acc" id="{{x.Cntr}}col">
+                <div class="row">
+                    <div class="col-md-4" ng-repeat="y in x.list">
+                        <div class="evenetTab" ng-class="{'Canceled':y.Released==true,}">
+                            <span title="Cancel" ng-click="ReleasedHold(y.Cntr,y.HoldName)" ng-show="y.Released!=true" class="crosschild" style="float:right;cursor:pointer;">
+                                <i class="icon-cross"></i>
+                            </span>
+                            <div class="evenetTitle" title="{{y.HoldName}}">
+                                {{y.HoldName}}
+                                <span ng-show="y.Released==true" class="badge-active babge-sm">Released</span>
+                            </div>
+                            <span>{{y.CreatedAt | date:'dd-MM-yyyy HH:mm:ss'}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <button style="position: fixed; bottom: 3px; right: 22px;" class="btn btn-primary pull-right mt-3" ng-click="LoadMore()">
+        Load More
+    </button>
+</div>
+
+
+<script>
+    //DAte Time
+
+
+    $('.date').bootstrapMaterialDatePicker({
+        format: 'DD/MM/YYYY HH:mm',
+        //maxDate: maxdate,
+        //  endDate: moment(new Date()).format('DD/MM/YYYY HH:mm'),
+        switchOnClick: true,
+        nowButton: true,
+        //currentDate: moment(),
+    });
+
+</script>
+<script src="~/Scripts/DatePicker/CustomIntilizeJS.js"></script>

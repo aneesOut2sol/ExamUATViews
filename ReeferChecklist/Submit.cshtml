@@ -1,0 +1,141 @@
+﻿
+@{
+    ViewBag.Title = "Submit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #ReeferModule .w-60 {
+        width: 60% !important;
+    }
+
+    #ReeferModule .w-10 {
+        width: 50px !important;
+    }
+
+    #ReeferModule .w-20 {
+        width: 20% !important;
+    }
+
+    #ReeferModule th {
+        background: var( --dpw-bg-color) !important;
+        color: #fff;
+    }
+
+    #ReeferModule .p-0 {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    #ReeferModule table td .form-control {
+        border: 0;
+        box-shadow: none !important;
+    }
+
+    input[type="radio"] {
+        transform: scale(1.5);
+    }
+
+        input[type="radio"]:checked {
+            accent-color: var( --dpw-bg-color); /* Change color when checked */
+        }
+
+    .font-size-lg {
+        font-size: 24px;
+    }
+    span.select2-selection__clear {
+        display: none;
+    }
+</style>
+<div ng-controller="ReeferChecklistCtrl" ng-init="submitpage_init()" id="ReeferCheckListSection" ng-cloak class="ng-cloak">
+
+
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-copy mr-2"></i> <span class="font-weight-semibold">Reefer Module CE Inspection Checklist</span></h4>
+                <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+            </div>
+            <div class="float-right">
+                <a href="@Url.Action("Index","ReeferChecklist")" class="btn btn-dark ">
+                    <i class="icon-backward m-r-5 text-white"></i>
+                    Go Back!
+                </a>
+                @if (User.IsInRole("Admin") || User.IsInRole("SeniorSuperVisor"))
+                {
+                    <a href="@Url.Action("DepartmentSettings","ReeferChecklist")" class="btn btn-dark ">
+                        <i class="icon-backward m-r-5 text-white"></i>
+                        Department Setting
+                    </a>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card" id="ReeferModule">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <label>Module</label>
+                    <div class="form-group">
+                        <select data-placeholder="Please Select Module" id="ModuleDD" class="form-control select-clear" ng-model="ReeferModule" data-fouc>
+                            <option></option>
+                            <option ng-repeat="item in ModuleList" value="{{item}}">{{item}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label>Department</label>
+                    <div class="form-group">
+                        <select multiple data-placeholder="Please Select department" id="DepartmentDD" class="form-control select-clear" ng-model="ReeferDepartment" data-fouc>
+                            <option></option>
+                            <option ng-repeat="item in DepartmentList" value="{{item.Id}}">{{item.Department}}</option>
+                        </select>
+                    </div>                  
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="w-60">Item</th>
+                        <th class="w-10 text-center">Y</th>
+                        <th class="w-10 text-center">N</th>
+                        <th class="w-10 text-center">Attachment</th>
+                        <th class="w-20 text-center">Remars/Action Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in ReeferChecklist">
+                        <td class="text-left">{{item.ReeferItem}}</td>
+                        <td>
+                            <input type="radio" value="true" ng-model="item.Action" name="Radio{{$index}}" />
+                        </td>
+                        <td>
+                            <input type="radio" value="false" ng-model="item.Action" name="Radio{{$index}}" />
+                        </td>
+                        <td>
+                            <span ng-if="item.Attachments.length==0"><i class="icon-upload font-size-lg cursor-pointer" ng-click="UploadAttachment(item,$index)"></i></span>
+                            <span ng-if="item.Attachments.length>0"><i class="icon-eye font-size-lg  cursor-pointer" ng-click="OpenAttachment(item,$index)"></i></span>
+                        </td>
+                        <td class="p-0">
+                            <input type="text" class="form-control" ng-model="item.Remarks" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button class="btn btn-primary pull-right mt-2" ng-click="SubmitReederCheckList()">Submit</button>
+        </div>
+
+    </div>
+
+
+    @Html.Partial("_ReeferModals");
+
+</div>
+<script>
+    var element = document.getElementById('ReeferService');
+    element.classList.add("active");  
+</script>
+<script src="@Url.Content("~/Scripts/crypto-js.min.js")"></script>
+

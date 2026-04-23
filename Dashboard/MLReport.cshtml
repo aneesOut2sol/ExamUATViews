@@ -1,0 +1,151 @@
+﻿
+@model  ExamPortal.Model.Features.ExamActivityDashboard.GetDashboardScanPredicationResponse
+
+@{
+    ViewBag.Title = "DashboardPrintReport";
+    Layout = null;
+    int gridIndex = 0;
+    int MultipleIndex = 0;
+
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+
+    .heading-print {
+        color: black;
+        font-weight: bold;
+        margin: 0px;
+    }
+
+
+    * {
+        font-family: 'Lato-regular', sans-serif;
+        color: black;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    table {
+        width: 100%;
+        box-sizing: border-box;
+        border-collapse: collapse;
+        margin: 15px 0px;
+    }
+
+    th {
+        font-weight: bold;
+    }
+
+    td, th {
+        padding: 10px !important;
+        border: 1px solid #191919;
+        text-align: center !important;
+    }
+
+    .HeaderTr {
+        background: #f3f3f3;
+    }
+
+    img {
+        height: 70px;
+        border: none;
+    }
+
+    @@media print {
+        table {
+            width: 100%;
+            box-sizing: border-box;
+            border-collapse: collapse;
+            margin: 15px 0px;
+        }
+    }
+
+    .statusred {
+        width: 20px;
+        height: 20px;
+        border-radius: 40px;
+        background-color: red;
+    }
+
+    .statusgreen {
+        width: 20px;
+        height: 20px;
+        border-radius: 40px;
+        background-color: green;
+    }
+</style>
+
+<table>
+    <tr class="HeaderTr">
+        <td class="text-center">
+            <img src="~/Content/images/dpworldlogo.png" />
+        </td>
+        <td colspan="3">
+            <h1 class="text-center heading-print">
+                ML Prediction Report
+            </h1>
+        </td>
+        <td colspan="3">
+            <table border="0">
+                <tr>
+                    <th> Date</th>
+                    <td>@DateTime.Now.ToString("dd-MM-yyyy")</td>
+                </tr>
+                <tr>
+                    <th>
+                        Time
+                    </th>
+                    <td>@DateTime.Now.ToString("HH:mm")</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th>Seq.No</th>
+        <th>Vessel</th>
+        <th>ETA</th>
+        <th>Import</th>
+        <th>Source</th>
+        <th>Exam</th>
+        <th>PL</th>
+        <th>NPL</th>
+    </tr>
+    @foreach (var item in Model.Data)
+    {
+        gridIndex++;
+        <tr>
+            <td rowspan="3">@gridIndex</td>
+            <td rowspan="3">@item.VessleName</td>
+            <td rowspan="3">@item.Eta.Value.ToString("dd-MM-yyyy HH:mm:ss")</td>
+            <td rowspan="3">@item.IMPRT</td>
+        </tr>
+        <tr>
+            <td>ML</td>
+            <td>@(item.ML_PL+ item.ML_NPL)</td>
+            <td>@item.ML_PL</td>
+            <td>@item.ML_NPL</td>
+        </tr>
+        <tr>
+            <td>SEAINI</td>
+            <td>@(item.SEAINI_PL+ item.SEAINI_NPL)</td>
+            <td>@item.SEAINI_PL</td>
+            <td>@item.SEAINI_NPL</td>
+        </tr>
+    }
+    <tr>
+        <td colspan="4">Total</td>
+        <td colspan="4">@(Model.Data.Sum(x=>x.IMPRT))</td>
+    </tr>
+</table>
+
+
+
+<script>
+    window.print();
+</script>

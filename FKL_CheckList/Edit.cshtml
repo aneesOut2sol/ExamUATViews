@@ -1,0 +1,162 @@
+﻿
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<style>
+    span.badge.badge-Active {
+        background: #00946b;
+        color: white;
+    }
+
+    span.badge.badge-InActive {
+        background: #cd0202;
+        color: white;
+    }
+
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .add-button {
+        background-color: var( --dpw-bg-color);
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+    }
+
+    .CloseModalBtn {
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        z-index: 99999999999 !important;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px !important;
+        padding: 8px;
+        cursor: pointer;
+        background: var( --dpw-bg-color);
+        z-index: 99999999999 !important;
+    }
+
+    .close {
+        display: none;
+    }
+
+    .CloseModalBtn .fa-times-circle-o {
+        color: #ffff !important;
+    }
+
+    .modal-content {
+        background-color: #f4f2fa !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+
+    .modal-title {
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+
+    .modal-footer {
+        border-top: none !important;
+        align-content: center;
+        text-align: center;
+    }
+</style>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+</head>
+<body>
+    <div class="ng-cloak" ng-cloak ng-controller="FKL_CheckListCtrl" ng-init="Editinit()">
+        <div class="card mt-2 d-flex">
+            <div class="card-body">
+                <div class="header-row">
+                    <h2>Checklist question</h2>
+                    <div>
+                        <input type="button" class="btn btn-secondary" value="Filters" data-toggle="collapse" data-target="#demo" />
+                        <button class="add-button" ng-click="OpenAdd()"><i class="icon-add m-r-5 text-white"></i> Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="Starick">Question</label>
+                            <input type="text" ng-model="QuestionDetails.Question" class="form-control" placeholder="Enter question" value="" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="Starick">Answer</label>
+                            <select class="form-control" ng-model="QuestionDetails.Answer">
+                                <option value="" selected hidden>select answer</option>
+                                <option ng-selected="QuestionDetails.Answer=='Yes'" value="Yes">Yes</option>
+                                <option ng-selected="QuestionDetails.Answer=='No'" value="No">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="Starick">Required</label>
+                            <select class="form-control" ng-model="QuestionDetails.Required">
+                                <option value="" selected hidden>select required</option>
+                                <option ng-selected="QuestionDetails.Required==true" value="true">Yes</option>
+                                <option ng-selected="QuestionDetails.Required==false" value="false">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="Starick">Photo Upload on</label>
+                            <select class="form-control" ng-model="QuestionDetails.PhotoUploadOn">
+                                <option value="" selected hidden>select photo upload on</option>
+                                <option ng-selected="QuestionDetails.PhotoUploadOn=='Yes'" value="Yes">Yes</option>
+                                <option ng-selected="QuestionDetails.PhotoUploadOn=='No'" value="No">No</option>
+                                <option ng-selected="QuestionDetails.PhotoUploadOn=='Both'" value="Both">Both</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <button class="btn btn-primary pull-right" ng-click="UpdateQuestion(QuestionDetails)">
+                        Update
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <!--pagination Code End-->
+</body>
+</html>
+

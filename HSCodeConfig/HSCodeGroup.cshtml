@@ -1,0 +1,220 @@
+﻿
+@{
+    ViewBag.Title = "HSCodeGroup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /*    .modal-body {
+        max-height: 70vh !important;
+        overflow: auto !important;
+    }*/
+
+    span.badge.badge-Active {
+        background: #00946b;
+        color: white;
+    }
+
+    span.badge.badge-Working {
+        background: #013765;
+        color: white;
+    }
+
+    span.badge.badge-InActive {
+        background: #cd0202;
+        color: white;
+    }
+
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .add-button {
+        background-color: #1E1450;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+    }
+
+    .CloseModalBtn {
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        z-index: 99999999999 !important;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px !important;
+        padding: 8px;
+        cursor: pointer;
+        background: #1E1450;
+        z-index: 99999999999 !important;
+    }
+
+    .close {
+        display: none;
+    }
+
+    .CloseModalBtn .fa-times-circle-o {
+        color: #ffff !important;
+    }
+
+    .modal-content {
+        background-color: #f4f2fa !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+
+    .modal-title {
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+
+    .modal-footer {
+        border-top: none !important;
+        align-content: center;
+        text-align: center;
+    }
+</style>
+
+<div class="ng-cloak" ng-cloak ng-controller="HSCodeConfigCtrl" ng-init="HSCodeGroupinit()">
+    <div class="card mt-2 d-flex">
+        <div class="card-body">
+            <div class="header-row">
+                <h2>HS code group</h2>
+                <div>
+                    <button class="add-button" ng-click="OpenAddHSCodeGroup()"><i class="icon-add m-r-5 text-white"></i> Add</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="CounterCard">
+                <b>Total item: </b>  <span id="counts">{{(HSCodeGroupList | filter :Search).length}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div id="tblrep" class="card table-card scrollbar">
+            <table class="table datatable-show-all text-center" id="table-id">
+                <thead>
+                    <tr class="table-card-head">
+                        <th>SR#</th>
+                        <th>Name</th>
+                        <th>Created at</th>
+                        <th>Created by</th>
+                        <th>Updated at</th>
+                        <th>Updated by</th>
+                        <th>Action</th>
+
+                    </tr>
+                </thead>
+                <tbody class="ng-cloak" ng-cloak>
+                    <tr ng-repeat="item in HSCodeGroupList | filter:Search">
+                        <td>{{$index+1}}</td>
+                        <td>{{item.Name}}</td>
+                        <td>{{item.CreatedAt | date:'dd/MM/yyyy hh:mm:ss'}}</td>
+                        <td>{{item.CreatedBy}}</td>
+                        <td>{{(item.UpdatedAt | date:'dd/MM/yyyy hh:mm:ss')||'-'}}</td>
+                        <td>{{(item.UpdatedBy)||'-'}}</td>
+                        <td>
+                            <span><i class="icon-pencil" title="Click to update" ng-click="OpenEditHSCodeGroup(item)"></i></span>
+                            <span><i class="icon-bin" title="Click to delete" ng-click="UpdateHSCodeGroup(item,true)"></i></span>
+                        </td>
+
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal fade" id="AddHSCodeGroup" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="overflow:visible !important">
+                <div class="CloseModalBtn" data-dismiss="modal">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Add HS code group</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="Starick">HS code group</label>
+                                <input class="form-control" type="text" placeholder="Enter HS code group" ng-model="HSCodeObj.Name" value="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-success" ng-click="AddHSCodeGroup(HSCodeObj)">
+                                Submit
+                            </button>
+                            <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="EditHSCodeGroup" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="overflow:visible !important">
+                <div class="CloseModalBtn" data-dismiss="modal">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Update HS code group</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="Starick">HS code group</label>
+                                <input class="form-control" type="text" placeholder="Enter HS code group" ng-model="EditHScodeGroupObj.Name" value="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-success" ng-click="UpdateHSCodeGroup(EditHScodeGroupObj,false)">
+                                Submit
+                            </button>
+                            <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

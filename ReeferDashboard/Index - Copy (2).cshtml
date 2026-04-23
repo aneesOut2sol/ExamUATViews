@@ -1,0 +1,219 @@
+﻿@{
+    ViewBag.Title = "Device Monitoring";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    :root {
+        --ds-bg: #f3f4f6;
+        --ds-primary: #1e1450;
+        --ds-freezer: #1e1450;
+        --ds-chiller: #3b82f6;
+        --ds-success: #10b981;
+        --ds-danger: #ef4444;
+        --ds-border: #e2e8f0;
+        --ds-text: #1e293b;
+    }
+
+    .ds-main { padding: 20px; background: var(--ds-bg); min-height: 100vh; font-family: 'Inter', sans-serif; }
+
+    /* Modern Navbar */
+    .ds-navbar {
+        display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+        background: #fff; padding: 15px 25px; border-radius: 12px; margin-bottom: 25px;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); gap: 20px;
+    }
+
+    .ds-controls-wrapper { display: flex; gap: 15px; align-items: center; }
+    .ds-filter-group { display: flex; background: #f1f5f9; padding: 4px; border-radius: 10px; gap: 4px; }
+
+    /* Tooltip / Hover Label Logic */
+    .ds-btn-wrapper { position: relative; display: inline-block; }
+    
+    .ds-filter-btn {
+        border: none; width: 40px; height: 40px; border-radius: 8px; cursor: pointer;
+        background: transparent; color: #1e1450; display: flex; align-items: center;
+        justify-content: center; transition: 0.2s; font-size: 1rem;
+    }
+
+    .ds-filter-btn.active { background: #fff; color: var(--ds-primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+    /* Tooltip Styling */
+    .ds-btn-wrapper .ds-tooltip {
+        visibility: hidden; width: 80px; background-color: #333; color: #fff;
+        text-align: center; border-radius: 6px; padding: 5px 0; position: absolute;
+        z-index: 10; bottom: 125%; left: 50%; margin-left: -40px; opacity: 0;
+        transition: opacity 0.3s; font-size: 0.75rem; font-weight: 400; pointer-events: none;
+    }
+
+    .ds-btn-wrapper:hover .ds-tooltip { visibility: visible; opacity: 1; }
+
+    /* Grid & Cards */
+    .ds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+    .ds-card { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid var(--ds-border); transition: 0.3s; }
+    .ds-card:hover { transform: translateY(-5px); box-shadow: 0 12px 20px -5px rgba(0,0,0,0.1); }
+
+    .ds-card-head { display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; }
+    .ds-id { font-weight: 700; color: var(--ds-primary); }
+    .ds-status-badge { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; display: flex; align-items: center; gap: 5px; }
+    .status-online { background: #dcfce7; color: #166534; }
+    .status-offline { background: #fee2e2; color: #991b1b; }
+
+    .ds-body-split { display: flex; gap: 15px; margin-bottom: 15px; }
+    .ds-icon-wrapper { width: 55px; height: 55px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; background: #f8fafc; }
+    .bg-freezer { background: #edeaff; }
+    .bg-chiller { background: #eff6ff; }
+    .bg-offline { background: #fee2e2; }
+
+    .ds-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex: 1; }
+    .ds-field label { display: block; font-size: 0.65rem; font-weight: 700; color: #1e1450; text-transform: uppercase; }
+    .ds-field span { font-size: 0.85rem; font-weight: 600; }
+
+    .ds-temp-footer { border-top: 1px solid #f1f5f9; padding-top: 15px; display: flex; justify-content: space-between; align-items: center; }
+    .ds-temp-val { font-size: 1.3rem; font-weight: 700; color: var(--ds-primary); }
+    .temp-offline { color: #cbd5e1; }
+
+    /* View Mode Switch */
+    .ds-view-switch { display: flex; gap: 8px; margin-left: 20px; border-left: 1px solid #ddd; padding-left: 20px; }
+    .ds-view-btn { border: none; background: #f1f5f9; color: #1e1450; padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+    .ds-view-btn.active { background: var(--ds-primary); color: #fff; }
+
+    /* Table View */
+    .ds-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; margin-top: 10px; }
+    .ds-table th { background: var(--ds-primary); color: #fff; padding: 12px; text-align: left; font-size: 0.85rem; text-transform: uppercase; }
+    .ds-table td { padding: 12px; border-bottom: 1px solid var(--ds-border); font-size: 0.9rem; }
+</style>
+
+<div class="ds-main" ng-controller="ReeferDashboardCtrl" ng-init="loadDashboard()">
+    <header class="ds-navbar">
+        <div>
+            <h1 style="margin:0; font-size: 1.5rem;">Reefer Live Monitoring</h1>
+            <span style="color:#64748b; font-size: 0.9rem;">
+                Showing {{ (DashbaordData | filter:customFilter).length }} of {{ DashbaordData.length }} devices
+            </span>
+        </div>
+
+        <div class="ds-controls-wrapper">
+            <div class="ds-filter-group">
+                <div class="ds-btn-wrapper">
+                    <button class="ds-filter-btn" ng-class="{'active': filters.category == 'all'}" ng-click="filters.category = 'all'">
+                        <i class="fa fa-layer-group"></i>
+                    </button>
+                    <span class="ds-tooltip">Show All</span>
+                </div>
+                <div class="ds-btn-wrapper">
+                    <button class="ds-filter-btn" ng-class="{'active': filters.category == 'FREEZER '}" ng-click="filters.category = 'FREEZER '">
+                        <i class="fa-solid fa-icicles" style="color: var(--ds-freezer);"></i>
+                    </button>
+                    <span class="ds-tooltip">Freezers</span>
+                </div>
+                <div class="ds-btn-wrapper">
+                    <button class="ds-filter-btn" ng-class="{'active': filters.category == 'CHILLER '}" ng-click="filters.category = 'CHILLER '">
+                        <i class="fa-solid fa-snowflake" style="color: var(--ds-chiller);"></i>
+                    </button>
+                    <span class="ds-tooltip">Chillers</span>
+                </div>
+            </div>
+
+            <div class="ds-filter-group">
+                <div class="ds-btn-wrapper">
+                    <button class="ds-filter-btn" ng-class="{'active': filters.online == 'all'}" ng-click="filters.online = 'all'">
+                        <i class="fa-solid fa-plug"></i>
+                    </button>
+                    <span class="ds-tooltip">All Status</span>
+                </div>
+                <div class="ds-btn-wrapper">
+                    <button class="ds-filter-btn" ng-class="{'active': filters.online == true}" ng-click="filters.online = true">
+                        <i class="fa-solid fa-circle" style="color: var(--ds-success); font-size: 12px;"></i>
+                    </button>
+                    <span class="ds-tooltip">Online</span>
+                </div>
+                <div class="ds-btn-wrapper">
+                    <button class="ds-filter-btn" ng-class="{'active': filters.online == false}" ng-click="filters.online = false">
+                        <i class="fa-solid fa-circle" style="color: var(--ds-danger); font-size: 12px;"></i>
+                    </button>
+                    <span class="ds-tooltip">Offline</span>
+                </div>
+            </div>
+
+            <div class="ds-view-switch">
+                <button class="ds-view-btn" ng-class="{'active': viewMode == 'grid'}" ng-click="viewMode = 'grid'"><i class="fa fa-th-large"></i></button>
+                <button class="ds-view-btn" ng-class="{'active': viewMode == 'table'}" ng-click="viewMode = 'table'"><i class="fa fa-table"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <div class="ds-grid" ng-if="viewMode == 'grid'">
+        <div class="ds-card" ng-repeat="item in DashbaordData | filter:customFilter">
+            <div class="ds-card-head">
+                <div class="ds-id-group">
+                    <span class="ds-id">{{item.Cntr}}</span>
+                    <small class="ds-category-text" ng-if="item.DeviceName">{{item.DeviceName.trim()}}</small>
+                </div>
+                <span class="ds-status-badge" ng-class="item.Online ? 'status-online' : 'status-offline'">
+                    <i class="fa-solid fa-circle" style="font-size: 8px;"></i> {{item.Online ? 'ONLINE' : 'OFFLINE'}}
+                </span>
+            </div>
+            <div class="ds-body-split">
+                <div class="ds-icon-wrapper" ng-class="{'bg-offline': !item.Online, 'bg-freezer': item.Online && item.DeviceCategory.trim() == 'FREEZER', 'bg-chiller': item.Online && item.DeviceCategory.trim() == 'CHILLER'}">
+    
+    <i class="fa-solid fa-plug-circle-xmark" 
+       ng-if="item.Online === false" 
+       style="color: var(--ds-danger);"></i>
+
+    <i class="fa-solid fa-icicles" 
+       ng-if="item.Online === true && item.DeviceCategory.trim() === 'FREEZER'" 
+       style="color: var(--ds-freezer);"></i>
+
+    <i class="fa-solid fa-snowflake" 
+       ng-if="item.Online === true && item.DeviceCategory.trim() === 'CHILLER'" 
+       style="color: var(--ds-chiller);"></i>
+
+    <i class="fa-solid fa-microchip" 
+       ng-if="item.Online === true && !item.DeviceCategory" 
+       style="color: var(--ds-primary);"></i>
+</div>
+                <div class="ds-info-grid">
+                    <div class="ds-field"><label>Type</label><span>{{item.DeviceCategory ? item.DeviceCategory.trim() : 'N/A'}}</span></div>
+                    <div class="ds-field"><label>Bayan No</label><span>{{item.BayanNo}}</span></div>
+                    <div class="ds-field"><label>Req Temp</label><span>{{item.ContainerTemp}}°C</span></div>
+                    <div class="ds-field"><label>Location</label><span>{{item.Location}}</span></div>
+                </div>
+            </div>
+            <div class="ds-temp-footer">
+                <span style="font-size: 0.75rem; font-weight: 600; color: #64748b;">Device Temp</span>
+                <span class="ds-temp-val" ng-class="{'temp-offline': !item.Online}">{{item.Online ? item.DeviceTemprature + '°C' : '--.-'}}</span>
+            </div>
+        </div>
+    </div>
+
+    <table class="ds-table" ng-if="viewMode == 'table'">
+        <thead>
+            <tr>
+                <th>Container</th>
+                <th>Device Name</th>
+                <th>Type</th>
+                <th>Bayan No</th>
+                <th>Req Temp</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Device Temp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in DashbaordData | filter:customFilter">
+                <td>{{item.Cntr}}</td>
+                <td>{{item.DeviceName.trim()}}</td>
+                <td>{{item.DeviceCategory.trim()}}</td>
+                <td>{{item.BayanNo}}</td>
+                <td>{{item.ContainerTemp}}°C</td>
+                <td>{{item.Location}}</td>
+                <td><span class="ds-status-badge" ng-class="item.Online ? 'status-online' : 'status-offline'">{{item.Online ? 'ONLINE' : 'OFFLINE'}}</span></td>
+                <td><span class="ds-temp-val" ng-class="{'temp-offline': !item.Online}">{{item.Online ? item.DeviceTemprature + '°C' : '--.-'}}</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

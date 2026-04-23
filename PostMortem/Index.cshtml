@@ -1,0 +1,124 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .nowrap {
+        white-space: nowrap !important;
+    }
+
+    table tr th, table tr, td {
+        white-space: nowrap;
+    }
+
+        table tr td p {
+            line-height: 7.5px
+        }
+
+    .w-100px {
+        min-width: 150px !important;
+        max-width: 300px !important;
+        white-space: pre-line;
+        line-height: 15px;
+    }
+</style>
+<div ng-controller="PostMortemCtrl" ng-cloak ng-init="init()">
+    <!-- Page header -->
+    <div class="page-header border-bottom-0 blurbg">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-tree6 mr-2"></i><span class="font-weight-semibold">Post Mortem Report</span></h4>
+            </div>
+            <div class="page-title d-flex">
+                <a class="btn btn-primary mr-2" href="/PostMortem/Submit">
+                    <i class="icon-add m-r-5 text-white"></i> Record new report
+                </a>
+                <input type="button" class="btn btn-secondary  pull-right mr-2" value="Filters" data-toggle="collapse" data-target="#demo" />
+                <button class="btn btn-secondary pull-right mr-2 ml-2" ng-click="DownloadCheckList()"> <i class="icon-file-excel"></i> Export To Excel </button>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <!--Search Filter Code Start-->
+    <div class="card collapse blurbg" id="demo">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 col-lg-3 col-sm-12 form-group">
+                    <label>RefNo</label>
+                    <input type="text" class="form-control" ng-model="Search.RefNo" />
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-12 form-group">
+                    <label>Vessel Name</label>
+                    <input type="text" class="form-control" ng-model="Search.Vessel" />
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-12 form-group">
+                    <label>Vessel Service</label>
+                    <input type="text" class="form-control" ng-model="Search.Service" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-lg-12 col-sm-12">
+
+                    <button class="btn btn-reset pull-right" ng-click="ResetFilters()">
+                        Reset
+                    </button>
+                    <button class="btn btn-primary pull-right mr-2" ng-click="SearchPostMortem(Search)">
+                        Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Search Filter Code End-->
+    <div class="row blurbg">
+        <div class="col-md-12">
+            <div id="tblrep" class="card table-card scrollbar">
+                <table class="table datatable-show-all text-center" id="table-id2">
+                    <thead>
+                        <tr class="table-card-head">
+                            <th>SR#</th>
+                            <th>RefNo</th>
+                            <th>Vessel</th>
+                            <th>Code</th>
+                            <th>Service</th>
+                            <th>Comments</th>
+                            <th>Additional Notes</th>
+                            <th>Reported By</th>
+                            <th>Reported At</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="row in PostMortemChecklist | filter:search">
+                            <td>{{$index+1}}</td>
+                            <td>{{row.RefNo}}</td>
+                            <td>{{row.VesselName}}</td>
+                            <td>{{row.VesselCode}}</td>
+                            <td>{{row.ServiceName}}</td>
+                            <td>
+                                <p ng-repeat="item in row.PostMortemComments">
+                                    {{item.Comments}}
+                                </p>
+                            </td>
+                            <td><p class="w-100px">{{row.Comments}}</p></td>
+                            <td>{{row.ReportedBy}}</td>
+                            <td>{{row.ReportTime | date :'dd/MM/yyyy HH:mm:ss'}}</td>
+                            <td>
+                                <span ng-click="DownloadCheckList(row)"><i class="icon-file-excel text-success cursor-pointer"></i></span>
+                                <span ng-click="ViewCheckList(row)"><i class="icon-printer  cursor-pointer"></i></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <button class="btn btn-primary pull-right mt-3" ng-click="LoadMore()">Load more</button>
+        </div>
+    </div>
+
+
+
+
+</div>

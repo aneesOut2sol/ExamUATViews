@@ -1,0 +1,564 @@
+﻿
+@{
+    ViewBag.Title = "ContainerInquiry";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
+<style>
+    .entry-content {
+        background-color: #FFF;
+        padding: 10px;
+    }
+
+
+
+    .site-content {
+        background: WHITE !important;
+    }
+
+    .ui-datepicker-calendar {
+        display: none;
+    }
+
+    .ui-datepicker-month {
+        display: none;
+    }
+
+    .ui-datepicker-next, .ui-datepicker-prev {
+        display: none;
+    }
+
+    .site-content {
+        background: WHITE !important;
+    }
+
+    .bgcolorwhite {
+        background: white
+    }
+
+        .bgcolorwhite td {
+            background: white;
+            font-weight: bolder
+        }
+
+    :root {
+        --background-color: #eeeeee;
+        --light-grey: #c4c1c1;
+        --accent-color: #4443a0;
+    }
+
+    .container {
+        width: 100% !important;
+    }
+
+    .form-control-changing {
+        margin: 0px !important;
+    }
+
+    .circle .icon {
+        position: absolute;
+        font-size: 25px;
+        bottom: 25px;
+    }
+
+    .circle .caption {
+        position: absolute;
+        font-size: 14px;
+        font-weight: bolder;
+        bottom: -30px;
+    }
+
+    .btn {
+        background: var(--accent-color);
+        color: #fff;
+        border: 0;
+        border-radius: 20px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: inherit;
+        padding: 8px 30px;
+        margin: 5px;
+    }
+
+        .btn:active {
+            transform: scale(0.9);
+        }
+
+        .btn:focus {
+            outline: 0;
+        }
+
+        .btn:disabled {
+            background-color: var(--light-grey);
+            cursor: not-allowed;
+        }
+
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        opacity: 100%
+    }
+
+        .tooltip .tooltiptext {
+            visibility: hidden !important;
+            width: fit-content;
+            background-color: #4443a0;
+            color: #fff;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            top: 0px;
+            left: 26%;
+            text-align: start;
+            font: small-caption;
+        }
+
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible !important;
+        }
+
+
+    /*@@media only screen and (max-width: 400px) {
+      .container {
+        width: 95%;
+      }
+    }*/
+
+
+    /*Step progress End*/
+
+
+    .step {
+        position: relative;
+        display: inline-flex;
+        margin-left: 14px;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #e1e5ea;
+        color: #a7bbc7;
+        border-radius: 50%;
+        transition: all 0.3s cubic-bezier(0.44, 0.79, 1, 0.59);
+    }
+
+        .step.active {
+            background: var(--accent-color);
+            color: #faf3f3;
+            /*   transform: scale(1.2);*/
+        }
+
+    .ProgFlexContainer {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .ProgFlexitem {
+        flex-direction: column;
+        width: 24%;
+        margin-bottom: 10px;
+    }
+
+    .services-menu-hcolor {
+        margin-left: 0px !important;
+    }
+</style>
+
+
+<style>
+    .caption small {
+        left: 68px;
+        position: relative;
+        top: -13px;
+    }
+
+    }
+
+    .CustomCard {
+        background: white;
+        box-shadow: 5px 12px 25px 0px rgba(0,0,0,0.1);
+        border-radius: 13px;
+        margin-bottom: 25px;
+    }
+
+        .CustomCard table {
+            width: 100%;
+        }
+
+            .CustomCard table th {
+                background: #efefef;
+            }
+
+            .CustomCard table th,
+            .CustomCard table td {
+                padding: 13px;
+                border: 1px solid #d9d9d9;
+            }
+
+    .btn-primary {
+        padding: 7px;
+        border-radius: 4px !important;
+        height: fit-content !important;
+    }
+
+    .mainProgress {
+        margin-top: 23px;
+        background: #efefef59;
+        padding: 13px;
+        border-radius: 6px;
+    }
+
+    .progress {
+        background: #d9d9d9;
+    }
+
+    .CollapseHeader h3 {
+        margin: 0px;
+    }
+
+    .CollapseHeader {
+        color: #ffffff;
+        display: flex;
+        justify-content: space-between;
+        padding: 1px 11px;
+        text-align: center;
+        padding: 12px;
+        background: var( --dpw-bg-color);
+        border-radius: 10px;
+        border-bottom-right-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+
+    .CustomCard .collapse {
+        padding: 20px;
+        border: 1px solid rgb(120, 120, 120);
+        border-radius: 0px 0px 12px 12px;
+        overflow: hidden;
+    }
+</style>
+
+
+
+@if (System.Configuration.ConfigurationManager.AppSettings["ManagementOptionDashboard"] == "on")
+{
+
+<div class="ng-cloak" ng-cloak ng-controller="ContainerInquiryCtrl" ng-init="init()">
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4> <span class="font-weight-semibold">Container Inquiry</span></h4>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>Search by </label>
+                <select class="form-control" ng-model="IR.SearchBy" ng-change="resetmodel()">
+                    <option value="Container" selected>Container Number</option>
+                    <option value="Bayan">Bayan Number</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4" ng-show="IR.SearchBy=='Container'">
+            <div class="form-group">
+                <label>Container Number</label>
+                <input type="text" class="form-control" id="cntr" ng-model="IR.Container" placeholder="Enter Container Number" />
+            </div>
+        </div>
+        <div class="col-md-4" ng-show="IR.SearchBy=='Bayan'">
+            <div class="form-group">
+                <label>Bayan Number</label>
+                <input type="text" class="form-control" id="Bayan" ng-model="IR.Bayan" placeholder="Enter Bayan Number" />
+            </div>
+        </div>
+        <div class="col-md-2 p-0">
+            <button ng-click="InquiryProcess(IR)" class="mt-4 btn btn-sm btn-primary">Inquiry</button>
+        </div>
+    </div>
+
+    <div class="row accordion" id="Acc">
+        <div class="col-md-12" ng-repeat="CntrInfo in AllCntr">
+
+            <div class="CustomCard" ng-if="CntrInfo!=null && CntrInfo!=undefined">
+                <div class="CollapseHeader" data-toggle="collapse" data-target="#Col{{$index}}" onclick="toggleindicator(this)">
+                    <div>
+                        <h3 class="font-weight-semibold">{{CntrInfo.Container}}</h3>
+                    </div>
+                    <div class="option">
+                        <span style="vertical-align: sub;">
+                            <i style=" font-size: 21px;" ng-if="$index==0" class="icon-minus2"></i>
+                            <i style=" font-size: 21px;" ng-if="$index!=0" class="icon-plus2"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="collapse" ng-class="{'show':$index==0}" id="Col{{$index}}" data-parent="#Acc">
+                    <table>
+                        <tr>
+                            <th>Container</th>
+                            <td>
+                                {{CntrInfo.Container}}
+                            </td>
+                            <th>Location</th>
+                            <td>
+                                {{CntrInfo.Location}}
+                            </td>
+                            <th>Bayan No</th>
+                            <td ng-if="CntrInfo.Tabs=='UI'">{{CntrInfo.Bayan}}</td>
+                            <td ng-if="CntrInfo.Tabs!='UI'">N/A</td>
+
+                        </tr>
+                        <tr>
+                            <th>Elapsed Hrs</th>
+                            <td>
+                                {{CntrInfo.DwellHrs}}
+                            </td>
+                            <th>Overall Hrs</th>
+                            <td>
+                                <div ng-if="CntrInfo.Tabs=='UI'">{{CntrInfo.OverallHrs}}</div>
+                                <div ng-if="CntrInfo.Tabs!='UI'">N/A</div>
+                            </td>
+                            <th>Custom Status</th>
+                            <td>
+                                <div ng-show="CntrInfo.Tabs=='UI'">UI (Under Inspection)</div>
+                                <div ng-show="CntrInfo.Tabs=='FI'">FI (From Inspection)</div>
+                                <div ng-show="CntrInfo.Tabs=='CI'">TI (To Inspection)</div>
+                                <div ng-show="CntrInfo.Tabs=='BuilingScan'"> Building / Mobile Scan</div>
+                            </td>
+
+                        </tr>
+
+                        <tr ng-if="CntrInfo.Tabs=='UI'">
+                            <th>Current Activity</th>
+                            <td>{{CntrInfo.SubTabs}}</td>
+                            <th>Inspection Type</th>
+                            <td>{{CntrInfo.InspectionType}}</td>
+                            <th ng-if="CntrInfo.Tabs=='UI'">Resources</th>
+                            <td ng-if="CntrInfo.Tabs=='UI'">
+                                <div ng-if="CntrInfo.Tabs=='UI' && CntrInfo.SubTabs='Cargo Strip In Progress'" ng-show="CntrInfo.LAS==true" class="dot LAS">LA</div>
+                                <div ng-if="CntrInfo.Tabs=='UI' && CntrInfo.SubTabs='Cargo Strip In Progress'" ng-show="CntrInfo.FAS==true" class="dot FAS">FA</div>
+                                <div ng-if="CntrInfo.Tabs=='UI' && CntrInfo.SubTabs='Cargo Repack In Progress'" ng-show="CntrInfo.LAR==true" class="dot LAR">LA</div>
+                                <div ng-if="CntrInfo.Tabs=='UI' && CntrInfo.SubTabs='Cargo Repack In Progress'" ng-show="CntrInfo.FAR==true" class="dot FAR">FA</div>
+                                <div ng-if="CntrInfo.SubTabs!='Cargo Repack In Progress' && CntrInfo.SubTabs!='Cargo Strip In Progress'">N/A</div>
+                            </td>
+                        </tr>
+                        <tr ng-if="CntrInfo.Tabs!='UI'">
+                            <th>Current Activity</th>
+                            <td colspan="3">{{CntrInfo.SubTabs}}</td>
+                            <th>Inspection Type</th>
+                            <td>{{CntrInfo.InspectionType}}</td>
+                        </tr>
+                    </table>
+                    <div ng-init="GetProgress(CntrInfo.Container,CntrInfo)" class="mainProgress" ng-show="CntrInfo.CntrCategory=='IMPRT'">
+
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: {{CntrInfo.CSDataDetails.ProgressCount}}%" aria-valuenow="{{CntrInfo.CSDataDetails.ProgressCount}}" aria-valuemin="{{CntrInfo.CSDataDetails.ProgressCount}}" aria-valuemax="{{CntrInfo.CSDataDetails.ProgressCount}}">{{CntrInfo.CSDataDetails.ProgressCount}}%</div>
+                        </div>
+
+                        <div class="ProgFlexContainer">
+                            <div class="ProgFlexitem tooltip">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.CSDataDetails.VesselArrive"></i>
+                                <i class="step fas fa-times " ng-show="!CntrInfo.CSDataDetails.VesselArrive"></i>
+                                <b class="caption">Vessel Arrived</b>
+                                <b class="tooltiptext" ng-show="CntrInfo.CSDataDetails.VesselArrive">ATA:{{CntrInfo.CSDataDetails.VesselArriveData.Ata | date : 'dd-MM-yyyy HH:mm'}}<br />ATB:{{CntrInfo.CSDataDetails.VesselArriveData.ETB | date : 'dd-MM-yyyy HH:mm'}}<br />Start Work:{{CntrInfo.CSDataDetails.VesselArriveData.Start_Work | date : 'dd-MM-yyyy HH:mm'}}</b>
+                            </div>
+                            <div class="ProgFlexitem tooltip">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.CSDataDetails.Discharge"></i>
+                                <i class="step fas fa-times " ng-show="!CntrInfo.CSDataDetails.Discharge"></i>
+                                <b class="caption">
+                                    Discharged
+                                    <br />
+                                    <small ng-show="CntrInfo.CSDataDetails.Discharge">{{CntrInfo.CSDataDetails.CntrData.time_in |date :'dd/MM/yyyy HH:mm:ss'}}</small>
+                                </b>
+                            </div>
+                            <div class="ProgFlexitem tooltip">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.CSDataDetails.ReceviedXrayResult"></i>
+                                <i class="step fas fa-times " ng-show="!CntrInfo.CSDataDetails.ReceviedXrayResult"></i>
+                                <b class="caption">
+                                    Xray Result Received
+                                    <br />
+                                    <small ng-show="CntrInfo.CSDataDetails.ReceviedXrayResult">{{CntrInfo.CSDataDetails.ReceviedXrayResultEventTime |date :'dd/MM/yyyy HH:mm:ss'}}</small>
+                                </b>
+                                <span class="tooltiptext" ng-show="CntrInfo.CSDataDetails.ReceviedXrayResult">{{CntrInfo.CSDataDetails.CntrData.XrayStatus}}<br />Time:{{CntrInfo.CSDataDetails.ReceviedXrayResultEventTime | date : 'dd-MM-yyyy HH:mm'}}</span>
+                                @*<span class="tooltiptext" ng-show="!CntrInfo.CSDataDetails.ReceviedXrayResult && CntrInfo.CSDataDetails.XrayScan!='Clear' && CntrInfo.CSDataDetails.CntrData.ReinspReason!='' && CntrInfo.CSDataDetails.CntrData.ReinspReason!=null">Re-Inspection Reason:{{CntrInfo.CSDataDetails.CntrData.ReinspReason}}</span>*@
+                            </div>
+                            <div class="ProgFlexitem tooltip">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.ConatinerGrounded!=null && CntrInfo.ConatinerGrounded!=''"></i>
+                                <i class="step fas fa-times " ng-show="CntrInfo.ConatinerGrounded==null || CntrInfo.ConatinerGrounded==''"></i>
+                                <b class="caption">
+                                    Grounded in Exam yard.
+                                    <br />
+                                    <small ng-show="CntrInfo.ConatinerGrounded!=null && CntrInfo.ConatinerGrounded!=''">{{CntrInfo.ConatinerGrounded | date:'dd/MM/yyyy HH:mm:ss'}}</small>
+
+
+                                </b>
+
+                                @*<span class="tooltiptext" ng-show="!CntrInfo.CSDataDetails.ReceviedXrayResult && CntrInfo.CSDataDetails.XrayScan!='Clear' && CntrInfo.CSDataDetails.CntrData.ReinspReason!='' && CntrInfo.CSDataDetails.CntrData.ReinspReason!=null">Re-Inspection Reason:{{CntrInfo.CSDataDetails.CntrData.ReinspReason}}</span>*@
+                            </div>
+                            <div class="ProgFlexitem tooltip">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.SealCut!=null && CntrInfo.SealCut!=''"></i>
+                                <i class="step fas fa-times " ng-show="CntrInfo.SealCut==null || CntrInfo.SealCut==''"></i>
+                                <b class="caption">
+                                    Seal cut done
+                                    <br />
+                                    <small ng-show="CntrInfo.SealCut!=null && CntrInfo.SealCut.length>0" ng-repeat="x in CntrInfo.SealCut">{{x |date :'dd/MM/yyyy HH:mm:ss'}} <br /></small>
+                                    <small ng-show="CntrInfo.SealCut==null || CntrInfo.SealCut.length==0">N/A <br /></small>
+                                </b>
+
+                                @*<span class="tooltiptext" ng-show="!CntrInfo.CSDataDetails.ReceviedXrayResult && CntrInfo.CSDataDetails.XrayScan!='Clear' && CntrInfo.CSDataDetails.CntrData.ReinspReason!='' && CntrInfo.CSDataDetails.CntrData.ReinspReason!=null">Re-Inspection Reason:{{CntrInfo.CSDataDetails.CntrData.ReinspReason}}</span>*@
+                            </div>
+                            <div class="ProgFlexitem tooltip">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.LocationFile!=null && CntrInfo.LocationFile!=''"></i>
+                                <i class="step fas fa-times " ng-show="CntrInfo.LocationFile==null || CntrInfo.LocationFile==''"></i>
+                                <b class="caption">
+                                    Location update
+                                    <br />
+
+                                    <small ng-show="CntrInfo.LocationFile!=null && CntrInfo.LocationFile.length>0" ng-repeat="x in CntrInfo.LocationFile">{{x |date :'dd/MM/yyyy HH:mm:ss'}} <br /></small>
+                                    <small ng-show="CntrInfo.LocationFile==null || CntrInfo.LocationFile.length==0">N/A <br /></small>
+                                </b>
+                            </div>
+                            <div class="ProgFlexitem tooltip">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.CargoStrip!=null && CntrInfo.CargoStrip!=''"></i>
+                                <i class="step fas fa-times " ng-show="CntrInfo.CargoStrip==null || CntrInfo.CargoStrip==''"></i>
+                                <b class="caption">
+                                    Cargo strip done
+                                    <br />
+
+                                    <small ng-show="CntrInfo.CargoStrip!=null && CntrInfo.CargoStrip.length>0" ng-repeat="x in CntrInfo.CargoStrip">{{x |date :'dd/MM/yyyy HH:mm:ss'}} <br /></small>
+                                    <small ng-show="CntrInfo.CargoStrip==null || CntrInfo.CargoStrip.length==0">N/A <br /></small>
+                                </b>
+
+
+                                @*<span class="tooltiptext" ng-show="!CntrInfo.CSDataDetails.ReceviedXrayResult && CntrInfo.CSDataDetails.XrayScan!='Clear' && CntrInfo.CSDataDetails.CntrData.ReinspReason!='' && CntrInfo.CSDataDetails.CntrData.ReinspReason!=null">Re-Inspection Reason:{{CntrInfo.CSDataDetails.CntrData.ReinspReason}}</span>*@
+                            </div>
+
+                            <div class="ProgFlexitem tooltip">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.CustomCleared!=null && CntrInfo.CustomCleared!=''"></i>
+                                <i class="step fas fa-times " ng-show="CntrInfo.CustomCleared==null || CntrInfo.CustomCleared==''"></i>
+                                <b class="caption">
+                                    Customs clearance <br />
+
+                                    <small ng-show="CntrInfo.CustomCleared!=null && CntrInfo.CustomCleared.length>0" ng-repeat="x in CntrInfo.CustomCleared">{{x |date :'dd/MM/yyyy HH:mm:ss'}} <br /></small>
+                                    <small ng-show="CntrInfo.CustomCleared==null || CntrInfo.CustomCleared.length==0">N/A <br /></small>
+                                </b>
+
+
+                                @*<span class="tooltiptext" ng-show="!CntrInfo.CSDataDetails.ReceviedXrayResult && CntrInfo.CSDataDetails.XrayScan!='Clear' && CntrInfo.CSDataDetails.CntrData.ReinspReason!='' && CntrInfo.CSDataDetails.CntrData.ReinspReason!=null">Re-Inspection Reason:{{CntrInfo.CSDataDetails.CntrData.ReinspReason}}</span>*@
+                            </div>
+                            <div class="ProgFlexitem tooltip">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.CragoStuffed!=null && CntrInfo.CragoStuffed!=''"></i>
+                                <i class="step fas fa-times " ng-show="CntrInfo.CragoStuffed==null || CntrInfo.CragoStuffed==''"></i>
+                                <b class="caption">
+                                    Cargo repack done <br />
+
+                                    <small ng-show="CntrInfo.CragoStuffed!=null && CntrInfo.CragoStuffed.length>0" ng-repeat="x in CntrInfo.CragoStuffed">{{x |date :'dd/MM/yyyy HH:mm:ss'}} <br /></small>
+                                    <small ng-show="CntrInfo.CragoStuffed==null || CntrInfo.CragoStuffed.length==0">N/A <br /></small>
+                                </b>
+
+
+                                @*<span class="tooltiptext" ng-show="!CntrInfo.CSDataDetails.ReceviedXrayResult && CntrInfo.CSDataDetails.XrayScan!='Clear' && CntrInfo.CSDataDetails.CntrData.ReinspReason!='' && CntrInfo.CSDataDetails.CntrData.ReinspReason!=null">Re-Inspection Reason:{{CntrInfo.CSDataDetails.CntrData.ReinspReason}}</span>*@
+
+                            </div>
+                            <div class="ProgFlexitem tooltip">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.RepackAndSealed!=null && CntrInfo.RepackAndSealed!=''"></i>
+                                <i class="step fas fa-times " ng-show="CntrInfo.RepackAndSealed==null || CntrInfo.RepackAndSealed==''"></i>
+                                <b class="caption">
+                                    Seal apply done
+                                    <br />
+
+                                    <small ng-show="CntrInfo.RepackAndSealed!=null && CntrInfo.RepackAndSealed.length>0" ng-repeat="x in CntrInfo.RepackAndSealed">{{x |date :'dd/MM/yyyy HH:mm:ss'}} <br /></small>
+                                    <small ng-show="CntrInfo.RepackAndSealed==null || CntrInfo.RepackAndSealed.length==0">N/A <br /></small>
+                                </b>
+
+
+                                @*<span class="tooltiptext" ng-show="!CntrInfo.CSDataDetails.ReceviedXrayResult && CntrInfo.CSDataDetails.XrayScan!='Clear' && CntrInfo.CSDataDetails.CntrData.ReinspReason!='' && CntrInfo.CSDataDetails.CntrData.ReinspReason!=null">Re-Inspection Reason:{{CntrInfo.CSDataDetails.CntrData.ReinspReason}}</span>*@
+
+                            </div>
+                            <div class="ProgFlexitem tooltip">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.MoveToDeliveryYard!=null && CntrInfo.MoveToDeliveryYard!=''"></i>
+                                <i class="step fas fa-times " ng-show="CntrInfo.MoveToDeliveryYard==null || CntrInfo.MoveToDeliveryYard==''"></i>
+                                <b class="caption">
+                                    Move to delivery yard
+                                    <br />
+
+                                    <small ng-show="CntrInfo.MoveToDeliveryYard!=null && CntrInfo.MoveToDeliveryYard!=''">{{CntrInfo.MoveToDeliveryYard|date :'dd/MM/yyyy HH:mm:ss'}} <br /></small>
+                                    <small ng-show="CntrInfo.MoveToDeliveryYard==null || CntrInfo.MoveToDeliveryYard==''">N/A <br /></small>
+                                </b>
+
+
+                                @*<span class="tooltiptext" ng-show="!CntrInfo.CSDataDetails.ReceviedXrayResult && CntrInfo.CSDataDetails.XrayScan!='Clear' && CntrInfo.CSDataDetails.CntrData.ReinspReason!='' && CntrInfo.CSDataDetails.CntrData.ReinspReason!=null">Re-Inspection Reason:{{CntrInfo.CSDataDetails.CntrData.ReinspReason}}</span>*@
+
+                            </div>
+
+                            <div class="ProgFlexitem tooltip" ng-show="Manual">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.CSDataDetails.Moved2ExamYard"></i>
+                                <i class="step fas fa-times " ng-show="!CntrInfo.CSDataDetails.Moved2ExamYard"></i>
+                                <b class="caption">Moved to ExamYard</b>
+                                <span class="tooltiptext" ng-show="CntrInfo.CSDataDetails.Moved2ExamYard">Time:{{CntrInfo.CSDataDetails.Moved2ExamYardTime | date : 'dd-MM-yyyy HH:mm'}}</span>
+                            </div>
+                            <div class="ProgFlexitem tooltip" ng-show="Manual">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.CSDataDetails.ContainerRepackAndSealed" title=""></i>
+                                <i class="step fas fa-times" ng-show="!CntrInfo.CSDataDetails.ContainerRepackAndSealed"></i>
+                                <b class="caption">Inspection Completed</b> @*<b class="caption">Repack and Sealed</b>*@
+                                <span class="tooltiptext" id="RepackandSeal" ng-show="CntrInfo.CSDataDetails.ContainerRepackAndSealed">Time:{{CntrInfo.CSDataDetails.ContainerRepackAndSealedTime | date : 'dd-MM-yyyy HH:mm'}}</span>
+                            </div>
+                            <div class="ProgFlexitem tooltip" ng-show="Manual">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.CSDataDetails.Moved2DeliveryArea"></i>
+                                <i class="step fas fa-times" ng-show="!CntrInfo.CSDataDetails.Moved2DeliveryArea"></i>
+                                <b class="caption">Moved to Delivery Area</b>
+                                <span class="tooltiptext" ng-show="CntrInfo.CSDataDetails.Moved2DeliveryArea">Time:{{CntrInfo.CSDataDetails.Moved2DeliveryAreaTime | date : 'dd-MM-yyyy HH:mm'}}</span>
+                            </div>
+                            <div class="ProgFlexitem tooltip">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.CSDataDetails.PortChargesSatteled"></i>
+                                <i class="step fas fa-times" ng-show="!CntrInfo.CSDataDetails.PortChargesSatteled"></i>
+                                <b class="caption">Port Charges Settled</b>
+                                <span class="tooltiptext" ng-show="CntrInfo.CSDataDetails.PortChargesSatteled">Time:{{CntrInfo.CSDataDetails.PortChargesSatteledTime | date : 'dd-MM-yyyy HH:mm'}}</span>
+                            </div>
+                            <div class="ProgFlexitem tooltip">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.CSDataDetails.PaymentSatteled"></i>
+                                <i class="step fas fa-times" ng-show="!CntrInfo.CSDataDetails.PaymentSatteled"></i>
+                                <b class="caption">Payment Settled</b>
+                            </div>
+                            <div class="ProgFlexitem tooltip">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.CSDataDetails.GatePassIssued"></i>
+                                <i class="step fas fa-times " ng-show="!CntrInfo.CSDataDetails.GatePassIssued"></i>
+                                <b class="caption">Gatepass Issued</b>
+                            </div>
+                            <div class="ProgFlexitem tooltip">
+                                <i class="step fas fa-check-circle active" ng-show="CntrInfo.CSDataDetails.Delivered"></i>
+                                <i class="step fas fa-times " ng-show="!CntrInfo.CSDataDetails.Delivered"></i>
+                                <b class="caption">Gate Out</b>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    function toggleindicator(e) {
+        var Currentele = $(e).find('i').hasClass('icon-plus2');
+        $('.CollapseHeader i').removeClass('icon-minus2');
+        $('.CollapseHeader i').addClass('icon-plus2');
+        if (Currentele) {
+            $(e).find('i').addClass('icon-minus2');
+            $(e).find('i').removeClass('icon-plus2');
+
+        }
+        else {
+            $(e).find('i').removeClass('icon-minus2');
+            $(e).find('i').addClass('icon-plus2');
+        }
+
+    }
+</script>

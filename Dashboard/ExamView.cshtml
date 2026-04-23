@@ -1,0 +1,458 @@
+﻿
+@{
+    ViewBag.Title = "ExamView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .DashboardDiv {
+        font-family: 'Pilat Wide';
+    }
+
+    .DashboardContainersSection h5 {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .custom-table-header {
+        overflow: auto;
+        border-radius: 7px;
+        box-shadow: 0px 4px 13px 0px #999;
+    }
+
+    .h60 {
+        height: 63vh;
+    }
+
+    .h27 {
+        height: 27vh;
+    }
+
+    .custom-table-header .icon-flag3 {
+        font-size: 10px;
+    }
+
+    .custom-table-header thead {
+        position: sticky;
+        top: 0;
+        background: whitesmoke;
+        height: 40px;
+        z-index: 111;
+        font-size: 10px;
+        color: #8d8d8d;
+    }
+
+        .custom-table-header thead th {
+            text-align: left !important;
+            white-space: inherit;           
+        }
+
+    .w-35 {
+        width: 35%;
+    }
+
+    .w-30 {
+        width: 35%;
+    }
+
+    .coldstorebg {
+        background-color: #8b86d6 !important
+    }
+
+    .drybg {
+        background-color: #e4e4e4 !important
+    }
+
+    .oogbg {
+        background-color: #ff4565 !important
+    }
+
+    .reeferbg {
+        background-color: #fbca34 !important
+    }
+
+    .imprtbg {
+        background-color: #37ce8d !important
+    }
+
+    .exprtbg {
+        background-color: #ffc421 !important
+    }
+
+    .color-highlighter {
+        width: 10px;
+        height: 10px;
+        border-radius: 30px;
+        display: inline-block;
+        margin-right: 2px;
+    }
+
+    .ch-coldstore {
+        accent-color: #8b86d6 !important;
+    }
+
+    .ch-dry {
+        accent-color: #e4e4e4 !important
+    }
+
+    .ch-oog {
+        accent-color: #ff4565 !important
+    }
+
+    .ch-reefer {
+        accent-color: #fbca34 !important
+    }
+
+    .ch-export {
+        accent-color: #ffc421 !important
+    }
+
+    .ch-import {
+        accent-color: #37ce8d !important
+    }
+    table{
+        width:100%;
+    }
+    td {
+        font-size: 10px;
+        white-space:nowrap;
+    }
+
+    table tr td, th {
+        background: #fff;
+        padding: 2px 8px;
+        text-align: left !important;
+       
+    }
+
+    td .truncate {
+        width: 65px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .tw-100px{
+        width:100px !important;
+    }
+
+    table thead{
+        box-shadow:none
+    }
+    .color-highlighter-section {
+        font-size: 10px;
+        height: 25px;
+    }
+
+    .total-container-count-section {
+        margin-top: 10px;
+    }
+
+    .more-detail-section p {
+        background: #fff;
+        padding: 8px 18px;
+        margin-top: 8px !important;
+        border-radius: 6px;
+        box-shadow: inset -1px -2px 5px 0px #999;
+        width: fit-content;
+        margin: auto;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .more-detail-section p:hover {
+        box-shadow: 3px 0px 5px 0px #999;
+    }
+    .DashboardContainersSection h5 {
+        font-size: 12px;
+    }
+
+    .strikethrough {
+        text-decoration: line-through;
+    }
+    .holdCircle{
+        width:12px;
+        height:12px;
+        border-radius:12px;
+        background:red;
+    }
+</style>
+
+<div class="ng-cloack DashboardDiv" ng-cloak ng-controller="ExamActivityDashboardCtrl" ng-init="ExamView_Init()">
+    <br />
+    <div class="row">
+        <div class="col-md-10 col-sm-10 offset-1">
+            <h3 class="DPWBold"><b>UI (Under Inspection) Details</b></h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 col-lg-4 col-sm-12">
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <div class="DashboardContainersSection">
+                        <div class="text-center">
+                            <h5 class="DPWRegular">Waiting Time SealCut</h5>
+                        </div>
+                        <div class="custom-table-header h27">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th class="w-35">Container</th>
+                                        <th class="w-35">Bayan</th>
+                                        <th class="w-35" ng-click="SortDetails('UI','Location','UIAwaitingsealcutRecords','UI1_Location_Sort')">
+                                            Location
+                                            <i class="icon-arrow-down22" ng-show="UI1_Location_Sort =='-'"></i>
+                                            <i class="icon-arrow-up22" ng-show="UI1_Location_Sort =='+'"></i>
+                                        </th>
+                                        <th class="w-30" ng-click="SortDetails('UI','hrs','UIAwaitingsealcutRecords','UI1_Hrs_Sort')">
+                                            Elapsed HRS
+                                            <i class="icon-arrow-down22" ng-show="UI1_Hrs_Sort =='-'"></i>
+                                            <i class="icon-arrow-up22" ng-show="UI1_Hrs_Sort =='+'"></i>
+                                        </th>
+                                        <th class="w-30" ng-click="SortDetails('UI','hrs','UIAwaitingsealcutRecords','UI1_Hrs_Sort')">
+                                            Overall HRS
+                                            @*<i class="icon-arrow-down22" ng-show="UI1_Hrs_Sort =='-'"></i>
+                                            <i class="icon-arrow-up22" ng-show="UI1_Hrs_Sort =='+'"></i>*@
+                                        </th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in UIAwaitingsealcutRecords">
+                                        <td class="w-35" ng-class="{'imprtbg':item.category == 'IMPRT','exprtbg':item.category =='EXPRT'}">
+                                            <div class="truncate tw-100px">{{item.Container}}</div>
+                                        </td>
+                                        <td><div class="truncate">{{item.Bayan}}</div></td>
+                                        <td class="w-35"><div class="truncate">{{item.Location}}</div></td>
+                                        <td class="w-30"><div class="truncate">{{item.DwellHrs}}</div></td>
+                                        <td class="w-30"><div class="truncate">{{item.DwellHrs}}</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="total-container-count-section">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-center"><b>Total</b></h6>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-center"><b>{{UIAwaitingsealcutRecords.length}}</b></h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="DashboardContainersSection">
+                        <div class="text-center">
+                            <h5>Cargo Strip In Progress</h5>
+                        </div>
+                        <div class="custom-table-header h27">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th class="w-30">Container</th>
+                                        <th class="w-30">Bayan</th>
+                                        <th class="w-35" ng-click="SortDetails('UI','Location','UIAwatingCargoStripRecords','UI3_Location_Sort')">
+                                            Location
+                                            <i class="icon-arrow-down22" ng-show="UI3_Location_Sort =='-'"></i>
+                                            <i class="icon-arrow-up22" ng-show="UI3_Location_Sort =='+'"></i>
+                                        </th>
+                                        <th class="w-30" ng-click="SortDetails('UI','hrs','UIAwatingCargoStripRecords','UI3_Hrs_Sort')">
+                                            Elapsed HRS
+                                            <i class="icon-arrow-down22" ng-show="UI3_Hrs_Sort =='-'"></i>
+                                            <i class="icon-arrow-up22" ng-show="UI3_Hrs_Sort =='+'"></i>
+                                        </th>
+                                        <th class="w-30" ng-click="SortDetails('UI','hrs','UIAwatingCargoStripRecords','UI3_Hrs_Sort')">
+                                            Overall HRS
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in UIAwatingCargoStripRecords">
+
+                                        <td class="w-35" ng-class="{'imprtbg':item.category == 'IMPRT','exprtbg':item.category =='EXPRT'}">
+                                            <div class="truncate tw-100px">{{item.Container}}</div>
+                                        </td>
+                                        <td> <div class="truncate">{{item.Bayan}}</div></td>
+                                        <td class="w-35">
+                                            <div class="truncate">{{item.Location}}</div>
+                                        </td>
+                                        <td class="w-30">
+                                            <div class="truncate">{{item.DwellHrs}}</div>
+                                        </td>
+                                        <td class="w-30">
+                                            <div class="truncate">{{item.DwellHrs}}</div>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="total-container-count-section">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-center"><b>Total</b></h6>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-center"><b>{{UIAwatingCargoStripRecords.length}}</b></h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-4 col-lg-4 col-sm-12">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="DashboardContainersSection">
+                        <div class="text-center">
+                            <h5>Waiting Time Custom Inspection</h5>
+                        </div>
+                        <div class="custom-table-header h60">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th class="w-35">Container</th>
+                                        <th class="w-35">Bayan</th>
+                                        <th class="w-35" ng-click="SortDetails('UI','Location','UIAwaitingInspctionRecords','UI2_Location_Sort')">
+                                            Location
+                                            <i class="icon-arrow-down22" ng-show="UI2_Location_Sort =='-'"></i>
+                                            <i class="icon-arrow-up22" ng-show="UI2_Location_Sort =='+'"></i>
+                                        </th>
+                                        <th class="w-30" ng-click="SortDetails('UI','hrs','UIAwaitingInspctionRecords','UI2_Hrs_Sort')">
+                                            Elapsed HRS
+                                            <i class="icon-arrow-down22" ng-show="UI2_Hrs_Sort =='-'"></i>
+                                            <i class="icon-arrow-up22" ng-show="UI2_Hrs_Sort =='+'"></i>
+                                        </th>
+                                        <th class="w-30" ng-click="SortDetails('UI','hrs','UIAwaitingInspctionRecords','UI2_Hrs_Sort')">
+                                            Overall HRS
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in UIAwaitingInspctionRecords">
+
+                                        <td class="w-35" ng-class="{'imprtbg':item.category == 'IMPRT','exprtbg':item.category =='EXPRT'}">
+                                            <div class="truncate tw-100px">{{item.Container}}</div>
+                                        </td>
+                                        <td><div class="truncate">{{item.Bayan}}</div></td>
+                                        <td class="w-35"><div class="truncate">{{item.Location}}</div></td>
+                                        <td class="w-30"><div class="truncate">{{item.DwellHrs}}</div></td>
+                                        <td class="w-30"><div class="truncate">{{item.DwellHrs}}</div></td>
+                                        <td>
+                                            <div ng-if="item.CustomsStage == 'Awaiting Clearance'" class="holdCircle"></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="total-container-count-section">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-center"><b>Total</b></h6>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-center"><b>{{UIAwaitingInspctionRecords.length}}</b></h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
+        <div class="col-md-4 col-lg-4 col-sm-12">
+            <div class="DashboardContainersSection">
+                <div class="text-center">
+                    <h5>Cargo Repack In Progress</h5>
+                </div>
+                <div class="custom-table-header h60">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="w-35">Container</th>
+                                <th class="w-35">Bayan</th>
+                                <th class="w-35" ng-click="SortDetails('UI','Location','UIRepackandSealRecords','UI5_Location_Sort')">
+                                    Location
+                                    <i class="icon-arrow-down22" ng-show="UI5_Location_Sort =='-'"></i>
+                                    <i class="icon-arrow-up22" ng-show="UI5_Location_Sort =='+'"></i>
+                                </th>
+                                <th class="w-30" ng-click="SortDetails('UI','hrs','UIRepackandSealRecords','UI5_Hrs_Sort')">
+                                    Elapsed HRS
+                                    <i class="icon-arrow-down22" ng-show="UI5_Hrs_Sort =='-'"></i>
+                                    <i class="icon-arrow-up22" ng-show="UI5_Hrs_Sort =='+'"></i>
+                                </th>
+                                <th class="w-30" ng-click="SortDetails('UI','hrs','UIRepackandSealRecords','UI5_Hrs_Sort')">
+                                    Overall HRS
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in UIRepackandSealRecords">
+
+                                <td class="w-35" ng-class="{'imprtbg':item.category == 'IMPRT','exprtbg':item.category =='EXPRT'}">
+                                    <div class="truncate tw-100px">{{item.Container}}</div>
+                                </td>
+                                <td><div class="truncate">{{item.Bayan}}</div></td>
+                                <td class="w-35"><div class="truncate">{{item.Location}}</div></td>
+                                <td class="w-30"><div class="truncate">{{item.DwellHrs}}</div></td>
+                                <td class="w-30"><div class="truncate">{{item.DwellHrs}}</div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-container-count-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-center"><b>Total</b></h6>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-center"><b>{{UIRepackandSealRecords.length}}</b></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 text-center">
+            <input type="checkbox" class="ch-export" id="ch-export" checked value="EXPRT" ng-click="FilterExamView('UI','ch-export')" /> EXPRT
+            <input type="checkbox" class="ch-import" id="ch-import" checked value="IMPRT" ng-click="FilterExamView('UI','ch-import')" /> IMPRT
+            <div class="flagsSection d-inline-block" id="UIReExamFlag" ng-click="FilterExamView('UI','UIReExamFlag')">
+                <i style="color: #ff4565; " class="icon-flag3"></i>Re-Exam
+            </div>
+            <div class="flagsSection d-inline-block" id="UIDogSniffingFlag" ng-click="FilterExamView('UI','UIDogSniffingFlag')">
+                <i style="color: #141eeb;" class="icon-flag3"></i>Dog Sniffing
+            </div>
+            <div class="flagsSection d-inline-block" id="UIPalletteFlag" ng-click="FilterExamView('UI','UIPalletteFlag')">
+                <i style="color: #ff8d00; " class="icon-flag3"></i>Pallette
+            </div>
+            <div class="flagsSection d-inline-block" id="UIUTCFlag" ng-click="FilterExamView('UI','UIUTCFlag')">
+                <i style="color: #ff00df9e; " class="icon-flag3"></i>UTC - CS
+            </div>
+            <div class="flagsSection d-inline-block" id="UIDWPColdStoreFlag" ng-click="FilterExamView('UI','UIDWPColdStoreFlag')">
+                <i style="color: #0f655c; " class="icon-flag3"></i>DPW - CS
+            </div>
+           
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function () {
+        document.getElementById('minisidebar').className = 'sidebar-xs';
+    };
+</script>

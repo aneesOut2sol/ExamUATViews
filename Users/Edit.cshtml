@@ -1,0 +1,247 @@
+﻿@using ExamPortal.Model.Resources
+@using ExamPortal.Model.EntityModel.Enums
+@{
+    ViewBag.Title = "Register User";
+}
+<link href="~/Scripts/SlimSelect/SlimSelectCustomStyle.css" rel="stylesheet" />
+<link href="~/Scripts/SlimSelect/slimselect.min.css" rel="stylesheet" />
+<script src="~/Scripts/SlimSelect/slimselect.min.js"></script>
+<style>
+    .bg-indigo-400 {
+        background-color: var( --dpw-bg-color) !important;
+    }
+
+    .Headingtable {
+        padding: 20px 0px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .ss-main .ss-multi-selected {
+        min-height: 38px !important;
+    }
+
+    .ss-add {
+        /*margin: auto !important;*/
+        padding-right: 12px;
+        font: bold;
+    }
+
+    element.style {
+    }
+
+    Label, btn, table td, table th, span {
+        font-weight: 500;
+    }
+
+    *, ::after, ::before {
+        box-sizing: border-box;
+    }
+
+    .ss-main .ss-multi-selected .ss-values .ss-value {
+        background-color: #455a64;
+    }
+</style>
+<div class="page-header border-bottom-0">
+    <div class="page-header-content header-elements-md-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-user mr-2 mr-2"></i> <span class="font-weight-semibold">Edit User</span></h4>
+
+        </div>
+    </div>
+</div>
+<hr />
+<div ng-controller="AccountCtr" ng-init="initEdit()" class="ng-cloak" ng-cloak>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item"><a href="#basic-tab1" class="nav-link active" data-toggle="tab"><b>General</b></a></li>
+
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade active show" id="basic-tab1">
+                            <div class="row">
+                                <div class="col-md-4">
+
+                                    <div class="card">
+                                        <div class="card-body bg-indigo-400 text-center card-img-top" style="background-image: url(~/Content/images/profile.jpg); background-size: contain;height:293px;">
+                                            <div class="card-img-actions d-inline-block mb-3 " style="margin-top:12px;">
+                                                <img class="img-fluid rounded-circle" src="~/Content/images/profile.jpg" width="170" height="170" alt="">
+                                                <div class="card-img-actions-overlay rounded-circle">
+                                                    <a href="#" class="btn btn-outline bg-white text-white border-white border-2 btn-icon rounded-round">
+                                                        <i class="icon-plus3"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <h6 class="font-weight-semibold mb-0">{{User.FullName}}</h6>
+                                            <span class="d-block opacity-75">Availability ( ON DUTY )</span>
+                                        </div>
+
+                                        <div class="card-body p-0">
+                                            <ul class="nav nav-sidebar mb-2">
+                                                <li class="nav-item">
+                                                    <a href="#inbox" class="nav-link custom-padding" style="position:relative;top:6px;">
+                                                        <i class="icon-stats-bars"></i>
+                                                        Status
+                                                        <span ng-if="User.Status==true" class="badge badge-success badge-pill ml-auto">Active</span>
+                                                        <span ng-if="User.Status!=true" class="badge badge-warning badge-pill ml-auto">Not Active</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card">
+                                        <div class="card-body" @*style="height:400px  !important"*@>
+                                            <form>
+
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-4 form-group">
+                                                            <label>Email</label><span class="required-starig">*</span>
+                                                            <input type="text" id="Email" class="form-control" placeholder="" ng-model="User.Email" readonly>
+                                                        </div>
+                                                        <div class="col-md-4 form-group">
+                                                            <label class="control-label">Login Id</label><span class="required-starig">*</span>
+                                                            <input type="text" id="Name" class="form-control" placeholder="" ng-model="User.Username" readonly>
+                                                        </div>
+                                                        <div class="col-md-4 form-group">
+                                                            <label class="control-label">FullName</label><span class="required-starig">*</span>
+                                                            <input type="text" id="FullName" class="form-control" placeholder="" ng-model="User.FullName">
+                                                        </div>
+                                                        <div class="col-md-4 form-group">
+                                                            <label class="control-label">Phone</label><span class="required-starig">*</span>
+                                                            <input type="text" id="phone" class="form-control" placeholder="" ng-model="User.Phone">
+                                                        </div>
+                                                        <div class="col-md-4">
+
+                                                            <label>Application Access</label><span class="required-starig">*</span>
+                                                            <select multiple id="UserAppId" ng-model="User.UsersApplication" ng-change="CheckAccessEdit(User.UsersApplication)">
+                                                                <option ng-repeat="App in AppList"  ng-selected="User.UsersApplication==App.Id" value="{{App.Id}}">{{App.Name}}</option>
+                                                            </select>
+
+                                                        </div>
+
+
+
+                                                        <div class="col-md-4 form-group">
+                                                            <label>Role</label><span class="required-starig">*</span>
+                                                                               <select multiple id="UserRoleId" ng-model="User.UserType" ng-change="RoleCountEdit(User.UserType)">
+                                                                                   <option ng-selected="User.UserType ==r.Id" ng-repeat="r in Roles" value="{{r.Id}}">{{r.Text}}</option>
+                                                                                   @*<optgroup label="Common Role" ng-if="User.UsersApplication!=null && User.UsersApplication!=''">
+                                                                                       <option ng-selected="User.UserType =='1'" ng-repeat="r in Roles" ng-if="r.Id==1" value="{{r.Id}}">{{r.Text}}</option>
+                                                                                       <option ng-selected="User.UserType == '2'" ng-repeat="r in Roles" ng-if="r.Id==2 && (User.UsersApplication.includes('1') || User.UsersApplication.includes('2') || User.UsersApplication.includes('3') )" value="{{r.Id}}">{{r.Text}}</option>
+                                                                                   </optgroup>
+                                                                                   <optgroup label="Exam Activity Roles" ng-if="RolesDiv.includes('9')">
+                                                                                       <option ng-selected="User.UserType =='2' ||User.UserType =='17'||User.UserType =='37' ||User.UserType =='38'||User.UserType =='39'||User.UserType =='44'||User.UserType =='47'||User.UserType =='48'" ng-repeat="r in Roles" ng-if="r.Id==2 || r.Id==17|| r.Id==37 || r.Id==38 ||r.Id==39||r.Id==44||r.Id==47 ||r.Id == 48" value="{{r.Id}}">{{r.Text}}</option>
+                                                                                   </optgroup>
+                                                                                   <optgroup label="Customs Container Inquiry Role" ng-if="RolesDiv.includes('4011')">
+                                                                                       <option ng-selected="User.UserType =='41'" ng-repeat="r in Roles" ng-if="r.Id==41" value="{{r.Id}}">{{r.Text}}</option>
+                                                                                   </optgroup>
+                                                                                   <optgroup label="Reefer Module Checklist" ng-if="RolesDiv.includes('5014')">
+                                                                                       <option ng-selected="User.UserType =='46' || User.UserType =='1'" ng-repeat="r in Roles" ng-if="r.Id==46 || r.Id==1" value="{{r.Id}}">{{r.Text}}</option>
+                                                                                   </optgroup>*@
+                                                                               </select>
+                                                        </div>
+                                                    
+
+                                                        <div class="col-md-4 form-group">
+                                                            <label>Status</label><span class="required-starig">*</span>
+                                                            <select data-placeholder="Status" class="form-control select-clear" ng-model="User.Status" data-fouc>
+                                                                <option disabled selected>Select Status </option>
+                                                                <option ng-selected="User.Status ==true " ng-value="true">Active</option>
+                                                                <option ng-selected="User.Status == false" ng-value="false">Not Active</option>
+                                                            </select>
+                                                        </div>
+
+
+                                                        <div class="col-md-4 form-group">
+                                                            <label>SHIFT & WORK HOURS</label>
+                                                            <input type="text" value="Shift A - 10Hrs 08:00am - 06:00pm" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4 form-group">
+                                                            <label>Department</label>
+                                                            <input type="text" value="Department" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4 form-group">
+                                                            <label>Sub Department</label>
+                                                            <input type="text" value="Sub Department" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4 form-group">
+                                                            <label>Nationality</label>
+                                                            <input type="text" value="Nationality" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4 form-group">
+                                                            <label>Religion</label>
+                                                            <input type="text" value="Religion" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4 form-group">
+                                                            <label>DOJ</label>
+                                                            <input type="text" value="DOJ" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4 form-group">
+                                                            <label>NFC Tag</label>
+                                                            <input type="text" placeholder="Enter NFC Tag" ng-model="User.NFC_Tag" class="form-control">
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <button type="button" ng-click="SaveUser(User)" class="btn btn-primary pull-right"><i class="fa fa-check" tabindex="3"></i>Update</button>
+                                <a ng-if="BehaveWithEasyMe == 'False'" href="Index" class="btn btn-theme-gray pull-right mr-2" tabindex="4">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+</div>
+
+<script src="@Url.Content("~/Scripts/crypto-js.min.js")"></script>
+<script src="~/Scripts/jquery.min.js"></script>
+<script type="text/javascript">
+
+
+
+    // Start phone Number Validation
+    function phoneFormatter() {
+        $('#phone').on('input', function () {
+            var number = $(this).val().replace(/[^+\d]/g, '')
+
+            $(this).val(number);
+            if (number.length == 17) {
+                $(this).val(null);
+                toastr.error('max limit 17 digit only');
+                return false;
+            }
+
+        });
+    };
+    $(phoneFormatter());
+
+    // End phone Number Validation
+
+    //auto  refresh ;
+    function CheckPageVersion() {
+        return "UsersEditVersion," + "1";
+    }
+
+</script>

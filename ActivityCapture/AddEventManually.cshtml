@@ -1,0 +1,635 @@
+﻿@using ExamPortal.Model.Resources
+@{
+    ViewBag.Title = "AddEventManually";
+}
+<style>
+    .bootstrap-tagsinput .tag:not([class*=bg-]) {
+        background-color: var( --dpw-bg-color);
+        color: #fff;
+    }
+
+    .bootstrap-tagsinput {
+        overflow-y: auto;
+        cursor: pointer;
+    }
+
+    .bootstrap-tagsinput {
+        BACKGROUND: whitesmoke;
+        min-height: 77PX !important;
+    }
+
+        .bootstrap-tagsinput input {
+            width: 100% !important;
+        }
+
+
+    .textAlignLeft {
+        text-align: left !important;
+    }
+
+
+    .CloseModalBtn {
+        background: var( --dpw-bg-color);
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px;
+        padding: 8px;
+        cursor: pointer
+    }
+
+        .CloseModalBtn .fa-times-circle-o {
+            color: #ffff !important;
+        }
+
+    .modal-content {
+        background-color: #fff !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+
+    .modal-title {
+        color: var( --dpw-bg-color);
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+
+    .modal-footer {
+        border-top: none !important;
+        align-content: center;
+        text-align: center;
+    }
+
+    .FilePickerCSS label {
+        color: white !important;
+        border-radius: 3px;
+        cursor: pointer;
+        padding: 4px 4px !important;
+        text-align: center;
+        color: white !important;
+        background: #00946b !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .fileNameCSS {
+        padding: 8px 24px !important;
+        margin-top: 14px;
+        background: #ffffff;
+        border: 2px dashed grey;
+        /*box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);*/
+        color: grey !important;
+    }
+
+        .fileNameCSS i {
+            color: gray !important;
+        }
+
+    .BrowseCss input {
+        background: #360e85;
+        width: 100%;
+        color: white;
+        padding: 2px;
+    }
+
+    input[type=file] {
+        display: none;
+    }
+
+    .downloadTemplate {
+        padding: 3px 10px !important;
+        margin-top: 0 !important;
+        border: none;
+        background: var( --dpw-bg-color);
+        color: white;
+        border-radius: 2;
+        border-radius: 2px;
+        line-height: 23px;
+        margin: 10px;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .btnSecondary {
+        padding: 0px 100px;
+        line-height: 30px;
+        border: 1px solid var( --dpw-bg-color);
+        color: var( --dpw-bg-color);
+        border-radius: 5px;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .btnPrimary {
+        padding: 0px 100px;
+        line-height: 32px;
+        border: none;
+        background: var( --dpw-bg-color);
+        color: white;
+        border-radius: 3px;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .nowrap {
+        white-space: nowrap;
+    }
+
+    .MasterDropDown {
+        position: absolute;
+        z-index: 9999999;
+    }
+
+    .CustomDropDown ul {
+        padding: 10px;
+    }
+
+    .CustomDropDown {
+        display: none;
+        position: relative;
+        top: -39px;
+        left: 13px;
+        z-index: 9999;
+        background: #f2f2f2f7;
+        padding: 0px;
+        border-radius: 7px;
+        border: 1px #00000026 solid;
+    }
+
+    .MasterDropDown .CustomDropDown ul li {
+        list-style-type: none;
+        padding: 4px;
+        color: #4a4848;
+        font-weight: 500;
+        cursor: pointer;
+    }
+</style>
+
+<div ng-controller="ActivityCaptureCtrl" class="ng-cloak" ng-cloak ng-init="GetManualEventsList()">
+    <br />
+
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-stack-text mr-2"></i><span class="font-weight-semibold">Manual Events List</span></h4>
+            </div>
+            <div class="page-title d-flex">
+                <input type="button" class="btn btn-primary  pull-right ml-2" value="Add Manual Event" data-toggle="collapse" data-target="#Events" />
+                <input type="button" class="btn btn-secondary  pull-right ml-2" value="Filters" data-toggle="collapse" data-target="#demo" />
+            </div>
+        </div>
+    </div><hr />
+
+
+    <div class="card collapse mt-2" id="Events">
+        <h3 class="card-header" style="background-color:var( --dpw-bg-color) !important; color:#fff; padding:10px;">
+            Add Manual Event
+        </h3>
+        <div class="card-body mt-3">
+            <div class="row">
+                <div class="col-md-4 form-group">
+                    <label>Functionality</label><span class="required-starig">*</span>
+                    <select data-placeholder="Please Select Functionality" id="Functionality" class="form-control select-clear" ng-model="Event.Functionality" data-fouc>
+                        <option></option>
+                        <option ng-repeat="E in CategoryList" value="{{E.Id}}">{{E.Category}}</option>
+                    </select>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="Starick">Event</label>@*<span class="required-starig">*</span>*@
+                        <input type="text" ng-model="Event.EventsName" placeholder="Enter Name" class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="Starick">Event Name</label>@*<span class="required-starig">*</span>*@
+                        <input type="text" ng-model="Event.DisplayName" placeholder="Enter Event Name" class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="Starick">Sort Order</label>@*<span class="required-starig">*</span>*@
+                        <input type="text" ng-model="Event.SortOrder" placeholder="Sort Order" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-3 form-group">
+                    <label class="">
+                        Pervious Seq Event
+                    </label>
+                    <select data-placeholder="Please Select  Pervious Seq Event" id="Vessels" class="form-control select-clear" ng-model="Event.DependOnEvent" data-fouc>
+                        <option></option>
+                        <option ng-repeat="E in AllEvent track by $index" value="{{E}}">{{E}}</option>
+                    </select>
+                </div>
+                <div class="col-md-3 form-group">
+                    <div class="check-group mt-3">
+                        <input ng-model="Event.SendEmail" type="checkbox" placeholder="Sort Order">
+                        <label class="">
+                            Send Email
+                        </label>
+                    </div>
+                    <div class="check-group">
+                        <input ng-model="Event.FieldChanges" ng-click="GetEventUpdateData()" type="checkbox" placeholder="Sort Order">
+                        <label class="">
+                            Field Updates
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!--Event Field Update-->
+            <div class="card" ng-show="Event.FieldChanges">
+                <h3 class="card-header" style="background-color:var( --dpw-bg-color) !important; color:#fff; padding:10px;">
+                    Event Field Update
+                </h3>
+                <div class="card-body mt-3">
+                    <div class="row" ng-show="Event.FieldChanges">
+                        <div class="col-md-3 form-group">
+                            <label class="Starick">
+                                Table Name
+                            </label>
+                            <br />
+                            <select ng-change="GetFieldName(Event.SrvEFTable)" data-placeholder="Please Select Table Name" id="TableName" class="form-control select-clear" ng-model="Event.SrvEFTable" data-fouc>
+                                <option></option>
+                                <option ng-repeat="E in EventUpdatTable" value="{{E}}">{{E}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 form-group" ng-show="Event.SrvEFTable!=null && Event.SrvEFTable!=''">
+                            <label class="Starick">
+                                Field Name
+                            </label>
+                            <br />
+                            <select data-placeholder="Please Select Field Name" id="FieldName" class="form-control select-clear" ng-model="Event.SrvEFFieldName" data-fouc>
+                                <option></option>
+                                <option ng-repeat="E in EventUpdatField" value="{{E}}">{{E}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 form-group" ng-show="Event.SrvEFFieldName!=null && Event.SrvEFFieldName!=''">
+                            <label class="Starick">
+                                Field value
+                            </label>
+                            <br />
+                            <input ng-model="Event.SrvValue" class="form-control" type="text" placeholder="Field Value">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Email Setting-->
+            <div class="card mt-2" ng-show="Event.SendEmail">
+                <h3 class="card-header" style="background-color:var( --dpw-bg-color) !important; color:#fff; padding:10px;">
+                    Email Settings
+                </h3>
+                <div class="card-body mt-3">
+                    <div class="row">
+                        <div class="col-md-4 form-group" ng-show="Event.SendEmail">
+                            <label class="Starick">
+                                Email Team
+                            </label>
+                            <select data-placeholder="Select Email" id="Emailteam" class="form-control select-clear" ng-model="Event.EmailTeam" data-fouc>
+                                <option></option>
+                                <option value="Broker">Broker</option>
+                                <option value="Committee">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            <label>
+                                CC Emails
+                            </label>
+                            <input type="text" value="" id="CCEmail" data-role="tagsinput" />
+                        </div>
+                        <div class="col-md-4 form-group" ng-show="Event.SendEmail && Event.EmailTeam=='Committee'">
+                            <label class="Starick">
+                                Other Emails
+                            </label>
+                            <input type="text" value="" id="CommiteeEmail" data-role="tagsinput" />
+                        </div>
+                        <div class="col-md-4 form-group" ng-show="Event.SendEmail">
+                            <label class="Starick">
+                                Email Message (Eng)
+                            </label>
+                            <textarea ng-keydown="CheckKeyword($event,'EngMes')" ng-blur="DismisKeyword('EngMes')" class="form-control" rows="3" ng-model="Event.EngMessage"></textarea>
+                            <div class="MasterDropDown">
+                                <div class="CustomDropDown" id="EngMes" prop="EngMessage" Parent="Event">
+                                    <ul>
+                                        <li>Container_number </li>
+                                        <li>Container_location </li>
+                                        <li>Vessel_ref </li>
+                                        <li>Event_update_time </li>
+                                        <li>Updated_by </li>
+                                        <li>Event_name </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 form-group" ng-show="Event.SendEmail">
+                            <label class="">
+                                Email Message (Ar)
+                            </label>
+                            <textarea class="form-control" ng-keydown="CheckKeyword($event,'ArMes')" ng-blur="DismisKeyword('ArMes')" rows="3" ng-model="Event.ArMessage"></textarea>
+                            <div class="MasterDropDown">
+                                <div class="CustomDropDown" id="ArMes" prop="ArMessage" Parent="Event">
+                                    <ul>
+                                        <li>Container_number </li>
+                                        <li>Container_location </li>
+                                        <li>Vessel_ref </li>
+                                        <li>Event_update_time </li>
+                                        <li>Updated_by </li>
+                                        <li>Event_name </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="text-right mt-4">
+                        <input type="button" class="btn btn-primary  pull-right ml-2" value="Cancel" data-toggle="collapse" data-target="#Events" />
+                        <button type="submit" ng-click="AddEventManually(Event)" class="btn btn-secondary">Save </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Field Update-->
+    <div class="row collapse" id="Events">
+        <div class="col-lg-6" ng-if="LOVList.length>0">
+            <table class="table datatable-show-all" id="Table">
+                <thead>
+                    <tr class="table-card-head">
+                        <th>Sr#</th>
+                        <th>Values</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in LOVList | filter: search">
+                        <td>{{$index+1}}</td>
+                        <td>{{item.FieldName}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-6" ng-if="PackingTypeList.length>0">
+            <table class="table datatable-show-all" id="Table">
+                <thead>
+                    <tr class="table-card-head">
+                        <th>Sr#</th>
+                        <th>Packing Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in PackingTypeList | filter: search">
+                        <td>{{$index+1}}</td>
+                        <td>{{item}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--Search Filter Code Start-->
+    <div class="card collapse mt-2" id="demo">
+        <div class="card-body">
+            <div class="col-md-12  border-bottom">
+                <div class="row">
+
+                    <div class="col-md-3 form-group">
+                        <label>Functionality</label>
+                        <select data-placeholder="Please Select Functionality" id="FunctionalityFilter" class="select-clear" ng-model="search.Functionality" data-fouc>
+                            <option></option>
+                            <option ng-repeat="E in CategoryList" value="{{E.Category}}">{{E.Category}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Event</label>
+                            <input type="text" maxlength="200" onkeyup="TableRowsCount()" min="1" class="form-control" placeholder="Search Event" ng-model="search.EventsName" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Sort Order</label>
+                            <input type="text" maxlength="200" min="1" class="form-control" placeholder="Search SortOrder here.." ng-model="search.SortOrder" />
+                        </div>
+                    </div>
+                    <div class="col-md-3 mt-1">
+                        <button class="btn btn-primary pull-right mr-2 mt-3" ng-click="ClearFilter3(search)">Clear</button>
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--Search Filter Code End-->
+
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="CounterCard">
+                <b>Total item: </b>  <span id="counts">{{(AllEventManualList | filter :search).length}}</span>
+            </div>
+        </div>
+    </div>
+
+    <!--Index Page Start--->
+    <div class="row">
+        <div class="card table-card scrollbar w-100">
+            <table class="table datatable-show-all" id="Table">
+                <thead>
+                    <tr class="table-card-head">
+
+                        <th class="nowrap">Sr#</th>
+                        <th class="nowrap">Functionality</th>
+                        <th class="nowrap">Event</th>
+                        <th class="nowrap">Event Name</th>
+                        <th class="nowrap">Send Email</th>
+                        <th class="nowrap">Sort Order</th>
+                        <th class="nowrap">Status</th>
+                        <th class="nowrap">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in AllEventManualList | filter: search">
+
+                        <td>{{$index+1}}</td>
+                        <td style="text-align:left;">{{item.Functionality}}</td>
+                        <td style="text-align:left;">{{item.EventsName}}</td>
+                        <td style="text-align:left;">{{item.DisplayName}}</td>
+                        <td>
+                            <span ng-show="item.SendEmail==true" class="badge badge-success">Active</span>
+                            <span ng-show="item.SendEmail==false||item.SendEmail==null" class="badge badge-danger">InActive</span>
+                        </td>
+                        <td>{{item.SortOrder}}</td>
+                        <td>
+                            <span ng-show="item.Status==true" class="badge badge-success">Active</span>
+                            <span ng-show="item.Status==false||item.Status==null" class="badge badge-danger">InActive</span>
+                        </td>
+
+                        <td>
+                            <div class="list-icons">
+                                <a class="list-icons-item color-gray" ng-click="OpenManualEventEdit(item.Id)"><i class="icon-pencil5" title="Edit Events"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--Index Page End--->
+    <!--Update Page Start--->
+    <div data-backdrop="static" data-keyboard="false" class="modal fade" id="OpenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" ng-click="CloseManualEventModal()">
+                    <button class="d-none" id="CloseIMPRTID" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Update Manual Events</h5>
+                </div>
+                <div class="modal-body" style=" letter-spacing: 0.8px;height:400px;overflow:auto;">
+                    <div class="HaulierView container">
+                        <div class="row FormsIcon gy-2 gx-3 align-items-center">
+                            <div class="col-6 col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>Event</label><span class="required-starig">*</span>
+                                    <input type="text" ng-model="ManualEvent.EventsName" placeholder="Event" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>Event Name</label><span class="required-starig">*</span>
+                                    <input type="text" ng-model="ManualEvent.DisplayName" placeholder="Event Name" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>Sort Order</label><span class="required-starig">*</span>
+                                    <input type="text" ng-model="ManualEvent.SortOrder" placeholder="Sorrt Order" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 form-group">
+
+                                <label> Functionality</label><span class="required-starig">*</span>
+                                <select data-placeholder="Please Select Functionality" class="form-control select-clear" id="EditFunctionality" ng-model="ManualEvent.FunctionalityId" data-fouc>
+                                    <option></option>
+                                    <option ng-selected="E.Id==ManualEvent.FunctionalityId" ng-repeat="E in CategoryList" value="{{E.Id}}">{{E.Category}}</option>
+                                </select>
+                            </div>
+                            <div class="col-6 col-md-6 col-sm-6 form-group">
+                                <div class="form-check">
+                                    <input ng-checked="ManualEvent.SendEmail" ng-model="ManualEvent.SendEmail" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Send Email
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-12 col-sm-12" ng-show="ManualEvent.SendEmail">
+                                <div class="form-group">
+                                    <label class="">Email Team</label><span class="required-starig">*</span>
+                                    <select data-placeholder="Select Email" id="EmailTeam2" class="form-control select-clear" ng-model="ManualEvent.EmailTeam" data-fouc>
+                                        <option ng-selected="ManualEvent.EmailTeam=='Broker'" value="Broker">Broker</option>
+                                        <option ng-selected="ManualEvent.EmailTeam=='Committee'" value="Committee">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12 col-sm-12" ng-show="ManualEvent.SendEmail && ManualEvent.EmailTeam=='Committee'">
+                                <div class="form-group">
+                                    <label class="Starick">
+                                        Other Emails
+                                    </label>
+                                    <input type="text" id="CommiteeEditValue" />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12 col-sm-12" ng-show="ManualEvent.SendEmail">
+                                <div class="form-group">
+                                    <label>
+                                        CCEmails Emails
+                                    </label>
+                                    <input type="text" id="CCEmailsEdit" />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12 col-sm-12" ng-show="ManualEvent.SendEmail">
+                                <div class="form-group">
+                                    <label class="Starick">
+                                        Email Message (Eng)
+                                    </label>
+                                    <textarea class="form-control" ng-keydown="CheckKeyword($event,'EditEngMes')" ng-blur="DismisKeyword('EditEngMes')" rows="3" ng-model="ManualEvent.EngMessage">{{ManualEvent.EngMessage}}</textarea>
+                                    <div class="MasterDropDown">
+                                        <div class="CustomDropDown" id="EditEngMes" prop="EngMessage" Parent="ManualEvent">
+                                            <ul>
+                                                <li>Container_number </li>
+                                                <li>Container_location </li>
+                                                <li>Vessel_ref </li>
+                                                <li>Event_update_time </li>
+                                                <li>Updated_by </li>
+                                                <li>Event_name </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-12 col-sm-12" ng-show="ManualEvent.SendEmail">
+                                <div class="form-group">
+                                    <label class="">
+                                        Email Message (Ar)
+                                    </label>
+                                    <textarea class="form-control" rows="3" ng-keydown="CheckKeyword($event,'EditArMes')" ng-blur="DismisKeyword('EditArMes')" ng-model="ManualEvent.ArMessage">{{ManualEvent.ArMessage}}</textarea>
+                                    <div class="MasterDropDown">
+                                        <div class="CustomDropDown" id="EditArMes" prop="ArMessage" Parent="ManualEvent">
+                                            <ul>
+                                                <li>Container_number </li>
+                                                <li>Container_location </li>
+                                                <li>Vessel_ref </li>
+                                                <li>Event_update_time </li>
+                                                <li>Updated_by </li>
+                                                <li>Event_name </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row mt-2 buttonrow">
+                        <div class="col-6 col-md-6 mt-4">
+                            <button type="submit" class="btnSecondary" ng-click="CloseManualEventModal()">Cancel</button>
+                        </div>
+                        <div class="col-6 col-md-6 mt-4">
+                            <button class="btnPrimary" ng-click="UpdateManualEvent(ManualEvent)">Update</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Update Page End--->
+</div>
+

@@ -1,0 +1,1246 @@
+﻿
+@{
+    ViewBag.Title = "NewDashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/css/DashboardStyle.css" rel="stylesheet" />
+<link href="~/Scripts/SlimSelect/SlimSelectCustomStyle.css" rel="stylesheet" />
+<link href="~/Scripts/SlimSelect/slimselect.min.css" rel="stylesheet" />
+
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.css" rel="stylesheet" />
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.standalone.css" rel="stylesheet" />
+<link href="~/Content/css/FilterPanelStyle.css" rel="stylesheet" />
+<style>
+    /* Pulse Animation */
+    .pulse-red {
+        display: inline-block;
+        border-radius: 50%;
+        animation: pulse-red-animation 2s infinite;
+    }
+
+    @@keyframes pulse-red-animation {
+        0% {
+            box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+        }
+
+        70% {
+            box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+        }
+    }
+
+    /* Optional: Position the badge correctly */
+    .dropdown .badge {
+        padding: 3px 6px;
+        border: 2px solid #fff; /* Makes the badge pop against the icon */
+    }
+
+    .jconfirm-box-container.jconfirm-animated.custom-confirm-width.jconfirm-no-transition {
+        max-width: 550px !important;
+    }
+
+    .questiobox {
+        text-align: start;
+    }
+
+        .questiobox ul {
+            margin: 0px;
+            margin-bottom: 4px
+        }
+
+            .questiobox ul li {
+                padding: 0px;
+                margin: 0px;
+                text-align: start;
+            }
+
+    .HistoryTable tr td, .HistoryTable tr th {
+        background: white;
+        border: 1px solid #bebebe !important;
+    }
+
+    .HistoryTable thead {
+        position: sticky;
+        top: -2px;
+    }
+
+    .HistoryTable tr th {
+        background: var( --dpw-bg-color) !important;
+        color: white !important;
+    }
+
+    tr.OPRHold td {
+        background: #fde6e6;
+    }
+
+    .icon-filter3.Active {
+        color: #06bd81;
+    }
+
+    .linkstyle {
+        text-decoration: underline;
+        cursor: pointer;
+        margin-right: 9px;
+        font-weight: 700;
+    }
+
+    th.dsc::after {
+        content: "\e9dc";
+        font-family: 'icomoon';
+        /* margin-right: 6px; */
+        padding: 5px;
+    }
+
+    table tr th {
+        cursor: pointer;
+    }
+
+    th.asc::after {
+        content: "\e9df";
+        font-family: 'icomoon';
+        /* margin-right: 6px; */
+        padding: 5px;
+    }
+
+    .BaseFilter label {
+        font-weight: 600 !important;
+    }
+
+    .DifficultStripIndication {
+        background: #c70000;
+        color: #ffffff !important;
+        border-radius: 4px;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 8px;
+        font-weight: 800;
+        padding: 0px 3px;
+        cursor: pointer;
+        box-shadow: 5px 12px 25px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    .MSOClr {
+        background: #ffa7a7;
+        accent-color: #ffa7a7;
+    }
+
+    .BaseFilter input:not(:checked)::before {
+        content: attr(data-content);
+        font-size: 6px;
+        DISPLAY: flex;
+        font-weight: 700;
+        JUSTIFY-CONTENT: center;
+        ALIGN-ITEMS: center;
+        ALIGN-SELF: center;
+    }
+
+    .OprFilter {
+        cursor: pointer;
+    }
+
+    .OprMenu {
+        display: none !important;
+        position: absolute;
+        bottom: 20px;
+        width: 0px;
+    }
+
+        .OprMenu.show {
+            display: inline-block !important;
+        }
+
+    .OprChild {
+        position: relative;
+        max-width: 250px;
+        min-width: 150px;
+        padding: 0px;
+        margin: 0px !important;
+        background: #fbfbfb;
+        right: 99px;
+        z-index: 99999999 !important;
+        border: 1px solid #d6d5dd;
+        box-shadow: 5px 12px 25px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 3px;
+    }
+
+        .OprChild ul li {
+            list-style: none;
+            cursor: pointer;
+            text-align: start;
+            padding: 10px 11px;
+            white-space: nowrap;
+            border-bottom: 1px solid #a6a6a6;
+        }
+
+        .OprChild ul {
+            margin: 0px;
+            padding: 0px;
+        }
+
+    @@media (min-width: 768px) {
+        .sidebar-xs .sidebar {
+            width: 0px;
+            overflow: hidden;
+        }
+
+        .sidebar-xs .content {
+            padding: 6px;
+        }
+    }
+
+    .badge-Planned {
+        background: #c75c5c;
+    }
+
+    .Laborbadge {
+        width: fit-content;
+        color: white;
+        font-weight: normal !important;
+        border-radius: 3px;
+    }
+
+    .badge-Paused {
+        background: #cb2900;
+    }
+
+    .badge-Shiftended {
+        background: #626262;
+    }
+
+    .badge-Assigned {
+        background: #0094d7;
+    }
+
+    .badge-Working, .badge-Inprogress {
+        background: var( --dpw-bg-color);
+    }
+
+    .badge-Queued {
+        background: var( --dpw-bg-color);
+    }
+
+    .DelayCntr td {
+        background: #ff00002b;
+    }
+
+    .redClr {
+        color: #730000;
+    }
+
+    .YardClr {
+        accent-color: #a2a2a2;
+        background: #a2a2a2;
+    }
+
+    .FKTypeClr {
+        accent-color: #9184d0;
+        background: #9184d0;
+    }
+
+    .OPRFKClr {
+        accent-color: #a9cc6f;
+        background: #a9cc6f;
+    }
+
+    .manualClr {
+        background: #2d8cda;
+        accent-color: #2e8cda;
+    }
+
+    .delaysClr {
+        background: #960000;
+        accent-color: #960000;
+    }
+
+    .autoClr {
+        accent-color: #ff6529;
+        background: #ff6529;
+    }
+
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+
+    .modal-content {
+        background-color: #f4f2fa !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .modal-title {
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+
+    .CloseModalBtn {
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        z-index: 99999999999 !important;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px !important;
+        padding: 8px;
+        cursor: pointer;
+        background: var( --dpw-bg-color);
+        z-index: 99999999999 !important;
+    }
+
+
+
+    .stripClr {
+        background: #cbfece !important;
+        accent-color: #cbfece;
+    }
+
+    .repackClr {
+        background: #d8d5ff !important;
+        accent-color: #d8d5ff;
+    }
+
+    .RedSection {
+        background: #ed292961 !important;
+    }
+
+    .yellowSection {
+        background: #ffc9378f !important;
+    }
+
+    .GreenSection {
+        background: #37ff8a7a;
+    }
+
+    .OprCls {
+        width: 150px;
+    }
+
+    .searchFilter input {
+        float: right;
+        margin-right: 8px;
+        border: 1px solid #80808038;
+        padding: 7px;
+        border-radius: 5px;
+        box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .searchFilter {
+        padding-top: 20px;
+    }
+
+        .searchFilter input::after {
+            content: '--';
+        }
+
+    .ForkliftCard {
+        background: white;
+        padding: 11px;
+        border-radius: 11px;
+        float: right;
+        margin-top: 9px;
+        box-shadow: 5px 12px 25px 0px rgba(0, 0, 0, 0.1);
+    }
+
+        .ForkliftCard div {
+            FONT-SIZE: 13PX !important;
+            font-weight: 900 !important;
+            text-align: center;
+            padding: 2px 24px;
+            border: inset;
+            border-radius: 6px;
+            margin-right: 10px;
+            border-right: 1px solid #8080802e;
+        }
+
+            .ForkliftCard div small {
+                text-decoration: underline;
+                cursor: pointer;
+            }
+
+            .ForkliftCard div:last-child {
+                border-right: none !important;
+            }
+
+    .ActiveDot {
+        display: inline-block;
+        background: green;
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        margin-right: 4px;
+    }
+
+    .LiveDot {
+        display: inline-block;
+        background: #b74bff;
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        margin-right: 4px;
+    }
+
+    .InActiveDot {
+        display: inline-block;
+        background: red;
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        margin-right: 4px;
+    }
+
+    .AssignedDot {
+        display: inline-block;
+        background: blue;
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        margin-right: 4px;
+    }
+
+    .ReqByDeprtDot {
+        display: inline-block;
+        background: gray;
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        margin-right: 4px;
+    }
+
+    .BlockedDot {
+        display: inline-block;
+        background: #ea7709;
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        margin-right: 4px;
+    }
+
+    .FKActiveCard {
+        background: #e4ffe4;
+    }
+
+    .FKIinActiveCard {
+        background: #ffe2e2;
+    }
+
+    .FKAssignedCard {
+        background: #cfe5ff;
+    }
+
+    .FKReqbyDpertCard {
+        background: #e4e4e4
+    }
+
+    .FKLiveCard {
+        background: #edd3ff;
+    }
+
+    .FKBlockedCard {
+        background: #ffe8bd;
+    }
+</style>
+<div class="DashboardDiv" ng-controller="FKL_DashboardCtrl" ng-init="init()">
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline" style="padding:0px;">
+            <div class="page-title d-flex">
+                <h4>
+                    <span class="font-weight-semibold">FOS  Dashboard</span>
+                </h4>
+            </div>
+            <div>
+                <div class=" d-flex ForkliftCard">
+                    <div ng-click="OpenCompletedActivity()" class="FKActiveCard"><span class="ActiveDot"></span>Completed Activity <br /></div>
+                    <div ng-click="OpenFKSummaryDetails(FKSummary.ActiveFK,'Active')" class="FKActiveCard"><span class="ActiveDot"></span>Active <br /> <small>{{FKSummary.ActiveFK.length}}</small></div>
+                    <div ng-click="OpenFKSummaryDetails(FKSummary.InActiveFK,'InActive')" class="FKIinActiveCard"><span class="InActiveDot"></span>InActive <br /> <small>{{FKSummary.InActiveFK.length}}</small></div>
+                    <div ng-click="OpenFKSummaryDetails(FKSummary.LIVEFK,'LIVEFK')" class="FKLiveCard"><span class="LiveDot"></span>Live <br /> <small>{{FKSummary.LIVEFK.length}}</small></div>
+                    <div ng-click="OpenFKSummaryDetails(FKSummary.AssignedFK,'Assigned')" class="FKAssignedCard"> <span class="AssignedDot"></span>Assigned <br /> <small>{{FKSummary.AssignedFK.length}}</small></div>
+                    <div ng-click="OpenFKSummaryDetails(FKSummary.BlockedFK,'Blocked')" class="FKBlockedCard"> <span class="BlockedDot"></span>Blocked <br /> <small>{{FKSummary.BlockedFK.length}}</small></div>
+                    <div ng-click="OpenFKSummaryDetails([],'')" class="FKReqbyDpertCard"><span class="ReqByDeprtDot"></span>Req by other department <br /> <small>0</small></div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <br />
+
+    <div style=" text-align: end;">
+        <span class="linkstyle" ng-click="OpenPerformanceReport()">Performance report</span>
+        <span title="More filters" ng-class="{'Active':FilterApplied==true}" data-toggle="modal" data-target="#filter" class="icon-filter3"></span>
+    </div>
+
+    <!---Block-->
+    <div class="card mt-2 mt-2 d-none" id="Block">
+        <div class="card-header " style=" background: var( --dpw-bg-color); color: white; padding: 8px;">
+            <h5 class="mt-2">Select Block</h5>
+        </div>
+        <div class=" card-body shadow">
+            <div class="row">
+                <div class="Cardtabs" ng-repeat="B in BlockCountList">
+                    <div class="Absoulte">
+                        <div class="CountBadge">{{B.Count}}</div>
+                        <br />
+                    </div>
+                    <button ng-click="GetContainerList(B)" ng-class="{'active' : B.Block == CurrentBlock}" class="btn btn-primary Blocks" value="{{B.BlockNumber}}">
+                        {{B.Block}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!---Block-->
+    <div class="row">
+        @*IDLE*@
+        <div class="col-md-6 col-sm-6 col-lg-4 p-1">
+            <div class="DashboardContainersSection">
+                <div class="text-center Cutsom-Table-title RedSection">
+                    Idle
+                    <div class="pull-right contextMenu"><i class="icon-list2"></i></div>
+                    <div class="submain" style="position: absolute; height: 0px; width: 100%; display: none; ">
+                        <div class="Context">
+                            <div class="Head">
+                                Reports
+                            </div>
+                            <ul>
+                                <li ng-click="OpenExcelModal('ML')"><i class="icon-file-excel"></i><span class="mr-2">Export to Excel</span></li>
+                                <li ng-click="OpenEmailModal('ML')"><i class="icon-paperplane"></i> <span class="mr-2">Send Email Report</span></li>
+                                <li ng-click="PrintReport('ML',MLData)"><i class="icon-file-pdf"></i><span class="mr-2">Print Report</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="custom-table-header">
+                    <table>
+                        <thead>
+                            <tr>
+
+                                <th>FL</th>
+                                <th>OPR</th>
+                                <th>Area</th>
+                                <th>Position</th>
+                                <th>DUR</th>
+                                <th>logout</th>
+                                <th>Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="x in IDLEOPRlist">
+                            <tr ng-class="{'OPRHold':x.OnHold==true}">
+                                <td><span title="Release Hold" ng-show="x.OnHold==true" ng-click="ReleaseOPRHold(x.OperatorEmpId)"><img style="height:13px;" src="~/Content/images/N4HoldRelease.png" /></span> {{x.Forklift}}</td>
+                                <td><div title="{{x.ForkliftOpertaor}}">{{x.OperatorEmpId}}</div></td>
+                                <td>{{x.Area}}</td>
+                                <td>{{x.Position}}</td>
+                                <td>{{x.Duration}}</td>
+                                <td>{{x.Logout}}</td>
+                                <td>
+                                    <span title="Idle Reason" ng-click="GetIdelReason(x.OperatorEmpId,x)" style="cursor: pointer;"><i class="icon-info22"></i></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-container-count-section">
+                    <div class="row">
+                        <div class="col-md-12 p-0">
+                            <b>Total</b>
+                            <b class="pull-right">{{IDLEOPRlist.length}}</b>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="d-sm-flex d-md-flex d-lg-none" style=" justify-content: center;">
+                <div class="more-detail-section">
+                    <p class="text-center" ng-click="opendetailpage('CI')">
+                        View Detail <i class="icon-arrow-right7"></i>
+                    </p>
+                </div>
+            </div>
+        </div>
+        @*Queue*@
+        <div class="col-md-6 col-sm-6 col-lg-4 p-1">
+            <div class="DashboardContainersSection">
+                <div class="text-center Cutsom-Table-title RedSection">
+                    Queue
+                    <div class="pull-right contextMenu"><i class="icon-list2"></i></div>
+                    <div class="submain" style="position: absolute; height: 0px; width: 100%; display: none; ">
+                        <div class="Context">
+                            <div class="Head">
+                                Reports
+                            </div>
+                            <ul>
+                                <li ng-click="OpenExcelModal('ML')"><i class="icon-file-excel"></i><span class="mr-2">Export to Excel</span></li>
+                                <li ng-click="OpenEmailModal('ML')"><i class="icon-paperplane"></i> <span class="mr-2">Send Email Report</span></li>
+                                <li ng-click="PrintReport('ML',MLData)"><i class="icon-file-pdf"></i><span class="mr-2">Print Report</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="custom-table-header">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Bayan</th>
+                                <th>Container</th>
+                                <th>Elapsed hr </th>
+                                <th>Position</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="x in QueueJobs">
+                            <tr>
+                                <td>
+                                    <img title="Assign Operator" ng-show="(_currentUser.UserType.includes('Admin') || _currentUser.UserType.includes('FK_JobAllocator'))" ng-click="OpenAssignOperator(x)" src="~/Content/images/ForkLift.png" style="height:14px;" />
+                                    <div title="Multi skill operator" ng-show="x.DifficultStrip==true" class="DifficultStripIndication">
+                                        MSO
+                                    </div>
+
+                                </td>
+                                <td class="BayanClr">
+                                    <span ng-show="x.Bayan.split('-').length>1">{{x.Bayan.split('-')[1]}}</span>
+                                    <span ng-show="x.Bayan.split('-').length!=2">{{x.Bayan.split('-')[0]}}</span>
+                                </td>
+                                <td ng-class="{'stripClr':   x.Activity === 'Strip','repackClr':  x.Activity === 'Repack'}">{{x.Container}}</td>
+                                <td>{{x.DwellHrs}}</td>
+                                <td>{{x.Position.split('.')[0]}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-container-count-section">
+                    <div class="row">
+                        <div class="col-md-12 p-0">
+                            <b>Total</b>
+                            <b class="pull-right">{{QueueJobs.length}}</b>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="d-sm-flex d-md-flex d-lg-none" style=" justify-content: center;">
+                <div class="more-detail-section">
+                    <p class="text-center" ng-click="opendetailpage('CI')">
+                        View Detail <i class="icon-arrow-right7"></i>
+                    </p>
+                </div>
+            </div>
+        </div>
+        @*Inprogress*@
+        <div class="col-md-6 col-sm-6 col-lg-4 p-1">
+            <div class="DashboardContainersSection">
+                <div class="text-center Cutsom-Table-title yellowSection">
+                    Inprogress
+                    <div class="pull-right contextMenu"><i class="icon-list2"></i></div>
+                    <div class="submain" style="position: absolute; height: 0px; width: 100%; display: none; ">
+                        <div class="Context">
+                            <div class="Head">
+                                Reports
+                            </div>
+                            <ul>
+                                <li ng-click="OpenExcelModal('ML')"><i class="icon-file-excel"></i><span class="mr-2">Export to Excel</span></li>
+                                <li ng-click="OpenEmailModal('ML')"><i class="icon-paperplane"></i> <span class="mr-2">Send Email Report</span></li>
+                                <li ng-click="PrintReport('ML',MLData)"><i class="icon-file-pdf"></i><span class="mr-2">Print Report</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="custom-table-header">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Bayan</th>
+                                <th>Container</th>
+                                <th>Status</th>
+                                <th>Position</th>
+                                <th>OPR</th>
+                                <th>FL</th>
+                                <th>Delays</th>
+                                <th>ADUR</th>
+                                <th>IDUR</th>
+
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="grp in InprpogressJobsGroup" ng-init="Pindex = $index;">
+                            <tr ng-class="{'DelayCntr':x.Delays!=''}" ng-repeat="x in grp.li" ng-init="Cindex = $index">
+                                <td>
+                                    <span ng-show="(_currentUser.UserType.includes('Admin') || _currentUser.UserType.includes('FK_JobAllocator')" ng-click="OpenShiftAssignment(x)"><i class="icon-history"></i></span>
+                                    <div title="Multi skill operator" ng-show="x.DifficultStrip==true" class="DifficultStripIndication">
+                                        MSO
+                                    </div>
+                                </td>
+                                <td class="BayanClr">
+                                    <div class="BayanClr">
+                                        <img title="Auto Assignment" ng-show="x.DisplayMode=='Auto'" style="height:14px;" src="~/Content/images/Auto.png" />
+                                        <img title="Manual Assignment" ng-show="x.DisplayMode!='Auto'" style="height:14px;" src="~/Content/images/Manual.png" />
+                                        <span ng-show="x.Bayan.split('-').length>1">{{x.Bayan.split('-')[1]}}</span>
+                                        <span ng-show="x.Bayan.split('-').length!=2">{{x.Bayan.split('-')[0]}}</span>
+                                    </div>
+                                </td>
+                                <td ng-class="{'stripClr':   x.Activity === 'Strip','repackClr':  x.Activity === 'Repack'}">{{x.Container}}</td>
+                                <td><span class="Laborbadge badge-{{x.Status}}">{{x.Status}}</span></td>
+                                <td>{{x.Position.split('.')[0]}} </td>
+                                <td style="border-right: 1px solid #dedede; border-left: 1px solid #dedede; " ng-show="Cindex==0" rowspan="{{grp.li.length}}"><div title="{{x.Operator}}">{{x.EmpId}}</div></td>
+                                <td style="border-right: 1px solid #dedede; " ng-show="Cindex==0" rowspan="{{grp.li.length}}">{{x.Forklift || '-'}}</td>
+                                <td><div class="redClr">{{x.Delays || '-'}}</div></td>
+                                <td><div>{{x.ADuration || '-'}}</div></td>
+                                <td><div>{{x.IDuration || '-'}}</div></td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="total-container-count-section">
+                    <div class="row">
+                        <div class="col-md-12 p-0">
+                            <b>Total</b>
+                            <b class="pull-right">{{InprpogressJobs.length}}</b>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="d-sm-flex d-md-flex d-lg-none" style=" justify-content: center;">
+                <div class="more-detail-section">
+                    <p class="text-center" ng-click="opendetailpage('CI')">
+                        View Detail <i class="icon-arrow-right7"></i>
+                    </p>
+                </div>
+            </div>
+        </div>
+        @*Completed*@
+        <div class="col-md-6 col-sm-6 col-lg-4 p-1 d-none">
+            <div class="DashboardContainersSection">
+                <div class="text-center Cutsom-Table-title GreenSection">
+                    Completed
+                    <div class="pull-right contextMenu"><i class="icon-list2"></i></div>
+                    <div class="submain" style="position: absolute; height: 0px; width: 100%; display: none; ">
+                        <div class="Context">
+                            <div class="Head">
+                                Reports
+                            </div>
+                            <ul>
+                                <li ng-click="OpenExcelModal('ML')"><i class="icon-file-excel"></i><span class="mr-2">Export to Excel</span></li>
+                                <li ng-click="OpenEmailModal('ML')"><i class="icon-paperplane"></i> <span class="mr-2">Send Email Report</span></li>
+                                <li ng-click="PrintReport('ML',MLData)"><i class="icon-file-pdf"></i><span class="mr-2">Print Report</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="custom-table-header">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Bayan</th>
+                                <th>Container</th>
+                                <th>Position</th>
+                                <th>OPR</th>
+                                <th>FL</th>
+                                <th>Delays</th>
+                                <th>ADUR</th>
+                                <th>IDUR</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="grp in CompletedJobsGroup">
+                            <tr ng-class="{'DelayCntr':x.Delays!=''}" ng-repeat="x in grp.li" ng-init="Cindex = $index">
+                                <td class="BayanClr">
+                                    <div class="BayanClr">
+                                        <img title="Auto Assignment" ng-show="x.DisplayMode=='Auto'" style="height: 14px;" src="~/Content/images/Auto.png" />
+                                        <img title="Manual Assignment" ng-show="x.DisplayMode!='Auto'" style="height: 14px;" src="~/Content/images/Manual.png" />
+                                        <span ng-show="x.Bayan.split('-').length>1">{{x.Bayan.split('-')[1]}}</span>
+                                        <span ng-show="x.Bayan.split('-').length!=2">{{x.Bayan.split('-')[0]}}</span>
+                                    </div>
+                                </td>
+                                <td ng-class="{'stripClr':   x.Activity === 'Strip','repackClr':  x.Activity === 'Repack'}">{{x.Container}}</td>
+                                <td>{{x.Position.split('.')[0]}}</td>
+                                <td ng-show="Cindex==0" style="border-right: 1px solid #dedede;border-left: 1px solid #dedede; " rowspan="{{grp.li.length}}"><div title="{{x.Operator}}">{{x.EmpId}}</div></td>
+                                <td ng-show="Cindex==0" style="border-right: 1px solid #dedede;" rowspan="{{grp.li.length}}">{{x.Forklift}}</td>
+                                <td><div class="redClr">{{x.Delays || '-'}}</div></td>
+                                <td>{{x.ADuration}}</td>
+                                <td>{{x.IDuration}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-container-count-section">
+                    <div class="row">
+                        <div class="col-md-12 p-0">
+                            <b>Total</b>
+                            <b class="pull-right">{{CompletedJobs.length}}</b>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="d-sm-flex d-md-flex d-lg-none" style=" justify-content: center;">
+                <div class="more-detail-section">
+                    <p class="text-center" ng-click="opendetailpage('CI')">
+                        View Detail <i class="icon-arrow-right7"></i>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="BaseFilter">
+        <div class="row">
+            <div class="col-md-12 p-0 m-0">
+                <div>
+                    <input type="checkbox" value="Strip" class="stripClr" /> Strip
+                </div>
+                <div>
+                    <input type="checkbox" value="Repack" class="repackClr" /> Repack
+                </div>
+
+                <div>
+                    <input type="checkbox" class="delaysClr" value="Delays" /> Delays
+                </div>
+
+                <div>
+                    <input type="checkbox" class="MSOClr" value="MSO" /> MSO
+                </div>
+                <div>
+                    <input type="checkbox" class="autoClr" value="Auto" /> Auto
+                </div>
+                <div>
+                    <input type="checkbox" class="manualClr" value="Manual" /> Manual
+                </div>
+                @*Area filter*@
+                <div ng-repeat="x in YardArea" ng-click="AddYardFilter(x.Name)">
+                    <input type="checkbox" id="Area{{$index}}" value="{{x.Name}}" class="YardClr" />
+                    <label ng-click="AddYardFilter(x.Name)" for="Area{{$index}}">{{x.Name}}</label>
+                </div>
+
+
+                @*Operator filter*@
+                <div class="OprFilter" ng-click="OpenOperatorMenu($event)">
+                    <input type="checkbox" value="TotalOperator" id="TotalOperator" style="pointer-events: none;" class="OPRFKClr" /> Operator
+                    <div class="OprMenu">
+                        <div class="OprChild">
+                            <ul>
+                                <li style=" background: #e9e9e9; font-size: 11px;"><b>Operator filter</b></li>
+                                <li ng-click="AddOperatorFilter(x.EmpId)" class="OprCheck" ng-repeat="x in OPRFilterList">
+                                    <input type="checkbox" class="OPRFKClr" name="name" id="EmpId{{$index}}" value="{{x.EmpId}}" />
+                                    <label ng-click="AddOperatorFilter(x.EmpId)" for="EmpId{{$index}}">{{x.EmpId}}-{{x.Name}}</label>
+                                </li>
+                                <li ng-show="OPRFilterList==null || OPRFilterList.length==0">No operator found</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                @*Forklift filter*@
+                <div class="OprFilter" ng-click="OpenOperatorMenu($event)">
+                    <input type="checkbox" value="TotalForklift" id="TotalForklift" style="pointer-events: none;" class="OPRFKClr" /> Forklift
+                    <div class="OprMenu">
+                        <div class="OprChild">
+                            <ul>
+                                <li style=" background: #e9e9e9; font-size: 11px;"><b>Forklift filter</b></li>
+                                <li ng-click="AddForkliftFilter(x)" class="OprCheck" ng-repeat="x in FKFilterList">
+                                    <input type="checkbox" class="YardClr" id="FK{{$index}}" name="name" value="{{x}}" />
+                                    <label ng-click="AddForkliftFilter(x)" for="FK{{$index}}">{{x}}</label>
+                                </li>
+                                <li ng-show="FKFilterList==null || FKFilterList.length==0">No forklift found</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                @*Forklift type*@
+                <div ng-repeat="x in ForkLiftTypeList" ng-click="AddFokrliftTypeFilter(x.Type)">
+                    <input type="checkbox" id="forklifttype{{$index}}" value="{{x.Type}}" class="FKTypeClr" />
+                    <label ng-click="AddFokrliftTypeFilter(x.Type)" for="forklifttype{{$index}}">{{x.Type}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Completed*@
+    <div class="modal fade" id="CompletedActivity" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width:700px" role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Completed Activity</h5>
+                </div>
+                <div class="modal-body" style=" min-height: 120px;overflow:visible !important">
+                    <div class="table-scrollable custom-table-header">
+                        <table class="table HistoryTable">
+                            <thead>
+                                <tr>
+                                    <th>Bayan</th>
+                                    <th>Container</th>
+                                    <th>Position</th>
+                                    <th>OPR</th>
+                                    <th>FL</th>
+                                    <th>Delays</th>
+                                    <th>ADUR</th>
+                                    <th>IDUR</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="grp in CompletedJobsGroup">
+                                <tr ng-class="{'DelayCntr':x.Delays!=''}" ng-repeat="x in grp.li" ng-init="Cindex = $index">
+                                    <td class="BayanClr">
+                                        <div class="BayanClr">
+                                            <img title="Auto Assignment" ng-show="x.DisplayMode=='Auto'" style="height: 14px;" src="~/Content/images/Auto.png" />
+                                            <img title="Manual Assignment" ng-show="x.DisplayMode!='Auto'" style="height: 14px;" src="~/Content/images/Manual.png" />
+                                            <span ng-show="x.Bayan.split('-').length>1">{{x.Bayan.split('-')[1]}}</span>
+                                            <span ng-show="x.Bayan.split('-').length!=2">{{x.Bayan.split('-')[0]}}</span>
+                                        </div>
+                                    </td>
+                                    <td ng-class="{'stripClr':   x.Activity === 'Strip','repackClr':  x.Activity === 'Repack'}">{{x.Container}}</td>
+                                    <td>{{x.Position.split('.')[0]}}</td>
+                                    <td ng-show="Cindex==0" style="border-right: 1px solid #dedede;border-left: 1px solid #dedede; " rowspan="{{grp.li.length}}"><div title="{{x.Operator}}">{{x.EmpId}}</div></td>
+                                    <td ng-show="Cindex==0" style="border-right: 1px solid #dedede;" rowspan="{{grp.li.length}}">{{x.Forklift}}</td>
+                                    <td><div class="redClr">{{x.Delays || '-'}}</div></td>
+                                    <td>{{x.ADuration}}</td>
+                                    <td>{{x.IDuration}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*FKSummary Details report*@
+    <div class="modal fade" id="FKSummaryDetail" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width:700px" role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Forklifts detail view</h5>
+                </div>
+                <div class="modal-body" style=" min-height: 120px;overflow:visible !important">
+                    <div class="table-scrollable">
+                        <table class="table HistoryTable">
+
+                            <tbody ng-repeat="y in FKSummaryByType">
+
+                                <!-- Group Header Row -->
+                                <tr class="group-header">
+                                    <th colspan="8" style="background: #f0f0f0; font-weight: bold; text-align: center;">
+                                        {{y.ForkliftType=="Null"?"Unknown":y.ForkliftType}}
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>FK No</th>
+                                    <th>Area</th>
+                                    <th>Forklift Type</th>
+                                    <th>Available Container</th>
+                                    <th>Operator</th>
+                                    <th>Status</th>
+                                    <th>DUR</th>
+                                    <th>Block Reason</th>
+                                </tr>
+                                <!-- Detail Rows for this Forklift Type -->
+                                <tr ng-repeat="x in FKSummaryDetailsList | filter:{ForkliftType: (y.ForkliftType)}">
+                                    <td>{{x.number || '-'}}</td>
+                                    <td>{{x.Area}}</td>
+                                    <td>{{x.ForkliftType=="Null"?"Unknown":x.ForkliftType}}</td>
+                                    <td>{{x.ContainerCount}}</td>
+                                    <td>{{x.OprEmpId || '-'}}</td>
+                                    <td>{{x.Status}}</td>
+                                    <td>{{x.Duration}}</td>
+                                    <td>
+                                        <div ng-if="x.Blockreason && x.Blockreason.length > 0">
+                                            <div class="questiobox" ng-repeat="q in x.Blockreason">
+                                                <b>{{q.Question}}</b>
+                                                <ul>
+                                                    <li>Answer: {{q.Answer}}</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div ng-if="x.LowBattery!=null && x.LowBattery!=''">
+                                            {{x.LowBattery}}
+                                        </div>
+
+                                    </td>
+                                </tr>
+
+                                <!-- Group Footer Row (Count) -->
+                                <tr class="group-footer">
+                                    <td colspan="2" style="text-align:center; font-weight:bold; background:#f8f8f8;">
+                                        Total  {{y.ForkliftType}}
+                                    </td>
+                                    <td colspan="6" style="text-align:center; font-weight:bold; background:#f8f8f8;">
+                                        {{y.Count}}
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Perfromance report*@
+    <div class="modal fade" id="PerfromanceReports" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Performance report</h5>
+                </div>
+                <div class="modal-body" style=" min-height: 120px;overflow:visible !important">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Date from</label>
+                            <div id="sandbox-container">
+                                <div class="input-group date">
+                                    <input type="text" class="form-control" id="DateFrom" placeholder="dd/mm/yyyy"><span class="input-group-addon"><i class="mi-insert-invitation"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label>Date to</label>
+                            <div id="sandbox-container">
+                                <div class="input-group date">
+                                    <input type="text" class="form-control" id="DateTo" placeholder="dd/mm/yyyy"><span class="input-group-addon"><i class="mi-insert-invitation"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-click="DownloadPerformanceReport()">Download report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Filter*@
+    <div class="modal filtermodel" id="filter" tabindex="-1" role="dialog" aria-labelledby="filterModalTitle" aria-hidden="true">
+        <div class="modal-dialog side-panel-dialog" role="document">
+            <div class="modal-content side-panel-content">
+
+                <div class="modal-header panel-header-sm">
+                    <h5 class="modal-title panel-title-sm" id="filterModalTitle">
+                        <i class="icon-filter3" style="margin-right: 5px;"></i>Filter Options
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size: 1.2rem; color: #6c757d;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body panel-body-sm">
+                    @*block filter*@
+                    <div class="filterSection" ng-show="BlockCountList!=null && BlockCountList.length>0">
+                        <b class="filter-section-title">Block</b>
+                        <div class="filter-pill-wrap">
+                            <div class="filter-pill-item" ng-click="AddBlockFilter(x.Block)" filter-val="{{x.Block}}" ng-repeat="x in BlockCountList">
+                                <span class="filter-count-badge">{{x.Count}}</span>
+                                {{x.Block}}
+                            </div>
+                        </div>
+                    </div>
+                    @*Activity filter*@
+                    <div class="filterSection">
+                        <b class="filter-section-title">Activity</b>
+                        <div class="filter-pill-wrap">
+                            <div class="filter-pill-item" filter-val="Strip">
+                                <span class="filter-count-badge">0</span>
+                                Strip
+                            </div>
+                            <div class="filter-pill-item" filter-val="Repack">
+                                <span class="filter-count-badge">0</span>
+                                Repack
+                            </div>
+                            <div class="filter-pill-item" filter-val="Delays">
+                                <span class="filter-count-badge">0</span>
+                                Delays
+                            </div>
+                            <div class="filter-pill-item" filter-val="Auto">
+                                <span class="filter-count-badge">0</span>
+                                Auto
+                            </div>
+                            <div class="filter-pill-item" filter-val="Manual">
+                                <span class="filter-count-badge">0</span>
+                                Manual
+                            </div>
+                        </div>
+                    </div>
+                    @*Container *@
+                    <div class="filterSection">
+                        <b class="filter-section-title">Container</b>
+                        <div class="filter-pill-wrap">
+                            <div class="filter-pill-item" filter-val="MSO">
+                                <span class="filter-count-badge">0</span>
+                                MSO
+                            </div>
+                        </div>
+                    </div>
+                    @*Area filter*@
+                    <div class="filterSection" ng-show="YardArea!=null && YardArea.length>0">
+                        <b class="filter-section-title">Area</b>
+                        <div class="filter-pill-wrap">
+                            <div class="filter-pill-item" ng-click="AddYardFilter(x.Name)" filter-val="{{x.Name}}" ng-repeat="x in YardArea">
+                                <span class="filter-count-badge">0</span>
+                                {{x.Name}}
+                            </div>
+                        </div>
+                    </div>
+                    @*Operator filter*@
+                    <div class="filterSection" ng-show="OPRFilterList!=null && OPRFilterList.length>0">
+                        <b class="filter-section-title">Operator</b>
+                        <div class="filter-pill-wrap">
+                            <div class="filter-pill-item" ng-click="AddOperatorFilter(x.EmpId)" filter-val="{{x.EmpId}}" ng-repeat="x in OPRFilterList">
+                                <span class="filter-count-badge">0</span>
+                                {{x.EmpId}}-{{x.Name}}
+                            </div>
+                        </div>
+                    </div>
+                    @*Forklift filter*@
+                    <div class="filterSection" ng-show="FKFilterList!=null && FKFilterList.length > 0">
+                        <b class="filter-section-title">Forklift</b>
+                        <div class="filter-pill-wrap">
+                            <div class="filter-pill-item" ng-click="AddForkliftFilter(x)" filter-val="{{x}}" ng-repeat="x in FKFilterList">
+                                <span class="filter-count-badge">0</span>
+                                {{x}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer panel-footer-sm">
+                    <button data-dismiss="modal" class="btn btn-primary w-100" ng-click="ClearAllFilter()">
+                        Clear All
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Manual Assignment*@
+    <div class="modal fade" id="ManualAssignment" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Manual assignment</h5>
+                </div>
+                <div class="modal-body" style=" min-height: 120px;overflow:visible !important">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Operator</label>
+                                <select class="" id="AllOperator" ng-model="OperatorEmpId">
+                                    <option value="">Select operator</option>
+                                    <option ng-repeat="x in ActiveOperator" value="{{x.EmpId}}">{{x.EmpId}}-{{x.Name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:center">
+                            @*<button class="btn btn-success" ng-click="AssignManaulJob(OperatorEmpId)">Assign</button>*@
+                            <button class="btn btn-success" ng-click="CheckOperJobForManualAssignment(OperatorEmpId)">Assign</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Shift Assignment*@
+    <div class="modal fade" id="ShiftAssignment" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Manual assignment</h5>
+                </div>
+                <div class="modal-body" style=" min-height: 120px;overflow:visible !important">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Operator</label>
+                                <select class="" id="AllOperator2" ng-model="ShiftOperatorEmpId">
+                                    <option value="">Select operator</option>
+                                    <option ng-repeat="x in ActiveOperator" ng-show="x.EmpId!=CurrentJobOpertaor" value="{{x.EmpId}}">{{x.EmpId}}-{{x.Name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:center">
+                            <button class="btn btn-success" ng-click="ShiftAssignment(ShiftOperatorEmpId)">Shift</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery.min.js"></script>
+
+<script src="~/Scripts/SlimSelect/slimselect.min.js"></script>
+<script src="~/Scripts/DatePicker/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/js/plugins/moment/moment_locales.min.js"></script>
+<script src="~/Scripts/DatePicker/CustomIntilizeJS.js"></script>
+<script>
+    $('body').on('click', function (e) {
+        if (e.target.closest('.OprFilter') != null) {
+
+        }
+        else if (e.target.classList.contains('OprFilter') || e.target.classList.contains('OprMenu')) {
+        }
+        else {
+            $('.OprMenu').removeClass('show');
+        }
+    })
+    window.onload = function () {
+        document.getElementById('minisidebar').className = 'sidebar-xs';
+    };
+    $(document).ready(function () {
+        window.onload = function () {
+            document.getElementById('minisidebar').className = 'sidebar-xs';
+        };
+
+        var o = new SlimSelect({
+            select: '#AllOperator',
+            placeholder: 'Select Operator',
+            showSearch: true,
+            allowDeselect: true,
+        });
+        var o = new SlimSelect({
+            select: '#AllOperator2',
+            placeholder: 'Select Operator',
+            showSearch: true,
+            allowDeselect: true,
+        });
+    });
+</script>

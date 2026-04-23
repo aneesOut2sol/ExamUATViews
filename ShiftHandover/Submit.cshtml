@@ -1,0 +1,419 @@
+﻿
+    <style>
+    body {
+      background-color: #f5f7fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .shift-handover-container {
+      /*background: white;*/
+      /*border-radius: 12px;*/
+      /*box-shadow: 0 4px 20px rgba(0,0,0,0.08);*/
+      /*padding: 1.5rem;*/
+      margin: 1.5rem auto;
+    }
+    h1, h2, h3 {
+      color: #1E1450;
+      border-bottom: 2px solid #1E1450;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .table th {
+      background-color: #1E1450;
+      color: white;
+      font-weight: 500;
+    }
+    .total-cell {
+      font-weight: bold;
+      background-color: #e9f1ff;
+      vertical-align: middle !important;
+      text-align: center;
+    }
+    .remarks-textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+    .section-title {
+      font-size: 1.4rem;
+      /*margin-top: 2.5rem;*/
+      margin-bottom: 1.25rem;
+    }
+    @@media (max-width: 576px) {
+      .shift-handover-container {
+        padding: 1rem;
+        margin: 0.75rem;
+      }
+    }
+    
+
+         
+        .form-control:focus {
+            border: none;
+            box-shadow: none;
+            outline: 0; /* Removes the default browser glow */
+        }
+        /* Target base, focus, and validation states */
+        .form-control.select-class,
+        .form-control.select-class:focus,
+        .form-control.select-class.is-invalid,
+        .form-control.select-class.is-invalid:focus {
+            border: none !important;
+            border-color: transparent !important;
+            box-shadow: none !important;
+            outline: 0 !important;
+            background-image: none !important; /* Removes the red '!' icon if present */
+        }
+        .w-150 {
+            width: 150px;
+        }
+    </style>
+
+
+
+    <div class="container-fluid shift-handover-container ng-cloak" ng-controller="ShiftCtrl" ng-cloak ng-init="Submitinit()">
+
+        <h1 class="text-center mb-5">Shift Handover</h1>
+
+        <div class="card rounded shadow-sm">
+            <div class="card-body">
+                <!-- Shift Information -->
+                <h2>Shift Information</h2>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-control" ng-model="formData.shift.date">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Time</label>
+                        <input type="time" class="form-control" ng-model="formData.shift.time">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Employee ID</label>
+                        <input type="text" class="form-control" ng-model="formData.shift.employeeId" readonly />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" ng-model="formData.shift.name" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Job Title</label>
+                        <input type="text" class="form-control" ng-model="formData.shift.jobTitle" readonly>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Shift</label>
+                        <select class="form-control" ng-model="formData.shift.shiftType">
+                            <option>Night</option>
+                            <option>Day</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Group</label>
+                        <input class="form-control" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" ng-model="formData.shift.group">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card rounded shadow-sm">
+            <div class="card-body">
+                <!-- Equipment -->
+                <h2>Equipment</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr>
+                                <th class="w-150"></th>
+                                <th ng-repeat="eq in formData.equipment.equipmentTypes">{{eq.Name}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="w-150"><strong>Available</strong></td>
+                                <td ng-repeat="eq in formData.equipment.equipmentTypes">
+                                    <select class="form-select border-0 w-100 text-center"
+                                            ng-model="eq.available"
+                                            ng-change="updateNotAvailableOptions(eq)">
+                                        <option ng-repeat="n in range(0, eq.max) track by $index">{{n}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="w-150"><strong>Not Available</strong></td>
+                                <td ng-repeat="eq in formData.equipment.equipmentTypes">
+                                    <input type="text" class="form-control border-0 text-center w-100" value="{{eq.Notavailable}}" readonly />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="w-150"><strong>Reason</strong></td>
+                                <td ng-repeat="eq in formData.equipment.equipmentTypes" class="position-relative">
+                                    <select class="form-select border-0 w-100 text-center"
+                                            ng-model="eq.Reason"
+                                            ng-class="{'is-invalid' : eq.Notavailable >0 && !eq.Reason,'border-danger': eq.Notavailable > 0 && !eq.Reason}" ng-required="eq.Notavailable > 0">
+                                        <option value="">-</option>
+                                        <option>PM</option>
+                                        <option>CM</option>
+                                        <option>BD</option>
+                                    </select>
+
+                                    <!-- Visual indicator when required but empty -->
+                                    <span ng-if="eq.Notavailable > 0 && !eq.Reason"
+                                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                          style="font-size: 0.65rem; padding: 0.35em 0.5em; line-height: 1;">
+                                        *
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="w-150"><strong>Remarks</strong></td>
+                                <td colspan="{{formData.equipment.equipmentTypes.length}}">
+                                    <textarea class="form-control" ng-model="formData.equipment.remarks"></textarea>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card rounded shadow-sm">
+            <div class="card-body">
+                <!-- Devices -->
+                <h2 class="section-title">Devices</h2>
+                <div class="row g-4">
+                    <div class="col-lg-6" ng-repeat="dev in formData.deviceTypes">
+                        <h3 class="h5">{{dev.Name}}</h3>
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Count</th>
+                                    <th class="total-cell">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Working</td>
+                                    <td><select class="form-select  border-0 text-center w-100" ng-model="dev.available" ng-options="n for n in range(0, dev.max)"></select></td>
+                                    <td rowspan="4" class="total-cell align-middle text-center fs-5">
+                                        {{ (dev.available || 0) + (dev.Notavailable || 0) + (dev.Missing || 0) }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Not working</td>
+                                    <td><select class="form-select  border-0 text-center w-100" ng-model="dev.Notavailable" ng-options="n for n in range(0, dev.max)"></select></td>
+                                </tr>
+                                <tr>
+                                    <td>Missing</td>
+                                    <td><select class="form-select  border-0 text-center w-100" ng-model="dev.Missing" ng-options="n for n in range(0, dev.max)"></select></td>
+                                </tr>
+                                <tr>
+                                    <td>Remarks</td>
+                                    <td><textarea class="form-control" ng-model="dev.remarks"></textarea></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card rounded shadow-sm">
+            <div class="card-body">
+                <!-- Labors -->
+                <h2 class="section-title">Labors</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>DPW Staff</th>
+                                <th>Outsource</th>
+                                <th class="total-cell">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="cat in laborCategories">
+                                <td>{{cat.name}}</td>
+                                <td>
+                                    <input type="text"
+                                           inputmode="numeric"
+                                           pattern="[0-9]*"
+                                           ng-model="formData.labors[cat.key].dpw"
+                                           class="form-control text-center w-100 border-0"
+                                           placeholder="0–100"
+                                           maxlength="3" />
+                                </td>
+                                <td>
+                                    <input type="text"
+                                           inputmode="numeric"
+                                           pattern="[0-9]*"
+                                           ng-model="formData.labors[cat.key].outsource"
+                                           class="form-control text-center w-100 border-0"
+                                           placeholder="0–100"
+                                           maxlength="3" />
+                                </td>
+                                <td class="total-cell fs-5 text-center">
+                                    {{ (formData.labors[cat.key].dpw || 0) + (formData.labors[cat.key].outsource || 0) }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="card rounded shadow-sm">
+            <div class="card-body">
+                <!-- Summary Yard Activity -->
+                <h2 class="section-title">Summary Yard Activity</h2>
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <h3 class="h5">Current in Yard</h3>
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr><th>Stage</th><th>Avg Time</th><th>Total</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="s in yardStages">
+                                    <td>{{s.Stage}}</td>
+                                    <td>{{s.YardAvgTime}}</td>
+                                    <td>{{s.TotalCount}}</td>
+                                </tr>
+                                <tr class="table-active">
+                                    <td><strong>Total</strong></td>
+                                    <td><input type="number" step="0.01" class="form-control form-control-sm" ng-model="formData.yard.currentTotalAvg" readonly></td>
+                                    <td><input type="number" class="form-control form-control-sm" ng-model="formData.yard.currentTotal" readonly></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-6">
+                        <h3 class="h5">Delayed</h3>
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr><th>Stage</th><th>Avg Time</th><th>Total</th><th>Remarks</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="s in yardStages">
+                                    <td>{{s.Stage}}</td>
+                                    <td>{{s.DelayAvgTime}}</td>
+                                    <td>{{s.DelayTotal}}</td>
+                                    <td><textarea class="form-control form-control-sm" ng-model="s.DelayRemarks"></textarea></td>
+                                </tr>
+                                <tr class="table-active">
+                                    <td><strong>Total</strong></td>
+                                    <td><input type="number" step="0.01" class="form-control form-control-sm" ng-model="formData.yard.delayedTotalAvg" readonly></td>
+                                    <td><input type="number" class="form-control form-control-sm" ng-model="formData.yard.delayedTotal" readonly></td>
+                                    <td><textarea class="form-control form-control-sm" ng-model="formData.yard.delayedRemarks" rows="1"></textarea></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card rounded shadow-sm">
+            <div class="card-body">
+                <!-- Challenges -->
+                <h2 class="section-title">Challenges</h2>
+                <textarea class="form-control remarks-textarea mb-4" ng-model="formData.challenges" placeholder="Enter any challenges faced during the shift..."></textarea>
+
+            </div>
+        </div>
+
+
+
+        <div class="card rounded shadow-sm">
+            <div class="card-body">
+                <!-- Shift Handover To -->
+                <h2>Shift Handover To</h2>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label">Employee ID</label>
+                        <select data-placeholder="Please select employee" class="form-control select-clear" id="HandoverEmpDD" ng-model="formData.handover.employeeId" ng-change="updateEmployeeInfo()" required data-fouc>
+                            <option></option>
+                            <option ng-repeat="emp in EmployeeList" value="{{emp.EmpId}}">{{emp.EmpId}} - {{emp.FullName}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" ng-model="formData.handover.name" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Job Title</label>
+                        <input type="text" class="form-control" ng-model="formData.handover.jobTitle" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Shift</label>
+                        <select class="form-control" ng-model="formData.handover.shiftType">
+                            <option>Night</option>
+                            <option>Day</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Group</label>
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" max="3" class="form-control" ng-model="formData.handover.group">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card rounded shadow-sm">
+            <div class="card-body">
+                <!-- Follow-up & Safety -->
+                <h2 class="section-title">Follow-up & Safety</h2>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">TBT #</label>
+                        <input type="number" class="form-control" ng-model="formData.tbt">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Accident #</label>
+                        <input type="number" class="form-control" ng-model="formData.accident">
+                    </div>
+                </div>
+
+                <!-- Follow up needed -->
+                <h2 class="section-title">Follow up needed</h2>
+                <textarea class="form-control remarks-textarea mb-4" ng-model="formData.followUp" placeholder="Items / tasks that need follow-up..."></textarea>
+            </div>
+        </div>
+
+
+
+        <!-- Confirmation -->
+        <!--<h2 class="section-title">Shift Acceptance Confirmation (by Receiving Person)</h2>
+    <div class="form-check mb-2">
+        <input class="form-check-input" type="radio" ng-model="formData.confirmation" value="confirmed" id="confirm1">
+        <label class="form-check-label" for="confirm1">
+            I confirm that I have received the shift as described by the outgoing person, with no additional comments.
+        </label>
+    </div>
+    <div class="form-check mb-3">
+        <input class="form-check-input" type="radio" ng-model="formData.confirmation" value="comments" id="confirm2">
+        <label class="form-check-label" for="confirm2">
+            I have comments or observations regarding the shift handover (please specify below):
+        </label>
+    </div>
+    <textarea ng-show="formData.confirmation === 'comments'" class="form-control remarks-textarea mb-4" ng-model="formData.confirmationComments" placeholder="Comments / Observations..."></textarea>-->
+        <!-- Submit -->
+        <div class="text-center mt-5">
+            <button class="btn btn-success btn-lg px-5" ng-click="submitForm()">Submit Handover</button>
+        </div>
+
+
+        <button class="btn btn-warning" ng-click="fillDummyData()" ng-if="_currentUser.UserName=='anees@out2sol.com'">
+            Fill Dummy Data (Testing)
+        </button>
+
+    </div>
+
+ 
+

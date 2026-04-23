@@ -1,0 +1,1241 @@
+﻿@model ExamPortal.Model.Features.VesselOps.GetVesselReportResponse
+@{
+    Layout = null;
+}
+
+<!--This Will Show Multiple Exception List-->
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <title>Print || Vessel Report</title>
+    <link href="@Url.Content("~/Content/css/icons/icomoon/styles.min.css")" rel="stylesheet" type="text/css">
+    <link href="@Url.Content("~/Content/css/bootstrap.min.css")" rel="stylesheet" ) />
+
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js" integrity="sha512-7oYXeK0OxTFxndh0erL8FsjGvrl2VMDor6fVqzlLGfwOQQqTbYsGPv4ZZ15QHfSk80doyaM0ZJdvkyDcVO7KFA==" crossorigin="anonymous"></script>*@
+    <script src="~/Scripts/jquery.min.js"></script>
+
+    <script src="~/Scripts/js/main/jquery.min.js"></script>
+    <link rel="icon" type="~/Content/images/favicon.ico" sizes="16x16" href="~/Content/images/favicon.ico">
+    <style>
+        .heading-print {
+            color: var( --dpw-bg-color);
+            font-weight: bold;
+        }
+
+        .row {
+            margin: 0px !important;
+        }
+
+        .badge {
+            font-size: 15px;
+            width: 90px;
+        }
+
+        body {
+            background-color: white !important;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: white !important;
+        }
+
+        .table thead th {
+            background: #e7e7e7 !important;
+        }
+
+        .table th {
+            background: #e7e7e7 !important;
+        }
+
+        .table tbody td {
+            font-weight: 500;
+        }
+
+        .badge-size {
+            width: 70px;
+            padding: 8px 6px 5px 7px;
+        }
+
+        .table-bordered td, .table-bordered th {
+            border: 1px solid #979797 !important;
+        }
+
+        .badge-xs {
+            font-size: 9px;
+            -webkit-transform: translate(0, -2px);
+            -ms-transform: translate(0, -2px);
+            -o-transform: translate(0, -2px);
+            transform: translate(0, -2px);
+        }
+
+        .badge-sm {
+            -webkit-transform: translate(0, -2px);
+            -ms-transform: translate(0, -2px);
+            -o-transform: translate(0, -2px);
+            transform: translate(0, -2px);
+        }
+        /*All Table Badges*/
+
+        .badge-Completed {
+            /*background-color: #2cb97c!important;*/
+            background-color: #6c757d !important;
+            text-transform: uppercase;
+        }
+
+        .badge-InProgress {
+            background-color: #65becc !important;
+            text-transform: uppercase;
+        }
+
+        .badge-OverDue {
+            background-color: red !important;
+            text-transform: uppercase;
+        }
+
+        .badge-News {
+            background-color: #c776aa !important;
+            text-transform: uppercase;
+        }
+
+        .badge-Closed {
+            background-color: #463d32 !important;
+            text-transform: uppercase;
+        }
+
+        .badge-Rejected {
+            background-color: #dc3545 !important;
+            text-transform: uppercase;
+        }
+
+        img {
+            height: 80px;
+            border: none;
+        }
+
+        @@font-face {
+            font-family: 'AvenirLTStd-Book';
+            src: url('../../fonts/AvenirLTStd-Book.otf') format('opentype');
+        }
+
+        @@font-face {
+            font-family: 'AvenirLTStd-Medium';
+            src: url('../../fonts/AvenirLTStd-Medium.otf') format('opentype');
+        }
+
+        @@font-face {
+            font-family: 'AvenirLTStd-Roman';
+            src: url('../../fonts/AvenirLTStd-Roman.otf') format('opentype');
+        }
+
+        /*h2 {
+            font-family: AvenirLTStd-Medium !important;
+        }*/
+
+        .testRotate {
+            transform: rotate(180deg);
+            writing-mode: vertical-rl;
+        }
+
+        #StudyHeading {
+            margin-left: 20px;
+            margin-top: 70px;
+        }
+
+        #otherheading {
+            margin-left: 20px;
+        }
+
+
+        .tblue {
+            color: var( --dpw-bg-color) !important;
+        }
+
+        .thWidht tr th {
+            width: 22% !important;
+        }
+
+        .thWidht tr td {
+            width: 22% !important;
+        }
+
+        /*.pageBreak {
+            page-break-after: always;
+        }*/
+        .pull-textleft {
+            text-align: left;
+        }
+
+        .sectionHeadingh2 {
+            /* padding: 10px 8px;*/
+            text-transform: uppercase;
+            color: red;
+            font-weight: 600;
+            margin: 0px !important;
+        }
+
+        th, td {
+            padding: 5px !important
+        }
+
+        p {
+            margin: 0px !important
+        }
+
+        @@media Print {
+            .general {
+                page-break-inside: avoid !important;
+            }
+
+                .general table tr td {
+                    page-break-inside: avoid !important;
+                }
+        }
+    </style>
+</head>
+
+<body>
+    @if (Model.VOPSReport.Count > 0)
+    {
+        foreach (var item in Model.VOPSReport)
+        {
+            <div>
+                <div class="row page-titles" style="padding:10px">
+                    <table class="table-bordered tblue table" style="border: 1px solid black;">
+                        <tr style="border: 1px solid black; text-align:center">
+                            <td style="width:25%;text-align:center">
+
+                                <img src="~/Content/images/dpworldlogo.png" style="height:70px;margin: 17px;" />
+                            </td>
+                            <td align="center" style="vertical-align:inherit">
+                                <h1 class="tblue" style="font-size:30px">
+                                    <b>
+                                        OPERATIONS DEPARTMENT
+                                    </b>
+
+                                </h1>
+                                <h1 class="tblue" style="font-weight:600;"><span style="color:#cb3655 !important"> ARRIVAL/DEPARTURE FORM</span></h1>
+                            </td>
+
+                        </tr>
+                    </table>
+
+
+                </div>
+
+
+
+            </div>
+
+            <!-- STart New Item-->
+            <div class="container-fluid general">
+                <table class="table table_heading table-bordered table-striped text-center">
+                    <tr>
+                        <th width="30%">Visit Id-VesselName	</th>
+                        <td class="pull-textleft">@item.VesselName</td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Berth number		</th>
+                        <td class="pull-textleft">@item.pos_slot</td>
+                    </tr>
+                </table>
+            </div>
+
+
+
+            <div class="container-fluid general">
+                <h2 class="sectionHeadingh2">Arrival time stamp </h2>
+                <table class="table table_heading table-bordered table-striped text-center">
+                    <tr>
+                        <th width="30%">
+                            Arrival to Jeddah
+                        </th>
+                        <td class="pull-textleft">
+                            @if (item.Arrival_Jeddah != null)
+                            {
+                                @item.Arrival_Jeddah.Value.ToString("dd-MM-yyyy HH:mm")}
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">
+                            Arrival to Anchorage
+                        </th>
+                        <td class="pull-textleft">
+                            @if (item.Arrival_Anchorage != null)
+                            {
+                                @item.Arrival_Anchorage.Value.ToString("dd-MM-yyyy HH:mm")}
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Departure from Anchorage</th>
+                        <td class="pull-textleft">
+                            @if (item.Departure_Anchorage != null)
+                            {
+                                @item.Departure_Anchorage.Value.ToString("dd-MM-yyyy HH:mm")}
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Arrival at pilot station	</th>
+                        <td class="pull-textleft">
+                            @if (item.eta != null)
+                            {
+                                @item.eta.Value.ToString("dd-MM-yyyy HH:mm")
+                            }
+                            else
+                            {
+                                <p>-</p>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Pilot boarded		</th>
+                        <td class="pull-textleft">
+                            @if (item.Pilotboarded != null)
+                            {
+                                @item.Pilotboarded.Value.ToString("dd-MM-yyyy HH:mm")
+                            }
+                            else
+                            {
+                                <p>-</p>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">No of tug used</th>
+                        <td class="pull-textleft">
+                            @if (item.NoOfTugUsed_Arr != null)
+                            {
+                                @item.NoOfTugUsed_Arr
+                            }
+                            else
+                            {
+                                <p>-</p>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Tug Arrived</th>
+                        <td class="pull-textleft">
+                            @if (item.Tug_Arrived != null)
+                            {
+                                @item.Tug_Arrived.Value.ToString("dd-MM-yyyy HH:mm")
+                            }
+                            else
+                            {
+                                <p>-</p>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">VSL Supervisor Arrived</th>
+                        <td class="pull-textleft">
+                            @if (item.VSL_Supervisor_Arrived != null)
+                            {
+                                @item.VSL_Supervisor_Arrived.Value.ToString("dd-MM-yyyy HH:mm")
+                            }
+                            else
+                            {
+                                <p>-</p>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">First Rope Secured</th>
+                        <td class="pull-textleft">
+                            @if (item.flex_date04 != null)
+                            {
+                                @item.flex_date04.Value.ToString("dd-MM-yyyy HH:mm")}
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Last Rope Secured</th>
+                        <td class="pull-textleft">
+                            @if (item.flex_date05 != null)
+                            {
+                                @item.flex_date05.Value.ToString("dd-MM-yyyy HH:mm")}
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">NO. Of Labor</th>
+                        <td class="pull-textleft">
+                            @if (item.NoOfLabour_Arr != null)
+                            {
+                                @item.NoOfLabour_Arr}
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <th width="30%">Gangway Secure Time</th>
+                        <td class="pull-textleft">
+                            @if (item.GangwaySecuredTime != null)
+                            {
+                                @item.GangwaySecuredTime.Value.ToString("dd-MM-yyyy HH:mm")}
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+
+
+                </table>
+            </div>
+
+
+
+
+
+
+            <div class="container-fluid general">
+                <h2 class="sectionHeadingh2">Operational time stamp </h2>
+                <table class="table table_heading table-bordered table-striped text-center">
+
+                    <tr>
+                        <th width="30%">
+                            Lashing Gang Onboard
+                        </th>
+                        <td class="pull-textleft">
+                            @if (item.Lashing_Gang_on_board != null)
+                            {
+                                @item.Lashing_Gang_on_board.Value.ToString("dd-MM-yyyy HH:mm")
+                            }
+                            else
+                            {
+                                <p>-</p>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">
+                            First Crane Boom Down / Crane Move
+                        </th>
+                        <td class="pull-textleft">
+                            @if (item.FirstCraneMove != null)
+                            {
+                                @item.FirstCraneMove.Value.ToString("dd-MM-yyyy HH:mm")
+                            }
+                            else
+                            {
+                                <p>-</p>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">
+                            Unlashing Completed First Con
+                        </th>
+                        <td class="pull-textleft">
+                            @if (item.UnlashingCompleted != null)
+                            {
+                                @item.UnlashingCompleted.Value.ToString("dd-MM-yyyy HH:mm")
+                            }
+                            else
+                            {
+                                <p>-</p>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">
+                            First lift on Vessel
+                        </th>
+                        <td class="pull-textleft">
+                            @if (item.start_work != null)
+                            {
+                                @item.start_work.Value.ToString("dd-MM-yyyy HH:mm")
+                            }
+                            else
+                            {
+                                <p>-</p>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Last lift on Vessel</th>
+                        <td class="pull-textleft">
+                            @if (item.LastLiftVessel != null)
+                            {
+                                @item.LastLiftVessel.Value.ToString("dd-MM-yyyy HH:mm")
+                            }
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Lashing Completed</th>
+                        <td class="pull-textleft">
+                            @if (item.LashingCompleted != null)
+                            {
+                                @item.LashingCompleted.Value.ToString("dd-MM-yyyy HH:mm")
+                            }
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Labor Off Board</th>
+                        <td class="pull-textleft">
+                            @if (item.LaborOffBoard != null)
+                            {
+                                @item.LaborOffBoard.Value.ToString("dd-MM-yyyy HH:mm")
+                            }
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <th width="30%">Vessel Master called Port Control</th>
+                        <td class="pull-textleft">
+                            @if (item.Vessel_Master_Port_Control != null)
+                            {
+                                @item.Vessel_Master_Port_Control.Value.ToString("dd-MM-yyyy HH:mm")
+                            }
+                            else
+                            { <p>-</p>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Last Crane Secured</th>
+                        <td class="pull-textleft">
+                            @if (item.LastCraneSecured != null)
+                            {
+                                @item.LastCraneSecured
+                            }
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+
+
+            <div class="container-fluid general">
+                <h2 class="sectionHeadingh2">completion time stamp </h2>
+                <table class="table table_heading table-bordered table-striped text-center">
+                    <tr>
+                        <th width="30%">Pilot Onboard for Sailing</th>
+                        <td class="pull-textleft">
+                            @if (item.PilotOnboardSailing != null)
+                            {
+                                @item.PilotOnboardSailing.Value.ToString("dd-MM-yyyy HH:mm")
+                            }
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">
+                            Tugboat Arrival Time
+                        </th>
+                        <td class="pull-textleft">
+                            @if (item.Tugboat_Arrival != null)
+                            {
+                                @item.Tugboat_Arrival.Value.ToString("dd-MM-yyyy HH:mm")}
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">
+                            NO. of Tug used
+                        </th>
+                        <td class="pull-textleft">
+                            @if (item.NOTugused != null)
+                            {
+                                @item.NOTugused}
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">First Rope Released</th>
+                        <td class="pull-textleft">
+                            @if (item.FirstRopeReleased != null)
+                            {
+                                @item.FirstRopeReleased.Value.ToString("dd-MM-yyyy HH:mm")
+                            }
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">Last Rope Released</th>
+                        <td class="pull-textleft">
+                            @if (item.LastRopeReleased != null)
+                            {
+                                @item.LastRopeReleased.Value.ToString("dd-MM-yyyy HH:mm")
+                            }
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="30%">No. Off Labor</th>
+                        <td class="pull-textleft">
+                            @if (item.NoOfLabour_Dep != null)
+                            {
+                                @item.NoOfLabour_Dep
+                            }
+                            else
+                            { <p>-</p>}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="container-fluid general">
+                <table class="table table_heading table-bordered table-striped text-center">
+                    <tr>
+                        <th width="30%" class="sectionHeadingh2">Arrival/Departure Delay Remarks:</th>
+                        <td class="pull-textleft">
+                            @if (item.DelayRemarks != null)
+                            {
+                                @item.DelayRemarks
+                            }
+                            else
+                            {
+                                <p>-</p>
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="container-fluid general">
+                <table class="table table_heading table-bordered table-striped text-center">
+                    <tr>
+                        <th style="text-align:center;" class="sectionHeadingh2">Cheif Officer/Master</th>
+                        <th style="text-align:center;" class="sectionHeadingh2">DP World Representative</th>
+                    </tr>
+                    <tr>
+                        <td class="pull-textleft"><b>Name:</b></td>
+                        <td class="pull-textleft"><b>Name:</b></td>
+                    </tr>
+                    <tr style="height:120px;">
+                        <td class="pull-textleft"><b>Signature:</b></td>
+                        <td class="pull-textleft"><b>Signature:</b></td>
+                    </tr>
+                </table>
+            </div>
+
+
+
+            <!-- End New Item-->
+
+
+
+
+
+            <div class="container-fluid general" style="display:none;">
+                <table class="table table_heading table-bordered table-striped text-center">
+
+
+
+                    <tbody class="table table_heading table-bordered table-striped">
+
+                        <tr>
+                            <th width="10%" class="headingbgColor" style="vertical-align:middle">
+                                <div class="testRotate" id="otherheading">
+                                    Vessel Detail
+                                </div>
+                            </th>
+                            <td colspan="10" style="padding:0px!important">
+                                <table width="100%" class="thWidht">
+                                    <tr>
+                                        <th>
+                                            Visit Id-VesselName
+                                        </th>
+                                        <th>
+                                            Arrival at pilot station
+                                        </th>
+                                        <th>
+                                            Berth number
+                                        </th>
+                                        <th>
+                                            Berthed at DPW-JED
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>@item.Vessel_RefernceNo</td>
+                                        <td>
+                                            @if (item.eta != null)
+                                            {
+                                                @item.eta.Value.ToString("dd-MM-yyyy HH:mm")
+                                            }
+                                            else
+                                            {
+                                                <p>-</p>
+                                            }
+                                        </td>
+
+
+                                        <td>@item.pos_slot</td>
+                                        <td>
+                                            @if (item.ata != null)
+                                            {
+                                                @item.ata.Value.ToString("dd-MM-yyyy HH:mm")
+                                            }
+                                            else
+                                            {
+                                                <p>-</p>
+                                            }
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>
+                                            Pilot boarded
+                                        </th>
+                                        <th>
+                                            Quarantine arrived at PORT
+                                        </th>
+                                        <th>
+                                            Quarantine boarded on Vessel
+                                        </th>
+                                        <th>
+                                            Quarantine disembark from Vessel
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            @if (item.Pilotboarded != null)
+                                            {
+                                                @item.Pilotboarded.Value.ToString("dd-MM-yyyy HH:mm")
+                                            }
+                                            else
+                                            {
+                                                <p>-</p>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Quarentine_arrived_AP != null)
+                                            {
+
+
+                                                @item.Quarentine_arrived_AP.Value.ToString("dd-MM-yyyy HH:mm")
+                                            }
+                                            else
+                                            {
+                                                <p>-</p>
+                                            }
+                                        </td>
+                                        <td>
+
+
+                                            @if (item.Quarentine_boarded_OV != null)
+                                            {
+                                                @item.Quarentine_boarded_OV.Value.ToString("dd-MM-yyyy HH:mm")
+                                            }
+                                            else
+                                            {
+                                                <p>-</p>
+                                            }
+
+                                        </td>
+                                        <td>
+                                            @if (item.Quarentine_disembark_FV != null)
+                                            {
+
+
+                                                @item.Quarentine_disembark_FV.Value.ToString("dd-MM-yyyy HH:mm")
+                                            }
+                                            else
+                                            {
+                                                <p>-</p>
+                                            }
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>
+                                            Custom arrived at PORT
+                                        </th>
+                                        <th>
+                                            Custom boarded on Vessel
+                                        </th>
+                                        <th>
+                                            Custom disembark from Vessel
+                                        </th>
+                                        <th>
+                                            Coastguard arrived at PORT
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            @if (item.Custom_arrived_port != null)
+                                            {
+                                                @item.Custom_arrived_port.Value.ToString("dd-MM-yyyy HH:mm")
+                                            }
+                                            else
+                                            {
+                                                <p>-</p>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Custom_borded_Vessel != null)
+                                            {
+                                                @item.Custom_borded_Vessel.Value.ToString("dd-MM-yyyy HH:mm")
+                                            }
+                                            else
+                                            {
+                                                <p>-</p>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Custom_disembark_FV != null)
+                                            {
+                                                @item.Custom_disembark_FV.Value.ToString("dd-MM-yyyy HH:mm")
+                                            }
+                                            else
+                                            {
+                                                <p>-</p>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Coastguard_arrived_AP != null)
+                                            {
+                                                @item.Coastguard_arrived_AP.Value.ToString("dd-MM-yyyy HH:mm")
+                                            }
+                                            else
+                                            {
+                                                <p>-</p>
+                                            }
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>
+                                            Coastguard boarded on Vessel
+                                        </th>
+                                        <th>
+                                            Coastguard disembark from Vessel
+                                        </th>
+                                        <th>
+                                            Next port arrival
+                                        </th>
+                                        <th>
+                                            Last port departed
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            @if (item.Coastguard_boarded_OV != null)
+                                            {
+                                                @item.Coastguard_boarded_OV.Value.ToString("dd-MM-yyyy HH:mm")
+
+                                            }
+                                            else
+                                            {
+                                                <p>-</p>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.Coastguard_disembark_FV != null)
+                                            {
+                                                @item.Coastguard_disembark_FV.Value.ToString("dd-MM-yyyy HH:mm")}
+                                            else
+                                            {
+                                                <p>-</p>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item != null)
+                                            {
+                                                @item.flex_string08}
+                                            else
+                                            {
+                                                <p>-</p>}
+                                        </td>
+                                        <td>
+                                            @if (item != null)
+                                            {
+                                                @item.flex_string07}
+                                            else
+                                            {
+                                                <p>-</p>
+                                            }
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th width="10%" class="headingbgColor" style="vertical-align:middle">
+                                <div class="testRotate" id="otherheading">
+                                    DP World Representative to fill
+                                </div>
+                            </th>
+                            <td style="padding:0px!important">
+                                <table width="100%" class="thWidht">
+                                    <tr>
+                                        <th>
+                                            Operation Lead Name
+                                        </th>
+                                        <th>
+                                            Employee ID
+                                        </th>
+                                        <th>
+                                            First Rope Secured Time
+                                        </th>
+                                        <th>
+                                            Last Rope Secured Time
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            @if (item != null)
+                                            {
+                                                @item.Operation_LeadName}
+                                            else
+                                            { <p>-</p>}
+                                        </td>
+                                        <td>
+                                            @if (item != null)
+                                            {
+                                                @item.Employee_Id}
+                                            else
+                                            {<p>-</p>}
+                                        </td>
+                                        <td>
+                                            @if (item.flex_date04 != null)
+                                            {
+                                                @item.flex_date04.Value.ToString("dd-MM-yyyy HH:mm")}
+                                            else
+                                            { <p>-</p>}
+                                        </td>
+                                        <td>
+                                            @if (item.flex_date05 != null)
+                                            {
+                                                @item.flex_date05.Value.ToString("dd-MM-yyyy HH:mm")}
+                                            else
+                                            { <p>-</p>}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>
+                                            Vessel secure at alongside
+                                        </th>
+                                        <th>
+                                            Gangway Secured
+                                        </th>
+                                        <th>
+                                            Pilot Disembark
+                                        </th>
+                                        <th>
+                                            Lashing Gang Onboard
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            @if (item.Vessel_Secure_alongside != null)
+                                            {
+                                                @item.Vessel_Secure_alongside.Value.ToString("dd-MM-yyyy HH:mm")}
+                                            else
+                                            { <p>-</p>}
+                                        </td>
+                                        <td>
+                                            @if (item.GangwaySecuredTime != null)
+                                            {
+                                                @item.GangwaySecuredTime.Value.ToString("dd-MM-yyyy HH:mm")}
+                                            else
+                                            { <p>-</p>}
+                                        </td>
+                                        <td>
+                                            @if (item.PILOTDisembark != null)
+                                            {
+                                                @item.PILOTDisembark.Value.ToString("dd-MM-yyyy HH:mm")}
+                                            else
+                                            { <p>-</p>}
+                                        </td>
+                                        <td>
+                                            @if (item.Lashing_Gang_on_board != null)
+                                            {
+                                                @item.Lashing_Gang_on_board.Value.ToString("dd-MM-yyyy HH:mm")}
+                                            else
+                                            { <p>-</p>}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>
+                                            Gang boarded on vessel prior authority clearance
+                                        </th>
+                                        <th>
+                                            First lift on Vessel
+                                        </th>
+                                        <th>
+                                            Operation Commenced
+                                        </th>
+                                        <th>
+
+                                            Vessel Master called Port Control
+                                        </th>
+                                    </tr>
+                                    <tr>
+
+                                        @if (item.Gang_on_board_PAC == true)
+                                        {
+                                            <td>Yes</td>
+                                        }
+                                        else
+                                        {
+                                            <td>No</td>
+                                        }
+
+                                        <td>
+                                            @if (item.start_work != null)
+                                            {
+                                                @item.start_work.Value.ToString("dd-MM-yyyy HH:mm")
+                                            }
+                                            else
+                                            {
+                                                <p>-</p>
+                                            }
+                                        </td>
+
+
+                                        <td>
+
+                                            @if (item.end_work != null)
+                                            {
+                                                @item.end_work.Value.ToString("dd-MM-yyyy HH:mm")
+                                            }
+                                            else
+                                            { <p>-</p>}
+
+                                        </td>
+                                        <td>
+
+                                            @if (item.Vessel_Master_Port_Control != null)
+                                            {
+                                                @item.Vessel_Master_Port_Control.Value.ToString("dd-MM-yyyy HH:mm")
+                                            }
+                                            else
+                                            { <p>-</p>
+                                            }
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <th>
+
+                                            Vessel Ready For Sailing
+                                        </th>
+                                        <th>
+
+                                            Delay Remarks
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            @if (item.Vessel_Ready_For_Sailing != null)
+                                            {
+                                                @item.Vessel_Ready_For_Sailing.Value.ToString("dd-MM-yyyy HH:mm")
+                                            }
+                                            else
+                                            { <p>-</p>
+                                            }
+
+                                        </td>
+                                        <td>
+
+                                            @if (item.DelayRemarks != null)
+                                            {
+                                                @item.DelayRemarks
+                                            }
+                                            else
+                                            {
+                                                <p>-</p>
+                                            }
+                                        </td>
+                                    </tr>
+
+
+                                </table>
+                            </td>
+                        </tr>
+
+
+
+
+                    </tbody>
+
+                </table>
+
+
+            </div>
+            @*<div class="pageBreak"></div>*@
+            if (item.FormData != null)
+            {
+                <div>
+                    <div class="row page-titles" style="padding:10px">
+                        <table class="table-bordered tblue table" style="border: 1px solid black;">
+                            <tr style="border: 1px solid black; text-align:center">
+                                <td style="width:25%;text-align:center">
+
+                                    <img src="~/Content/images/dpworldlogo.png" style="height:96px;margin: 17px;" />
+                                </td>
+                                <td align="center" style="vertical-align:inherit">
+                                    <h1 class="tblue" style="font-size:30px">
+                                        <b>
+                                            Doc Scanner Vessel Report
+                                        </b>
+
+                                    </h1>
+
+                                </td>
+
+                            </tr>
+                        </table>
+
+
+                    </div>
+
+
+
+                </div>
+
+                <div class="container-fluid general">
+                    <table class="table table_heading table-bordered table-striped text-center">
+
+                        <tr class=tblue>
+                            <th>
+                                Vessel Name
+                            </th>
+                            <th>
+
+                                Visit Id
+                            </th>
+                            <th>
+
+                                ATB
+                            </th>
+                            <th>
+                                Line
+                            </th>
+                            <th>
+                                Classification
+                            </th>
+                            <th>
+                                Created At
+                            </th>
+                            <th>
+                                Created By
+                            </th>
+                        </tr>
+
+                        <tbody>
+                            <tr>
+                                <td>@item.VesselName</td>
+                                <td>@item.RefNo</td>
+                                <td>@item.ATB.Value.ToString("dd-MM-yyyy HH:mm")</td>
+                                <td>@item.Line</td>
+                                <td>@item.Classification</td>
+                                <td>
+                                    @if (item.CreatedAt != null)
+                                    {
+                                        @item.CreatedAt.Value.ToString("dd-MM-yyyy HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <p style="margin:0px;">-</p>
+                                    }
+
+
+
+
+
+                                </td>
+                                <td>@item.CreatedBy</td>
+
+
+                            </tr>
+
+                            <tr>
+
+                                <td colspan="10" style="padding:0px!important">
+                                    <table width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>S.no</th>
+                                                <th>Form Name</th>
+                                                <th>Images</th>
+                                                <th>Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        @{ int x = 0;}
+                                        @foreach (var items in item.FormData)
+                                        {
+                                            x++;
+
+                                            <tr>
+
+                                                <td style="vertical-align:middle">@x</td>
+                                                <td style="vertical-align:middle;text-align:left">@items.FormName</td>
+                                                <td>
+
+                                                    <img src="@items.Image" height="80" width="80" /><br />
+
+                                                </td>
+                                                @if (items.FormRemarks == null)
+                                                {
+                                                    <td style="vertical-align:middle">
+                                                        -
+                                                    </td>
+
+                                                }
+                                                else
+                                                {
+                                                    <td>
+                                                        @items.FormRemarks
+                                                    </td>
+                                                }
+                                            </tr>
+
+
+                                        }
+                                    </table>
+                                </td>
+                            </tr>
+
+
+
+                        </tbody>
+
+
+
+                    </table>
+
+
+                </div>
+
+            }
+
+        }
+
+    }
+</body>
+</html>
+
+<script>
+
+    window.print();
+</script>

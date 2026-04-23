@@ -1,0 +1,1472 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .modal-body {
+        max-height: 70vh !important;
+        overflow: auto !important;
+    }
+
+    .Labortable {
+        border: none !important;
+    }
+
+        .Labortable tr {
+            border: none !important;
+        }
+
+    .card.active {
+        background: #e8f7f3;
+        border: 1px solid #008963 !important;
+        color: #005a41;
+    }
+
+    .Labortable tr td {
+        background: none;
+    }
+
+    .text-end {
+        text-align: end;
+    }
+
+    .Laborbadge {
+        font-size: 12px;
+        padding: 4px 8px;
+        color: white;
+        font-weight: normal !important;
+        border-radius: 3px;
+    }
+
+    .badge-Assigned {
+        background: #0094d7;
+    }
+
+    .badge-POWOUT, .badge-Completed {
+        background: #616161;
+    }
+
+    .badge-Working, .badge-Inprogress {
+        background: var( --dpw-bg-color);
+    }
+
+    .badge-POWIN {
+        background: green;
+    }
+
+    .badge-Reached {
+        background: #ff5b00;
+    }
+
+    .badge-Labor {
+        right: 17px;
+        bottom: 11px;
+        font-size: 13px;
+        border-radius: 50% !important;
+        vertical-align: middle;
+        height: auto;
+        width: fit-content !important;
+        padding: 1px 4PX;
+        font-weight: normal;
+        background: #008963;
+        TEXT-ALIGN: center;
+        color: WHITE;
+    }
+
+    .statusred {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 40px;
+        background-color: red;
+        position: absolute;
+        margin-left: 20px;
+        cursor: pointer;
+    }
+
+    .statusgreen {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 40px;
+        background-color: green;
+        position: absolute;
+        margin-left: 20px;
+        cursor: pointer;
+    }
+
+    .collapsible-link {
+        width: 100%;
+        position: relative;
+        text-align: left;
+    }
+
+
+    .jconfirm-content textarea {
+        width: 100% !important;
+    }
+
+    #CntrTableHeader tr {
+        background: var( --dpw-bg-color);
+        color: #fff;
+    }
+
+    #CntrTableHeader td {
+        text-align: left
+    }
+
+    #CardInnerTable {
+        padding: 0;
+    }
+
+        #CardInnerTable tr {
+            border: none;
+        }
+
+        #CardInnerTable td {
+            text-align: left !important;
+            border: none;
+        }
+
+    .event-table {
+        max-height: 300px;
+        overflow: auto;
+    }
+
+    .pad-5 {
+        padding: 5px !important;
+    }
+
+    .m-0 {
+        margin: 0 !important;
+    }
+
+    .evnetBox {
+        padding: 11px;
+        border: 2px solid #d1d1d145;
+        margin: 5px;
+        color: #7a7a7a;
+        border-radius: 3px;
+        background: whitesmoke;
+        box-shadow: 1px 1px 1px #cbc9c9;
+    }
+
+        .evnetBox.Active {
+            background: #00946b1f !important;
+            border: 1px solid #00946b !important;
+        }
+
+        .evnetBox.PendingApprovalEvent {
+            background: #ffa5001a !important;
+            border: 1px solid orange !important;
+        }
+
+        .evnetBox.RejectedApprovalEvent {
+            background: #ff00001c !important;
+            border: 1px solid red !important;
+        }
+
+    .Custom-Card {
+        margin-bottom: 15px !important;
+        padding: 16px 25px;
+        border-radius: 7px !important;
+        border: 1px solid #b8b8b866 !important;
+        box-shadow: -2px -2px 3px 0px inset #989898a1;
+        background: #fff;
+    }
+
+        .Custom-Card .card-header {
+            background: none !important;
+            border: 0;
+        }
+
+        .Custom-Card td {
+            padding: 4px 10px;
+        }
+
+    .eventCheckBox {
+        float: right;
+        transform: scale(1);
+        margin-top: 4px;
+        box-shadow: 1px 1px 1px #ececec !important;
+    }
+
+    .EventNameTruncate {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 80%;
+    }
+
+    .evnetBox.Disbaled {
+        background: #9400001f !important;
+        border: 1px solid #d42600 !important;
+    }
+
+    .labelChild {
+        background: red;
+        position: relative;
+        width: 100px;
+        /*z-index: 999;*/
+        color: white;
+        text-align: center;
+        /*transform: rotate(325deg);*/
+        /*right: 24px;*/
+        /*top: 11px;*/
+        top: 6px;
+        font-size: 15px;
+        display: flex;
+        align-items: center !important;
+        justify-content: center;
+        border-radius: 5px;
+    }
+
+    .Bred {
+        background: green !important;
+    }
+
+    .labelParent {
+        /*position: absolute;*/
+        /*height: 100px;*/
+        height: 55px;
+        /*width: 100px;*/
+        width: auto;
+        overflow: hidden;
+        left: 0px;
+    }
+
+    .CloseModalBtn {
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        z-index: 99999999999 !important;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px !important;
+        padding: 8px;
+        cursor: pointer;
+        background: var( --dpw-bg-color);
+        z-index: 99999999999 !important;
+    }
+
+    .close {
+        display: none;
+    }
+
+    .CloseModalBtn .fa-times-circle-o {
+        color: #ffff !important;
+    }
+
+    .modal-content {
+        background-color: #f4f2fa !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+
+    .modal-title {
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+
+    .modal-footer {
+        border-top: none !important;
+        align-content: center;
+        text-align: center;
+    }
+
+    table thead {
+        box-shadow: none !important;
+    }
+
+    table {
+        border: 1px solid var( --dpw-bg-color) !important;
+    }
+
+    .ImageUploader {
+        border: 1px solid #959595;
+        color: #707070;
+        text-align: center;
+        padding: 6px;
+        height: fit-content;
+        border-radius: 5px;
+        background: #8b8b8b21;
+    }
+
+    .imageView {
+        width: 100%;
+        height: 100px;
+        border: 1px solid #e3e3e3;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+    .disgnerLabel {
+        margin: 0px;
+        padding: 5px 10px;
+        font-size: 15px;
+        border-bottom: 1px solid #ededed;
+    }
+
+        .disgnerLabel:last-child {
+            border-bottom: 0px;
+        }
+
+    .dlticon {
+        background: #80808000;
+        padding: 6px;
+        border-radius: 6px;
+        float: right;
+        left: 10px;
+    }
+
+    .CamInput {
+        padding: 5px 38px;
+        background: #f0f0f0;
+        border: 1px solid #959595;
+        border-radius: 5px;
+        color: #707070;
+        cursor: pointer;
+    }
+
+    .Indicatior {
+        cursor: pointer;
+    }
+
+    .MasterDropDown {
+        position: absolute;
+        z-index: 9999999;
+    }
+
+    .CustomDropDown ul {
+        padding: 10px;
+    }
+
+    .CustomDropDown {
+        display: none;
+        position: relative;
+        top: -39px;
+        left: 13px;
+        z-index: 9999;
+        background: #f2f2f2f7;
+        padding: 0px;
+        border-radius: 7px;
+        border: 1px #00000026 solid;
+    }
+
+    .MasterDropDown .CustomDropDown ul li {
+        list-style-type: none;
+        padding: 4px;
+        color: #4a4848;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .Blocks {
+        padding: 10px;
+        box-shadow: 1px 3px 3px 1px gray;
+    }
+
+    button.btn.btn-primary.active {
+        background: #00946b !important;
+    }
+
+    .Blocks:hover {
+        box-shadow: none;
+        background: #00946b
+    }
+
+    .Cardtabs {
+        width: auto !important;
+        display: inline-block;
+        margin: 15px;
+    }
+
+    .Absoulte {
+        position: absolute;
+        height: 0px;
+        width: 56px;
+    }
+
+    .tooltipAbsoult {
+        position: absolute;
+    }
+
+    .tooltipChild {
+        position: relative;
+    }
+
+    .CountBadge {
+        position: relative;
+        z-index: 99;
+        color: #ffffff;
+        padding: 0px 6px;
+        background: #00946b;
+        border-radius: 10px;
+        float: right;
+        bottom: 7px;
+        left: 0px;
+        width: fit-content;
+        box-shadow: 1px 1px 5px -1px #000000cc;
+    }
+
+    .optionIcon img {
+        height: 25px;
+        filter: contrast(0.3);
+    }
+
+    .DropOptionParent {
+        position: absolute;
+        display: none;
+        right: 7%;
+        z-index: 99;
+    }
+
+        .DropOptionParent .OptionInner {
+            Position: relative;
+            background-color: #e4dbff;
+            border-radius: 3px;
+            box-shadow: 0px 0px 4px 4px #80808029;
+            border: 1px solid #80808057;
+            bottom: 13px;
+        }
+
+    .OptionInner ul {
+        padding: 8px;
+        border-radius: 20px;
+    }
+
+        .OptionInner ul li {
+            list-style: none;
+            padding: 8px;
+            cursor: pointer;
+            color: #221b62 !important;
+        }
+
+            .OptionInner ul li:hover {
+                background: linear-gradient(180deg, #221b62, #431dc1) !important;
+                color: #fff !important;
+                border-radius: 8px;
+            }
+
+    .imageBox {
+        border: 1px solid var( --dpw-bg-color)38;
+        border-radius: 9px;
+        overflow: hidden;
+        background: #f2f2f2;
+        margin-bottom: 10px;
+    }
+
+    .Imgheader {
+        padding: 3px 13px;
+        background: var( --dpw-bg-color);
+        color: white;
+        text-align: center;
+        font-weight: 200;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .ImgContent {
+        padding: 14px;
+        text-align: center;
+    }
+
+        .ImgContent img {
+            height: auto;
+            max-width: 100%;
+            height: 100px;
+        }
+
+    .DeleteIconInner {
+        position: relative;
+        padding: 49px 69px;
+        background: radial-gradient(#0000008f, #00000052);
+        color: white;
+    }
+
+    .DeleteIcon {
+        position: absolute;
+        display: none;
+    }
+
+    .imageBox:hover .DeleteIcon {
+        display: block;
+    }
+
+    .DeleteIconInner i {
+        font-size: 30px;
+    }
+
+    input[type=checkbox] {
+        accent-color: #008963 !important;
+    }
+
+    .searchBox input {
+        float: right;
+        box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
+        border-radius: 4px;
+        border: 1px solid #d8d8d8;
+        padding: 6px 11px;
+    }
+
+    .searchBox i {
+        float: right;
+        position: relative;
+        left: 161px;
+        top: 11px;
+        font-size: 12px;
+        color: gray;
+    }
+
+    ul.Damage_Images {
+        padding: 0px;
+        border: 1px solid #ececec;
+    }
+
+        ul.Damage_Images li .Icon span {
+            padding: 7px;
+            border: 1px solid #343434;
+            border-radius: 50%;
+            color: #6b6868 !important;
+            /* font-size: 6px; */
+        }
+
+        ul.Damage_Images li {
+            padding: 12px 18px;
+            list-style: none;
+            border-bottom: 1px solid #e8e8e8cf;
+            color: #6b6868 !important;
+        }
+
+    .Icon {
+        width: fit-content;
+        float: right;
+    }
+
+    /*    .Custom-Card .collapse {
+        padding-bottom: 10px;
+    }*/
+
+    .icon-cross {
+        font-size: 25px;
+    }
+
+    .badge {
+        font-size: 15px;
+        width: 100% !important;
+        border-radius: 4px !important;
+    }
+
+    .waitingForApprovalStatus {
+        color: #fdfdfd;
+        background-color: #769aff !important;
+        font-weight: bolder;
+        border: 1px solid #769aff;
+    }
+
+    .badge {
+        font-size: 15px;
+        width: 183px !important;
+        border-radius: 4px !important;
+    }
+
+    .inProgressStatus {
+        color: #212529;
+        background-color: #fff816 !important;
+        font-weight: bolder;
+        border: 1px solid #fff816;
+    }
+
+    .approvedStatus {
+        background-color: #198754 !important;
+        font-weight: bolder;
+        border: 1px solid #198754;
+        color: #fff;
+    }
+
+    .rejectStatus {
+        background-color: #dc3545 !important;
+        font-weight: bolder;
+        border: 1px solid #dc3545;
+        color: #fff;
+    }
+
+    .badge {
+        width: fit-content !important;
+    }
+
+    .approvalrequierd {
+        background: #4f4f4f !important;
+    }
+
+    .approved {
+        background: #00946b !important;
+    }
+
+    .Rejected {
+        background: #d64a48 !important;
+    }
+
+    .pending {
+        background: #d64a48 !important;
+    }
+
+    /*Excess cargo styling*/
+    .SignBox {
+        text-align: center;
+        border: 1px solid;
+        border-color: lightgray;
+        padding: 0px 0px 10px 0px;
+    }
+
+    .Image-view img {
+        height: 50% !important;
+        width: 50% !important;
+        float: none !important
+    }
+
+    .Image-view {
+        float: none !IMPORTANT;
+        margin: 0 !IMPORTANT;
+        height: auto !IMPORTANT;
+        width: auto !important;
+    }
+    /*Excess cargo styling end*/
+
+    #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #111111de;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+        display: none;
+        overflow: scroll;
+    }
+
+        #overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            transition: transform 0.5s ease;
+        }
+
+    #close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    #my_camera, #my_camera video, #my_camera img {
+        width: 100% !important;
+        height: 70vh !important;
+    }
+
+    .modal-body {
+        max-height: 60vh !important;
+        overflow: auto !important;
+    }
+
+    .printBdage {
+        padding: 0px 8px;
+        background: var( --dpw-bg-color);
+        color: white !IMPORTANT;
+        border-radius: 3px;
+    }
+
+        .printBdage a i {
+            color: white !important;
+        }
+
+        .printBdage a {
+            text-decoration: none !important;
+            color: white;
+        }
+
+    .jqueryConfrim .modal-content {
+        border-top: solid 7px #3498db;
+        border-radius: 6px !IMPORTANT;
+        background: white !important;
+    }
+
+    .jqueryConfrim .modal-header h5 {
+        font-size: 22px;
+    }
+
+    .jqueryConfrim .modal-header {
+        justify-content: center !important;
+    }
+
+    .jqueryConfrim .btn-primary {
+        background: #3498db;
+        padding: 5px 11px;
+        text-transform: uppercase;
+    }
+
+    .jqueryConfrim .btn-reset {
+        background: #363636;
+        padding: 5px 11px;
+        text-transform: uppercase;
+    }
+
+    .imguplaoder {
+        width: 100%;
+        padding: 7px 18px;
+        border-radius: 5px;
+        border: 1px solid #d7d7d7;
+        color: gray;
+        cursor: pointer;
+    }
+
+    @@keyframes zoomIn {
+        0% {
+            opacity: 0;
+            -webkit-transform: scale3d(.3, .3, .3);
+            transform: scale3d(.3, .3, .3);
+        }
+
+        50% {
+            opacity: 1;
+        }
+    }
+
+    .ZoominAnimate {
+        animation: zoomIn 0.2s linear;
+    }
+
+    .ActiveHold {
+        position: relative;
+        bottom: 17px;
+        background: #cf3534;
+        color: white;
+        padding: 5px 5px;
+        line-height: 0;
+        border-radius: 22px;
+    }
+
+    .ActiveHoldParent {
+        position: absolute;
+    }
+
+    .scrollerdiv {
+        height: 70vh;
+        overflow: auto
+    }
+
+        .scrollerdiv::-webkit-scrollbar {
+            display: none;
+        }
+
+    .ScanParent {
+        position: absolute;
+        width: 100%;
+    }
+
+    .ScanChild {
+        position: relative;
+        top: -56px;
+        width: fit-content;
+    }
+
+        .ScanChild .Scan {
+            background: white;
+            width: fit-content;
+            padding: 9px;
+            border: 2px solid var( --dpw-bg-color);
+            border-radius: 35px;
+            box-shadow: 2px 2px 5px 2px #80808094;
+        }
+
+        .ScanChild .Scanned {
+            background: white;
+            width: fit-content;
+            padding: 6px;
+            border: 2px solid var( --dpw-bg-color);
+            border-radius: 35px;
+            box-shadow: 2px 2px 5px 2px #80808094;
+        }
+
+    .DmageTable {
+        width: 100%;
+        border: none !IMPORTANT;
+    }
+
+        .DmageTable tr td {
+            background: none;
+            border: none;
+            white-space: nowrap;
+            padding: 14px;
+            font-size: 11px;
+        }
+
+        .DmageTable tr {
+            border-bottom: solid 1px gray;
+        }
+
+
+
+    #my_camera {
+        height: 70vh !important
+    }
+
+    #CamModel_small video {
+        object-fit: fill !important;
+        height: 70VH !important;
+    }
+
+    .ScanTable {
+        width: 100%;
+        border: none !IMPORTANT;
+    }
+
+        .ScanTable tr td, .ScanTable tr th {
+            background: transparent;
+            padding: 9px;
+            border-bottom: 1px solid #a8a8a8;
+        }
+
+    .Chervronicon div {
+        display: inline-block;
+    }
+
+
+    .buttonrow {
+        margin-top: 11px !important;
+        margin-left: 15px !important;
+    }
+
+    .badge-darkred {
+        background-color: darkred;
+        color: white;
+    }
+
+    .badge-Orange {
+        background-color: darkorange;
+        color: white;
+    }
+
+    .badge-Green {
+        background-color: darkgreen;
+        color: white;
+    }
+
+    .badge-Red {
+        background-color: red;
+        color: white;
+    }
+
+    .Capture-CardFlex {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .Capture-Card {
+        background: #ebebeb;
+        padding: 11px 18px;
+        box-shadow: 1px 1px 2px 1px #80808042 inset;
+        border-radius: 4px;
+        margin-bottom: 17px;
+    }
+
+    .evenetTab {
+        padding: 7px 16px;
+        border-radius: 5px;
+        color: #006517;
+        margin-bottom: 15px;
+        background: #00ad271f;
+        border: 1px solid #006517;
+    }
+
+        .evenetTab span {
+            font-size: 11px;
+        }
+
+        .evenetTab.Canceled {
+            background: #ff04041f;
+            border: 1px solid #b00d0d;
+            color: #6a0707;
+        }
+
+    .evenetTitle {
+        min-width: 11px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 700;
+    }
+
+    span.badge-active.babge-sm {
+        padding: 1px 4px;
+        border-radius: 3px;
+        float: right;
+        line-height: 1.7;
+        font-weight: normal;
+        background: #6a0707 !important;
+    }
+
+
+
+    .Image-view img {
+        height: 50% !important;
+        width: 50% !important;
+        float: none !important
+    }
+
+    .Image-view {
+        float: none !IMPORTANT;
+        margin: 0 !IMPORTANT;
+        height: auto !IMPORTANT;
+        width: auto !important;
+    }
+
+
+    .iconsDev {
+        display: inline-block;
+    }
+
+    .greyscale {
+        filter: grayscale(1);
+    }
+
+    .nogreyscale {
+        filter: grayscale(0) !important;
+        box-shadow: -1px 2px 6px 1px #6a6969a3;
+        background: #00ea7412;
+        border: 1px solid green !important;
+    }
+
+    .iconDevimgs:hover {
+        filter: grayscale(0);
+        padding: 4px;
+        transition: 0.5s ease all;
+    }
+
+    .iconDevimgs {
+        padding: 6px;
+        border: 1px solid;
+        height: 45px !important;
+        border-radius: 5px;
+    }
+
+    .EventViewSection {
+        display: inline-block;
+        position: relative;
+        bottom: 36px;
+        height: 0 !important;
+        float: right;
+    }
+
+    .eventviewRightmrgn {
+        right: 20px;
+    }
+
+    .ActiveRiskType {
+        position: relative;
+        bottom: 22px;
+        color: white;
+        line-height: 0;
+        border-radius: 22px;
+    }
+
+    /*tooltip styling*/
+
+    .Event-Tooltip {
+        display: none;
+        position: absolute;
+    }
+
+        .Event-Tooltip .Event-tooltip-content {
+            position: relative;
+            background: white;
+            width: 220px;
+            text-align: left;
+            z-index: 99;
+            box-shadow: 5px 7px 7px 0px darkgrey;
+            padding: 2px 14px;
+            border: 1px solid red;
+            top: -18px;
+            border-radius: 8px;
+        }
+
+    .HoldTooltip:hover .Event-Tooltip {
+        display: block;
+        z-index: 9999;
+    }
+
+    .HoldButton:hover .Event-Tooltip {
+        display: block;
+        z-index: 9999;
+    }
+
+    .Event-tooltip-content li {
+        margin-top: 5px;
+        border-bottom: 1px solid #ff000026;
+        color: black;
+    }
+
+
+    .ActiveHoldParent ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .evnetBox.RepostEvent {
+        background: #ffe0e0;
+        border: 1px solid #bd0a0a !important;
+    }
+    /*tooltip styling end*/
+    .reexamIndicator {
+        right: 0;
+    }
+
+    .InspectionStatusErrorDetails {
+        background: #f6cfcf;
+        color: #9e2828;
+        border: 1px solid #afafaf;
+    }
+
+    .InspectionStatusSuccessDetails {
+        background: #e0f2ed;
+        color: #897a93;
+        border: 1px solid #4CAF50;
+    }
+
+    .InspectionStatussection {
+        padding: 2px 8px;
+        width: fit-content;
+        border-radius: 1px;
+        border-bottom: 0px;
+    }
+
+    .sortby {
+        background: white;
+        padding: 5px 17px;
+        outline: none;
+        border: 1px solid #d8d8d8;
+        border-radius: 3px;
+        color: #757575;
+        box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
+    }
+
+    .AlphaAsc:after {
+        content: "\ee49";
+        font-family: 'icomoon';
+        margin-left: auto;
+    }
+
+    .AlphaDsc:after {
+        content: "\ee4a";
+        font-family: 'icomoon';
+        margin-left: auto;
+    }
+
+    .NumberAsc:after {
+        content: "\ee4b";
+        font-family: 'icomoon';
+        margin-left: auto;
+    }
+
+    .NumberDsc:after {
+        content: "\ee4c";
+        font-family: 'icomoon';
+        margin-left: auto;
+    }
+
+    .LOCSTSStatusbutton {
+        padding: 1px 7px;
+        font-size: 11px;
+        display: inline-block;
+    }
+
+    .btn-danger-outline {
+        border: 2px solid #c51f41 !important;
+        background: none !important;
+    }
+
+    .btn-success-outline {
+        border: 2px solid #00a172 !important;
+        background: none !important;
+    }
+
+    .UIHrsSection p {
+        display: inline-block;
+        padding-bottom: 3px !important;
+        padding-right: 10px;
+        margin: 0 !important;
+        font-family: 'Pilat Wide';
+    }
+</style>
+<link href="~/Content/popup/jquery-confirm.min.css" rel="stylesheet" />
+<!--Header-->
+<div ng-controller="LA_RunnerCtrl" ng-init="init()" class="ng-cloak" ng-cloak>
+    <!---Block-->
+    <div class="card mt-2 mt-2" id="Block">
+        <div class="card-header" style=" background: var( --dpw-bg-color); color: white; padding: 8px;">
+            <h5 class="mt-2">Runner Activity</h5>
+        </div>
+        <div class=" card-body shadow">
+            <div class="row">
+                <div class="Cardtabs" ng-repeat="B in BlockList">
+                    <div class="Absoulte">
+                        <div class="CountBadge">{{B.Cntrs}}</div>
+                        <br />
+                    </div>
+                    <button @*ng-click="GetLAContainerList(B)"*@ ng-click="GetLAContainerLabor2(B)" ng-class="{'active' : B.Block == CurrentBlock.Block }" class="btn btn-primary Blocks" value="{{B.Block}}">
+                        <span ng-show="B.Block!=983">{{B.Block}}</span>
+                        <span ng-show="B.Block==983">  {{B.Block}}K</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!---Block-->
+    <!---Container-->
+    <div class="accordion scrollerdiv" id="accordionExample" ng-show="!stringNullorEmpty(ContainerList)">
+        <div class="card Custom-Card m-0" ng-repeat="x in ContainerList | filter :search" style="overflow:visible">
+            <!---Container Header-->
+            <div class="" id="heading{{$index}}">
+                <div class="collapsible-link">
+                    <div class="row">
+                        <div class="col-md-5 col-lg-6 col-sm-6 col-xs-12" id="OpenDetails{{$index}}">
+                            <div style="display: inline-block; vertical-align: middle; margin-bottom: 4px;">
+                                <img style="height:50px;" src="~/Content/images/container.png" />
+
+                            </div>
+                            <div style="display: inline-block; vertical-align: middle; margin-bottom: 4px; margin-left: 12px; font-family: 'Pilat Wide';">
+                                {{x.Cntr}} <span style=" font-size: 10px; vertical-align: bottom;" class="badge" ng-class="x.Activity == 'Strip' ? 'badge-success' : 'badge-danger'">{{x.Activity}}</span>
+
+
+                                <span ng-show="x.BayanNo!='' && x.BayanNo!=null" style="font-size: 11px; color: #898989;"> - {{x.BayanNo}} </span>
+                                <div ng-show="x.Location!='' && x.Location!=null" style="font-size: 11px; color: #898989;">{{x.Location}} </div>
+                                <div class="position-absolute" style="top: 0px;width: 0px; white-space: nowrap;" ng-show="x.InspectionStatus!=null && x.InspectionStatus!=''">
+                                    <div class="position-relative" style="bottom:30px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-5 col-sm-5 col-xs-12 mt-xs-2 DamageButton" style="align-self:center;line-height:2.4;">
+                            <span class="Laborbadge badge-{{x.ActivityStatus}}">{{x.ActivityStatus}}</span>
+                        </div>
+                        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-12 Chervronicon" style="cursor:pointer; align-self:center;text-align:end">
+
+                            <div class="Indicatior" ng-click="OpenContainerDetails(x)">
+                                <i class="icon-info22"></i>
+
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 p-0" style=" border-top: 1PX SOLID #e5e5e5; margin-top: 18px;">
+                            <div class="row">
+                                <div class="col-md-6 mt-3" ng-repeat=" z in x.laborDatails" ng-click="DropLabor(z.LaborId,'one',z.IsDropped,x.Location,z.Name);">
+                                    <div class="card p-2 m-0" ng-class="{'active' : z.IsDropped==true }" style=" border-radius: 7px; border: none; box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;">
+                                        <table border="0" class="Labortable">
+                                            <tr>
+                                                <td style="width:8%" rowspan="2"> <img style=" height: 40px; border-radius: 50%;" src="~/Content/images/profile-img.jpg" alt="Alternate Text" /></td>
+                                                <td style="width:55%">
+                                                    <b>{{z.EMPId}}-{{z.Name}}</b>
+                                                    <br />
+                                                    <span>Punch in Time:{{z.PunchInTime |date:'dd-MM-yyyy HH:mm:ss'}}</span>
+                                                </td>
+                                                <td>  <span class="Laborbadge badge badge-{{z.Status}}">{{z.Status}}</span></td>
+                                                <td class="text-end " style="white-space:nowrap;">
+                                                    <input ng-checked="z.IsDropped==true" ng-disabled="z.IsDropped==true" type="checkbox" name="name" value="" />
+
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-end mt-3">
+                                    <button class="btn btn-success" ng-show="x.AllDropped==false" ng-click="DropLabor(x.laborDatails,'many',false,x.Location,'All');">Drop All</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!---Container Header-->
+                <!---Events-->
+            </div>
+        </div>
+    </div>
+    <!--LaborModel-->
+    <div class="modal fade" id="ContainerDetails" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:1000px;">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ContainerDetails.Cntr}}</h5>
+                </div>
+                <div class="modal-body" style="max-height:80vh!important">
+                    <div>
+                        <h2>Container Details</h2>
+                        <table class="table">
+                            <tr>
+                                <th>Container</th>
+                                <td>{{ContainerDetails.Cntr}}</td>
+                            </tr>
+                            <tr>
+                                <th>Location</th>
+                                <td>{{ContainerDetails.Location}}</td>
+                            </tr>
+                            <tr>
+                                <th>Activity Status</th>
+                                <td><span class="Laborbadge badge-{{ContainerDetails.ActivityStatus}}">{{ContainerDetails.ActivityStatus}}</span></td>
+                            </tr>
+                            <tr>
+                                <th>Activity</th>
+                                <td>{{ContainerDetails.Activity}}</td>
+                            </tr>
+
+                            <tr>
+                                <th>Activity Start Time</th>
+                                <td>{{(ContainerDetails.ActivityStartTime | date:'dd/MM/yyyy HH:mm:ss')||'N/A'}}</td>
+                            </tr>
+                            <tr>
+                                <th>Activity End Time</th>
+                                <td>
+                                    {{(ContainerDetails.ActivityEndTime | date:'dd/MM/yyyy HH:mm:ss')||'N/A'}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Estimated Duration</th>
+                                <td>
+                                    {{(ContainerDetails.ETA)||'N/A'}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Actual Duration</th>
+                                <td>{{(getTimeDifference(ContainerDetails.ActivityStartTime,ContainerDetails.ActivityEndTime))||'N/A'}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br />
+                    <div>
+                        <h2>Labor Details</h2>
+                        <div class="row">
+                            <div class="col-md-6 mb-3 pl-0" ng-repeat="x in ContainerDetails.laborDatails">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <th style="background: #464545; color: white; font-size: 17px;" colspan="2">{{x.EMPId}}-{{x.Name}}</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Punch in Time</th>
+                                            <td>{{(x.PunchInTime | date:'dd/MM/yyyy HH:mm:ss') ||'N/A'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Status </th>
+                                            <td> <span class="Laborbadge badge badge-{{x.Status}}">{{x.Status}}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Assigned At</th>
+                                            <td>{{(x.AssignedAt | date:'dd/MM/yyyy HH:mm:ss') ||'N/A'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Reached Location At</th>
+                                            <td>{{(x.ReachedLocationTime | date:'dd/MM/yyyy HH:mm:ss') ||'N/A'}}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Drop by</th>
+                                            <td>{{x.DropBy ||'N/A'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Pow In Time</th>
+                                            <td>{{(x.PowinTime | date:'dd/MM/yyyy HH:mm:ss')||'N/A'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Pow In Longitude</th>
+                                            <td>{{(x.PowInLongitude)||'N/A'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Pow In Latitude</th>
+                                            <td>{{(x.PowInLatitude)||'N/A'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Container Photo</th>
+                                            <td><a href="{{x.ContainerPhoto}}" ng-show="x.ContainerPhoto!='' && x.ContainerPhoto!=null" target="_blank"><i class="icon-eye"></i></a></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Activity Start Time</th>
+                                            <td>{{(x.LaborStartTime | date:'dd/MM/yyyy HH:mm:ss')||'N/A'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Activity End Time</th>
+                                            <td>{{(x.LaborEndTime | date:'dd/MM/yyyy HH:mm:ss')||'N/A'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Pow Out Time</th>
+                                            <td>{{(x.PowoutTime | date:'dd/MM/yyyy HH:mm:ss')||'N/A'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Pow Out Longitude</th>
+                                            <td>{{(x.PowOutLongitude | date:'dd/MM/yyyy HH:mm:ss')||'N/A'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Pow Out Latitude</th>
+                                            <td>{{(x.PowOutLatitude | date:'dd/MM/yyyy HH:mm:ss')||'N/A'}}</td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:center">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--LaborModel-->
+    <div class="modal fade" id="LaborModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:800px;">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ActiveCntr}}</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row accordion" id="LaborAcc">
+                        <div class="col-md-12" ng-repeat=" x in LaborList">
+                            <div class="card p-2" style=" border-radius: 7px; border: none; box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;">
+                                <table border="0" style="border:none!important">
+                                    <tr style="border:none!important">
+                                        <td style="width:8%"> <img style=" height: 40px; border-radius: 50%;" src="~/Content/images/profile-img.jpg" alt="Alternate Text" /></td>
+                                        <td style="width:55%">
+                                            <b>{{x.EMPId}}-{{x.Name}}</b>
+                                            <br />
+                                            <span>Punch in Time:{{x.PunchInTime |date:'dd-MM-yyyy HH:mm:ss'}}</span>
+                                        </td>
+                                        <td>  <span class="Laborbadge badge badge-{{x.Status}}">{{x.Status}}</span></td>
+                                        <td class="text-end " style="white-space:nowrap;">
+
+                                            <button ng-show="x.IsDropped==false" class="btn btn-primary btn-sm" ng-click="DropLabor(x.Id,'one');">Drop</button>
+                                            @*<div data-toggle="collapse" data-target="#Laborcollapse{{$index}}">
+                                                    <i class="icon-chevron-down"></i>
+                                                </div>*@
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div class="collapse" id="Laborcollapse{{$index}}" data-parent="#LaborAcc">
+                                    <div style=" background: #ececec; padding: 11px; box-shadow: 2px 2px 4px -3px inset #808080; border-radius: 7px; margin-top: 11px;">
+                                        <table class="DetailsTable" style="width:100%; border:none !important">
+                                            <tr>
+                                                <td>Total Labor:</td>
+                                                <td>{{x.Labors}}</td>
+                                                <td>Activity Status:</td>
+                                                <td><span class="Laborbadge badge-{{x.Status}}">{{x.Status}}</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Activity Start Time:</td>
+                                                <td>{{(x.ActivityStartTime | date:'dd/MM/yyyy HH:mm:ss')||'N/A'}}</td>
+                                                <td>Activity End Time:</td>
+                                                <td>{{(x.ActivityEndTime| date:'dd/MM/yyyy HH:mm:ss')||'N/A'}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Estimated Duration:</td>
+                                                <td>{{x.ETA ||'N/A'}}</td>
+                                                <td>Actual Duration:</td>
+                                                <td>{{getTimeDifference(x.ActivityStartTime,x.ActivityEndTime) ||'N/A'}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:center">
+                            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                            <button class="btn btn-success" ng-show="ShowDropAll" ng-click="DropLabor(null,'many');">Drop All</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/crypto-js.min.js")"></script>
+<script src="~/Content/popup/jquery-confirm.min.js"></script>
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/webcam.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var o = new SlimSelect({
+            select: '#Occ',
+            placeholder: 'Select Occures',
+            showSearch: true,
+            allowDeselect: true,
+        });
+        var ContractorDD = new SlimSelect({
+            select: '#ContractorDD',
+            placeholder: 'Select Contractor',
+            showSearch: true,
+            allowDeselect: true,
+        });
+    });
+    window.addEventListener('click', function (e) {
+        var Target = $(e.target).hasClass('optionIcon');
+        var Targetparent = $(e.target).parent().hasClass('optionIcon');
+        if (!Targetparent && !Target) {
+            $('.DropOptionParent').css('display', 'none');
+        }
+    });
+
+    var element = document.getElementById('RecordServices');
+    element.classList.add("Active");
+    //Hide Side Menu
+    window.onload = function () {
+        document.getElementById('minisidebar').className = 'sidebar-xs';
+    };
+</script>
+
+

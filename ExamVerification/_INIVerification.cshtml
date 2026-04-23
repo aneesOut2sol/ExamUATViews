@@ -1,0 +1,452 @@
+﻿<style>
+    /* --- CUSTOM NAMESPACED STYLES --- */
+
+    /* Using your requested class name */
+    .INIVerificationDetailModal .modal-content {
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    /* Custom Header styling for Tabs */
+    .ini-custom-header {
+        background-color: #f4f7f9;
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
+        border-bottom: 2px solid #e9ecef;
+        padding: 0;
+    }
+
+    .ini-tabs-container {
+        display: flex;
+        flex-grow: 1;
+    }
+
+    .ini-tab-link {
+        border: none;
+        background: none;
+        padding: 16px 24px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #8898aa;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border-bottom: 3px solid transparent;
+        outline: none !important;
+    }
+
+        /* Active Tab Styling */
+        .ini-tab-link.active {
+            color: var(--dpw-bg-color); /* Elegant Indigo */
+            border-bottom: 3px solid var(--dpw-bg-color);
+            background-color: #ffffff;
+        }
+
+        .ini-tab-link:hover:not(.active) {
+            background-color: #f1f3f9;
+            color: #525f7f;
+        }
+
+    /* Content Display Logic */
+    .ini-tab-pane {
+        display: none;
+        padding: 25px;
+        min-height: 200px;
+    }
+
+        .ini-tab-pane.active {
+            display: block;
+            animation: iniFadeSlide 0.3s ease-out;
+        }
+
+    @@keyframes iniFadeSlide {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .ini-close-wrap {
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+    }
+
+    /* Table specific namespaced styles */
+    .ini-custom-table {
+        border: 1px solid #ebf1f6;
+        font-size: 13px;
+    }
+
+        .ini-custom-table thead th {
+            border-top: none;
+            background-color: #f8f9fe;
+            color: #8898aa;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 1px;
+            padding: 12px;
+        }
+
+        .ini-custom-table td {
+            vertical-align: middle;
+            padding: 10px 12px;
+            color: #525f7f;
+        }
+
+    /* Scrollbar for large datasets inside modal */
+    .modal-body {
+        max-height: 450px;
+        overflow-y: auto;
+    }
+
+
+    /* Container styling for SEAINI Tab */
+    .ini-order-wrapper {
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .ini-order-banner {
+        background-color: #f8f9fe;
+        padding: 10px 15px;
+        border-bottom: 1px solid #e9ecef;
+        font-size: 13px;
+        color: #32325d;
+    }
+
+    /* Table styling */
+    .ini-nested-table {
+        font-size: 13px;
+    }
+
+        .ini-nested-table thead th {
+            background: #ffffff;
+            border-top: none;
+            border-bottom: 1px solid #e9ecef;
+            color: #8898aa;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+            padding: 10px;
+        }
+
+        .ini-nested-table td {
+            padding: 12px 10px;
+            vertical-align: middle;
+        }
+
+    /* Summary Card Shadow */
+    .shadow-sm {
+        box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+    }
+
+    /* Badge Tweaks */
+    .badge-pill {
+        border-radius: 50rem;
+    }
+
+    /* Styling for the top info bar */
+    .ini-modal-info-bar {
+        background-color: #ffffff;
+        padding: 12px 20px;
+        border-bottom: 1px solid #edf2f9;
+    }
+
+        .ini-modal-info-bar .info-item i {
+            font-size: 18px;
+            vertical-align: middle;
+        }
+
+    /* Ensure header tabs feel connected */
+    .ini-custom-header {
+        background-color: #f8fafd !important; /* Slightly darker than info bar */
+    }
+
+    /* Match the Badge style to your Indigo theme if preferred */
+    .badge-primary {
+        background-color: var(--dpw-bg-color);
+    }
+    .badge{
+        width:fit-content !important;
+    }
+    .text-primary {
+        color: var(--dpw-bg-color) !important;
+    }
+
+    /* Ensure the button is the anchor for the badge */
+.ini-tab-link {
+    position: relative; /* Crucial for absolute positioning of children */
+    display: flex;
+    align-items: center;
+    padding-right: 45px; /* Create space for the badge on the right */
+}
+
+/* Wrapper for the badge positioning */
+.Absoulte {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* The actual Badge styling */
+.CountBadge {
+    background-color: #ebf1ff; /* Light indigo background */
+    color: #5e72e4;            /* Primary indigo text */
+    font-size: 11px;
+    font-weight: 800;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 11px;      /* Circular pill shape */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(94, 114, 228, 0.2);
+    transition: all 0.2s ease;
+}
+
+/* Change colors when the tab is active */
+.ini-tab-link.active .CountBadge {
+    background-color: #5e72e4; /* Solid indigo */
+    color: #ffffff;            /* White text */
+    box-shadow: 0 2px 5px rgba(94, 114, 228, 0.4);
+    border: none;
+}
+
+/* Shake animation when the modal opens (Optional) */
+.CountBadge {
+    animation: badgePop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@@keyframes badgePop {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+}
+</style>
+
+
+<div class="modal fade INIVerificationDetailModal" id="verificationModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="ini-modal-info-bar d-flex align-items-center">
+                <div class="container-fluid d-flex justify-content-between">
+                    <div class="info-item">
+                        <span class="text-muted small font-weight-bold text-uppercase">Viewing Details For Container:</span>
+                        <span class="ml-2 badge badge-primary py-1 px-3" style="font-size: 14px;">
+                            #{{INIVerificationCntr || 'N/A'}}
+                        </span>
+                    </div>                   
+                </div>
+            </div>
+            <div class="ini-custom-header">
+                <div class="ini-tabs-container">
+                    <button class="ini-tab-link active" onclick="handleTabClick(event, 'SEAINI')">
+                        SEAINI
+                        <div class="Absoulte">
+                            <div class="CountBadge">{{SEAINI_Array.length}}</div>
+                           
+                        </div>
+                    </button>
+                    <button class="ini-tab-link" onclick="handleTabClick(event, 'H2HINI')">
+                        H2HINI
+                        <div class="Absoulte">
+                            <div class="CountBadge">{{INIH2H_Array.length}}</div>                           
+                        </div>
+                    </button>
+                </div>
+                <div class="ini-close-wrap">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="modal-body p-0">
+                <div id="SEAINI" class="ini-tab-pane active">
+
+                    <div ng-repeat="item in SEAINI_Array" class="mb-4">
+
+                        <div class="card border-0 shadow-sm mb-3" style="border-left: 5px solid var(--dpw-bg-color) !important;">
+                            <div class="card-body p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="row flex-grow-1">
+                                        <div class="col-md-3">
+                                            <small class="text-muted d-block text-uppercase font-weight-bold" style="font-size: 10px;">Declaration No</small>
+                                            <span class="text-primary font-weight-bold">{{item.getMessageResponse.message.declaration.declarationNo}}</span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block text-uppercase font-weight-bold" style="font-size: 10px;">Importer Name</small>
+                                            <span class="text-dark">{{item.getMessageResponse.message.declaration.importerName}}</span>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-muted d-block text-uppercase font-weight-bold" style="font-size: 10px;">Request Date</small>
+                                            <span class="text-dark">{{item.getMessageResponse.message.requestDate}}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="ml-3 pl-3 border-left text-center">
+                                        <button class="btn btn-link text-primary p-0" ng-click="DownloadJsonSEAINI(item)" title="Download Report">
+                                            <i class="ri-download-2-fill"></i>
+                                            <small class="d-block font-weight-bold text-primary" style="font-size: 9px;">EXPORT</small>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div ng-repeat="order in item.getMessageResponse.message.declaration.deliveryOrders" class="ini-order-wrapper mb-3">
+                            <div class="ini-order-banner d-flex justify-content-between align-items-center">
+                                <span>
+                                    <i class="fa fa-ship mr-1"></i>
+                                    <strong>{{order.vesselName}}</strong> (Voyage: {{order.voyageNo}})
+                                </span>
+                                <span class="badge badge-light px-3">BL: {{order.blNo}}</span>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-sm mb-0 ini-nested-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="pl-3">Container No</th>
+                                            <th>Unloading Ratio</th>
+                                            <th>Inspection Type</th>
+                                            <th>Stakeholders</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="container in order.containerDetails | uniqueContainer:'containerNo'">
+                                            <td class="pl-3 font-weight-bold text-dark">{{container.containerNo}}</td>
+                                            <td>
+                                                <span class="badge badge-info">{{container.unloadingRatio}}%</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-pill border px-2 text-uppercase"
+                                                      style="font-size: 10px;"
+                                                      ng-class="{
+                                        'badge-warning': getInspectionType(container.inspectionType) === 'Manual',
+                                        'badge-primary': getInspectionType(container.inspectionType) === 'Scan',
+                                        'badge-success': getInspectionType(container.inspectionType) === 'No Inspection',
+                                        'badge-light': getInspectionType(container.inspectionType) === 'None'
+                                      }">
+                                                    {{getInspectionType(container.inspectionType)}}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex flex-wrap">
+                                                    <span ng-repeat="sub in order.containerDetails | filter:{containerNo: container.containerNo}"
+                                                          class="badge badge-light border text-muted mr-1 mb-1" style="font-size: 10px;">
+                                                        {{sub.stakeHolderName}}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="p-2 bg-white border-top">
+                                <small class="text-muted">
+                                    <strong>Goods:</strong> {{order.deliveryOrderItems[0].goodsDescEn}}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-if="!SEAINI_Array || SEAINI_Array.length === 0" class="text-center py-5">
+                        <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" width="50" class="opacity-50 mb-3">
+                        <p class="text-muted">No Verification Data Available</p>
+                    </div>
+                </div>
+
+                <div id="H2HINI" class="ini-tab-pane" [class.active]="activeTab === 'H2HINI'">
+                    <h5 class="mb-3 font-weight-bold">Host-to-Host (H2H) INI Logs</h5>
+
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover ini-custom-table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Created At</th>
+                                    <th>Bayan No</th>
+                                    <th>File Name</th>
+                                    <th class="text-center">Content</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in INIH2H_Array">
+                                    <td class="small">{{item.CreatedAt | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                    <td><span class="badge badge-secondary">{{item.BayanNo}}</span></td>
+                                    <td class="text-truncate" style="max-width: 150px;" title="{{item.FileName}}">
+                                        {{item.FileName}}
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-link btn-sm p-0" title="Download Content" ng-click="downloadH2HFile(item)">
+                                            <i class="ri-download-2-fill"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr ng-if="INIH2H_Array.length === 0">
+                                    <td colspan="4" class="text-center text-muted py-4">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    /**
+     * Function to switch tabs and set active state
+     */
+    function handleTabClick(evt, tabId) {
+        // 1. Hide all tab content panes
+        var panes = document.getElementsByClassName("ini-tab-pane");
+        for (var i = 0; i < panes.length; i++) {
+            panes[i].classList.remove("active");
+        }
+
+        // 2. Remove "active" class from all buttons
+        var buttons = document.getElementsByClassName("ini-tab-link");
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove("active");
+        }
+
+        // 3. Show current tab pane and set button to active
+        document.getElementById(tabId).classList.add("active");
+        evt.currentTarget.classList.add("active");
+
+        console.log("Tab switched to: " + tabId);
+    }
+
+    /**
+     * Example action function
+     */
+    function submitVerification() {
+        alert("Verification process started!");
+    }
+</script>

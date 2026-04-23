@@ -1,0 +1,503 @@
+﻿
+@{
+    ViewBag.Title = "OperationView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .DashboardDiv {
+        font-family: 'Pilat Wide';
+    }
+
+    .DashboardContainersSection h5 {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .custom-table-header {
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: 70vh;
+        border-radius: 7px;
+        box-shadow: 0px 4px 13px 0px #999;
+    }
+
+        .custom-table-header .icon-flag3 {
+            font-size: 10px;
+        }
+
+    table {
+        width: 100%;
+    }
+
+    .custom-table-header thead {
+        position: sticky;
+        top: 0;
+        background: whitesmoke;
+        height: 40px;
+        z-index: 111;
+        font-size: 10px;
+        color: #8d8d8d;
+    }
+
+        .custom-table-header thead th {
+            text-align: left !important;
+            white-space: nowrap;
+        }
+    table thead{
+        box-shadow:none !important;
+    }
+
+    .coldstorebg {
+        background-color: #8b86d6 !important
+    }
+
+    .drybg {
+        background-color: #e4e4e4 !important
+    }
+
+    .oogbg {
+        background-color: #ff4565 !important
+    }
+
+    .reeferbg {
+        background-color: #fbca34 !important
+    }
+
+    .imprtbg {
+        background-color: #37ce8d !important
+    }
+
+    .exprtbg {
+        background-color: #ffc421 !important
+    }
+
+    .color-highlighter {
+        width: 10px;
+        height: 10px;
+        border-radius: 30px;
+        display: inline-block;
+        margin-right: 4px;
+        margin-left: 20px;
+    }
+
+    .ch-coldstore {
+        accent-color: #8b86d6 !important;
+    }
+
+    .ch-dry {
+        accent-color: #e4e4e4 !important
+    }
+
+    .ch-oog {
+        accent-color: #ff4565 !important
+    }
+
+    .ch-reefer {
+        accent-color: #fbca34 !important
+    }
+
+    .ch-export {
+        accent-color: #ffc421 !important
+    }
+
+    .ch-import {
+        accent-color: #37ce8d !important
+    }
+
+    td {
+        font-size: 10px;
+        white-space: nowrap;
+    }
+
+    table tr td, th {
+        background: #fff;
+        padding: 4px 2px;
+        width: fit-content;
+        color: #111;
+    }
+
+    .color-highlighter-section {
+        font-size: 10px;
+        height: 25px;
+        display: inline-block;
+        margin-left: 5px;
+        width: 100%;
+    }
+
+    .total-container-count-section {
+        margin-top: 10px;
+    }
+
+    .more-detail-section p {
+        background: #fff;
+        padding: 8px 18px;
+        margin-top: 8px !important;
+        border-radius: 6px;
+        box-shadow: inset -1px -2px 5px 0px #999;
+        width: fit-content;
+        margin: auto;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+        .more-detail-section p:hover {
+            box-shadow: 3px 0px 5px 0px #999;
+        }
+
+    table {
+        width: 100%;
+    }
+
+    .DashboardContainersSection {
+    }
+
+        .DashboardContainersSection h5 {
+            font-size: 16px;
+        }
+
+    .filterationSection {
+        font-weight: 800;
+        text-align: center;
+        padding: 22px 12px;
+    }
+        .filterationSection div{
+            padding:2px 8px;
+        }
+
+        .strikethrough {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+    .SectionSeprator {
+        display: inline-block;
+        width: 49%;
+    }
+</style>
+
+<div class="ng-cloack DashboardDiv" ng-cloak ng-controller="ExamActivityDashboardCtrl" ng-init="OperationView_Init()">
+    <br />
+    <div class="row">
+
+
+        <div class="col-lg-2 col-md-2 col-sm-12 offset-1">
+            <div class="DashboardContainersSection">
+                <div class="text-center">
+                    <h5 class="DPWBold">CI-Yard</h5>
+                </div>
+                <div class="custom-table-header">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="w-35">Container</th>
+                                <th class="w-30" ng-click="SortDetails('CI','hrs','CI-T1')">
+                                    HRS
+                                    <i class="icon-arrow-down22" ng-show="CI_Hrs_Sort =='-'"></i>
+                                    <i class="icon-arrow-up22" ng-show="CI_Hrs_Sort =='+'"></i>
+                                </th>
+                                <th class="w-35" ng-click="SortDetails('CI','Location','CI-T1')">
+                                    Location
+                                    <i class="icon-arrow-down22" ng-show="CI_Location_Sort =='-'"></i>
+                                    <i class="icon-arrow-up22" ng-show="CI_Location_Sort =='+'"></i>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in CIT1Records">
+
+                                <td class="w-35" ng-class="{'coldstorebg':item.result == 'Cold Store','drybg':item.result =='Dry','oogbg':item.is_oog ==true,'reeferbg':item.result =='Reefer'}">
+                                    {{item.Container}}
+                                </td>
+                                <td class="w-30 text-center">{{item.DwellHrs}}</td>
+                                <td class="w-35">{{item.Location}}</td>
+                                @*<td>
+                                    <i style="color: #ff4565; " ng-if="item.ReExamFlag ==1" class="icon-flag3"></i>
+                                    <i style="color: #141eeb; " ng-if="item.InspectionType =='Dog Sniffing'" class="icon-flag3"></i>
+                                    <i style="color: #ff8d00; " ng-if="item.packageType =='Pallette'" class="icon-flag3"></i>
+                                    <i style="color: #ff00df9e; " ng-if="item.YardLoc =='UTC COLD Store'" class="icon-flag3"></i>
+                                    <i style="color: #0f655c; " ng-if="item.YardLoc =='DPW ColdStore'" class="icon-flag3"></i>
+                                    <i style="color: #754343; " ng-if="item.FoodFlag ==1" class="icon-flag3"></i>
+                                </td>*@
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="total-container-count-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-center"><b>Total</b></h6>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-center"><b>{{CIT1Length}}</b></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-2 col-md-2">
+            <div class="DashboardContainersSection">
+                <div class="text-center">
+                    <h5 class="DPWBold">CI-Holding Area</h5>
+                </div>
+                <div class="custom-table-header">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="w-30">Container</th>
+                                <th class="w-30" ng-click="SortDetails('CI','hrs','CI-T2')">
+                                    HRS
+                                    <i class="icon-arrow-down22" ng-show="CI_Hrs_Sort =='-'"></i>
+                                    <i class="icon-arrow-up22" ng-show="CI_Hrs_Sort =='+'"></i>
+                                </th>
+                                <th class="w-35" ng-click="SortDetails('CI','Location','CI-T2')">
+                                    Location
+                                    <i class="icon-arrow-down22" ng-show="CI_Location_Sort =='-'"></i>
+                                    <i class="icon-arrow-up22" ng-show="CI_Location_Sort =='+'"></i>
+                                </th>
+                                @*<th></th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in CIT2Records">
+
+                                <td class="w-35" ng-class="{'coldstorebg':item.result == 'Cold Store','drybg':item.result =='Dry','oogbg':item.is_oog ==true,'reeferbg':item.result =='Reefer'}">
+                                    {{item.Container}}
+                                </td>
+                                <td class="w-30 text-center">
+                                    {{item.DwellHrs}}
+                                </td>
+                                <td class="w-35">
+                                    {{item.Location}}
+                                </td>
+                                @*<td>
+                                    <i style="color: #ff4565; " ng-if="item.ReExamFlag ==1" class="icon-flag3"></i>
+                                    <i style="color: #141eeb; " ng-if="item.InspectionType =='Dog Sniffing'" class="icon-flag3"></i>
+                                    <i style="color: #ff8d00; " ng-if="item.packageType =='Pallette'" class="icon-flag3"></i>
+                                    <i style="color: #ff00df9e; " ng-if="item.YardLoc =='UTC COLD Store'" class="icon-flag3"></i>
+                                    <i style="color: #0f655c; " ng-if="item.YardLoc =='DPW ColdStore'" class="icon-flag3"></i>
+                                    <i style="color: #754343; " ng-if="item.FoodFlag ==1" class="icon-flag3"></i>
+                                </td>*@
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-container-count-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-center"><b>Total</b></h6>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-center"><b>{{CIT2Length}}</b></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-lg-2 col-md-2">
+            <div class="DashboardContainersSection">
+                <div class="text-center">
+                    <h5 class="DPWBold">FI-Yard</h5>
+                </div>
+                <div class="custom-table-header">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="w-35">Container</th>
+                                <th class="w-30" ng-click="SortDetails('FI','hrs','FI-T1')">
+                                    HRS
+                                    <i class="icon-arrow-down22" ng-show="FI_Hrs_Sort =='-'"></i>
+                                    <i class="icon-arrow-up22" ng-show="FI_Hrs_Sort =='+'"></i>
+                                </th>
+                                <th class="w-35" ng-click="SortDetails('FI','Location','FI-T1')">
+                                    Location
+                                    <i class="icon-arrow-down22" ng-show="FI_Location_Sort =='-'"></i>
+                                    <i class="icon-arrow-up22" ng-show="FI_Location_Sort =='+'"></i>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in FIT1Records">
+
+                                <td class="w-35" ng-class="{'coldstorebg':item.result == 'Cold Store','drybg':item.result =='Dry','oogbg':item.is_oog ==true,'reeferbg':item.result =='Reefer'}">
+                                    {{item.Container}}
+                                </td>
+                                <td class="w-30 text-center">{{item.DwellHrs}}</td>
+                                <td class="w-35">{{item.Location}}</td>
+                                @*<td>
+                                    <i style="color: #ff4565; " ng-if="item.ReExamFlag ==1" class="icon-flag3"></i>
+                                    <i style="color: #141eeb; " ng-if="item.InspectionType =='Dog Sniffing'" class="icon-flag3"></i>
+                                    <i style="color: #ff8d00; " ng-if="item.packageType =='Pallette'" class="icon-flag3"></i>
+                                    <i style="color: #ff00df9e; " ng-if="item.YardLoc =='UTC COldStore'" class="icon-flag3"></i>
+                                    <i style="color: #0f655c; " ng-if="item.YardLoc =='DPW ColdStore'" class="icon-flag3"></i>
+                                    <i style="color: #754343; " ng-if="item.FoodFlag ==1" class="icon-flag3"></i>
+                                </td>*@
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-container-count-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-center"><b>Total</b></h6>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-center"><b>{{FIT1Length}}</b></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-md-2">
+            <div class="DashboardContainersSection">
+                <div class="text-center">
+                    <h5 class="DPWBold">FI-Holding Area</h5>
+                </div>
+                <div class="custom-table-header">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="w-35">Container</th>
+                                <th class="w-30" ng-click="SortDetails('FI','hrs','FI-T2')">
+                                    HRS
+                                    <i class="icon-arrow-down22" ng-show="FI_Hrs_Sort =='-'"></i>
+                                    <i class="icon-arrow-up22" ng-show="FI_Hrs_Sort =='+'"></i>
+                                </th>
+                                <th class="w-35" ng-click="SortDetails('FI','Location','FI-T2')">
+                                    Location
+                                    <i class="icon-arrow-down22" ng-show="FI_Location_Sort =='-'"></i>
+                                    <i class="icon-arrow-up22" ng-show="FI_Location_Sort =='+'"></i>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in FIT2Records">
+
+                                <td class="w-35" ng-class="{'coldstorebg':item.result == 'Cold Store','drybg':item.result =='Dry','oogbg':item.is_oog ==true,'reeferbg':item.result =='Reefer'}">
+                                    {{item.Container}}
+                                </td>
+                                <td class="w-30" text-center>{{item.DwellHrs}}</td>
+                                <td class="w-35">{{item.Location}}</td>
+                                @*<td>
+                                    <i style="color: #ff4565; " ng-if="item.ReExamFlag ==1" class="icon-flag3"></i>
+                                    <i style="color: #141eeb; " ng-if="item.InspectionType =='Dog Sniffing'" class="icon-flag3"></i>
+                                    <i style="color: #ff8d00; " ng-if="item.packageType =='Pallette'" class="icon-flag3"></i>
+                                    <i style="color: #ff00df9e; " ng-if="item.YardLoc =='UTC COldStore'" class="icon-flag3"></i>
+                                    <i style="color: #0f655c; " ng-if="item.YardLoc =='DPW ColdStore'" class="icon-flag3"></i>
+                                    <i style="color: #754343; " ng-if="item.FoodFlag ==1" class="icon-flag3"></i>
+                                </td>*@
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-container-count-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-center"><b>Total</b></h6>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-center"><b>{{FIT2Length}}</b></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-2 col-md-2">
+            <div class="DashboardContainersSection">
+                <div class="text-center">
+                    <h5 class="DPWBold">Building / Mobile Scan</h5>
+                </div>
+                <div class="custom-table-header">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Container</th>
+                                <th class="w-30" ng-click="SortDetails('Exam','hrs')">
+                                    HRS
+                                    <i class="icon-arrow-down22" ng-show="Exam_Hrs_Sort =='-'"></i>
+                                    <i class="icon-arrow-up22" ng-show="Exam_Hrs_Sort =='+'"></i>
+                                </th>
+                                <th class="w-35" ng-click="SortDetails('Exam','Location')">
+                                    Location
+                                    <i class="icon-arrow-down22" ng-show="Exam_Location_Sort =='-'"></i>
+                                    <i class="icon-arrow-up22" ng-show="Exam_Location_Sort =='+'"></i>
+                                </th>                              
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in Dashboard_Exam_List">
+                                <td>
+                                    {{item.Container}}
+                                </td>
+                                <td class="text-center">{{item.DwellHrs}}</td>
+                                <td class="text-center">{{item.Location}}</td>
+                                @*<td>
+                                    <i style="color: #ff4565; " ng-if="item.RescanType =='MobileScan'" class="icon-flag3"></i>
+                                    <i style="color: #141eeb; " ng-if="item.RescanType =='BuildingScan'" class="icon-flag3"></i>
+                                </td>*@
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-container-count-section">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-center"><b>Total</b></h6>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-center"><b>{{Dashboard_Exam_List.length}}</b></h6>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row p-0">
+        <div class="col-md-12 col-sm-12 filterationSection">
+            <div class="filterDiv d-inline-block"><input type="checkbox" class="ch-coldstore" id="ch-coldstore" checked value="Cold Store" ng-click="FilterOperationView('CI','ch-coldstore')" /> Cold Store </div>
+            <div class="filterDiv d-inline-block"><input type="checkbox" class="ch-dry" id="ch-dry" checked value="Dry" ng-click="FilterOperationView('CI','ch-dry')" /> Dry </div>
+            <div class="filterDiv d-inline-block"><input type="checkbox" class="ch-oog" id="ch-oog" checked value="OOG" ng-click="FilterOperationView('CI','ch-oog')" /> OOG </div>
+            <div class="filterDiv d-inline-block"><input type="checkbox" class="ch-reefer" id="ch-reefer" checked value="Reefer" ng-click="FilterOperationView('CI','ch-reefer')" /> Reefer </div>
+
+            <div id="DogSniffingFlag" class="d-inline-block" ng-click="FilterOperationView('CI','DogSniffingFlag')">
+                <i style="color: #141eeb;" class="icon-flag3"></i>Dog Sniffing
+            </div>
+            <div id="PalletteFlag" class="d-inline-block" ng-click="FilterOperationView('CI','PalletteFlag')">
+                <i style="color: #ff8d00; " class="icon-flag3"></i>Pallette
+            </div>
+            <div id="UTCFlag" class="d-inline-block" ng-click="FilterOperationView('CI','UTCFlag')">
+                <i style="color: #ff00df9e; " class="icon-flag3"></i>UTC -CS
+            </div>
+            <div id="FoodFlag" class="d-inline-block" ng-click="FilterOperationView('CI','FoodFlag')">
+                <i style="color: #754343; " class="icon-flag3"></i>Food
+            </div>
+            <div id="MobileScanFlag" class="d-inline-block"  ng-click="FilterOperationView('Exam','MobileScanFlag')">
+                <i style="color: #ff4565;" class="icon-flag3"></i>Mobile Scan
+            </div>
+            <div id="BuildingScanFlag" class="d-inline-block"  ng-click="FilterOperationView('Exam','BuildingScanFlag')">
+                <i style="color: #141eeb; " class="icon-flag3"></i>Building Scan
+            </div>
+        </div>
+    </div>
+
+    
+
+
+
+
+</div>
+<script>
+    window.onload = function () {
+        document.getElementById('minisidebar').className = 'sidebar-xs';
+    };
+</script>

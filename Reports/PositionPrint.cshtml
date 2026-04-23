@@ -1,0 +1,175 @@
+﻿@model ExamPortal.Model.Features.Position.PositionPrintResponse
+@{
+    ViewBag.Title = "PrintReport";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report</title>
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 41px;
+        }
+
+        .table {
+            margin-bottom: 30px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, tr, th, td {
+            border: 1px solid lightgray;
+            padding: 8px !important;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .w-20 {
+            width: 20% !important;
+        }
+
+        .headerTable {
+            margin: 0px;
+        }
+
+        .headerTable {
+            margin-bottom: 10px;
+        }
+
+        .colortheme {
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        th.rightArrowbtn, td.rightArrowbtn {
+            width: 20px;
+        }
+
+        .border-0 {
+            border: 0 !important;
+        }
+
+        .badge-0 {
+            background: var( --dpw-bg-color);
+            color: white;
+        }
+
+        th {
+            background: #ededed;
+            color: black;
+        }
+
+        .text-center {
+            text-align: center !important;
+        }
+        .bordersolid{
+            border: 2px solid groove;
+        }
+        .table-bordered, th, td {
+  border: 1px solid black;
+}
+    </style>
+</head>
+<body>
+    <table class="table table-bordered">
+        <tr class="border-1 ">
+            <td class=" w-20"><img src="~/Content/images/dpworldlogo.png" height="100px" /></td>
+            <td class="border-1 text-center"><h1><b>Position Report</b></h1></td>
+
+
+            <td class="border-1 w-20"> Date: <span class="colortheme">@DateTime.Now.ToString("dd/MM/yyyy") </span>  <br />Time: <span class="colortheme"> @DateTime.Now.ToString("HH:mm:ss")</span>   </td>
+        </tr>
+    </table>
+
+    <!---<div><h2 class="headerTable">Position <span class="colortheme">ITV Driver </span></h2></div>-->
+    @{
+        int x = 0;
+        int b = 0;
+     }
+
+    @foreach (var item in Model.TrainingPrintList)
+    {
+        { x++; }
+        <table class="table">
+            <thead class="bordersolid">
+
+                <tr>
+                    <th> <span class="colortheme"> Sr#@x</span>  </th>
+                    <th>
+                        <span class="colortheme"> Training Name</span> 
+                    </th>
+
+
+                    <th colspan="5">
+                        <span class="colortheme">@item.TrainingName</span>
+                    </th>
+
+                </tr>
+            </thead>
+
+
+            @foreach (var item2 in item.ModulePrintList)
+            {
+                { b++; }
+            <tbody>
+                <tr>
+                    <td>
+              
+                        <b> @b :  Module Name</b> 
+                    </td>
+                    <td>
+
+                        @item2.TrainingModule
+                    </td>
+                    <td>
+                        
+                        <b>Hours</b> 
+                    </td>
+                    <td>
+                     @item2.Hours
+                    </td>
+                    <td>
+                       <b>Grade</b> 
+                    </td>
+                    <td>
+             
+                            @item2.Grade
+                  
+                    </td>
+                </tr>
+
+            </tbody>
+
+                
+            }
+
+
+        </table>
+        { b = 0; }
+    }
+
+
+
+
+
+
+
+
+
+
+<script>
+
+    window.print();
+</script>
+
+
+
+</body>
+
+
+
+</html>

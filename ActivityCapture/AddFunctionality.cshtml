@@ -1,0 +1,33 @@
+﻿@using ExamPortal.Model.Resources
+@{
+    ViewBag.Title = "Add";
+}
+
+
+<div ng-controller="ActivityCaptureCtrl" class="ng-cloak" ng-cloak>
+    <br />
+    <div class="card">
+        <h3 class="card-header" style="background-color:var( --dpw-bg-color) !important; color:#fff; padding:10px;">
+            Add Functionality
+        </h3>
+        <div class="card-body mt-3">
+            <div class="row">
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label>Functionality Name</label>
+                        <input type="text" ng-model="Event.Functionality" placeholder="Functionality Name" class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-6 ">
+                    <div class="text-right mt-4">
+                        <a class="btn btn-primary" href="@Url.Action("FunctionalityIndex","ActivityCapture")"> Cancel</a>
+                        <button type="submit" ng-click="AddFunctionality(Event)" class="btn btn-secondary">Save </button>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

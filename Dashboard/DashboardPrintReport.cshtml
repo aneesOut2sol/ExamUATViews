@@ -1,0 +1,1867 @@
+﻿
+@{
+    ViewBag.Title = "DashboardPrintReport";
+    Layout = null;
+    int gridIndex = 0;
+    int MultipleIndex = 0;
+    var UIAwaitingsealcutRecords = new List<ExamPortal.Model.Features.ExamActivityDashboard.ExamActivityDashboard_N4Views>();
+    var UIAwaitingInspctionRecords = new List<ExamPortal.Model.Features.ExamActivityDashboard.ExamActivityDashboard_N4Views>();
+    var UIAwatingCargoStripRecords = new List<ExamPortal.Model.Features.ExamActivityDashboard.ExamActivityDashboard_N4Views>();
+    var UIStartCargoStripRecords = new List<ExamPortal.Model.Features.ExamActivityDashboard.ExamActivityDashboard_N4Views>();
+    var UIStartRepackandSealRecords = new List<ExamPortal.Model.Features.ExamActivityDashboard.ExamActivityDashboard_N4Views>();
+    var UIRepackandSealRecords = new List<ExamPortal.Model.Features.ExamActivityDashboard.ExamActivityDashboard_N4Views>();
+    var UIWaitingtoApplySealRecords = new List<ExamPortal.Model.Features.ExamActivityDashboard.ExamActivityDashboard_N4Views>();
+    var FIHolding = new List<ExamPortal.Model.Features.ExamActivityDashboard.ExamActivityDashboard_N4Views>();
+    var FIYard = new List<ExamPortal.Model.Features.ExamActivityDashboard.ExamActivityDashboard_N4Views>();
+    var TIYardRed = new List<ExamPortal.Model.Features.ExamActivityDashboard.TIYard>();
+    var TIYardGreen = new List<ExamPortal.Model.Features.ExamActivityDashboard.TIYard>();
+    if (Model.Card == "UI (Under Inspection) Details")
+    {
+        var Data = Model.li as List<ExamPortal.Model.Features.ExamActivityDashboard.ExamActivityDashboard_N4Views>;
+
+        UIAwaitingsealcutRecords = Data
+      .Where(a => a.CustomsStage == "Awaiting sealcut" && a.WaitingtoApplySeal == 0)
+      .ToList();
+
+        // Awaiting Inspection / Clearance
+        UIAwaitingInspctionRecords = Data
+           .Where(a => (a.CustomsStage == "Awaiting Inspction" || a.CustomsStage == "Awaiting Clearance")
+                       && a.WaitingtoApplySeal == 0)
+           .ToList();
+
+        // Awaiting CargoStrip
+        UIAwatingCargoStripRecords = Data
+           .Where(a => a.CustomsStage == "Awaiting CargoStrip" && a.WaitingtoApplySeal == 0)
+           .ToList();
+
+        // Awaiting Start CargoStrip
+        UIStartCargoStripRecords = Data
+           .Where(a => a.CustomsStage == "Awaiting Start CargoStrip")
+           .ToList();
+
+        // Awaiting Repack and Seal
+        UIRepackandSealRecords = Data
+           .Where(a => a.CustomsStage == "Awaiting Repack and Seal" && a.WaitingtoApplySeal == 0)
+           .ToList();
+
+        // Awaiting Start Repack and Seal
+        UIStartRepackandSealRecords = Data
+           .Where(a => a.CustomsStage == "Awaiting Start Repack and Seal")
+           .ToList();
+
+        // Waiting to Apply Seal
+        UIWaitingtoApplySealRecords = Data
+           .Where(a => a.WaitingtoApplySeal == 1)
+           .ToList();
+    }
+    if (Model.Card == "TI (To Inspection) Details")
+    {
+        var Data = Model.TI as List<ExamPortal.Model.Features.ExamActivityDashboard.TIYard>;
+        TIYardRed = Data.Where(a => a.lst.Where(x => CheckForStatus(x, "red")).Count() > 0).ToList();
+        TIYardGreen = Data.Where(a => a.lst.Where(x => CheckForStatus(x, "green")).Count() > 0).ToList();
+    }
+    if (Model.Card == "FI (From Inspection) Details")
+    {
+        var Data = Model.li as List<ExamPortal.Model.Features.ExamActivityDashboard.ExamActivityDashboard_N4Views>;
+        FIHolding = Data.Where(x => x.Position == "CI-T2").ToList();
+        FIYard = Data.Where(x => x.Position == "CI-T1").ToList();
+    }
+    @functions {
+        public bool CheckForStatus(dynamic item, string status)
+        {
+            if (status == "green")
+            {
+                if (item.category != "EXPRT" && item.TotalContainer == item.TotalXrayResultReceived)
+                {
+                    return true;
+                }
+                else if (item.category == "EXPRT" && item.InspectionType == "Manual")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (item.category != "EXPRT" && item.TotalContainer != item.TotalXrayResultReceived)
+                {
+                    return true;
+                }
+                else if (item.category == "EXPRT" && item.InspectionType != "Manual")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+    }
+
+
+}
+
+<style>
+    .textGreen {
+        color: green;
+    }
+
+    .textRed {
+        color: red;
+    }
+
+    @@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+
+    .red-dot {
+        background: red;
+        height: 10px;
+        width: 10px;
+        display: inline-block;
+        border-radius: 10px;
+    }
+
+    .heading-print {
+        color: black;
+        font-weight: bold;
+        margin: 0px;
+    }
+
+
+    * {
+        font-family: 'Lato-regular', sans-serif;
+        color: black;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    table {
+        width: 100%;
+        box-sizing: border-box;
+        border-collapse: collapse;
+        margin: 15px 0px;
+    }
+
+    th {
+        font-weight: bold;
+    }
+
+    td, th {
+        padding: 10px !important;
+        border: 1px solid #191919;
+        text-align: center !important;
+    }
+
+    .HeaderTr {
+        background: #f3f3f3;
+    }
+
+    img {
+        height: 70px;
+        border: none;
+    }
+
+    @@media print {
+        table {
+            width: 100%;
+            box-sizing: border-box;
+            border-collapse: collapse;
+            margin: 15px 0px;
+        }
+    }
+
+    .statusred {
+        width: 20px;
+        height: 20px;
+        border-radius: 40px;
+        background-color: red;
+    }
+
+    .statusgreen {
+        width: 20px;
+        height: 20px;
+        border-radius: 40px;
+        background-color: green;
+    }
+    .Planned-dot {
+        background: orange;
+        border-radius: 50%;
+        text-align: center;
+        width: fit-content;
+        padding: 1px 4px;
+        display: inline-block;
+    }
+</style>
+
+<table>
+    <tr class="HeaderTr">
+        <td class="text-center">
+            <img src="~/Content/images/dpworldlogo.png" />
+        </td>
+        <td colspan="3">
+            <h1 class="text-center heading-print">
+                @Model.Card
+            </h1>
+        </td>
+        <td colspan="3">
+            <table border="0">
+                <tr>
+                    <th> Date</th>
+                    <td>@DateTime.Now.ToString("dd-MM-yyyy")</td>
+                </tr>
+                <tr>
+                    <th>
+                        Time
+                    </th>
+                    <td>@DateTime.Now.ToString("HH:mm")</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+@if (Model.Multiple != null)
+{
+
+    foreach (var x in Model.Multiple)
+    {
+
+        <table>
+
+            <tr>
+                @if (MultipleIndex == 0)
+                {
+                    <th colspan="7">TI (To Inspection)</th>
+                }
+                @if (MultipleIndex == 1)
+                {
+                    <th colspan="7">UI (Under Inspection)</th>
+                }
+                @if (MultipleIndex == 2)
+                {
+                    <th colspan="7">FI (From Inspection)</th>
+                }
+                @if (MultipleIndex == 3)
+                {
+                    <th colspan="7">Building / Mobile Scan</th>
+                }
+            </tr>
+            <tr>
+                <th>Seq.No</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Elapsed Hrs</th>
+                @if (MultipleIndex == 1 || MultipleIndex == 2)
+                {
+                    <th>Overall Hrs</th>
+                }
+
+            </tr>
+            @foreach (var item in x)
+            {
+                gridIndex++;
+                <tr>
+                    <td>@gridIndex</td>
+                    <td>@item.Container</td>
+                    <td>@item.Location</td>
+                    <td>@item.DwellHrs</td>
+                    @if (MultipleIndex == 1 || MultipleIndex == 2)
+                    {
+                        <td>@item.OverallHrs</td>
+                    }
+                </tr>
+            }
+            @{gridIndex = 0; }
+            @{MultipleIndex++;}
+        </table>
+    }
+
+
+}
+@*Single Stage*@
+@if (Model.Multiple == null)
+{
+    var Index = 0;
+    if (Model.Card == "Waiting Time SealCut")
+    {
+        <table>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Stage Elapsed Hrs</th>
+                <th>Overall Hrs</th>
+                <th>Palletized</th>
+                <th>Cargo Type</th>
+                <th>LOC Sent</th>
+            </tr>
+            @if (Model.li != null && Model.li.Count > 0)
+            {
+                foreach (var item in Model.li)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+                        <td>
+                            @if (item.packageType == "Pallette")
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else if (item.packageType == "NONPallette")
+                            {
+                                <span class="textRed">No</span>
+                            }
+                        </td>
+                        <td>@item.CargoType</td>
+                        <td>
+                            @if (item.LOCSent)
+                            {
+                                <span>@item.LOCTime</span>
+                            }
+
+                        </td>
+                    </tr>
+                }
+
+            }
+
+
+        </table>
+    }
+    if (Model.Card == "Waiting Time Start Strip")
+    {
+        <table>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Photos Done</th>
+                <th>Photos Elapsed Hrs</th>
+                <th>Stage Elapsed Hrs</th>
+
+                <th>Overall Hrs</th>
+                <th>Palletized</th>
+                <th>Cargo Type</th>
+                <th>STS Received</th>
+            </tr>
+            @if (Model.li != null && Model.li.Count > 0)
+            {
+                foreach (var item in Model.li)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+
+                        <td>
+                            @if (item.SealCutPhotoUpdated == true)
+                            {
+                                <span class="green-dot">
+                                    @(item.HandleBy=="Forklift"?"FK": item.HandleBy == "Labor"?"LAB": item.HandleBy == "Mobilecrane"? "MC":"")
+                                </span>
+
+                            }
+                            else
+                            {
+                                <span class="red-dot"></span>
+
+                            }
+                        </td>
+                        <td>@item.PhotoOpenElapsedHr</td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+                        <td>
+                            @if (item.packageType == "Pallette")
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else if (item.packageType == "NONPallette")
+                            {
+                                <span class="textRed">No</span>
+                            }
+                        </td>
+                        <td>@item.CargoType</td>
+                        <td>
+                            @if (item.STSReceived == true)
+                            {
+                                <span>@item.STSTime</span>
+                            }
+
+                        </td>
+                    </tr>
+                }
+
+            }
+
+
+        </table>
+    }
+    if (Model.Card == "Cargo Strip In Progress")
+    {
+        <table>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Handle by</th>
+                <th>DTS</th>
+                <th>Stage Elapsed Hrs</th>
+                <th>Approval Elapsed HRS</th>
+                <th>Overall Hrs</th>
+                <th>Palletized</th>
+                <th>Cargo Type</th>
+                <th>STS Received</th>
+            </tr>
+            @if (Model.li != null && Model.li.Count > 0)
+            {
+
+                foreach (var item in Model.li)
+                {
+
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>
+                            @if (item.HandleBy != null)
+                            {
+                                <span class="green-dot">
+                                    @(item.HandleBy.ToLower() =="forklift"?"FK": (item.HandleBy.ToLower() == "labor"|| item.HandleBy.ToLower() == "labour") ?"LAB":item.HandleBy.ToLower() == "mobilecrane"? "MC" : item.HandleBy.ToLower() == "nostrip"?"NST":"")
+                                </span>
+
+                            }
+                            else
+                            {
+                                <span class="red-dot"></span>
+
+                            }
+                        </td>
+                        <td>
+                            @if (item.Difficulties == true)
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="textRed">No</span>
+
+                            }
+
+
+                        </td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.StripApprovalElapsedHr</td>
+                        <td>@item.OverallHrs</td>
+                        <td>
+                            @if (item.packageType == "Pallette")
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else if (item.packageType == "NONPallette")
+                            {
+                                <span class="textRed">No</span>
+                            }
+                        </td>
+                        <td>@item.CargoType</td>
+                        <td>
+                            @if (item.STSReceived == true)
+                            {
+                                <span>@item.STSTime</span>
+                            }
+                        </td>
+                    </tr>
+                }
+
+            }
+
+
+        </table>
+    }
+    if (Model.Card == "Waiting Time Custom Inspection")
+    {
+        <table>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Handle by</th>
+                <th>DTS</th>
+                <th>Stage Elapsed Hrs</th>
+                <th>Overall Hrs</th>
+                <th>Palletized</th>
+                <th>Cargo Type</th>
+                <th>LOC Sent</th>
+            </tr>
+            @if (Model.li != null && Model.li.Count > 0)
+            {
+                foreach (var item in Model.li)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>
+                            @if (item.HandleBy != null)
+                            {
+                                <span class="green-dot">
+                                    @(item.HandleBy.ToLower() =="forklift"?"FK": (item.HandleBy.ToLower() == "labor"|| item.HandleBy.ToLower() == "labour") ?"LAB":item.HandleBy.ToLower() == "mobilecrane"? "MC" : item.HandleBy.ToLower() == "nostrip"?"NST":"")
+                                </span>
+
+                            }
+                            else
+                            {
+                                <span class="red-dot"></span>
+
+                            }
+                        </td>
+                        <td>
+                            @if (item.Difficulties == true)
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="textRed">No</span>
+
+                            }
+
+
+                        </td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+                        <td>
+                            @if (item.packageType == "Pallette")
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else if (item.packageType == "NONPallette")
+                            {
+                                <span class="textRed">No</span>
+                            }
+                        </td>
+                        <td>@item.CargoType</td>
+                        <td>
+                            @if (item.CustomsStage == "Awaiting Clearance")
+                            {
+                                <div class="holdCircle"></div>
+
+                            }
+                        </td>
+                    </tr>
+                }
+
+            }
+
+
+        </table>
+    }
+    if (Model.Card == "Waiting Time Start Repack")
+    {
+        <table>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Handle by</th>
+                <th>DTS</th>
+                <th>Stage Elapsed Hrs</th>
+                <th>Overall Hrs</th>
+                <th>Palletized</th>
+                <th>Cargo Type</th>
+                <th>STS Received</th>
+            </tr>
+            @if (Model.li != null && Model.li.Count > 0)
+            {
+                foreach (var item in Model.li)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>
+                            @if (item.HandleBy != null)
+                            {
+                                <span class="green-dot">
+                                    @(item.HandleBy.ToLower() =="forklift"?"FK": (item.HandleBy.ToLower() == "labor"|| item.HandleBy.ToLower() == "labour") ?"LAB":item.HandleBy.ToLower() == "mobilecrane"? "MC": item.HandleBy.ToLower() == "nostrip"?"NST":"")
+                                </span>
+
+                            }
+                            else
+                            {
+                                <span class="red-dot"></span>
+
+                            }
+                        </td>
+                        <td>
+                            @if (item.Difficulties == true)
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="textRed">No</span>
+
+                            }
+
+
+                        </td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+                        <td>
+                            @if (item.packageType == "Pallette")
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else if (item.packageType == "NONPallette")
+                            {
+                                <span class="textRed">No</span>
+                            }
+                        </td>
+                        <td>@item.CargoType</td>
+                        <td>
+                            @if (item.STSReceived == true)
+                            {
+                                <span>@item.STSTime</span>
+                            }
+                        </td>
+                    </tr>
+                }
+
+            }
+
+
+        </table>
+    }
+    if (Model.Card == "Cargo Repack In Progress")
+    {
+        <table>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Handle by</th>
+                <th>DTS</th>
+                <th>Stage Elapsed Hrs</th>
+                <th>Approval Elapsed Hrs</th>
+                <th>Overall Hrs</th>
+                <th>Palletized</th>
+                <th>Cargo Type</th>
+            </tr>
+            @if (Model.li != null && Model.li.Count > 0)
+            {
+                foreach (var item in Model.li)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>
+                            @if (item.HandleBy != null)
+                            {
+                                <span class="green-dot">
+                                    @(item.HandleBy.ToLower() =="forklift"?"FK": (item.HandleBy.ToLower() == "labor"|| item.HandleBy.ToLower() == "labour") ?"LAB":item.HandleBy.ToLower() == "mobilecrane"? "MC":item.HandleBy.ToLower() == "nostrip" ?"NST": "")
+                                </span>
+
+                            }
+                            else
+                            {
+                                <span class="red-dot"></span>
+
+                            }
+                        </td>
+                        <td>
+                            @if (item.Difficulties == true)
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="textRed">No</span>
+
+                            }
+
+
+                        </td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.RepackApprovalElapsedHr</td>
+                        <td>@item.OverallHrs</td>
+                        <td>
+                            @if (item.packageType == "Pallette")
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else if (item.packageType == "NONPallette")
+                            {
+                                <span class="textRed">No</span>
+                            }
+                        </td>
+                        <td>@item.CargoType</td>
+
+                    </tr>
+                }
+
+            }
+
+
+        </table>
+    }
+    if (Model.Card == "Waiting to Apply Seal")
+    {
+        <table>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Stage Elapsed Hrs</th>
+                <th>Overall Hrs</th>
+                <th>Palletized</th>
+                <th>Cargo Type</th>
+                <th>LOC Sent</th>
+            </tr>
+            @if (Model.li != null && Model.li.Count > 0)
+            {
+                foreach (var item in Model.li)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+                        <td>
+                            @if (item.packageType == "Pallette")
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else if (item.packageType == "NONPallette")
+                            {
+                                <span class="textRed">No</span>
+                            }
+                        </td>
+                        <td>@item.CargoType</td>
+                        <td>
+                            @if (item.LOCSent == true)
+                            {
+                                <span>
+                                    @item.LOCTime
+                                </span>
+                            }
+                        </td>
+
+                    </tr>
+                }
+
+            }
+
+
+        </table>
+    }
+    if (Model.Card == "UI (Under Inspection) Details")
+    {
+
+        //SealCut
+        <table>
+            <tr>
+                <th style=" background: #e6e6e6;" colspan="9">Waiting Time SealCut</th>
+            </tr>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Stage Elapsed Hrs</th>
+                <th>Overall Hrs</th>
+                <th>Palletized</th>
+                <th>Cargo Type</th>
+                <th>LOC Sent</th>
+            </tr>
+            @if (UIAwaitingsealcutRecords != null && UIAwaitingsealcutRecords.Count > 0)
+            {
+                Index = 0;
+                foreach (var item in UIAwaitingsealcutRecords)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+                        <td>
+                            @if (item.packageType == "Pallette")
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else if (item.packageType == "NONPallette")
+                            {
+                                <span class="textRed">No</span>
+                            }
+                        </td>
+                        <td>@item.CargoType</td>
+                        <td>
+                            @if (item.LOCSent)
+                            {
+                                <span>@item.LOCTime</span>
+                            }
+
+                        </td>
+                    </tr>
+                }
+
+            }
+
+
+        </table>
+        //Strip Start
+        <table>
+            <tr>
+                <th style=" background: #e6e6e6;" colspan="11">
+                    Waiting Time Start Strip
+                </th>
+            </tr>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+
+                <th>Photos Done</th>
+                <th>Photos Elapsed Hrs</th>
+                <th>Stage Elapsed Hrs</th>
+                <th>Overall Hrs</th>
+                <th>Palletized</th>
+                <th>Cargo Type</th>
+                <th>STS Received</th>
+            </tr>
+            @if (UIStartCargoStripRecords != null && UIStartCargoStripRecords.Count > 0)
+            {
+                Index = 0;
+                foreach (var item in UIStartCargoStripRecords)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+
+                        <td>
+                            @if (item.SealCutPhotoUpdated == true)
+                            {
+                                <span class="green-dot">
+                                    @(item.HandleBy=="Forklift"?"FK": item.HandleBy == "Labor"?"LAB": item.HandleBy == "Mobilecrane"? "MC":"")
+                                </span>
+
+                            }
+                            else
+                            {
+                                <span class="red-dot"></span>
+
+                            }
+                        </td>
+                        <td>@item.PhotoOpenElapsedHr</td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+                        <td>
+                            @if (item.packageType == "Pallette")
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else if (item.packageType == "NONPallette")
+                            {
+                                <span class="textRed">No</span>
+                            }
+                        </td>
+                        <td>@item.CargoType</td>
+                        <td>
+                            @if (item.STSReceived == true)
+                            {
+                                <span>@item.STSTime</span>
+                            }
+
+                        </td>
+                    </tr>
+                }
+
+            }
+
+
+        </table>
+        //Strip Done
+        <table>
+            <tr>
+                <th style=" background: #e6e6e6;" colspan="12">Cargo Strip In Progress</th>
+            </tr>
+            <tr>
+
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Handle by</th>
+                <th>DTS</th>
+                <th>Stage Elapsed Hrs</th>
+                <th>Approval Elapsed HRS</th>
+                <th>Overall Hrs</th>
+                <th>Palletized</th>
+                <th>Cargo Type</th>
+                <th>STS Received</th>
+            </tr>
+            @if (UIAwatingCargoStripRecords != null && UIAwatingCargoStripRecords.Count > 0)
+            {
+                Index = 0;
+
+                foreach (var item in UIAwatingCargoStripRecords)
+                {
+
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>
+                            @if (item.HandleBy != null)
+                            {
+                                <span class="green-dot">
+                                    @(item.HandleBy.ToLower() =="forklift"?"FK": (item.HandleBy.ToLower() == "labor"|| item.HandleBy.ToLower() == "labour") ?"LAB":item.HandleBy.ToLower() == "mobilecrane"? "MC": item.HandleBy.ToLower() == "nostrip"?"NST":"")
+                                </span>
+
+                            }
+                            else
+                            {
+                                <span class="red-dot"></span>
+
+                            }
+                        </td>
+                        <td>
+                            @if (item.Difficulties == true)
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="textRed">No</span>
+                            }
+                        </td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.StripApprovalElapsedHr</td>
+                        <td>@item.OverallHrs</td>
+                        <td>
+                            @if (item.packageType == "Pallette")
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else if (item.packageType == "NONPallette")
+                            {
+                                <span class="textRed">No</span>
+                            }
+                        </td>
+                        <td>@item.CargoType</td>
+                        <td>
+                            @if (item.STSReceived == true)
+                            {
+                                <span>@item.STSTime</span>
+                            }
+                        </td>
+                    </tr>
+                }
+
+            }
+
+
+        </table>
+        // Custom Inspection
+        <table>
+            <tr>
+                <th style=" background: #e6e6e6;" colspan="11">Waiting Time Custom Inspection</th>
+            </tr>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Handle by</th>
+                <th>DTS</th>
+                <th>Stage Elapsed Hrs</th>
+                <th>Overall Hrs</th>
+                <th>Palletized</th>
+                <th>Cargo Type</th>
+                <th>LOC Sent</th>
+            </tr>
+            @if (UIAwaitingInspctionRecords != null && UIAwaitingInspctionRecords.Count > 0)
+            {
+                Index = 0;
+                foreach (var item in UIAwaitingInspctionRecords)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>
+                            @if (item.HandleBy != null)
+                            {
+                                <span class="green-dot">
+                                    @(item.HandleBy.ToLower() =="forklift"?"FK": (item.HandleBy.ToLower() == "labor"|| item.HandleBy.ToLower() == "labour") ?"LAB":item.HandleBy.ToLower() == "mobilecrane"? "MC": item.HandleBy.ToLower() == "nostrip"?"NST":"")
+                                </span>
+
+                            }
+                            else
+                            {
+                                <span class="red-dot"></span>
+
+                            }
+                        </td>
+                        <td>
+                            @if (item.Difficulties == true)
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="textRed">No</span>
+
+                            }
+
+
+                        </td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+                        <td>
+                            @if (item.packageType == "Pallette")
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else if (item.packageType == "NONPallette")
+                            {
+                                <span class="textRed">No</span>
+                            }
+                        </td>
+                        <td>@item.CargoType</td>
+                        <td>
+                            @if (item.CustomsStage == "Awaiting Clearance")
+                            {
+                                <div class="holdCircle"></div>
+
+                            }
+                        </td>
+                    </tr>
+                }
+
+            }
+
+
+        </table>
+        //Repack Start
+        <table>
+            <tr>
+                <th style=" background: #e6e6e6;" colspan="11">
+                    Waiting Time Start Repack
+                </th>
+            </tr>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Handle by</th>
+                <th>DTS</th>
+                <th>Stage Elapsed Hrs</th>
+                <th>Overall Hrs</th>
+                <th>Palletized</th>
+                <th>Cargo Type</th>
+                <th>STS Received</th>
+            </tr>
+            @if (UIStartRepackandSealRecords != null && UIStartRepackandSealRecords.Count > 0)
+            {
+                Index = 0;
+                foreach (var item in UIStartRepackandSealRecords)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>
+                            @if (item.HandleBy != null)
+                            {
+                                <span class="green-dot">
+                                    @(item.HandleBy.ToLower() =="forklift"?"FK": (item.HandleBy.ToLower() == "labor"|| item.HandleBy.ToLower() == "labour") ?"LAB":item.HandleBy.ToLower() == "mobilecrane"? "MC":item.HandleBy.ToLower() == "nostrip"?"NST":"")
+                                </span>
+
+                            }
+                            else
+                            {
+                                <span class="red-dot"></span>
+
+                            }
+                        </td>
+                        <td>
+                            @if (item.Difficulties == true)
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="textRed">No</span>
+
+                            }
+
+
+                        </td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+                        <td>
+                            @if (item.packageType == "Pallette")
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else if (item.packageType == "NONPallette")
+                            {
+                                <span class="textRed">No</span>
+                            }
+                        </td>
+                        <td>@item.CargoType</td>
+                        <td>
+                            @if (item.STSReceived == true)
+                            {
+                                <span>@item.STSTime</span>
+                            }
+                        </td>
+                    </tr>
+                }
+
+            }
+
+
+        </table>
+        //Repack Done
+        <table>
+            <tr>
+                <th style=" background: #e6e6e6;" colspan="11">
+                    Cargo Repack In Progress
+                </th>
+            </tr>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Handle by</th>
+                <th>DTS</th>
+                <th>Stage Elapsed Hrs</th>
+                <th>Approval Elapsed Hrs</th>
+                <th>Overall Hrs</th>
+                <th>Palletized</th>
+                <th>Cargo Type</th>
+            </tr>
+            @if (UIRepackandSealRecords != null && UIRepackandSealRecords.Count > 0)
+            {
+                Index = 0;
+                foreach (var item in UIRepackandSealRecords)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>
+                            @if (item.HandleBy != null)
+                            {
+                                <span class="green-dot">
+                                    @(item.HandleBy.ToLower() =="forklift"?"FK": (item.HandleBy.ToLower() == "labor"|| item.HandleBy.ToLower() == "labour") ?"LAB":item.HandleBy.ToLower() == "mobilecrane"? "MC":item.HandleBy.ToLower() == "nostrip" ?"NST":"")
+                                </span>
+
+                            }
+                            else
+                            {
+                                <span class="red-dot"></span>
+
+                            }
+                        </td>
+                        <td>
+                            @if (item.Difficulties == true)
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="textRed">No</span>
+                            }
+                        </td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.RepackApprovalElapsedHr</td>
+                        <td>@item.OverallHrs</td>
+                        <td>
+                            @if (item.packageType == "Pallette")
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else if (item.packageType == "NONPallette")
+                            {
+                                <span class="textRed">No</span>
+                            }
+                        </td>
+                        <td>@item.CargoType</td>
+
+                    </tr>
+                }
+
+            }
+
+
+        </table>
+        //Apply Seal
+        <table>
+            <tr>
+                <th style=" background: #e6e6e6;" colspan="9">
+                    Waiting to Apply Seal
+                </th>
+            </tr>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Stage Elapsed Hrs</th>
+                <th>Overall Hrs</th>
+                <th>Palletized</th>
+                <th>Cargo Type</th>
+                <th>LOC Sent</th>
+            </tr>
+            @if (UIWaitingtoApplySealRecords != null && UIWaitingtoApplySealRecords.Count > 0)
+            {
+                Index = 0;
+                foreach (var item in UIWaitingtoApplySealRecords)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+                        <td>
+                            @if (item.packageType == "Pallette")
+                            {
+                                <span class="textGreen">Yes</span>
+                            }
+                            else if (item.packageType == "NONPallette")
+                            {
+                                <span class="textRed">No</span>
+                            }
+                        </td>
+                        <td>@item.CargoType</td>
+                        <td>
+                            @if (item.LOCSent == true)
+                            {
+                                <span>
+                                    @item.LOCTime
+                                </span>
+                            }
+                        </td>
+
+                    </tr>
+                }
+
+            }
+
+
+        </table>
+
+    }
+    if (Model.Card == "UI (Under Inspection)")
+    {
+        <table>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Elapsed Hrs</th>
+                <th>Overall Hrs</th>
+            </tr>
+            @if (Model.li != null && Model.li.Count > 0)
+            {
+                foreach (var item in Model.li)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+                    </tr>
+                }
+
+            }
+        </table>
+    }
+    if (Model.Card == "FI (From Inspection)")
+    {
+        <table>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Elapsed Hrs</th>
+                <th>Overall Hrs</th>
+            </tr>
+            @if (Model.li != null && Model.li.Count > 0)
+            {
+                foreach (var item in Model.li)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+                    </tr>
+                }
+
+            }
+        </table>
+    }
+    if (Model.Card == "TI  (To Inspection)" || Model.Card == "TI (To Inspection)")
+    {
+        <table>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Elapsed Hrs</th>
+                <th>Overall Hrs</th>
+            </tr>
+            @if (Model.li != null && Model.li.Count > 0)
+            {
+                foreach (var item in Model.li)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Bayan</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+                    </tr>
+                }
+
+            }
+        </table>
+    }
+    if (Model.Card == "TI-Yard")
+    {
+        <table>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>TI
+                <th>UI</th>
+                <th>Strip %</th>
+                <th>PAL</th>
+                <th>Food</th>
+                <th>Total Unit</th>
+                <th>X-Ray Result</th>
+                <th>Manual Inspection req</th>
+                <th>Elapsed HRS</th>
+                <th>Temp</th>
+                <th>Status</th>
+            </tr>
+
+            @if (Model.TI != null && Model.TI.Count > 0)
+            {
+                foreach (var x in Model.TI)
+                {
+                    var ChildIndex = 0;
+                    <tbody>
+                        @foreach (var item in x.lst)
+                        {
+                            <tr>
+                                @if (ChildIndex == 0)
+                                {
+                                    <td rowspan="@x.lst.Count">@(++Index)</td>
+                                    <td rowspan="@x.lst.Count">@item.Bayan</td>
+                                }
+
+                            <td>
+                                @if (item.IsPlanned == true)
+                                {
+                                    <div title="Planned to exam yard" class="Planned-dot">
+                                        P
+                                    </div>
+                                }
+                                @item.Container
+                            </td>
+                                <td>@item.Location</td>
+                                @if (ChildIndex == 0)
+                                {
+                                    <td rowspan="@x.lst.Count">@item.TICount</td>
+                                    <td rowspan="@x.lst.Count">@item.UICount</td>
+                                }
+                                @if (!string.IsNullOrEmpty(item.StrippingPercentage))
+                                {
+                                    <td>@(item.StrippingPercentage)%</td>
+                                }
+                                else
+                                {
+                                    <td>-</td>
+                                }
+                                <td>
+                                    @if (item.packageType != "NONPallette")
+                                    {
+                                        <span style="color: #00ed00">Y</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: #f93e3e">N</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.commodityGrp == "Food")
+                                    {
+                                        <span style="color: #00ed00">Y</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: #f93e3e">N</span>
+                                    }
+                                </td>
+                                @if (ChildIndex == 0)
+                                {
+                                    <td rowspan="@x.lst.Count">@item.TotalContainer</td>
+                                    <td rowspan="@x.lst.Count">@item.TotalXrayResultReceived</td>
+                                    <td rowspan="@x.lst.Count">@item.TotalManualInspectionReq</td>
+                                }
+                                @if (ChildIndex == 0)
+                                {
+                                    <td rowspan="@x.lst.Count">@item.DwellHrs</td>   
+                                }
+                                @if (item.Temp != null)
+                                {
+                                    <td>@item.Temp</td>
+                                }
+                                else
+                                {
+                                    <td>-</td>
+                                }
+                                <td>
+                                    @if (item.category != "EXPRT")
+                                    {
+                                        if (item.TotalContainer != item.TotalXrayResultReceived)
+                                        {
+                                            <div title="Not ready to move" class="statusred"></div>
+                                        }
+                                        else
+                                        {
+                                            <div title="Ready to move" class="statusgreen"></div>
+                                        }
+                                    }
+                                    else if (item.category == "EXPRT" && item.InspectionType == "Manual")
+                                    {
+                                        <div title="Ready to move" class="statusgreen"></div>
+                                    }
+                                    else if (item.category == "EXPRT" && item.InspectionType != "Manual")
+                                    {
+                                        <div title="Not ready to move" class="statusred"></div>
+                                    }
+                                </td>
+                            </tr>
+                            ChildIndex++;
+                        }
+                    </tbody>
+                }
+            }
+        </table>
+
+    }
+    if (Model.Card == "TI (To Inspection) Details")
+    {
+        //Red TI Yard
+        <table>
+            <tr>
+                <th colspan="15">TI-Yard <div class="statusred " style=" display: inline-block;"></div></th>
+            </tr>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>TI
+                <th>UI</th>
+                <th>Strip %</th>
+                <th>PAL</th>
+                <th>Food</th>
+                <th>Total Unit</th>
+                <th>X-Ray Result</th>
+                <th>Manual Inspection req</th>
+                <th>Elapsed HRS</th>
+                <th>Temp</th>
+                <th>Status</th>
+            </tr>
+
+            @if (TIYardRed != null && TIYardRed.Count > 0)
+            {
+                foreach (var x in TIYardRed)
+                {
+                    var ChildIndex = 0;
+                    <tbody>
+                        @foreach (var item in x.lst)
+                        {
+
+
+
+
+                            <tr>
+                                @if (ChildIndex == 0)
+                                {
+                                    <td rowspan="@x.lst.Count">@(++Index)</td>
+                                    <td rowspan="@x.lst.Count">@item.Bayan</td>
+                                }
+
+                                <td>@item.Container</td>
+                                <td>@item.Location</td>
+                                @if (ChildIndex == 0)
+                                {
+                                    <td rowspan="@x.lst.Count">@item.TICount</td>
+                                    <td rowspan="@x.lst.Count">@item.UICount</td>
+                                }
+                                @if (!string.IsNullOrEmpty(item.StrippingPercentage))
+                                {
+                                    <td>@(item.StrippingPercentage)%</td>
+                                }
+                                else
+                                {
+                                    <td>-</td>
+                                }
+                                <td>
+                                    @if (item.packageType != "NONPallette")
+                                    {
+                                        <span style="color: #00ed00">Y</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: #f93e3e">N</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.commodityGrp == "Food")
+                                    {
+                                        <span style="color: #00ed00">Y</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: #f93e3e">N</span>
+                                    }
+                                </td>
+                                @if (ChildIndex == 0)
+                                {
+                                    <td rowspan="@x.lst.Count">@item.TotalContainer</td>
+                                    <td rowspan="@x.lst.Count">@item.TotalXrayResultReceived</td>
+                                    <td rowspan="@x.lst.Count">@item.TotalManualInspectionReq</td>
+                                }
+                                <td>@item.DwellHrs</td>
+                                @if (item.Temp != null)
+                                {
+                                    <td>@item.Temp</td>
+                                }
+                                else
+                                {
+                                    <td>-</td>
+                                }
+                                <td>
+
+                                    @if (item.category != "EXPRT")
+                                    {
+                                        if (item.TotalContainer != item.TotalXrayResultReceived)
+                                        {
+                                            <div title="Not ready to move" class="statusred"></div>
+                                        }
+                                        else
+                                        {
+                                            <div title="Ready to move" class="statusgreen"></div>
+                                        }
+                                    }
+                                    else if (item.category == "EXPRT" && item.InspectionType == "Manual")
+                                    {
+                                        <div title="Ready to move" class="statusgreen"></div>
+                                    }
+                                    else if (item.category == "EXPRT" && item.InspectionType != "Manual")
+                                    {
+                                        <div title="Not ready to move" class="statusred"></div>
+                                    }
+
+                                </td>
+
+                            </tr>
+                            ChildIndex++;
+                        }
+                    </tbody>
+                }
+            }
+        </table>
+        //Green TI Yard
+        <table>
+            <tr>
+                <th colspan="15">TI-Yard <div class="statusgreen" style=" display: inline-block;"></div></th>
+            </tr>
+            <tr>
+                <th>Seq.No</th>
+                <th>Bayan</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>TI
+                <th>UI</th>
+                <th>Strip %</th>
+                <th>PAL</th>
+                <th>Food</th>
+                <th>Total Unit</th>
+                <th>X-Ray Result</th>
+                <th>Manual Inspection req</th>
+                <th>Elapsed HRS</th>
+                <th>Temp</th>
+                <th>Status</th>
+            </tr>
+
+            @if (TIYardGreen != null && TIYardGreen.Count > 0)
+            {
+                foreach (var x in TIYardGreen)
+                {
+                    var ChildIndex = 0;
+                    <tbody>
+                        @foreach (var item in x.lst)
+                        {
+
+
+
+
+                            <tr>
+                                @if (ChildIndex == 0)
+                                {
+                                    <td rowspan="@x.lst.Count">@(++Index)</td>
+                                    <td rowspan="@x.lst.Count">@item.Bayan</td>
+                                }
+
+                                <td>@item.Container</td>
+                                <td>@item.Location</td>
+                                @if (ChildIndex == 0)
+                                {
+                                    <td rowspan="@x.lst.Count">@item.TICount</td>
+                                    <td rowspan="@x.lst.Count">@item.UICount</td>
+                                }
+                                @if (!string.IsNullOrEmpty(item.StrippingPercentage))
+                                {
+                                    <td>@(item.StrippingPercentage)%</td>
+                                }
+                                else
+                                {
+                                    <td>-</td>
+                                }
+                                <td>
+                                    @if (item.packageType != "NONPallette")
+                                    {
+                                        <span style="color: #00ed00">Y</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: #f93e3e">N</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.commodityGrp == "Food")
+                                    {
+                                        <span style="color: #00ed00">Y</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: #f93e3e">N</span>
+                                    }
+                                </td>
+                                @if (ChildIndex == 0)
+                                {
+                                    <td rowspan="@x.lst.Count">@item.TotalContainer</td>
+                                    <td rowspan="@x.lst.Count">@item.TotalXrayResultReceived</td>
+                                    <td rowspan="@x.lst.Count">@item.TotalManualInspectionReq</td>
+                                }
+                                <td>@item.DwellHrs</td>
+                                @if (item.Temp != null)
+                                {
+                                    <td>@item.Temp</td>
+                                }
+                                else
+                                {
+                                    <td>-</td>
+                                }
+                                <td>
+
+                                    @if (item.category != "EXPRT")
+                                    {
+                                        if (item.TotalContainer != item.TotalXrayResultReceived)
+                                        {
+                                            <div title="Not ready to move" class="statusred"></div>
+                                        }
+                                        else
+                                        {
+                                            <div title="Ready to move" class="statusgreen"></div>
+                                        }
+                                    }
+                                    else if (item.category == "EXPRT" && item.InspectionType == "Manual")
+                                    {
+                                        <div title="Ready to move" class="statusgreen"></div>
+                                    }
+                                    else if (item.category == "EXPRT" && item.InspectionType != "Manual")
+                                    {
+                                        <div title="Not ready to move" class="statusred"></div>
+                                    }
+
+                                </td>
+
+                            </tr>
+                            ChildIndex++;
+                        }
+                    </tbody>
+                }
+            }
+        </table>
+    }
+    if (Model.Card == "FI-Holding Area")
+    {
+        <table>
+            <tr>
+                <th>Seq.No</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Elapsed HRS</th>
+                <th>Overall HRS</th>
+            </tr>
+            @if (Model.li != null && Model.li.Count > 0)
+            {
+                foreach (var item in Model.li)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+
+                    </tr>
+                }
+            }
+        </table>
+    }
+    if (Model.Card == "FI-Yard")
+    {
+        <table>
+            <tr>
+                <th>Seq.No</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Elapsed HRS</th>
+                <th>Overall HRS</th>
+            </tr>
+            @if (Model.li != null && Model.li.Count > 0)
+            {
+                foreach (var item in Model.li)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+
+                    </tr>
+                }
+            }
+        </table>
+    }
+    if (Model.Card == "FI (From Inspection) Details")
+    {
+        //Yard
+        <table>
+            <tr>
+                <th colspan="5">FI Yard</th>
+            </tr>
+            <tr>
+                <th>Seq.No</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Elapsed HRS</th>
+                <th>Overall HRS</th>
+            </tr>
+            @if (FIYard != null && FIYard.Count > 0)
+            {
+                foreach (var item in FIYard)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+
+                    </tr>
+                }
+            }
+        </table>
+        //Holding Area
+        <table>
+            <tr>
+                <th colspan="5">FI Holding Area</th>
+            </tr>
+            <tr>
+                <th>Seq.No</th>
+                <th>Container</th>
+                <th>Location</th>
+                <th>Elapsed HRS</th>
+                <th>Overall HRS</th>
+            </tr>
+            @if (FIHolding != null && FIHolding.Count > 0)
+            {
+                foreach (var item in FIHolding)
+                {
+                    <tr>
+                        <td>@(++Index)</td>
+                        <td>@item.Container</td>
+                        <td>@item.Location</td>
+                        <td>@item.DwellHrs</td>
+                        <td>@item.OverallHrs</td>
+
+                    </tr>
+                }
+            }
+        </table>
+    }
+}
+
+<script>
+    window.print();
+</script>

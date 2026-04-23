@@ -1,0 +1,138 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .Cardtabs {
+        width: auto !important;
+        display: inline-block;
+        margin: 15px;
+    }
+
+    .Absoulte {
+        position: absolute;
+        height: 0px;
+        width: 56px;
+    }
+
+    .Blocks {
+        padding: 14px;
+        box-shadow: 1px 3px 3px 1px gray;
+    }
+
+    button.btn.btn-primary.active {
+        background: #00946b;
+    }
+
+    .CountBadge {
+        position: relative;
+        z-index: 999;
+        color: #ffffff;
+        padding: 0px 5px;
+        background: #00946b;
+        border-radius: 10px;
+        float: right;
+        bottom: 7px;
+        left: 5px;
+        width: fit-content;
+        box-shadow: 1px 1px 5px -1px #000000cc;
+    }
+    .display {
+        transform: scale(0);
+        animation: scaleUp 0.5s ease-in-out forwards;
+    }
+
+
+@@keyframes scaleUp {
+	0% { opacity: 0; }
+	100% { -webkit-transform: scale(1); transform: scale(1); opacity: 1; }
+}
+</style>
+<link href="~/Content/popup/jquery-confirm.min.css" rel="stylesheet" />
+<!--Header-->
+<div class="page-header border-bottom-0">
+    <div class="page-header-content header-elements-md-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-details mr-2"></i> <span class="font-weight-semibold"><i class="icon-stack-text"></i>&nbsp;Container Location Update</span></h4>
+        </div>
+        <div class="col-md-6">
+
+        </div>
+    </div>
+</div>
+<hr />
+<!--Header-->
+<!---Block-->
+<div ng-controller="CntrLocCtrl" ng-init="init()" class="ng-cloak" ng-cloak>
+    @*<div class="card mt-2 mt-2" id="Block">
+            <div class="card-header" style=" background: var( --dpw-bg-color); color: white; padding: 8px;">
+                <h5 class="mt-2">Select Block</h5>
+            </div>
+            <div class=" card-body">
+                <div class="row">
+
+                    <div class="Cardtabs" ng-repeat="B in BlocList">
+                        <div class="Absoulte">
+                            <div class="CountBadge">{{B.Cntr}}</div>
+                        </div>
+                        <button ng-click="GetContainerList(B)" ng-class="{'active' : B.BlockNumber == CurrentBlock.BlockNumber }" class="btn btn-primary Blocks" value="{{B.BlockNumber}}">{{B.BlockNumber}} </button>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    <div class="row">
+        <div class="col-md-4">
+            <label class="">Container Number</label>
+            <input class="form-control" ng-model="ContainerNumber" ng-keyup="GetContainerList(ContainerNumber)" maxlength="500" type="text" placeholder="Enter Container Number" required>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="CounterCard">
+                <b>Total item: </b>  <span id="counts">{{ContainerList.length}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="card table-card scrollbar w-100">
+            <table class="table datatable-show-all" id="Table">
+                <thead>
+                    <tr class="table-card-head">
+
+                        <th class="nowrap">Sr#</th>
+                        <th class="nowrap">Container No</th>
+                        <th class="nowrap">Location</th>
+                        <th class="nowrap">Action</th>
+                    </tr>
+                </thead>
+                <tbody ng-show="load">
+                    <tr>
+                        <td colspan="4" style="text-align:center">Loading...</td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="!load && ContainerList.length>0">
+                    <tr ng-repeat="item in ContainerList |orderBy:'SortOrder' | filter: search">
+
+                        <td class="display">{{$index+1}}</td>
+                        <td class="display" style="text-align:left;">{{item.Cntr}}</td>
+                        <td class="display" style="text-align:left;">{{item.Position}}</td>
+                        <td class="display">
+                            <div class="list-icons">
+                                <a class="list-icons-item color-gray" ng-click="EditLocation(item.Cntr)"><i class="icon-pencil5" title="Edit Events"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="!load && ContainerList.length<1">
+                    <tr>
+                        <td colspan="4" class="display">No data found!</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="~/Content/popup/jquery-confirm.min.js"></script>
+<script src="~/Scripts/jquery.min.js"></script>

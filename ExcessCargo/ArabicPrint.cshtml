@@ -1,0 +1,185 @@
+﻿@model  ExamPortal.Model.Features.AcitvityCapture.ExcessCargo.ExcessCargo
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Excess Cargo Arabic</title>
+</head>
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+
+    table tr td {
+        padding: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        text-align: right;
+        border: 1px solid;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    .border {
+        border: 2px solid;
+    }
+
+    * {
+        font-family: 'Lato', sans-serif;
+    }
+
+    .noborder tr td {
+        border: 0px !important;
+    }
+
+    h3 {
+        font-size: 16px !important;
+    }
+
+    @@media Print {
+        h3 {
+            font-size: 16px !important;
+        }
+
+        img {
+            height: 80px !important;
+        }
+    }
+</style>
+<body>
+    <table style="width:100%" class="noborder">
+        <tr>
+            <td style="width:45%;text-align:center;">
+                <h3>
+                    DP WORLD MIDDLE EAST LIMITED<br />
+                    SOUTH CONTAINER TERMINAL<br />
+                    JEDDAH ISLAMIC PORT
+                </h3>
+            </td>
+            <td style="text-align:center">
+                <img style="height:100px !important;" src="https://fileserver.dpworld.sa/UploadedFiles/ExamPortalOPS/20230824-638284754727056703-9881-dpworldlogo.png" />
+            </td>
+            <td style="width: 45%; text-align: center;">
+                <h3>
+                    موانئ دبي العالمية للشرق الأوسط المحدودة<br />
+                    محطة الحاويات الجنوبية<br />
+                    ميناء جدة الإسلامي
+                </h3>
+            </td>
+        </tr>
+    </table>
+    <hr />
+    <table style="width:100%" class="border">
+        <tr>
+            <td> </td>
+            <td style="width:30%; white-space:nowrap">المكرم / رئيس المجموعة الجمركية</td>
+
+        </tr>
+        <tr>
+            <td> </td>
+
+            <td> المكرم / المراقـب الجـمـركي </td>
+        </tr>
+        <tr>
+            <td> </td>
+
+            <td> المكرم / مراقب الأمن الجمركي </td>
+        </tr>
+        <tr>
+            <td> </td>
+
+            <td>بضائع زائدة عن الحاوية</td>
+        </tr>
+        <tr>
+            <td> @Model.Container</td>
+
+            <td> : رقــــــم الحـاويــــة</td>
+        </tr>
+        <tr>
+            <td> </td>
+
+            <td> : مفرغة من الباخرة	</td>
+        </tr>
+        <tr>
+            @if (!string.IsNullOrEmpty(Model.Type))
+            {
+                <td>
+
+                    @{var Type = Model.Type.ToLower().Contains("bundle") ? "ربطة" : Model.Type.ToLower().Contains("pallet") ? "طبلية " : Model.Type.ToLower().Contains("carton") ? "كرتون" : Model.Type.ToLower().Contains("pieces") ? "قطع" : "";}
+                    @Type
+
+                </td>
+            }
+            else
+            {
+                <td> </td>
+            }
+
+            <td> : نـــوع الـبـضاعـــة	</td>
+        </tr>
+        <tr>
+            <td>@Model.Quantity </td>
+
+            <td> : الـكــمــيــة الزائدة	</td>
+        </tr>
+        <tr>
+            <td style="font-weight:normal !important">  البضاعة أعلاه لم تستوعبها الحاوية وهي الآن في ساحة المعاينة الجمركية .. نأمل تعميدكم  اللازم لصاحبها أو مندوب التاجر بتحميلها <br /> <b>شاكرين لكم حسن تعاونكم معنا </b></td>
+
+            <td> : ملاحظــة	</td>
+        </tr>
+        <tr>
+            <td style="width:100%;padding:0px;" colspan="2">
+                <table style="width:100%">
+                    <tr>
+                        <td style="text-align:center;width:50%" colspan="2">مندوب التاجر</td>
+                        <td style="text-align: center; width: 50%" colspan="2">مندوب الشركة</td>
+
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="width:10%"> : الاسـم  </td>
+                        <td></td>
+
+                        <td style="width:10%"> : الاسـم  </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+
+                        <td style="width:10%"> : التوقيع </td>
+                        <td></td>
+
+                        <td style="width:10%"> : التوقيع </td>
+                    </tr>
+                    <tr>
+
+                        <td style="text-align:center;" colspan="4">مندوب الأمن الجمركي</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+
+                        <td style="width:10%"> : الاسـم  </td>
+
+
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+
+                        <td style="width:10%"> : التوقيع </td>
+
+                    </tr>
+                </table>
+
+
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+<script>
+    window.print();
+</script>

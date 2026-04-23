@@ -1,0 +1,321 @@
+﻿
+@{
+    ViewBag.Title = "SLAConfig";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .modal-body {
+        max-height: 70vh !important;
+        overflow: auto !important;
+    }
+
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .add-button {
+        background-color: #163D65;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+    }
+
+    .CloseModalBtn {
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        z-index: 99999999999 !important;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px !important;
+        padding: 8px;
+        cursor: pointer;
+        background: #173a64;
+        z-index: 99999999999 !important;
+    }
+
+    .close {
+        display: none;
+    }
+
+    .CloseModalBtn .fa-times-circle-o {
+        color: #ffff !important;
+    }
+
+    .modal-content {
+        background-color: #f4f2fa !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+
+    .modal-title {
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+
+    .modal-footer {
+        border-top: none !important;
+        align-content: center;
+        text-align: center;
+    }
+</style>
+
+<div class="ng-cloak" ng-cloak ng-controller="SLAConfigCtrl" ng-init="init()">
+    <!--Title-->
+    <div class="card mt-2 d-flex">
+        <div class="card-body">
+            <div class="header-row">
+                <h2>SLA Configuration</h2>
+                <div>
+                    <input type="button" class="btn btn-secondary" value="Filters" data-toggle="collapse" data-target="#demo" />
+                    <button class="add-button" ng-click="OpenAddSLA()"><i class="icon-add m-r-5 text-white"></i> Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Search Filter Code Start-->
+    <div class="card collapse" id="demo">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class=" form-group">
+                        <label class="Starick">Activity</label>                       
+                        <select data-placeholder="Please Select activity" class="form-control select-clear" id="dd1"
+                                ng-model="filter.Activity"
+                                ng-change="ChangeSubCategory(filter.Activity)"
+                                required data-fouc>
+                            <option></option>
+                            <option ng-repeat="x in ActivityList track by $index" value="{{x.Category}}">{{x.Category}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4" ng-show="SubcategoryList!=null && SubcategoryList.length>0">
+                    <div class=" form-group">
+                        <label class="Starick">Process</label>
+                        <select data-placeholder="Please select process" class="form-control select-clear" id="dd2" ng-model="filter.process">
+                            <option></option>
+                            <option ng-repeat="x in subcategorylist track by $index" value="{{x.item}}">{{x.item}}</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class=" form-group">
+                        <label class="Starick">Hours</label>
+                        <select data-placeholder="Please select hours" class="form-control select-clear" id="dd3"  ng-model="filter.Hours">
+                            <option></option>
+                            <option ng-repeat="x in HoursList track by $index" value="{{x}}">{{x}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class=" form-group">
+                        <label class="Starick">Minutes</label>
+                        <select  data-placeholder="Please select minutes" class="form-control select-clear" id="dd4" ng-model="filter.Minutes">
+                            <option></option>
+                            <option ng-repeat="x in MinutesList track by $index" value="{{x}}">{{x}}</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <button class="btn btn-reset pull-right" ng-click="filter={}">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Grid-->
+    <div class="row">
+        <div id="tblrep" class="card table-card scrollbar">
+            <table class="table datatable-show-all text-center" id="table-id">
+                <thead>
+                    <tr class="table-card-head">
+                        <th>SR#</th>
+                        <th>Activity</th>
+                        <th>Process</th>
+                        <th>Hours</th>
+                        <th>Mintues</th>
+                        <th>Created At</th>
+                        <th>Created By</th>
+                        <th>Updated At</th>
+                        <th>Updated By</th>
+                        <th>Action</th>
+
+                    </tr>
+                </thead>
+                <tbody class="ng-cloak" ng-cloak>
+                    <tr ng-repeat="item in SLAList | filter:filter:false">
+                        <td>{{$index+1}}</td>
+                        <td>{{item.Activity}}</td>
+                        <td>{{item.Process || '-'}}</td>
+                        <td>{{item.Hours}}</td>
+                        <td>{{item.Minutes}}</td>
+                        <td>{{item.CreatedAt | date :'dd/MM/yyyy HH:mm:ss'}}</td>
+                        <td>{{item.CreatedBy}}</td>
+                        <td>{{(item.UpdatedAt | date :'dd/MM/yyyy HH:mm:ss') || '-'}}</td>
+                        <td>{{item.UpdatedBy || '-'}}</td>
+                        <td><i class="icon-pencil" title="Click to Update" ng-click="EditSLAConfig(item.Id)"></i></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--Add Modal-->
+    <div class="modal fade" id="SLAAdd" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+            <div class="modal-content" style="overflow:visible !important">
+                <div class="CloseModalBtn" data-dismiss="modal">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Add SLA</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class=" form-group">
+                                <label class="Starick">Activity</label>
+                                <select class="form-control" data-placeholder="Select activity" ng-model="SLAObj.Activity" ng-change="ChangeSubCategoryAdd(SLAObj.Activity)">
+                                    <option selected hidden disabled value="">Select activity</option>
+                                    <option ng-repeat="x in ActivityList track by $index" value="{{x.Category}}">{{x.Category}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6" ng-show="SubcategoryList!=null && SubcategoryList.length>0">
+                            <div class=" form-group">
+                                <label class="Starick">Process</label>
+                                <select class="form-control" data-placeholder="Select process" ng-model="SLAObj.Process">
+                                    <option selected hidden disabled value="">Select process</option>
+                                    <option ng-repeat="x in SubcategoryList track by $index" value="{{x.item}}">{{x.item}}</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class=" form-group">
+                                <label class="Starick">Hours</label>
+                                <select class="form-control" data-placeholder="Select hours" ng-model="SLAObj.Hours">
+                                    <option selected hidden disabled value="">Select hours</option>
+                                    <option ng-repeat="x in HoursList track by $index" value="{{x}}">{{x}}</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class=" form-group">
+                                <label class="Starick">Minutes</label>
+                                <select class="form-control" data-placeholder="Select minutes" ng-model="SLAObj.Minutes">
+                                    <option selected hidden disabled value="">Select minutes</option>
+                                    <option ng-repeat="x in MinutesList track by $index" value="{{x}}">{{x}}</option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-success" ng-click="SubmitSLAConfig(SLAObj)">
+                                Submit
+                            </button>
+                            <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Edit SLA-->
+    <div class="modal fade" id="SLAEdit" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+            <div class="modal-content" style="overflow:visible !important">
+                <div class="CloseModalBtn" data-dismiss="modal">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit SLA</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class=" form-group">
+                                <label class="Starick">Activity</label>
+                                <select class="form-control" data-placeholder="Select activity" ng-model="EditSLAObj.Activity" ng-change="ChangeSubCategoryUpdate(EditSLAObj.Activity)">
+                                    <option selected hidden disabled value="">Select activity</option>
+                                    <option ng-repeat="x in ActivityList track by $index" ng-selected="x.Category==EditSLAObj.Activity" value="{{x.Category}}">{{x.Category}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6" ng-show="SubcategoryList!=null && SubcategoryList.length>0">
+                            <div class=" form-group">
+                                <label class="Starick">Process</label>
+                                <select class="form-control" data-placeholder="Select process" ng-model="EditSLAObj.Process">
+                                    <option selected hidden disabled value="">Select process</option>
+                                    <option ng-repeat="x in SubcategoryList track by $index" ng-selected="x.item==EditSLAObj.Process" value="{{x.item}}">{{x.item}}</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class=" form-group">
+                                <label class="Starick">Hours</label>
+                                <select class="form-control" data-placeholder="Select hours" ng-model="EditSLAObj.Hours">
+                                    <option selected hidden disabled value="">Select hours</option>
+                                    <option ng-repeat="x in HoursList track by $index" ng-selected="x==EditSLAObj.Hours" value="{{x}}">{{x}}</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class=" form-group">
+                                <label class="Starick">Minutes</label>
+                                <select class="form-control" data-placeholder="Select minutes" ng-model="EditSLAObj.Minutes">
+                                    <option selected hidden disabled value="">Select minutes</option>
+                                    <option ng-repeat="x in MinutesList track by $index" ng-selected="x==EditSLAObj.Minutes" value="{{x}}">{{x}}</option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-success" ng-click="UpdateSLAConfig(EditSLAObj)">
+                                Submit
+                            </button>
+                            <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

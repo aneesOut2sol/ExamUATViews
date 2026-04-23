@@ -1,0 +1,225 @@
+﻿
+@{
+    ViewBag.Title = "AddLabourAssignment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .modal-content {
+        background-color: #fff !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+    .CloseModalBtn {
+        background: var( --dpw-bg-color);
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px;
+        padding: 8px;
+        cursor: pointer;
+    }
+    .CloseModalBtn {
+        z-index: 999;
+    }
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+</style>
+<div ng-controller="LabourAssignmentCtrl" ng-init="AddEvnetInit()">
+    <br />
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-stack-text mr-2"></i><span class="font-weight-semibold"> Labour Assignmnet Event</span></h4>
+            </div>
+            <div class="page-title d-flex">
+                <input type="button" class="btn btn-primary  pull-right ml-2"  value="Add Event" data-toggle="collapse" data-target="#Events" />
+                <input type="button" class="btn btn-secondary  pull-right ml-2" value="Filters" data-toggle="collapse" data-target="#Filters" />
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="accordion" id="Acc">
+                <!--Add Form-->
+                <div class="card collapse" id="Events" data-parent="#Acc">
+
+                    <h3 class="card-header" style="background-color:var( --dpw-bg-color) !important; color:#fff; padding:10px;">
+                        Add Event
+                    </h3>
+                    <div class="card-body mt-3">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Event</label><span class="required-starig">*</span>
+                                    <select data-placeholder="Please Select Event" id="Event" class="form-control select-clear" ng-model="Event.EventId" data-fouc>
+                                        <option></option>
+                                        <option ng-repeat="E in EventsList" value="{{E.EventId}}">{{E.EventId}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label>Event Name</label><span class="required-starig">*</span>
+                                    <input class="form-control" ng-model="Event.DisplayName" maxlength="500" type="text" placeholder="Enter Event Name" required>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label>Sort No</label>
+                                    <input ng-model="Event.SortOrder" type="text" placeholder="Sort Order" onkeypress="return event.charCode>=48 && event.charCode<=57" class="form-control">
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12" style="text-align:end">
+                                    <button class="btn btn-primary" type="button" ng-click="AddEvent(Event)">Add Event</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <!--Filter-->
+                <div class="card collapse" id="Filters" data-parent="#Acc">
+
+                    <h3 class="card-header" style="background-color:var( --dpw-bg-color) !important; color:#fff; padding:10px;">
+                        Filter
+                    </h3>
+                    <div class="card-body mt-3">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Event</label><span class="required-starig">*</span>
+                                    <input class="form-control" ng-model="filter.EventName" maxlength="500" type="text" placeholder="Enter Event Name" required>
+
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label>Event Name</label><span class="required-starig">*</span>
+                                    <input class="form-control" ng-model="filter.DisplayName" maxlength="500" type="text" placeholder="Enter Event Name" required>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label>Sort No</label><span class="required-starig">*</span>
+                                    <input ng-model="filter.SortOrder" type="text" placeholder="Sort Order" onkeypress="return event.charCode>=48 && event.charCode<=57" class="form-control">
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label>Status</label><span class="required-starig">*</span>
+                                    <select data-placeholder="Please Select Status" id="Status" class="form-control select-clear" ng-model="filter.Status" data-fouc>
+                                        <option></option>
+                                        <option value="true">Active</option>
+                                        <option value="false">InActive</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-12 text-end" style="text-align:end">
+                                    <button type="button" ng-click="ClearFilter()" class="btn btn-primary">clear</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Counter-->
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="CounterCard">
+                <b>Total item: </b>  <span id="counts">{{(LabourEvent | filter :filter).length}}</span>
+            </div>
+        </div>
+    </div>
+    <!--Table -->
+    <div class="row">
+        <div class="card table-card scrollbar w-100">
+            <table class="table datatable-show-all" id="Table">
+                <thead>
+                    <tr class="table-card-head">
+
+                        <th class="nowrap">Sr#</th>
+                        <th class="nowrap">Event</th>
+                        <th class="nowrap">Event Name</th>
+                        <th class="nowrap">Sort Order</th>
+                        <th class="nowrap">Status</th>
+                        <th class="nowrap">Action</th>
+                    </tr>
+                </thead>
+                <tbody ng-show="LabourEvent.length>0">
+                    <tr ng-repeat="item in LabourEvent | filter: filter">
+
+                        <td>{{$index+1}}</td>
+                        <td style="text-align:left;">{{item.EventName}}</td>
+                        <td style="text-align:left;">{{item.DisplayName}}</td>
+                        <td>{{item.SortOrder}}</td>
+                        <td>
+                            <span ng-show="item.Status==true" class="badge badge-success">Active</span>
+                            <span ng-show="item.Status==false||item.Status==null" class="badge badge-danger">InActive</span>
+                        </td>
+                        <td>
+                            <div class="list-icons">
+                                <a class="list-icons-item color-gray" ng-click="OpenEditLabourAssignment(item.Id)"><i class="icon-pencil5" title="Edit Events"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="LabourEvent.length==0 || LabourEvent==undefined || LabourEvent==null">
+                    <tr>
+                        <td colspan="7"> No data found</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="EventEditOpen" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:800px;">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Custom Holds</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            <label>Event</label><span class="required-starig">*</span>
+                            <select data-placeholder="Please Select Event" id="EditEvent" class="form-control select-clear" ng-model="EditEventData.EventName" data-fouc>
+                                <option></option>
+                                <option ng-selected="EditEventData.EventName==E.EventId" ng-repeat="E in EventsList" value="{{E.EventId}}">{{E.EventId}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label>Event Name</label><span class="required-starig">*</span>
+                            <input class="form-control" ng-model="EditEventData.DisplayName" maxlength="500" type="text" placeholder="Enter Event Name" required>
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label>Sort No</label>
+                            <input ng-model="EditEventData.SortOrder" type="text" placeholder="Sort Order" onkeypress="return event.charCode>=48 && event.charCode<=57" class="form-control">
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label>Status</label>
+                            <select data-placeholder="Please Select Status" id="Editstatus" class="form-control select-clear" ng-model="EditEventData.status" data-fouc>
+                                <option ng-selected="EditEventData.Status" value="true">Active</option>
+                                <option ng-selected="EditEventData.Status" value="false">InActive</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12" style="text-align:end;">
+                            <div class="btn btn-primary">Cancel</div>
+                            <div class="btn btn-success" ng-click="UpdateLabourEvent(EditEventData)">Update</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

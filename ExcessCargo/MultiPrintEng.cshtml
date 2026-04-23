@@ -1,0 +1,265 @@
+﻿@model  List<DPWVessel.Model.Features.AcitvityCapture.ExcessCargo.ExcessCargo>
+@{
+    ViewBag.Title = "DWHVesselPrint";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <title>Excess Cargo</title>
+    <link rel="icon" type="~/Content/images/favicon.ico" sizes="16x16" href="~/Content/images/favicon.ico">
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+        .brk{
+            page-break-after:always;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        * {
+            font-family: 'Lato', sans-serif;
+        }
+
+        .no-border tr td, .no-border tr th {
+            border: 0px solid !important;
+            text-align: center;
+        }
+
+            .no-border tr td div, .no-border tr th div {
+                border: none !important;
+                border-bottom: 1px solid black !important;
+                padding: 8px;
+            }
+
+        .bold tr td {
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .Topborder {
+            border: 2px solid black !important;
+        }
+
+        h3 {
+            font-size: 15px !important;
+        }
+
+        img {
+            height: 80px !important
+        }
+
+        .innerTable {
+            margin: 0px !important;
+            height: 19vh !important;
+        }
+
+        .contentTable td {
+            width: 50% !important;
+            padding: 5px !IMPORTANT;
+            border: 1px solid !important;
+            text-align: center;
+        }
+
+        .contentTable {
+            line-height: 1.5;
+        }
+
+        .Innertab div:not(:last-child) {
+            border-bottom: 1px solid;
+        }
+
+        .Innertab div {
+            padding: 10px;
+        }
+
+        .Innertab {
+            vertical-align: baseline;
+        }
+
+        .border0 {
+            border: 2px solid;
+        }
+    </style>
+</head>
+<body>
+
+    @foreach (var item in Model)
+    {
+    <table style="width:100%" class="noboard" border="0">
+        <tr>
+            <td style="width: 40%; text-align: center; ">
+                <h3 style=" font-weight: bold; line-height: 1.5;">
+                    DP WORLD MIDDLE EAST LIMITED<br />
+                    SOUTH CONTAINER TERMINAL<br />
+                    JEDDAH ISLAMIC PORT
+                </h3>
+
+            </td>
+            <td style="width: 20%; text-align: center;">
+                <img style="height:100px !important;" src="https://fileserver.dpworld.sa/UploadedFiles/DPWVesselOPS/20230824-638284754727056703-9881-dpworldlogo.png" />
+            </td>
+            <td style="width: 40%; text-align: center; ">
+                <h3>
+                    موانئ دبي العالمية للشرق الأوسط المحدودة
+                    <br />محطة الحاويات الجنوبية
+                    <br /> ميناء جدة الإسلامي
+                </h3>
+
+            </td>
+        </tr>
+
+    </table>
+    <hr />
+    <table style="width:100%" class="noboard bold Topborder">
+        <tr>
+            <td style="text-align:center;">JEDDAH CONTAINER TERMINAL</td>
+            <td style="width:40%"></td>
+            <td style="text-align:center;">محطة حاويات جدة</td>
+        </tr>
+        <tr>
+            <td style="text-align:center;">EXCESS CARGO DELIVERY NOTICE</td>
+            <td style="width:40%"></td>
+            <td style="text-align:center;">إشعار تسليم بضائع زائدة</td>
+        </tr>
+        <tr>
+            <td style="text-align:center;">Date:@DateTime.Now.ToString("dd/MM/yyyy")</td>
+            <td style="width:40%"></td>
+            <td style="text-align:center;">@DateTime.Now.ToString("dd/MM/yyyy"): التاريخ </td>
+        </tr>
+    </table>
+    <table style="width:100%" class=" bold Topborder contentTable">
+        <tr>
+            <td>
+                CONTAINER NO
+                <br />
+                رقم الحاويـــــــة
+            </td>
+            <td>@item.Container</td>
+        </tr>
+        <tr>
+            <td>
+                CARGO LOCATION <br />
+                موقع البضاعـــــــة
+            </td>
+            <td>@item.Loaction</td>
+        </tr>
+        <tr>
+            <td>
+                TYPE AND QUANTITY OF CARGO <br />
+                نوع وكمية البضاعـــــة
+            </td>
+            <td>@item.Quantity , @item.Type</td>
+        </tr>
+        <tr>
+            <td>
+                CONTAINER DETAINED BY NAME
+                <br />
+                تم ﺤﺠﺰ الحاوية ﻣﻦ ﻗﺒﻞ
+                <br />
+                <div style="text-align:right !important;">
+                    <span>
+                        <span style="float:left;">NAME</span>الاسم
+                        <br />
+                        <br />
+                        <span style="float:left;">SIGNATURE</span>التوقيع
+                    </span>
+                </div>
+            </td>
+            <td>
+                @item.CreatedBy
+                <br />
+                @if (!string.IsNullOrEmpty(item.Detainedsign))
+                {<img src="@item.Detainedsign" alt="" />}
+                else
+                { <span>-</span>}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                EXCESS CARGO DELIVERED ON TRUCK NO
+                <br />
+                البضاعة الزائدة  سلمت على الشاحنة
+            </td>
+            <td>@item.TruckNo</td>
+        </tr>
+        <tr>
+            <td>
+                DETENTION RELEASED BY NAME
+                <br />
+                جرى فك الحجز من قبل
+                <br />
+                <div style="text-align:right !important;">
+                    <span>
+                        <span style="float:left">Name</span>  الاسم
+                        <br />
+                        <br />
+                        <span style="float:left">SIGNATURE</span>   التوقيع
+                    </span>
+                </div>
+            </td>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="text-align:left;float:left">
+                    I hereby and confirm that I have received the entire shipment for the above mentioned container, and DPW will not be held responsible for any missing cargo
+                </span>
+                <br />
+                <span style="text-align: right; float: right">
+                    أقر وأؤكد أنني استلمت الشحنة الخاصة بالحاوية اعلاه بأكملها ، ولن تتحمل شركة موانئ دبي مسؤولية أي شحنة مفقودة فيها
+                </span>
+
+
+            </td>
+            <td class="Innertab" style="padding:0px !important;">
+                <div style="text-align:right !Important">: مندوب التاجر<span></span></div>
+                <div style="text-align:right !Important">: جهة العمل<span></span></div>
+                <div style="text-align:right !Important">: التوقيع<span></span></div>
+                <div style="text-align:right !Important">: رقم الجوال<span></span></div>
+            </td>
+        </tr>
+
+    </table>
+    <table style="width:100%" class=" bold Topborder contentTable brk">
+        <tr>
+            <td style="text-align:right!important">مندوب الشركة</td>
+            <td style="text-align: right !important">الامن الجمركي</td>
+        </tr>
+        <tr>
+            <td style="text-align: right !important">: الاسم </td>
+            <td style="text-align: right !important">: الاسم</td>
+        </tr>
+        <tr>
+            <td style="text-align: right !important">: التوقيع </td>
+            <td style="text-align: right !important">: التوقيع </td>
+        </tr>
+        <tr>
+            <td style="text-align: right !important">الختم</td>
+            <td style="text-align: right !important">الختم</td>
+        </tr>
+    </table>
+    }
+</body>
+</html>
+
+
+
+
+
+<script>
+    window.print();
+</script>
+
+
+
+
+

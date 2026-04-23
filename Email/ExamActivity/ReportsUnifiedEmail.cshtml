@@ -1,0 +1,123 @@
+﻿
+@{
+    ViewBag.Title = "DamageEmail";
+    Layout = "~/Views/Shared/_EmailLayoutUpdated.cshtml";
+}
+
+<style>
+    table {
+        border: none;
+        width: 100%;
+    }
+
+    .notification-content {
+        padding: 8px 16px;
+    }
+
+    td {
+        width: 100%;
+        text-align: center;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .english {
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    .arabic {
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .pilatwidefont {
+        font-family: 'Pilat Wide Light';
+    }
+</style>
+
+@if (!string.IsNullOrEmpty(Model.EngMessage) && !string.IsNullOrEmpty(Model.ArMessage))
+{
+    <table>
+        <tr>
+            <td class="notification-content english" style="font-family: 'Pilat Wide Light';width:50%;">
+                <div>
+                    @Model.EngMessage
+                </div>
+            </td>
+            <td class="notification-content arabic" style="font-family: 'Makdessi Light';width:50% " dir="rtl" lang="ar">
+                @Model.ArMessage
+            </td>
+        </tr>
+    </table>
+}
+else if (!string.IsNullOrEmpty(Model.EngMessage))
+{
+    <table>
+        <tr>
+            <td class="notification-content english" style="font-family: 'Pilat Wide Light';width:100%;text-align:center">
+                <div>
+                    @Model.EngMessage
+                </div>
+            </td>
+        </tr>
+    </table>
+}
+else if (!string.IsNullOrEmpty(Model.ArMessage))
+{
+    <table>
+        <tr>
+            <td class="notification-content arabic" style="font-family: 'Makdessi Light';width:50%;text-align:center" dir="rtl" lang="ar">
+                @Model.ArMessage
+            </td>
+        </tr>
+    </table>
+}
+else if (Model.Report == "InspectionDelay")
+{
+    <table>
+        <tr>
+            <td class="notification-content english" style="font-family: 'Pilat Wide Light';width:100%;text-align:left !important">
+                <div style="text-align:left">
+                    <h5 style="font-family: 'Pilat Wide Black' !important"><b>Dear Team,</b></h5>
+                    <p>Please be informed that following delays has been reported in the system for @Model.Cntr:</p>
+                    <ul>
+                        @foreach (var item in Model.Reasons)
+                        {
+                            <li>@item</li>
+                        }
+                    </ul>
+                    <br />
+                    <p>
+                        To proceed with resolving the delays, please click <a href="@Model.Link" target="_blank">here</a>.
+                    </p>
+
+                </div>
+            </td>
+        </tr>
+    </table>
+}
+else if (Model.Report == "InspectionDelayRejection")
+{
+    <table>
+        <tr>
+            <td class="notification-content english" style="font-family: 'Pilat Wide Light';width:100%;text-align:left !important">
+                <div style="text-align:left">
+                    <h5 style="font-family: 'Pilat Wide Black' !important"><b>Dear Team,</b></h5>
+                    <p>Please be informed that following delay resolution has been rejected for @Model.Cntr:</p>
+                    <ul>
+                        @foreach (var item in Model.Reasons)
+                        {
+                            <li>@item</li>
+                        }
+                    </ul>
+                    <p><b>REASON:</b>@Model.RejectRemarks</p>
+                    <p>
+                        To proceed with resolving the delays, please click <a href="@Model.Link" target="_blank">here</a>.
+                    </p>
+
+                </div>
+            </td>
+        </tr>
+    </table>
+}

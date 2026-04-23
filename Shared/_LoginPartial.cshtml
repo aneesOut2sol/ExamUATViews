@@ -1,0 +1,65 @@
+﻿@using System.Text.RegularExpressions;
+@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right" style="margin-top:15px">
+
+            <li style="color:white!important">
+                <div class="dropdown profileDDMenu">
+                    <div class=" dropdown-toggle" type="button" data-toggle="dropdown">
+                        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "", "Index", "", routeValues: null, htmlAttributes: new { title = "{{LoginUsertype}}" })
+                        <span class="caret"></span>
+                    </div>
+                    <ul class="dropdown-menu" style="color:#333">
+                        <li><span><i class="icon-key"></i></span> <a data-toggle="modal" data-target="#ChangePasswordModel">Change Password</a></li>
+                        <li ng-click="Logout()"><span><i class="icon-switch"></i></span><a >Log off </a></li>
+                    </ul>
+                </div>
+
+            </li>
+            <li ng-if="BehaveWithEasyMe == 'False'"></li>
+        </ul>
+
+
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}
+
+
+<style>
+
+    .profileDDMenu .dropdown-toggle {
+        background: var( --dpw-bg-color);
+    }
+
+        .profileDDMenu .dropdown-toggle a {
+            color: white;
+        }
+
+    .profileDDMenu .dropdown-menu {
+        padding: 0px;
+    }
+
+        .profileDDMenu .dropdown-menu li a {
+            text-decoration: none;
+            color: var( --dpw-bg-color);
+        }
+
+        .profileDDMenu .dropdown-menu li {
+            padding: 5px 14px;
+        }
+
+            .profileDDMenu .dropdown-menu li:hover {
+                background: #80808021;
+            }
+</style>

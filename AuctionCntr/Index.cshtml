@@ -1,0 +1,481 @@
+﻿
+@{
+    ViewBag.Title = "Auction Containers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    .SearchForm .btn {
+        height:fit-content;
+        align-self:center;
+    }
+    .windowmode::-webkit-scrollbar-track, .mobileview::-webkit-scrollbar-track {
+        display: none !important;
+    }
+
+    tbody tr:nth-child(even) td {
+        background: none !important;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f7f7ff !important;
+    }
+
+    .table td, .table th {
+        border: none !important;
+    }
+
+    .table td, .table tr {
+        border: none;
+    }
+
+    .windowmode {
+        height: 450px;
+        overflow-y: scroll;
+        overflow-x: visible !important;
+        padding: 0px;
+        width: 100%;
+    }
+    .w-20{
+        width:20px !important;
+    }
+    .AuctionContainerPage i {
+        font-size: 22px !important;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    textarea {
+        width: 100%;
+    }
+
+    .AttachmentSection a {
+        text-decoration: none;
+        color: black;
+        cursor: pointer;
+    }
+
+    .AttachmentSection a:hover {
+        color: royalblue;
+        text-decoration: underline;
+    }
+
+
+    .LCLCard {
+        max-height: 500px;
+        overflow: auto;
+    }
+
+    .LCLCard th, .LCLCard td {
+        white-space: nowrap;
+    }
+
+    .jqueryConfrim .modal-content {
+        border-top: solid 7px #3498db;
+        border-radius: 6px !IMPORTANT;
+        background: white !important;
+    }
+
+    .jqueryConfrim .modal-header h5 {
+        font-size: 22px;
+    }
+
+    .jqueryConfrim .modal-header {
+        justify-content: center !important;
+    }
+
+    .jqueryConfrim .btn-primary {
+        background: #3498db;
+        padding: 5px 11px;
+        text-transform: uppercase;
+    }
+
+    .jqueryConfrim .btn-reset {
+        background: #363636;
+        padding: 5px 11px;
+        text-transform: uppercase;
+    }
+
+    @@keyframes zoomIn {
+        0% {
+            opacity: 0;
+            -webkit-transform: scale3d(.3, .3, .3);
+            transform: scale3d(.3, .3, .3);
+        }
+
+        50% {
+            opacity: 1;
+        }
+    }
+
+    .ZoominAnimate {
+        animation: zoomIn 0.2s linear;
+    }
+
+    #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #111111de;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+        display: none;
+        overflow: scroll;
+    }
+
+    #overlay img {
+        max-width: 90%;
+        max-height: 90%;
+        transition: transform 0.5s ease;
+    }
+
+    #close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    ul.Damage_Images {
+        padding: 0px;
+        border: 1px solid #ececec;
+    }
+
+    ul.Damage_Images li .Icon span {
+        padding: 7px;
+        /*border: 1px solid #343434;*/
+        border-radius: 50%;
+        color: #6b6868 !important;
+    }
+
+    ul.Damage_Images li {
+        padding: 12px 18px;
+        list-style: none;
+        border-bottom: 1px solid #e8e8e8cf;
+        color: #6b6868 !important;
+    }
+    .badge-sm{
+        width:fit-content!important;
+        font-size:smaller;
+    }
+    .cursor-pointer {
+        cursor: pointer;
+        transition: font-size 0.3s ease;
+    }
+    .cursor-pointer:hover {
+        font-size: x-small;
+    }
+
+</style>
+<div ng-controller="AuctionCntrCtrl" ng-cloak class="ng-cloak AuctionContainerPage" ng-init="init()">
+
+    <div class="page-header border-bottom-0 blur">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-details mr-2"></i> <span class="font-weight-semibold"><i class="icon-stack-text"></i>&nbsp; {{HeaderText}}</span></h4>
+            </div>
+            <div class="col-md-6">
+                <div class="pull-right d-inline-block">
+                    <button class="btn btn-primary" ng-click="Export2Excel()">Export To Excel</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <hr />
+
+    <div class="card" @*ng-if="!ishistory"*@>
+        <div class="card-body">
+            <form class="SearchForm" id="SearchFormSection" name="SearchFormSection">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label Starick">Container</label>
+                            <input type="text" id="CntrInput" ng-change="FilterpasteData($event,Search.Container)" ng-model="Search.Container"  class="form-control" placeholder="Enter Container" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label Starick">BL</label>
+                            <input type="text" id="BLInput"  ng-model="Search.bl_nbr"  class="form-control" placeholder="Enter BL" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label Starick">Bayan</label>
+                            <input type="text" id="BayanInput"  ng-model="Search.BayanNo"  class="form-control " placeholder="Enter Bayan" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label Starick">Status</label>
+                            <input type="text" id="StatusInput"  ng-model="Search.Status"  class="form-control" placeholder="Status" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 d-flex">
+                        <button class="btn btn-primary mr-2"  ng-click="SearchData(Search)">Search</button>
+                        <button class="btn btn-reset"  ng-click="Reset()">Reset</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    @*<div ng-show="ShowProgress">
+            @Html.Partial("_ProgressBar")
+        </div>*@
+
+
+    <!--<div class="row" ng-show="GenerateInvoiceButtonVisibility()" ng-if="!ishistory">
+        <div class="col-md-12 col-lg-12 col-sm-12">-->
+    @*<div class="CounterCard">
+            <b>Total item: </b>  <span id="counts">{{(ContainerRecords).length}}</span>
+        </div>*@
+    <!--<div class="pull-right d-inline-block mb-3">
+                <button class="btn btn-primary" ng-click="GenerateInvoice()">Generate Invoice</button>
+            </div>
+        </div>
+    </div>-->
+    <div class="row" >
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            @*<div class="CounterCard">
+            <b>Total item: </b>  <span id="counts">{{(ContainerRecords).length}}</span>
+        </div>*@
+            @if (User.IsInRole("ExamOfficer") || User.IsInRole("Admin"))
+            {
+                <div class="pull-right d-inline-block mb-3 mx-2" ng-show="UpdateActionButtonVisibility('Custom Nomination Pending,Invoice Not Generated')">
+                    <button class="btn btn-primary" ng-click="UpdateAuctionInspectionApi('Custom Nomination Pending,Invoice Not Generated','Update_AuctionInspection',null)">Update Auction Inspection</button>
+                </div>
+
+
+                <div class="pull-right d-inline-block mb-3  mx-2" ng-show="UpdateActionButtonVisibility('Auction Conformation Pending')">
+                    <button class="btn btn-primary" ng-click="UpdateAuctionInspectionApi('Auction Conformation Pending','Update_AuctionConformation',null)">Update Auction Conformation</button>
+                </div>
+                <div class="pull-right d-inline-block mb-3  mx-2" ng-show="UpdateActionButtonVisibility('Auction Day Move Pending')">
+                    <button class="btn btn-primary" ng-click="UpdateAuctionInspectionApi('Auction Day Move Pending','Update_AuctionConformationMoveToAuction',null)">Move To Auction</button>
+                </div>
+
+                <div class="pull-right d-inline-block mb-3  mx-2" ng-show="UpdateActionButtonVisibility('Action Conformation Updated')">
+                    <button class="btn btn-primary" ng-click="UpdateAuctionCompleted()">Update Auction Completed</button>
+                </div>
+            }
+            @if (User.IsInRole("LegalTeam") || User.IsInRole("Admin"))
+            {
+                <div class="pull-right d-inline-block mb-3  mx-2" ng-show="UpdateActionButtonVisibility('Auction Completed')">
+                    <button class="btn btn-primary" ng-click="UpdateAuctionInvoiceFinalized()">Update Invoice Paid </button>
+                </div>
+            }
+
+            <div class="pull-right d-inline-block mb-3  mx-2" ng-show="UpdateActionButtonVisibility('Custom Nomination Pending,Invoice Not Generated,Auction Conformation Pending,Auction Day Move Pending')">
+                <button class="btn btn-primary" ng-click="ReGenerateInvoice('Custom Nomination Pending,Invoice Not Generated,Auction Conformation Pending,Auction Day Move Pending')">Re-Generate Invoice</button>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="windowmode">
+        <table class="table table-striped">
+            <thead>
+                <tr class="table-card-head">
+                    <th class="w-20">S.No</th>
+                    <th></th>
+                    <th>Container</th>
+                    <th>Bayan</th>
+                    <th>Broker</th>
+                    <th>BL#</th>
+                    @*<th ng-if="!ishistory">Location</th>*@
+                    <th>Status</th>
+                    <th>Total Days</th>
+                    <th>Charges</th>
+                    <th>Attachments</th>
+                    <th>Available Reports</th>
+                    @*<th ng-if="ShowGridColumnAfterInvoiceGeneration('Message')">Comments</th>*@
+                    <th ng-if="ShowGridColumnAfterInvoiceGeneration('InvoicePrintUrl')">Invoice</th>
+                    @*@if (User.IsInRole("Admin") || User.IsInRole("Finance"))
+                        {
+                            <th ng-if="ishistory">Approve Status</th>
+                            <th ng-if="ShowGridColumnAfterInvoiceGeneration('ApproveTime') && ishistory">Approved Time</th>
+                            <th ng-if="ishistory">Action</th>
+                        }
+                        @if (User.IsInRole("LegalTeam"))
+                        {
+                            <th>Finance Approval</th>
+                        }*@
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in ContainerRecords | filter:search ">
+
+                    <td class="w-20">{{$index+1}}</td>
+                    <td class="w-20"><input type="checkbox" class="mx-2" ng-show="item.ActionStatus=='Custom Nomination Pending' || item.ActionStatus=='Invoice Not Generated' || item.ActionStatus=='Auction Conformation Pending' || item.ActionStatus=='Auction Day Move Pending' || item.ActionStatus=='Action Conformation Updated' || item.ActionStatus=='Auction Completed'" ng-model="item.selected" /></td>
+                    <td class="autoCaps">{{item.Cntr}}</td>
+                    <td>{{item.BayanNo}}</td>
+                    <td>{{item.BrokerNo}}</td>
+                    <td>{{item.bl_nbr}}</td>
+                    <td>
+                        {{item.ActionStatus}}
+                        <small class="badge badge-sm badge-dark">{{item.LastActionNumberofDays}}</small>
+                        <small ng-show="item.ActionStatus=='Invoice Not Generated'" class="text-danger"><br />{{item.ActionDetails.replace('Invoice Generation Failure:','')}}</small>
+                        <small ng-show="item.ActionStatus=='Auction Completed' && item.ActionDetails.indexOf('Failure') != -1" class="text-danger"><br />{{item.ActionDetails.replace('Failure:','')}}</small>
+                        <small ng-show="item.ActionStatus=='Custom Nomination Pending' || item.ActionStatus=='Auction Conformation Pending' || item.ActionStatus=='Action Conformation Updated'"
+                               ng-class="item.ActionDetails.indexOf('Yes') === -1 ? 'cursor-pointer text-info' : 'text-success'">
+                            <br /> <span ng-click="UpdateActionDetails(item)">{{item.ActionDetails}}</span>
+                        </small>
+                        <small ng-show="item.ActionStatus=='Auction Conformation Pending' || item.ActionStatus=='Auction Day Move Pending'">
+                            <br /><span class="cursor-pointer text-info" ng-click="ReopenContainerReinspection(item)">Do you want to re-open Container?</span>
+                        </small>
+                    </td>
+                    <td>
+                        <small class="badge badge-sm badge-warning">{{item.TotalNumbersofDays}}</small>
+                    </td>
+                    <td>
+                        {{ item.Charges || 0 }}
+                        <small ng-show="item.LastInvoiceGeneratedAt">
+                            <br />
+                            {{ item.LastInvoiceGeneratedAt | date:'dd-MM-yyyy' }}
+                        </small> 
+                    </td>
+                    @*<td ng-if="!ishistory">{{item.Location}}</td>*@
+
+                    @*<td>
+            <span ng-if="item.AuctionCntr == true">Auction Container</span>
+            <span ng-if="item.AuctionCntr == false"><i class="icon-cross text-danger"></i></span>
+        </td>*@
+                    <td>
+                        <span ><i class="icon-upload font-size-lg" ng-click="UploadAttachment(item,$index)"></i></span>
+                    </td>
+                    <td>
+                        <span ng-if="item.ReportsList.length == 0"><i class="icon-cross text-danger"></i></span>
+                        <span ng-if="item.ReportsList.length > 0"><i title="View Reports" class="icon-eye font-size-lg" ng-click="ViewReports(item)"></i></span>
+                    </td>
+                    @*<td ng-if="ShowGridColumnAfterInvoiceGeneration('Message')">
+            <span class="CommentsWrap">{{item.Message}}</span>
+        </td>*@
+                    <td ng-if="ShowGridColumnAfterInvoiceGeneration('InvoicePrintUrl')">
+                        @*<span ng-if="item.InvoicePrintUrl != null && item.InvoicePrintUrl!=''">
+                <a href="{{item.InvoicePrintUrl}}" title="Print Invoice" target="_blank"><i class="icon-printer"></i></a>
+            </span>*@
+                        <span ng-if="item.InvoiceDownloadUrl != null && item.InvoiceDownloadUrl !=''">
+                            <a href="{{item.InvoiceDownloadUrl}}" title="Download Invoice" target="_blank"><i class="icon-download"></i></a>
+                        </span>
+                    </td>
+                    @*@if (User.IsInRole("Admin") || User.IsInRole("Finance"))
+        {
+            <td ng-if="ishistory">
+                <span class="badge badge-info" ng-if="!item.FinanceApproved">Pending</span>
+                <span class="badge badge-success" ng-if="item.FinanceApproved">Approved</span>
+            </td>
+            <td ng-if="ShowGridColumnAfterInvoiceGeneration('ApproveTime') && ishistory">
+                <span ng-if="item.ApproveTime != null">{{item.ApproveTime | date:'dd/MM/yyyy HH:mm'}}</span>
+            </td>
+            <td ng-if="_currentUser.UsersApplication.includes('AuctionContainer') && !item.FinanceApproved && ishistory">
+                <button class="btn-primary" ng-click="ApproveInvoice(item.gkey)">Approve</button>
+            </td>
+        }
+        @if (User.IsInRole("LegalTeam"))
+        {
+            <td ng-if="ishistory">
+                <span class="badge badge-info" ng-if="!item.FinanceApproved">Pending</span>
+                <span class="badge badge-success" ng-if="item.FinanceApproved">Approved</span>
+            </td>
+        }*@
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+
+
+    <div class="modal ZoominAnimate jqueryConfrim" id="AttachmentModal" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="min-width:30%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="">
+                        <b>{{SelectedRecord.Cntr}} Attachments!</b>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ul class="Damage_Images">
+                                <li ng-repeat="x in SelectedRecord.Images">
+
+                                    @if (User.IsInRole("Admin") || User.IsInRole("LegalTeam") || User.IsInRole("Finance"))
+                                    {
+                                        <b>{{x.Label}}</b>
+                                        <div class="Icon pull-right" ng-show="x.Url!=null && x.Url!=''">
+                                            <a title="View file" ng-click="OpenImageView(x.Url,'AttachmentModal')"><span><i class="icon-eye"></i></span></a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <b ng-show="x.Label!=='Payment Proof'">{{x.Label}} {{$index+1}}</b>
+                                        <div class="Icon pull-right" ng-show="x.Url!=null && x.Url!='' && x.Label!=='Payment Proof'">
+                                            <a title="View file" ng-click="OpenImageView(x.Url,'AttachmentModal')"><span><i class="icon-eye"></i></span></a>
+                                        </div>
+                                    }
+                                    
+
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <div class="Icon pull-right">
+                                <label title="Upload file" style="margin:0px;">
+                                    <span><i class="icon-upload"></i></span>
+                                    <input type="file" style="display:none" id="SupportingDoc"  name="pic" accept="image/*" onchange="angular.element(this).scope().AuctionImagesUpload(this,'SelectedRecord')">
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer" style=" padding: 9px; ">
+                    <button class="btn btn-reset" data-dismiss="modal">Close</button>
+                    @if (User.IsInRole("Admin") || User.IsInRole("LegalTeam") || User.IsInRole("Finance") || !User.IsInRole("ExamOfficer"))
+                    {
+                        <button class="btn btn-primary pull-right" data-dismiss="modal" ng-click="SaveCntrAttachments()">Submit</button>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="overlay">
+        <span id="close-btn" ng-click="closeOverlay()">&#10006;</span>
+        <img src="" id="LargeImageView" alt="Image">
+    </div>
+
+
+    <button style=" position: fixed; bottom: 3px; right: 22px;"  class="btn btn-primary pull-right mt-3" ng-click="LoadMore()">
+        Load More
+    </button>
+
+
+</div>
+
+<script src="@Url.Content("~/Scripts/crypto-js.min.js")"></script>
+<script>
+
+    function copytoClipBoard(txt) {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(txt);
+            toastr.success("Copied to clipboard");
+        }
+    }
+
+    window.onload = function () {
+        document.getElementById('minisidebar').className = 'sidebar-xs';
+    };
+</script>

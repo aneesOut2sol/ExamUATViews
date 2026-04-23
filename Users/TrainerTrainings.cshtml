@@ -1,0 +1,103 @@
+﻿
+@{
+    ViewBag.Title = "TrainerTrainings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div ng-controller="UsersCtr" ng-init="TrainerInit()" class="ng-cloak" ng-cloak>
+
+
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4>
+                    <i class="icon-user mr-2"></i>
+                    <span class="font-weight-semibold">Trainer Trainings </span>
+                </h4>
+            </div>
+
+            <div class="page-title d-flex">
+                <input type="button" class="btn btn-primary mr-2" value="Filters" data-toggle="collapse" data-target="#demo" />
+             
+            </div>
+        </div>
+    </div><hr />
+    <!-- Page header End-->
+    <!-- Filter Section -->
+    <div class="card collapse" id="demo">
+        <div class="card-body">
+            <div class="row">
+
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <span>Training Name</span>
+                        <input type="text" ng-model="Search.TrainingName" class="form-control" placeholder="Training Name.." />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <input style="margin-left: 289%; margin-top: 6%;" type="button" ng-click="(Search='')" class="btn btn-reset" value="Reset" />
+                    </div>
+                </div>
+               
+            </div>
+
+        </div>
+    </div>
+    <!-- Filter Section End-->
+
+
+
+
+    <div class="row">
+        <div class="card table-card scrollbar">
+            <table class="table datatable-show-all text-center">
+                <thead>
+                    <tr class="table-card-head">
+                        <th>S No#</th>
+                        <th>Training Name</th>
+                    
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr class="" ng-repeat="u in TrainingList1 | filter:Search">
+                        <td>{{$index+1}}</td>
+                        <td>{{u.TrainingName}}</td>
+
+                                    @*<table class="table table-striped">
+                                        <thead>
+                                            <tr class="table-TrnModule-head">
+                                                <th>Date</th>
+                                                <th>Training Module</th>
+
+                                                <th>Trainee</th>
+                                                <th>Status</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-repeat="c in TrainingList1.ModuleList1">
+                                            <tr tabindex="0">
+                                                <td>{{c.TrainingModule}}</td>
+                                                <td>{{c.Hours}}</td>
+                                                <td>{{c.Grade}}</td>
+
+
+                                            </tr>
+
+                                        </tbody>
+                                    </table>*@
+                 
+                    
+                   
+                    </tr>
+                
+                
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

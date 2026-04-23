@@ -1,0 +1,132 @@
+﻿@model ExamPortal.Web.Models.SendCodeViewModel
+@{
+    ViewBag.Title = "Two-Factor Authentication";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>DPWorld Jeddah Exam - @ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="~/Content/css/icons/icomoon/styles.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" sizes="16x16" href="~/Content/images/favicon.ico">
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/bootstrap_limitless.min.css" rel="stylesheet" />
+    <link href="~/Content/css/layout.min.css" rel="stylesheet" />
+    <link href="~/Content/css/colors.min.css" rel="stylesheet" />
+
+    <style>
+        :root {
+            --dpw-primary-dark: #1E1450;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            background: linear-gradient(to bottom right, #1E1450 0%, #3b2a8d 50%, #5c4aa8 100%);
+        }
+
+        .page-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .LoginCard {
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .card-body {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+            .card-body .text-center img {
+                max-height: 80px;
+                width: auto;
+                margin-bottom: 15px;
+            }
+
+            .card-body .text-center h6 {
+                color: var(--dpw-primary-dark);
+                font-size: 1.3rem;
+                margin-bottom: 5px;
+            }
+
+        /* Custom styling for the dropdown to match the input height */
+        .form-control-select {
+            height: 48px !important;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        .btn-primary {
+            background-color: var(--dpw-primary-dark) !important;
+            border-color: var(--dpw-primary-dark) !important;
+            height: 48px;
+            font-weight: 600;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-content">
+        <div class="LoginCard">
+            @using (Html.BeginForm("SendCode", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("rememberMe", Model.RememberMe)
+
+                <div class="card mb-0">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <img src="~/Content/images/dpworldlogo.png" alt="DPWorld Logo" />
+                            <h6 class="font-weight-bold">Two-Factor Verification</h6>
+                            <span class="d-block text-muted">Select a provider to receive your security code.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="text-muted">Authentication Provider</label>
+                            <div class="form-group-feedback form-group-feedback-left">
+                                @Html.DropDownListFor(m => m.SelectedProvider, Model.Providers, new { @class = "form-control form-control-select" })
+                                <div class="form-control-feedback">
+                                    <i class="icon-shield-check"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary btn-block">
+                                Send Code <i class="icon-paperplane ml-2"></i>
+                            </button>
+                        </div>
+
+                        <div class="text-center">
+                            <a href="@Url.Action("Login", "Account")" class="text-sm text-indigo-800">Back to Login</a>
+                        </div>
+                    </div>
+                </div>
+            }
+            <p class="footer-text">&copy; @DateTime.Now.Year DP World. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

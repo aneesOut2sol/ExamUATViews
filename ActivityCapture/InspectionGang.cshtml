@@ -1,0 +1,177 @@
+﻿
+@{
+    ViewBag.Title = "InspectionGang";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<link href="~/Scripts/SlimSelect/SlimSelectCustomStyle.css" rel="stylesheet" />
+    <link href="~/Scripts/SlimSelect/slimselect.min.css" rel="stylesheet" />
+    <script src="~/Scripts/SlimSelect/slimselect.min.js"></script>*@
+
+<style>
+    .CloseModalBtn {
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        z-index: 99999999999 !important;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px !important;
+        padding: 8px;
+        cursor: pointer;
+        background: var( --dpw-bg-color);
+        z-index: 99999999999 !important;
+    }
+
+    .close {
+        display: none;
+    }
+
+    .CloseModalBtn .fa-times-circle-o {
+        color: #ffff !important;
+    }
+
+    .modal-content {
+        background-color: #f4f2fa !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+
+    .modal-title {
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+
+    .modal-footer {
+        border-top: none !important;
+        align-content: center;
+        text-align: center;
+    }
+</style>
+<div ng-controller="InspectionGangCtrl" ng-init="init()">
+    <!-- Page header -->
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-stack-text mr-2"></i><span class="font-weight-semibold">Inspection Gang</span></h4>
+                <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+            </div>
+            <div class="page-title d-flex">
+                <input type="button" ng-click="OpenAddInspectionGang()" class="btn btn-primary  pull-right ml-2" value="Add new" />
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="card table-card scrollbar">
+            <table class="table datatable-show-all text-center">
+                <thead>
+                    <tr class="table-card-head">
+                        <th>Sr.No</th>
+                        <th>Contractor</th>
+                        <th>Labor Count</th>
+                        <th>Start time</th>
+                        <th>Completion time</th>
+                        @*<th>Gang out of terminal</th>
+                            <th>Gang at terminal</th>*@
+                        <th>Email</th>
+                        <th>Name</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="" ng-repeat="s in InspectionGanglist | orderBy : '-Id'">
+                        <td>{{$index+1}}</td>
+                        <td>{{s.ContractorName||'N/A'}}</td>
+                        <td>{{s.Labor_Count||0}}</td>
+                        <td>{{s.StartTime | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                        <td>{{s.CompletionTime | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                        @*<td>{{s.Out_of_Terminal}}</td>
+                            <td>{{s.From_Terminal}}</td>*@
+                        <td>{{s.Email||'N/A'}}</td>
+                        <td>{{s.Name||'N/A'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="InspectionGangModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Inspection Gang</h4>
+                </div>
+                <div class="modal-body" style=" min-height: 120px;">
+                    <form autocomplete="off">
+                        <div class="row">
+                            @*<div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="Starick">Inspection gang out of terminal</label>
+                                        <input type="text" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '')" ng-model="Inspection.Outgoing" class="form-control" name="name" value="" placeholder="Enter Inspection gang out of terminal" />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="Starick">Inspection gang at terminal</label>
+                                        <input type="text" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '')" ng-model="Inspection.Fromgoing" class="form-control" name="name" value="" placeholder="Enter Inspection gang at terminal" />
+                                    </div>
+                                </div>*@
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="Starick">Contractor</label>
+                                    <select class="form-control select-clear" ng-model="Inspection.ContractorId">
+                                        <option value="">Select Contractor</option>
+                                        <option ng-repeat="x in ContractorList" value="{{x.Id}}">{{x.Contractor}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="Starick">Labor Count</label>
+                                    <input type="text" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '')" ng-model="Inspection.LaborCount" class="form-control" name="name" value="" placeholder="Enter Labor count" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:center">
+                            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                            <button class="btn btn-success" ng-click="SubmitInspectionGang(Inspection)">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<script src="~/Scripts/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var o = new SlimSelect({
+                select: '#Forklift',
+                placeholder: 'Select Forklift',
+                showSearch: true,
+                allowDeselect: true,
+            });
+        });
+    </script>*@

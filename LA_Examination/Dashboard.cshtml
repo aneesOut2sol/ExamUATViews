@@ -1,0 +1,1010 @@
+﻿
+@{
+    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    <style>
+        .modal-body {
+            max-height: 70vh !important;
+            overflow: auto !important;
+        }
+        .font-weight-normal {
+            font-weight: normal !important;
+        }
+
+        .text-start {
+            text-align: start !important;
+        }
+
+        .border-right {
+            border-right: 1px solid #ddd !important;
+        }
+
+        .LiveMonitering table {
+            width: 100%;
+        }
+
+        .LiveMonitering img {
+            height: 22px;
+        }
+
+        .LiveMonitering tr td {
+            text-decoration: underline;
+            font-weight: 600;
+            cursor: pointer !important;
+        }
+
+        .LiveMonitering tr td,
+        .LiveMonitering tr th {
+            text-align: center;
+            background: none !important;
+            padding: 8px 7px;
+            white-space: nowrap;
+        }
+
+        .pr-1 {
+            padding-right: 10px !important;
+        }
+
+
+        .card-footer {
+            background: #3c3c3c21;
+        }
+
+
+        .card-header {
+            background: var( --dpw-bg-color) !important;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+            border-radius: 12px;
+            padding: 13px 4px !IMPORTANT;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        .button {
+            background-color: #004A7F;
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+            border: none;
+            color: #FFFFFF;
+            cursor: pointer;
+            display: inline-block;
+            /* font-family: Arial; */
+            font-size: 12px;
+            padding: 6px 7px;
+            /* text-align: center; */
+            text-decoration: none;
+            -webkit-animation: glowing 1500ms infinite;
+            -moz-animation: glowing 1500ms infinite;
+            -o-animation: glowing 1500ms infinite;
+            animation: glowing 1500ms infinite;
+        }
+
+        @@-webkit-keyframes glowing {
+            0% {
+                background-color: #B20000;
+                -webkit-box-shadow: 0 0 3px #B20000;
+            }
+
+            50% {
+                background-color: #FF0000;
+                -webkit-box-shadow: 0 0 40px #FF0000;
+            }
+
+            100% {
+                background-color: #B20000;
+                -webkit-box-shadow: 0 0 3px #B20000;
+            }
+        }
+
+        @@-moz-keyframes glowing {
+            0% {
+                background-color: #B20000;
+                -moz-box-shadow: 0 0 1px #B20000;
+            }
+
+            50% {
+                background-color: #FF0000;
+                -moz-box-shadow: 0 0 35px #FF0000;
+            }
+
+            100% {
+                background-color: #B20000;
+                -moz-box-shadow: 0 0 2px #B20000;
+            }
+        }
+
+        @@-o-keyframes glowing {
+            0% {
+                background-color: #B20000;
+                box-shadow: 0 0 1px #B20000;
+            }
+
+            50% {
+                background-color: #FF0000;
+                box-shadow: 0 0 35px #FF0000;
+            }
+
+            100% {
+                background-color: #B20000;
+                box-shadow: 0 0 3px #B20000;
+            }
+        }
+
+        @@keyframes glowing {
+            0% {
+                background-color: #B20000;
+                box-shadow: 0 0 3px #B20000;
+            }
+
+            50% {
+                background-color: #FF0000;
+                box-shadow: 0 0 35px #FF0000;
+            }
+
+            100% {
+                background-color: #B20000;
+                box-shadow: 0 0 1px #B20000;
+            }
+        }
+
+        .value {
+            margin-left: 4px;
+        }
+
+        .icon-eye {
+            cursor: pointer;
+            float: inline-end;
+        }
+
+
+
+        .badge-active {
+            background-color: #e2e2e2 !important;
+            color: black;
+            font-weight: 700;
+        }
+
+        .DashboardDiv {
+            font-family: 'Pilat Wide';
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+
+
+        .col {
+            flex: 1 1 calc(25% - 20px);
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 10px 16px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            min-height: 350px;
+        }
+
+        .topheading {
+            background-color: var( --dpw-bg-color);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            font-weight: bold;
+        }
+
+        .topheading-warning {
+            background-color: var( --dpw-bg-color);
+            color: white;
+        }
+
+        .topheading-success {
+            background-color: var( --dpw-bg-color);
+            color: white;
+        }
+
+        .topheading-danger {
+            background-color: var( --dpw-bg-color);
+            color: white;
+        }
+
+        .card-body {
+            flex: 1;
+            padding: 20px;
+            background-color: #f9f9f9;
+            /* display: flex;*/
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .card-text {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 10px 0;
+        }
+
+        .section {
+            margin-top: 1rem;
+        }
+
+        .pull-right {
+            float: right;
+        }
+
+        @@media (max-width: 992px) {
+            .col {
+                flex: 1 1 calc(50% - 20px);
+            }
+        }
+
+        @@media (max-width: 600px) {
+            .col {
+                flex: 1 1 100%;
+            }
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /*  margin: 6px 0;*/
+        }
+
+        .right-side {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 60px;
+            justify-content: flex-end;
+        }
+
+        .value {
+            font-weight: bold;
+        }
+
+        .icon-eye {
+            display: inline-block;
+            width: 18px;
+            /*  height: 18px;*/
+            /*background: url('https://img.icons8.com/material-outlined/24/000000/visible.png') no-repeat center center;*/
+            background-size: contain;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 4px;
+            margin-left: 2px;
+            margin-right: -3px;
+        }
+
+            .icon-eye:hover {
+                transform: scale(1.2);
+            }
+
+        .CloseModalBtn {
+            background: var( --dpw-bg-color) !IMPORTANT;
+            color: #FFFFFF;
+            line-height: 25px;
+            position: absolute;
+            right: -12px;
+            text-align: center;
+            top: -10px;
+            width: 45px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 1px 1px 3px #000;
+            transition: all .3s;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 25px !important;
+            padding: 8px;
+            cursor: pointer;
+            z-index: 9999;
+        }
+
+        .Maincard .card-body {
+            padding: 1px 14px !important;
+            min-height: 170px;
+        }
+
+        .CursorPointer {
+            cursor: pointer!important;
+        }
+
+        .Maincard .cardHeading {
+            font-size: 16px;
+            font-weight: 800;
+            padding: 5px 9px;
+            border-bottom: 1px solid #ded7d7;
+        }
+
+        .Maincard .card-body ul {
+            margin-top: 10px;
+            padding-left: 7px;
+        }
+
+            .Maincard .card-body ul li {
+                padding: 3px 2px;
+                list-style: none;
+            }
+
+                .Maincard .card-body ul li span {
+                    float: right;
+                    text-decoration: underline;
+                    font-weight: 600;
+                    cursor: pointer;
+                }
+
+
+
+        .Maincard .card-footer {
+            background: #3c3c3c21;
+        }
+
+        .Maincard .card {
+            width: 100%;
+            border-radius: 7px;
+            overflow: hidden;
+            box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+        }
+
+        .Maincard .card-header {
+            background: var( --dpw-bg-color) !important;
+            color: white;
+            font-size: 15px;
+            font-family: 'Pilat Wide bold';
+            text-align: center;
+            padding: 10px 4px !IMPORTANT;
+        }
+
+        .Maincard .card-body ul li img {
+            height: 25px;
+        }
+
+        .Maincard .card-footer span {
+            float: right;
+        }
+
+        .Maincard .card-body .Activity {
+            padding: 4px 10px;
+            border-bottom: 1px solid #8080803d;
+        }
+
+        .text-decoration-underline {
+            text-decoration: underline;
+        }
+
+        .Maincard .card-footer img {
+            height: 22px;
+        }
+
+        .Maincard .card-footer div {
+            margin-bottom: 4px;
+        }
+
+
+        .card-footer {
+            background: #3c3c3c21;
+        }
+
+        .card-header.backgreen {
+            background: linear-gradient(179deg, #01492d, #09a266) !important;
+        }
+
+        .card-header.backred {
+            background: linear-gradient(181deg, #77092c, #ff004f) !important;
+        }
+
+        .card-header.backgray {
+            background: linear-gradient(0deg, #8f8e8e, #322f2f) !important;
+        }
+
+        .text-green {
+            color: green !important;
+        }
+
+        .text-red {
+            color: red !important;
+        }
+
+        .text-gray {
+            color: gray !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="ng-cloak DashboardDiv" ng-cloak ng-controller="LA_ExaminationCtrl" ng-init="Dashboardinit()">
+        <div class="mt-3">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-text blur d-inline-block"><b>Labor Dashboard</b></h3>
+                    <button class="btn btn-primary pull-right mr-2" ng-click="AssignlaborAutomate()">Auto Assign Labor</button>
+                    <button class="btn btn-primary pull-right mr-2" onclick="window.open('/api/LA_ExaminationApi/SendMisMatchEmail','_blank')">Send Mismatch Email</button>
+                </div>
+            </div>
+        </div>
+        <div class="container mt-4">
+            <div class="row p-0 m-0">
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12 col-xs-12 p-0 m-0 pr-1  Maincard">
+                    <div class="ChildCard">
+                        <div class="card">
+                            <div class="card-header">TI (To Inspection)</div>
+                            <div class="card-body">
+                                <div class="cardHeading"> <b>Sizes</b></div>
+                                <div class="">
+
+                                    <ul>
+                                        <li> 20ft  <span ng-click="OpenContainerDetails('20','Strip','TI')">{{TISummary.Strip20ft}}</span></li>
+                                        <li> 40ft  <span ng-click="OpenContainerDetails('40','Strip','TI')">{{TISummary.Strip40ft}}</span></li>
+                                        <li> 45ft  <span ng-click="OpenContainerDetails('45','Strip','TI')">{{TISummary.Strip45ft}}</span></li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div class="card-footer">
+                                <div><img src="~/Content/images/container3.png" /> Total Container <span>{{TITotalContainer}}</span></div>
+                                <div><img src="~/Content/images/LabourIcon.png" />  Labor Required<span>{{TITotalLabor}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12 col-xs-12 p-0 m-0 pr-1  Maincard">
+                    <div class="ChildCard">
+                        <div class="card">
+                            <div class="card-header">UI (Under Inspection)</div>
+                            <div class="card-body">
+                                <div class="cardHeading d-flex justify-content-between"> <b>Sizes</b><b>Strip</b><b>Stuff</b></div>
+                                <div class="">
+
+                                    <ul>
+                                        <li class="d-flex justify-content-between">
+                                            <div>20ft</div>
+                                            <div ng-click="OpenContainerDetails('20','Strip','UI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{UISummary.Strip20ft}}</div>
+                                            <div ng-click="OpenContainerDetails('20','Repack','UI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{UISummary.Stuff20ft}}</div>
+                                        </li>
+                                        <li class="d-flex justify-content-between">
+                                            <div>40ft</div>
+                                            <div ng-click="OpenContainerDetails('40','Strip','UI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{UISummary.Strip40ft}}</div>
+                                            <div ng-click="OpenContainerDetails('40','Repack','UI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{UISummary.Stuff40ft}}</div>
+                                        </li>
+                                        <li class="d-flex justify-content-between">
+                                            <div>45ft</div>
+                                            <div ng-click="OpenContainerDetails('45','Strip','UI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{UISummary.Strip45ft}}</div>
+                                            <div ng-click="OpenContainerDetails('45','Repack','UI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{UISummary.Stuff45ft}}</div>
+                                        </li>
+                                    </ul>
+
+                                </div>
+
+                            </div>
+                            <div class="card-footer">
+                                <div><img src="~/Content/images/container3.png" /> Total Container <span>{{UITotalContainer}}</span></div>
+                                <div><img src="~/Content/images/LabourIcon.png" />  Labor Required<span>{{UITotalLabor}}</span></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12 col-xs-12 p-0 m-0 pr-1  Maincard">
+                    <div class="ChildCard">
+                        <div class="card">
+                            <div class="card-header" ng-class="{ 'backgreen': PlannedShift1 - UITotalLabor > 0, 'backgray': PlannedShift1 - UITotalLabor == 0, 'backred': PlannedShift1 - UITotalLabor < 0 }">ROSTER LABORS</div>
+                            <div class="card-body">
+                                <div class="cardHeading"> <b> Planned Labor</b></div>
+                                <div class="">
+                                    <ul>
+                                        <li> Shift 1  <span ng-click="OpenLaborModelDetails('Planned','Shift1')">{{PlannedShift1}}</span></li>
+                                        <li> Shift 2  <span ng-click="OpenLaborModelDetails('Planned','Shift2')">{{PlannedShift2}}</span></li>
+                                        <li ng-class="{ 'text-green': PlannedShift1 - UITotalLabor > 0, 'text-gray': PlannedShift1 - UITotalLabor == 0, 'text-red': PlannedShift1 - UITotalLabor < 0 }" class="text-danger"> Target Shift 1  <span>{{PlannedShift1-(UITotalLabor)}}</span></li>
+                                        <li ng-class="{ 'text-green': PlannedShift2 - UITotalLabor > 0, 'text-gray': PlannedShift2 - UITotalLabor == 0, 'text-red': PlannedShift2 - UITotalLabor < 0 }" class="text-danger"> Target Shift 2  <span>{{PlannedShift2-(UITotalLabor)}}</span></li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div class="card-footer">
+                                <div><img src="~/Content/images/LabourIcon.png" style="filter:hue-rotate(153deg)" /> Planned Labor <span>{{TotalPlannedLabour}}</span></div>
+                                <div><img src="~/Content/images/LabourIcon.png" />  Required Labor<span>{{(UITotalLabor)}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12 col-xs-12 p-0 m-0  Maincard">
+                    <div class="ChildCard">
+                        <div class="card">
+                            <div class="card-header" ng-class="{ 'backgreen': CheckOnlyCurrentShift('LiveShift') - UITotalLabor > 0, 'backgray': CheckOnlyCurrentShift('LiveShift') - UITotalLabor == 0, 'backred': CheckOnlyCurrentShift('LiveShift') - UITotalLabor < 0 }">LIVE Labors/Resource</div>
+                            <div class="card-body">
+                                <div class="cardHeading"> <b>Available Labor</b></div>
+                                <div class="">
+
+                                    <ul>
+                                        <li> Shift 1   <span ng-click="OpenLaborModelDetails('LIVE','Shift1')">{{LiveShift1}}</span></li>
+                                        <li> Shift 2  <span ng-click="OpenLaborModelDetails('LIVE','Shift2')">{{LiveShift2}}</span></li>
+                                        <li class="text-danger" ng-class="{ 'text-green': LiveShift1 - UITotalLabor > 0, 'text-gray': LiveShift1 - UITotalLabor == 0, 'text-red': LiveShift1 - UITotalLabor < 0 }"> Target Shift 1  <span>{{LiveShift1-(UITotalLabor)}}</span></li>
+                                        <li class="text-danger" ng-class="{ 'text-green': LiveShift2 - UITotalLabor > 0, 'text-gray': LiveShift2 - UITotalLabor == 0, 'text-red': LiveShift2 - UITotalLabor < 0 }"> Target Shift 2<span>{{LiveShift2-(UITotalLabor)}}</span></li>
+
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div class="card-footer">
+                                <div><img src="~/Content/images/LabourIcon.png" style="filter:hue-rotate(153deg)" /> Available Labor <span>{{TotalLiveLabour}}</span></div>
+                                <div><img src="~/Content/images/LabourIcon.png" />  Required Labor<span>{{(UITotalLabor)}}</span></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row p-0 m-0">
+                <div class="col-xl-6 col-lg-6 offset-lg-3 offset-xl-3 offset-md-3 col-md-6 col-sm-12 col-12 col-xs-12 p-0   Maincard">
+                    <div class="ChildCard w-100">
+                        <div class="card">
+                            <div class="card-header">Live Assignment</div>
+                            <div class="card-body">
+                                @*salman*@
+
+                                <div class="LiveMonitering">
+                                    <table>
+                                        <tr>
+                                            <td></td>
+                                            <th colspan="2">20ft</th>
+                                            <th colspan="2">40ft</th>
+                                            <th colspan="2">45ft</th>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td><img src="~/Content/images/container3.png" /></td>
+                                            <td><img src="~/Content/images/LabourIcon.png" /></td>
+                                            <td><img src="~/Content/images/container3.png" /></td>
+                                            <td><img src="~/Content/images/LabourIcon.png" /></td>
+                                            <td><img src="~/Content/images/container3.png" /></td>
+                                            <td><img src="~/Content/images/LabourIcon.png" /></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-start font-weight-normal">  Strip</th>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Strip.Container20)">{{AssignedDetails.Strip.Container20.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('labor',AssignedDetails.Strip.labor20)" class="border-right">{{AssignedDetails.Strip.labor20.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Strip.Container40)">{{AssignedDetails.Strip.Container40.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('labor',AssignedDetails.Strip.labor40)" class="border-right">{{AssignedDetails.Strip.labor40.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Strip.Container45)">{{AssignedDetails.Strip.Container45.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('labor',AssignedDetails.Strip.labor45)" class="border-right">{{AssignedDetails.Strip.labor45.length}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-start font-weight-normal">  Stuff</th>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Stuff.Container20)">{{AssignedDetails.Stuff.Container20.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('labor',AssignedDetails.Stuff.labor20)" class="border-right">{{AssignedDetails.Stuff.labor20.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Stuff.Container40)">{{AssignedDetails.Stuff.Container40.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('labor',AssignedDetails.Stuff.labor40)" class="border-right">{{AssignedDetails.Stuff.labor40.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Stuff.Container45)">{{AssignedDetails.Stuff.Container45.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('labor',AssignedDetails.Stuff.labor45)" class="border-right">{{AssignedDetails.Stuff.labor45.length}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-start font-weight-normal">  Delay Container</th>
+                                            <td>{{AssignedDetails.Delays.Container20.length}}</td>
+                                            <td class="border-right">{{AssignedDetails.Delays.labor20.length}}</td>
+                                            <td>{{AssignedDetails.Delays.Container40.length}}</td>
+                                            <td class="border-right">{{AssignedDetails.Delays.labor40.length}}</td>
+                                            <td>{{AssignedDetails.Delays.Container45.length}}</td>
+                                            <td class="border-right">{{AssignedDetails.Delays.labor45.length}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-start font-weight-normal">  Completed Container</th>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Completed.Container20)" colspan="2">{{AssignedDetails.Completed.Container20.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Completed.Container40)" colspan="2">{{AssignedDetails.Completed.Container40.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Completed.Container45)" colspan="2">{{AssignedDetails.Completed.Container45.length}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-start font-weight-normal">  Idle Container</th>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Idle.Cntr20)" colspan="2">{{AssignedDetails.Idle.Cntr20.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Idle.Cntr40)" colspan="2">{{AssignedDetails.Idle.Cntr40.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Idle.Cntr45)" colspan="2">{{AssignedDetails.Idle.Cntr45.length}}</td>
+
+                                        </tr>
+                                        <tr>
+                                            <th class="text-start font-weight-normal"> Idle Labor</th>
+                                            <td ng-click="ShowLiveAssignmentDetails('labor',Idlelabor)" colspan="6">{{Idlelabor.length}}</td>
+                                        </tr>
+
+                                    </table>
+
+
+                                </div>
+
+                            </div>
+                            <div class="card-footer">
+                                <div><img src="~/Content/images/container3.png" /> Assigned Container <span>{{TotalContainer}}</span></div>
+                                <div><img src="~/Content/images/LabourIcon.png" />  Assigned Labor<span>{{TotalLabor}}</span></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row d-none">
+
+            <!-- TI Card -->
+
+            <div class="col">
+                <div class="topheading">TI (To Inspection)</div>
+                <div class="card-body">
+                    <div class="card-title">
+                        Total Containers: <span class="pull-right badge badge-active" style=" width: 36px; border-radius: 30px !important; height: 22px; font-size: 10px;">{{TotalContainer}}</span>
+                    </div>
+                    <div class="card-text">Sizes:</div>
+                    <div>20 <span class="pull-right">{{ExaminationArea[0].total20}} <i class="icon-eye" title="View Details" data-toggle="modal" data-target="#exampleModal1" ng-click="GetTIDetails(ExaminationArea[1].Size)"> </i></span></div>
+                    <div>40 <span class="pull-right">{{ExaminationArea[1].total40}} <i class="icon-eye" title="View Details" data-toggle="modal" data-target="#exampleModal1" ng-click="GetTIDetails(ExaminationArea[0].Size)"> </i></span></div>
+                    <div>45 <span class="pull-right">{{ExaminationArea[2].total45}} <i class="icon-eye" title="View Details" data-toggle="modal" data-target="#exampleModal1" ng-click="GetTIDetails(ExaminationArea[2].Size)"> </i></span></div>
+                    <hr class="divider">
+                    <div class="card-title">
+                        Total Labor Required: <span class="pull-right">{{TotalLaborRequired}}</span>
+                    </div>
+                </div>
+            </div>
+            <!-- UI Card -->
+            <div class="col">
+                <div class="topheading topheading-warning">UI (Under Inspection)</div>
+                <div class="card-body">
+                    <div class="card-title">
+                        Total Containers: <span class="pull-right badge badge-active" style="width: 26px; border-radius: 30px !important; height: 22px; font-size: 10px;"> {{allovercount}}</span>
+                    </div>
+                    <div>
+                        <div class="section">
+                            <h5>CargoStrip</h5>
+                            <div ng-repeat="size in ['20', '40', '45']">
+                                <div class="">
+                                    <span>
+                                        {{size}}
+                                        <span class="value pull-right">
+                                            {{ ContainerCount[size.replace('ft', '')] && ContainerCount[size.replace('ft', '')]['Awaiting CargoStrip']|| 0 }}
+                                            <i class="icon-eye"
+                                               ng-if="ContainerCount[size.replace('ft', '')] && ContainerCount[size.replace('ft', '')]['Awaiting CargoStrip']"
+                                               title="View Details"
+                                               data-toggle="modal"
+                                               data-target="#exampleModal"
+                                               ng-click="getDetails(size,cntrstage[0])">
+                                            </i>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <h5>Repack and Seal</h5>
+                            <div ng-repeat="size in ['20', '40', '45']">
+                                <div class="">
+                                    <span>
+                                        {{size}}
+                                        <span class="value pull-right">
+                                            {{ ContainerCount[size.replace('ft', '')] && ContainerCount[size.replace('ft', '')]['Awaiting Repack and Seal'] || 0}}
+                                            <i class="icon-eye"
+                                               ng-if="ContainerCount[size.replace('ft', '')] && ContainerCount[size.replace('ft', '')]['Awaiting Repack and Seal']"
+                                               title="View Details"
+                                               data-toggle="modal"
+                                               data-target="#exampleModal"
+                                               ng-click="getDetails(size,cntrstage[1])">
+                                            </i>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                            <hr class="divider">
+                            <div class="card-text">
+                                Total Labor Required: <span class="pull-right">{{TotalLaborRequireds}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- CRS Labors -->
+            <div class="col">
+                <div class="topheading topheading-success">CRS LABORS</div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Total Labor
+                        <span class="pull-right badge badge-active" style="width: 35px; border-radius: 30px !important; height: 22px; font-size: 10px;">{{totallaborshift}}</span>
+                    </p>
+                    <hr class="divider">
+                    <p>
+                        Shift 1 Planned Labor
+                        <span class="pull-right">{{shifstart}}</span>
+                    </p>
+                    <div class="">
+                        <p class="">
+                            Shift 2 Planned Labor
+                            <span class="pull-right">{{shifEnd}}</span>
+                        </p>
+                    </div>
+                    <hr class="divider">
+                </div>
+            </div>
+            <!-- Live Labors -->
+
+
+            <div class="col">
+                <div class="topheading topheading-danger">LIVE Labors/Resource</div>
+                <div class="card-body">
+                    <hr class="divider">
+                    <p>
+                        Shift 1 Planned Labor
+                        <span class="pull-right">{{TotalPlannedLabor1}}</span>
+                    </p>
+                    <div class="">
+                        <p class="">
+                            Shift 2 Planned Labor
+                            <span class="pull-right">{{TotalPlannedLabor2}}</span>
+                        </p>
+                    </div>
+                    <hr class="divider">
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="topheading topheading-danger">Planned Container</div>
+                <div class="card-body">
+                    Total Planned Container
+                    <span class="pull-right badge badge-active" style="width: 35px; border-radius: 30px !important; height: 22px; font-size: 10px;">{{totalplanedcontainer}}</span>
+
+                    <div class="mt-2">
+                        <p>Assign Container <span class="pull-right">{{totalplanedcontainer}}</span></p>
+                    </div>
+                    <div>
+                        <p>Assign Labor <span class="pull-right">{{TotalAssignLabor}}</span></p>
+                    </div>
+
+                    <div>
+                        <p ng-if="RequiredLaborList !=null">
+                            Details<span class="pull-right">
+                                <i class="icon-eye"
+                                   title="View Details"
+                                   data-toggle="modal"
+                                   data-target="#exampleModal2"
+                                   ng-click="GetLaborDetails(GetDetails)">
+                                </i>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="mt-3" ng-if="RequiredLaborList !=null">
+                        <a class="button" href="#" style="width: 100%;">Mis/Match Labor: <span class="pull-right">{{MissMatchLabor}}</span></a>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <!----------------------------------------------------------Modal---------------------------------------------------------->
+
+        <div class="modal fade" id="ContainerDetailModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:70%;">
+                <div class="modal-content">
+                    <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                        <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                        <i class="icon-cross"></i>
+                    </div>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Container Details</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <label class="col-form-label ml-3">Search</label>
+                            <input type="text" ng-model="searchText" placeholder="Search..." style="width:58%;" class="form-control ml-3" />
+                        </div>
+                        <div>
+                            <div class="row">
+                                <div class="card table-card scrollbar">
+                                    <table class="table datatable-show-all text-center" style=" height: 30vh;">
+                                        <thead>
+                                            <tr class="table-card-head">
+                                                <th>SR#</th>
+                                                <th>Bayan #</th>
+                                                <th>Container #</th>
+                                                <th>Location</th>
+                                                <th>Custom Inspection Type</th>
+                                                <th>Custom Inspection Stage</th>
+                                                <th>Xray Result</th>
+                                                <th>Package Type</th>
+                                                <th>Size</th>
+                                                <th>Refeer</th>
+                                                <th>Elapsed HRS</th>
+                                                <th>Overall Hrs</th>
+                                                <th>Catagory</th>
+                                                <th>Required Labor</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="ng-cloak" ng-cloak>
+                                            <tr ng-repeat="Dtl in CntrModelData | filter:searchText">
+                                                <td>{{$index+1}}</td>
+                                                <td>{{Dtl.Bayan}}</td>
+                                                <td>{{Dtl.Cntr}}</td>
+                                                <td>{{Dtl.Location}}</td>
+                                                <td>{{Dtl.CustomsInspectionType}}</td>
+                                                <td>{{Dtl.CustomsStage}}</td>
+                                                <td>{{Dtl.XrayResult}}</td>
+                                                <td>{{Dtl.PackageType}}</td>
+                                                <td>{{Dtl.Size}}</td>
+                                                <td>{{Dtl.IsReefer?'Yes':'No'}}</td>
+                                                <td>{{Dtl.ElapsedHr}}</td>
+                                                <td>{{Dtl.OverAllHr}}</td>
+                                                <td>{{Dtl.Catgeory}}</td>
+                                                <td>
+                                                    <span>{{ Dtl.Size == 20 ? 3 : (Dtl.Size == 40 || Dtl.Size == 45 ? 4 : '') }}</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        
+        <!---------------------------------------------------------- Modal Body UI ---------------------------------------------------------->
+        <!----------------------------------------------------------Modal---------------------------------------------------------->
+        <div class="modal fade" id="LaborDetailModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:70%;">
+                <div class="modal-content">
+                    <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                        <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                        <i class="icon-cross"></i>
+                    </div>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Labor Details</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <label class="col-form-label ml-3">Search</label>
+                            <input type="text" ng-model="searchText" placeholder="Search..." style="width:58%;" class="form-control ml-3" />
+                        </div>
+                        <div>
+                            <div class="row">
+                                <div class="card table-card scrollbar">
+                                    <table class="table datatable-show-all text-center" style=" height: 30vh;">
+                                        <thead>
+                                            <tr class="table-card-head">
+                                                <th>SR#</th>
+                                                <th>Employee Code #</th>
+                                                <th>Employee Name #</th>
+                                                <th>Shift Type</th>
+                                                <th>Shift</th>
+                                                <th>Shift Start Time</th>
+                                                <th>Shift End Time</th>
+                                                <th>Clock In Time</th>
+                                                <th>Clock Out Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="ng-cloak" ng-cloak>
+                                            <tr ng-repeat="Dtl in LaborModelData | filter:searchText">
+                                                <td>{{$index+1}}</td>
+                                                <td>{{Dtl.employeeNumber}}</td>
+                                                <td>{{Dtl.employeeFullName}}</td>
+                                                <td>{{Dtl.shiftType}}</td>
+                                                <td>{{Dtl.Shift}}</td>
+                                                <td>{{Dtl.shiftStartTime | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                <td>{{Dtl.shiftEndTime | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                <td>{{Dtl.clockInTime | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                <td>{{Dtl.clockOutTime | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <!---------------------------------------------------------- Modal Body UI ---------------------------------------------------------->
+    </div>
+</body>
+</html>
+<script src="~/Scripts/jquery.min.js"></script>
+<script>
+    //Hide Side Menu
+    window.onload = function () {
+        document.getElementById('minisidebar').className = 'sidebar-xs';
+        speechSynthesis.cancel();
+    };
+    window.onbeforeunload = function () {
+        speechSynthesis.pause();
+    };
+
+
+    // Tabel Animation Code Start
+    var $el = $("#tblrep");
+    function anim() {
+        var st = $el.scrollTop();
+        var sb = $el.prop("scrollHeight") - $el.innerHeight();
+        $el.animate({ scrollTop: st < sb / 2 ? sb : 0 }, 7000, anim);
+    }
+    function stop() {
+        $el.stop();
+    }
+    anim();
+    $el.hover(stop, anim);
+    //End
+
+
+    var fullMode = false;
+
+
+    function Hideheader() {
+        fullMode = true;
+        //$(".navbar").css("display", "none");
+        //$(".sidebar").css("display", "none");
+        $(".icon-enlarge").css("display", "none");
+        $(".icon-shrink6").css("display", "block");
+        const content = document.getElementById('XrayContent');
+        if (content.requestFullscreen) {
+            content.requestFullscreen();
+        } else if (content.mozRequestFullScreen) { // Firefox
+            content.mozRequestFullScreen();
+        } else if (content.webkitRequestFullscreen) { // Chrome, Safari, Opera
+            content.webkitRequestFullscreen();
+        } else if (content.msRequestFullscreen) { // Internet Explorer and Edge
+            content.msRequestFullscreen();
+        }
+
+    }
+
+
+    function showHeader() {
+        fullMode = false;
+        //$(".navbar").css("display", "block");
+        //$(".sidebar").css("display", "block");
+        //document.getElementById("navbar-mobile").classList.add("RemoveNav");
+        $(".icon-enlarge").css("display", "block");
+        $(".icon-shrink6").css("display", "none");
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+
+
+    }
+
+    document.addEventListener('fullscreenchange', onFullScreenChange);
+    function onFullScreenChange() {
+        console.log(document.fullscreenElement);
+
+        if (document.fullscreenElement == null) {
+            $(".icon-enlarge").css("display", "block");
+            $(".icon-shrink6").css("display", "none");
+        }
+    }
+
+</script>

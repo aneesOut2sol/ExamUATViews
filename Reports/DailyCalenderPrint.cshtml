@@ -1,0 +1,480 @@
+﻿@model ExamPortal.Model.Features.TrainingCalendar.DailyActivitiesOTCResponse
+@{
+    ViewBag.Title = "PrintReport";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report</title>
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .table {
+            margin-bottom: 30px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, tr, th, td {
+            border: 1px solid lightgray;
+            padding: 8px !important;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .w-20 {
+            width: 20% !important;
+        }
+
+        .headerTable {
+            margin: 0px;
+        }
+
+        .headerTable {
+            margin-bottom: 10px;
+        }
+
+        .colortheme {
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        th.rightArrowbtn, td.rightArrowbtn {
+            width: 20px;
+        }
+
+        .border-0 {
+            border: 0 !important;
+        }
+
+        .badge-0 {
+            background: var( --dpw-bg-color);
+            color: white;
+        }
+
+        th {
+            background: #ededed;
+            color: black;
+        }
+
+        .text-center {
+            text-align: center !important;
+        }
+    </style>
+</head>
+<body >
+    <table class="border-0 table">
+        <tr class="border-0 ">
+            <td class="border-0 w-20"><img src="~/Content/images/dpworldlogo.png" height="80px" /></td>
+            <td class="border-0 text-center"><h1><b>Daily Activities OTC Report</b></h1></td>
+
+            
+            <td class="border-0 w-20"> Date:@DateTime.Now.ToString("dd/MM/yyyy") <br /> Time:@DateTime.Now.ToString("HH:mm:ss") </td>
+        </tr>
+    </table>
+
+    <div><h2 class="headerTable">Detail of  <span class="colortheme">@Model.Month.Value.ToString("dd/MMM/yyyy") </span></h2></div>
+    <table class="table">
+        <tbody>
+           
+            <tr >
+                <td>
+                    #
+                </td>
+                @foreach (var item in Model.DailyListt)
+                {
+                
+                    <td>@item.DailyTrainingsName</td>
+                }
+            </tr>
+
+            <tr>
+
+                <th class="border-0"><b>Fresher</b></th>
+                @foreach (var item in Model.DailyListt)
+                {
+                    <td  colspan="2">
+                       @if (item.DailyFreshers != 0)
+                       {
+                        <span>@item.DailyFreshers</span>
+                       }
+                       
+                    </td>
+                }
+                
+            </tr>
+            <tr>
+                <th class="border-0"><b>Developmental</b></th>
+              
+                @foreach (var item in Model.DailyListt)
+                {
+                    <td colspan="2">
+                        @if (item.DailyDevelopmental != 0)
+                        {
+                            <span>@item.DailyDevelopmental</span>
+                        }
+                    
+                    </td>
+                }
+
+            </tr>
+            <tr>
+                <th class="border-0"><b>Incident Based</b></th>
+
+             
+                @foreach (var item in Model.DailyListt)
+                {
+                    <td colspan="2">
+                        @if (item.DailyIncidentBased != 0)
+                        {
+                            <span>@item.DailyIncidentBased</span>
+                        }
+                  
+                    </td>
+                }
+
+
+            </tr>
+            <tr>
+                <th class="border-0"><b>New Enrollment</b></th>
+                
+                @foreach (var item in Model.DailyListt)
+                {
+                    <td colspan="2">
+                        @if (item.DailyNewEnrollment != 0)
+                        {
+                            <span>@item.DailyNewEnrollment</span>
+                        }
+                      
+                    </td>
+                }
+
+
+            </tr>
+        </tbody>
+    </table>
+
+
+    <div><h2 class="headerTable">Detail of  <span class="colortheme">@Model.Month.Value.ToString("dd/MMM/yyyy")</span></h2></div>
+    <table class="table ">
+        <thead class="thead">
+            <tr>
+                <th>
+                    Trainer
+                </th>
+                <th>
+                    Training
+                </th>
+                <th>
+                    Status
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+          
+
+                @foreach (var item in Model.TrainerDetails)
+                {
+                    <tr>
+                        <td>
+                            <span> @item.TrainerName </span>
+                        </td>
+                        <td>
+                            <span> @item.Training </span>
+                        </td>
+                        <td>
+                     
+                            @if (item.Status == 0)
+                            {
+                                <span class="badge badge-Inprogress">Inprogress</span>
+                            }
+                            @if (item.Status == 1)
+                            {
+                                <span class="badge badge-Hold">Hold</span>
+                            }
+                            @if (item.Status == 2)
+                            {
+                                <span class="badge badge-Completed">Completed</span>
+                            }
+                         
+                        </td>
+                    </tr>
+                }
+
+
+          
+            
+        </tbody>
+    </table>
+
+
+
+
+    <div><h2 class="headerTable">Detail of <span class="colortheme">@Model.Month.Value.ToString("MMM/yyyy")</span></h2></div>
+    <table class="table">
+        <tr>
+            <td colspan="16">
+                <table class="table">
+                    <tr style="background:var( --dpw-bg-color); color: white;">
+                        <th>Date</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5 </th>
+                        <th>6</th>
+                        <th>7</th>
+                        <th>8</th>
+                        <th>9</th>
+                        <th>10</th>
+                        <th>11</th>
+                        <th>12</th>
+                        <th>13</th>
+                        <th>14</th>
+                        <th>15</th>
+                        <th>16</th>
+                        <th>17</th>
+                        <th>18</th>
+                        <th>19</th>
+                        <th>20</th>
+                        <th>21</th>
+                        <th>22</th>
+                        <th>23</th>
+                        <th>24</th>
+                        <th>25</th>
+                        <th>26</th>
+                        <th>27</th>
+                        <th>28</th>
+                        <th>29</th>
+                        <th>30</th>
+                        <th>31</th>
+
+                    </tr>
+
+
+                    @foreach (var item in Model.DailyActivitiesOTC)
+                    {
+                        <tr>
+                            <td>  @item.TrainingsName</td>
+
+                            <td>
+                                @if (item.n1 != 0)
+                                {
+                                    <span>@item.n1</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n2 != 0)
+                                {
+                                    <span>@item.n2</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n3 != 0)
+                                {
+                                    <span>@item.n3</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n4 != 0)
+                                {
+                                    <span>@item.n4</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n5 != 0)
+                                {
+                                    <span>@item.n5</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n6 != 0)
+                                {
+                                    <span>@item.n6</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n7 != 0)
+                                {
+                                    <span>@item.n7</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n8 != 0)
+                                {
+                                    <span>@item.n8</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n9 != 0)
+                                {
+                                    <span>@item.n9</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n10 != 0)
+                                {
+                                    <span>@item.n10</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n11 != 0)
+                                {
+                                    <span>@item.n11</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n12 != 0)
+                                {
+                                    <span>@item.n12</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n13 != 0)
+                                {
+                                    <span>@item.n13</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n14 != 0)
+                                {
+                                    <span>@item.n14</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n15 != 0)
+                                {
+                                    <span>@item.n15</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n16 != 0)
+                                {
+                                    <span>@item.n16</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n17 != 0)
+                                {
+                                    <span>@item.n17</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n18 != 0)
+                                {
+                                    <span>@item.n18</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n19 != 0)
+                                {
+                                    <span>@item.n19</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n20 != 0)
+                                {
+                                    <span>@item.n20</span>
+                                }
+                            </td>
+                        
+                            <td>
+                                @if (item.n21 != 0)
+                                {
+                                    <span>@item.n21</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n22 != 0)
+                                {
+                                    <span>@item.n22</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n23 != 0)
+                                {
+                                    <span>@item.n23</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n24 != 0)
+                                {
+                                    <span>@item.n24</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n25 != 0)
+                                {
+                                    <span>@item.n25</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n26 != 0)
+                                {
+                                    <span>@item.n26</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n27 != 0)
+                                {
+                                    <span>@item.n27</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n28 != 0)
+                                {
+                                    <span>@item.n29</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n29 != 0)
+                                {
+                                    <span>@item.n29</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n30 != 0)
+                                {
+                                    <span>@item.n30</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.n31 != 0)
+                                {
+                                    <span>@item.n31</span>
+                                }
+                            </td>
+                           
+                           
+
+                        </tr>
+                    }
+
+
+
+
+            </td>
+        </tr>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+        window.print();
+    </script>
+</body>
+</html>

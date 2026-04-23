@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "ExaminationDetailsReportEmail";
+    Layout = "~/Views/Shared/_EmailLayoutUpdated.cshtml";
+}
+
+<style>
+    .badge {
+        padding: 3px 8px;
+        width: fit-content;
+        color: white;
+        border-radius: 5px;
+    }
+
+    .badge-info {
+        background-color: #006fff;
+    }
+
+    .badge-success {
+        background-color: #007e27;
+    }
+
+    .badge-danger {
+        background-color: red;
+    }
+
+    table tr td, table tr th {
+        padding: 5px;
+    }
+
+    .button {
+        background-color: #1e1450;
+        border: none;
+        color: white;
+        padding: 8px 15px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+</style>
+
+<p style="text-align:left;">
+    <b>Dear Team,</b><br />
+   Kindly find the attached file @Model Report
+</p>
+

@@ -1,0 +1,224 @@
+﻿<style>
+    /* Modal and Dialog Settings */
+    #CntrJourneyModal .modal-dialog {
+        max-width: 900px;
+        margin: 30px auto;
+    }
+
+    .modal-content {
+        background-color: #f8f9fa !important;
+        border-radius: 12px !important;
+        border: none;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2) !important;
+    }
+
+    .modal-header {
+        background: #fff;
+        padding: 15px 25px;
+        border-bottom: 1px solid #dee2e6 !important;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .modal-title {
+        color: #173a64;
+        font-weight: 800 !important;
+        font-size: 20px;
+    }
+    /* Container for each Journey Entry */
+    .journey-item-wrapper {
+        background: #fff;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        overflow: hidden;
+    }
+    /* THE ALIGNMENT ENGINE: One table per item */
+    .journey-table {
+        width: 100%;
+        table-layout: fixed; /* Forces columns to be identical across all rows */
+        border-collapse: collapse;
+    }
+        /* General Cell Styling */
+        .journey-table th, .journey-table td {
+            padding: 12px 15px;
+            font-size: 11px;
+            text-align: left;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f0f0;
+            word-wrap: break-word;
+        }
+    /* Header Row (Top Row) Styling */
+    .header-row {
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+        .header-row th {
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: inherit; /* Takes color from ACP/REJ parent */
+        }
+    /* Details Rows Styling */
+    .details-row th {
+        background-color: #f1f3f5; /* Distinct color for inner labels */
+        color: #495057;
+        font-weight: 700;
+        border-right: 1px solid #dee2e6;
+    }
+
+    .details-row td {
+        background-color: #ffffff;
+        color: #212529;
+    }
+    /* Status Colors applied to the Header Row */
+    .Accepted .header-row {
+        background-color: #e0f2ed !important;
+        color: #2e592f !important;
+    }
+
+    .Rejected .header-row {
+        background-color: #f6cfcf !important;
+        color: #9e2828 !important;
+    }
+    /* Chevron and OPR column adjustments */
+    .opr-badge {
+        background: rgba(0,0,0,0.05);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+    .action-cell {
+        width: 40px !important;
+        text-align: center !important;
+        padding: 0 !important;
+    }
+    /* Close Button */
+    .CloseModalBtn {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        background: #173a64;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 1000;
+    }
+
+    .icon-file-download {
+        font-size: 18px;
+        color: #173a64;
+        cursor: pointer;
+    }
+</style>
+<div class="modal fade" id="CntrJourneyModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">Container ({{Exam_ContainerJourney[0].Cntr}}) Journey</h5>
+            </div>
+            <div class="modal-body" style="max-height:600px; overflow-y:auto; padding: 20px;">
+                <div class="journey-item-wrapper" ng-repeat="item in Exam_ContainerJourney"
+                     ng-class="{'Accepted': GetSeaLOCMsg(item.SEALOCSTS_Details).inspectionLocStatus.status == 'ACP' && item.CreatedFrom == 'SEALOCSTS',
+                                'Rejected': GetSeaLOCMsg(item.SEALOCSTS_Details).inspectionLocStatus.status != 'ACP' && item.CreatedFrom == 'SEALOCSTS'}">
+                    <table class="journey-table">
+                        <tr class="header-row" ng-click="ShowJourneyCollapse($index)">
+                            <th>Integration</th>
+                            <td>{{item.CreatedFrom}}</td>
+                            <th ng-if="item.CreatedFrom == 'SEALOCSTS'">Receive Time</th>
+                            <th ng-if="item.CreatedFrom != 'SEALOCSTS'">Sent Time</th>
+                            <td>{{item.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                            <th style="width: 60px;">OPR</th>
+                            <td style="width: 40px;"><span class="opr-badge">{{item.OprCode}}</span></td>
+                            <td class="action-cell">
+                                <i class="icon-chevron-down" id="STSJourneydownicon{{$index}}"></i>
+                                <i class="icon-chevron-up" id="STSJourneyupicon{{$index}}" style="display:none;"></i>
+                            </td>
+                        </tr>
+                        <tbody id="STSJourneydetails{{$index}}" class="STSdetails">
+                            <tr class="details-row" ng-if="item.CreatedFrom == 'SEALOCSTS'">
+                                <th colspan="2">Acc Id</th>
+                                <td colspan="2">{{GetSeaLOCMsg(item.SEALOCSTS_Details).acctId}}</td>
+                                <th colspan="2">Doc Ref</th>
+                                <td colspan="2">{{GetSeaLOCMsg(item.SEALOCSTS_Details).docRefNumber}}</td>
+                            </tr>
+                            <tr class="details-row" ng-if="item.CreatedFrom == 'SEALOCSTS'">
+                                <th colspan="2">Dec ISN</th>
+                                <td colspan="2">{{GetSeaLOCMsg(item.SEALOCSTS_Details).declarationISN}}</td>
+                                <th colspan="2">Insp Category</th>
+                                <td colspan="2">{{GetSeaLOCMsg(item.SEALOCSTS_Details).inspectionCategory}}</td>
+                            </tr>
+                            <tr class="details-row" ng-if="item.CreatedFrom == 'SEALOCSTS'">
+                                <th colspan="2">Area</th>
+                                <td colspan="2">{{GetSeaLOCMsg(item.SEALOCSTS_Details).inspectionLocStatus.areaID}}</td>
+                                <th colspan="2">Status</th>
+                                <td colspan="2">{{GetSeaLOCMsg(item.SEALOCSTS_Details).inspectionLocStatus.status}}</td>
+                            </tr>
+                            <tr class="details-row" ng-if="item.CreatedFrom == 'SEALOCSTS'">
+                                <th colspan="2">OPR Code DESC</th>
+                                <td colspan="2">{{GetOPRCodeDescription(item.OprCode)}}</td>
+                                <th colspan="2">Sub Code</th>
+                                <td colspan="2">{{GetSeaLOCMsg(item.SEALOCSTS_Details).inspectionLocStatus.errorCodeDetails}}</td>
+                            </tr>
+                            <tr class="details-row" ng-if="item.CreatedFrom == 'SEALOCSTS'">
+                                <th colspan="2">Sub Code DESC</th>
+                                <td colspan="2">{{GetSubCodeDescription(item.OprCode,GetSeaLOCMsg(item.SEALOCSTS_Details).inspectionLocStatus.errorCodeDetails)}}</td>
+                                <th colspan="2">Seal No</th>
+                                <td colspan="2">{{GetSeaLOCMsg(item.SEALOCSTS_Details).inspectionLocStatus.sealNo || 'NONE'}}</td>
+                            </tr>
+                            <tr class="details-row" ng-if="item.CreatedFrom == 'SEALOCSTS'">
+                                <th colspan="2">Remarks</th>
+                                <td colspan="2">{{GetSeaLOCMsg(item.SEALOCSTS_Details).inspectionLocStatus.remarks}}</td>
+                                <th colspan="2">Download</th>
+                                <td colspan="2"><i class="icon-file-download" ng-click="DownloadJsonSEALOC(item.REQUEST,item.RESPONSE,item.CreatedFrom,item.Cntr)"></i></td>
+                            </tr>
+                            <tr class="details-row" ng-if="item.CreatedFrom != 'SEALOCSTS'">
+                                <th colspan="2">Acc Id</th>
+                                <td colspan="2">{{item.SEALOC_Details.declarationAccount}}</td>
+                                <th colspan="2">Doc Ref</th>
+                                <td colspan="2">{{item.SEALOC_Details.declarationDetails.docRefNo}}</td>
+                            </tr>
+                            <tr class="details-row" ng-if="item.CreatedFrom != 'SEALOCSTS'">
+                                <th colspan="2">Dec ISN</th>
+                                <td colspan="2">{{item.SEALOC_Details.declarationDetails.declarationISN}}</td>
+                                <th colspan="2">Insp Category</th>
+                                <td colspan="2">{{item.SEALOC_Details.inspectionCategory}}</td>
+                            </tr>
+                            <tr class="details-row" ng-if="item.CreatedFrom != 'SEALOCSTS'">
+                                <th colspan="2">OPR Code DESC</th>
+                                <td colspan="2">
+                                    <span ng-if="item.OprCode==1">Move to exam yard</span>
+                                    <span ng-if="item.OprCode==3">Cargo strip done</span>
+                                    <span ng-if="item.OprCode==6">Cargo repack done</span>
+                                </td>
+                                <th colspan="2">Area</th>
+                                <td colspan="2">{{item.SEALOC_Details.areaDetails[0].areaID}}</td>
+                            </tr>
+                            <tr class="details-row" ng-if="item.CreatedFrom != 'SEALOCSTS'">
+                                <th colspan="2">X Coord</th>
+                                <td colspan="2">{{item.SEALOC_Details.areaDetails[0].containerDetails[0].X}}</td>
+                                <th colspan="2">Y Coord</th>
+                                <td colspan="2">{{item.SEALOC_Details.areaDetails[0].containerDetails[0].Y}}</td>
+                            </tr>
+                            <tr class="details-row" ng-if="item.CreatedFrom != 'SEALOCSTS'">
+                                <th colspan="2">Download</th>
+                                <td colspan="6"><i class="icon-file-download" ng-click="DownloadJsonSEALOC(item.REQUEST,item.RESPONSE,item.CreatedFrom,item.Cntr)"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #dee2e6;">
+                <button class="btn btn-secondary" data-dismiss="modal" style="padding: 8px 30px;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

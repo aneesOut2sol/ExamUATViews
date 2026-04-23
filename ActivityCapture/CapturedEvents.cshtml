@@ -1,0 +1,619 @@
+﻿
+@{
+    ViewBag.Title = "CapturedEvents";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/BootsrapDatetime/icon.css" rel="stylesheet" />
+<link href="~/Content/BootsrapDatetime/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+<link href="~/Content/BootsrapDatetime/css.css" rel="stylesheet" />
+
+<script src="~/Scripts/jquery.min.js"></script>
+@*<script src="~/Content/BootsrapDatetime/ripples.min.js"></script>
+    <script src="~/Content/BootsrapDatetime/material.min.js"></script>*@
+
+<script src="~/Scripts/js/plugins/moment/moment_locales.min.js"></script>
+@*<script src="~/Content/BootsrapDatetime/bootstrap-material-datetimepicker.js"></script>*@
+
+
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.css" rel="stylesheet" />
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.standalone.css" rel="stylesheet" />
+<script src="~/Scripts/DatePicker/bootstrap-datepicker.js"></script>
+
+
+<script src="~/Content/BootsrapDatetime/ripples.min.js"></script>
+<script src="~/Content/BootsrapDatetime/material.min.js"></script>
+
+<script src="~/Content/BootsrapDatetime/bootstrap-material-datetimepicker.js"></script>
+<link href="~/Content/ZoomInOut/ZoomInOut.css" rel="stylesheet" />
+
+
+
+<style>
+
+    .DetailsTable {
+        width: 100%;
+    }
+
+        .DetailsTable tr td, .DetailsTable tr th {
+            padding: 9px 16px;
+            border-bottom: 1px solid #bcbcbc;
+        }
+
+    #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #111111de;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+        display: none;
+        overflow: scroll;
+    }
+
+        #overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            transition: transform 0.5s ease;
+        }
+
+
+    .badge-approved {
+        background: #c9fbd2;
+        border: 1px solid #45654b;
+        color: #45654b;
+        font-size: 12px;
+        width: fit-content;
+    }
+
+    .badge-pending {
+        background: #ffe8b4;
+        color: #925f01;
+        border: 1px solid #925f01;
+        width: fit-content;
+        font-size: 12px;
+    }
+
+    .badge-rejected {
+        background: #f9cdcd;
+        color: #770101;
+        border: 1px solid #740202;
+        width: fit-content;
+        font-size: 12px;
+    }
+
+    .sliderNav td {
+        background: #9b9b9b26 !important;
+        padding: 0px 30px;
+        text-align: center;
+    }
+
+    .thumbnail {
+        width: 50px; /* Adjust size as needed */
+        height: auto;
+        cursor: pointer;
+        margin: 5px; /* Space between images */
+        border: 1px solid #ddd; /* Optional border */
+        border-radius: 4px; /* Optional rounded corners */
+        transition: transform 0.2s; /* Animation on hover */
+    }
+
+        .thumbnail.Active {
+            border-color: #007bff; /* Change color for the active thumbnail */
+            border-width: 2px; /* Thicker border for active thumbnail */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Optional shadow */
+        }
+
+        .thumbnail:hover {
+            transform: scale(1.1); /* Slight zoom effect on hover */
+        }
+
+    .image-name {
+        text-align: center; /* Center the text */
+        font-size: 12px; /* Adjust font size */
+        margin-top: 5px; /* Space between image and name */
+        color: #ffffff; /* Text color */
+    }
+
+    .tableView .table td {
+        font-family: 'Pilat Wide';
+    }
+
+    .tableView .table th {
+        font-family: 'Pilat Wide Demi';
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+    }
+
+    .table td, .table th {
+        white-space: nowrap !important;
+    }
+
+    .examhistory {
+        font-family: 'Pilat Wide';
+    }
+</style>
+<link href="~/Content/css/ExamCSS.css" rel="stylesheet" />
+<div ng-controller="ActivityCaptureCtrl" class="ng-cloak" ng-cloak ng-init="CaptureEventInit()">
+    @*<div id="overlay">
+            <span id="close-btn" ng-click="closeOverlay()">&#10006;</span>
+            <img src="" id="LargeImageView" alt="Image">
+        </div>*@
+
+    <!-- Page header -->
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4>
+                    <i class="icon-stack-text mr-2"></i><span class="font-weight-semibold">Inspection Events History</span>
+
+                </h4>
+                <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+            </div>
+            <div class="page-title d-flex">
+                <div class="pull-right SwitchIcon">
+                    <span ng-class="{'active':CurrentView=='Table'}" ng-click="SwitchView('Table')" class="mr-1"><i class="icon-grid fs-20"></i></span>
+                    <span ng-class="{'active':CurrentView=='Card'}" ng-click="SwitchView('Card')" class="mr-1"><i class="icon-list fs-20"></i></span>
+                </div>
+                <input type="button" class="btn btn-secondary  pull-right ml-2" value="Filters" data-toggle="collapse" data-target="#demo" />
+
+            </div>
+        </div>
+    </div><hr />
+
+    <!--Search Filter Code Start-->
+    <div class="card collapse" id="demo">
+        <div class="card-body">
+            <div class="col-md-12  border-bottom">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Container #</label>
+                            <input type="text" maxlength="200" onkeyup="TableRowsCount()" min="1" class="form-control" placeholder="Search Container.." ng-model="search.Cntr" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Event Name</label>
+                            <input type="text" maxlength="200" min="1" class="form-control" placeholder="Search Event Name.." ng-model="search.EventName" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>From Date</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control date" id="FromDate" placeholder="DD/MM/YYYY HH:mm">
+                                <span class="input-group-append">
+                                    <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label>To Date</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control date" id="ToDate" placeholder="DD/MM/YYYY HH:mm">
+                                <span class="input-group-append">
+                                    <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8 mt-3" style="text-align:end;" ng-show="CurrentView=='Card'">
+                        <button class="btn btn-success pull-right mr-2" ng-click="CaptureEventSearch()">Search</button>
+                        <button class="btn btn-primary pull-right mr-2" ng-click="ClearFilter()">Clear</button>
+                    </div>
+                    <div class="col-md-8 mt-3" style="text-align:end;" ng-show="CurrentView=='Table'">
+                        <button class="btn btn-success pull-right mr-2" ng-click="CaptureEventTableSearch()">Search</button>
+                        <button class="btn btn-primary pull-right mr-2" ng-click="ClearTableFilter()">Clear</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--Search Filter Code End-->
+
+    <div class="row" ng-show="CurrentView=='Card'">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="CounterCard">
+                <b>Total item: </b>  <span id="counts">{{(CapturedEventList | filter: d).length}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="row accordion" id="acc" ng-show="CurrentView=='Card'">
+        <div class="col-md-12 Capture-Card" ng-repeat="x in CapturedEventList">
+            <div class="Capture-CardFlex" data-toggle="collapse" data-target="#{{x.Container}}col" ng-click="OpenCollapse(x.Container,x,$index)">
+                <div class="mr-3"><img src="~/Content/images/output-onlinepngtools.png" style="height: 49px;" /></div>
+                <div style=" font-size: 14px; font-weight: 500;" data-toggle="collapse">{{x.Container}}</div>
+                <div class="ml-auto">
+                    <span>
+                        <i ng-show="CurrentCntr!=x.Container" class="icon-chevron-down"></i>
+                        <i ng-show="CurrentCntr==x.Container" class="icon-chevron-up"></i>
+                    </span>
+
+                </div>
+            </div>
+            <div class="collapse mt-3" data-parent="#acc" id="{{x.Container}}col">
+                <div class="row">
+                    <div class="col-md-4" ng-repeat="y in x.list">
+                        <div class="evenetTab" ng-class="{'Canceled':y.Cancel==true,}">
+                            <span class="crosschild" style="float:right;cursor:pointer;">
+                                <span title="View event history" class="ml-1" ng-click="OpenevnetInfo(y,y.EventName,x.Container)" ng-show="y.EventName=='EXAM_SEALCUT' || y.EventName=='UNIT_REPACK_AND_SEALED'|| y.EventName=='EXAM_CARGOSTRIP'|| y.EventName=='EXAM_CARGOSTUFFED' || y.EventName=='EXAM_EXCESS_CARGO' || y.EventName=='UNIT_BAD_STOWAGE' || y.EventName=='UNIT_TECHNICAL_SERVICE' || y.EventName=='EXAM_DAMAGE _REPORT'"><i class="icon-info22"></i></span>
+                                <span title="Cancel" ng-click="RemoveEventFormCntr(y.Container,y.Functionality,y.EventName,y.Id)" ng-show="y.Cancel!=true && y.EventName!='Scan_REQUEST_BY_CUSTOM'"><i class="icon-cross"></i></span>
+                            </span>
+                            <div class="evenetTitle" title="{{y.DisplayEventName}}" ng-if="y.DisplayEventName!=null &&y.DisplayEventName!=''">
+                                {{y.DisplayEventName}}
+                                <span ng-show="y.Cancel==true" class="badge-active babge-sm">Canceled</span>
+                            </div>
+                            <div class="evenetTitle" title="{{y.EventName}}" ng-if="y.DisplayEventName==null ||y.DisplayEventName==''">
+                                {{y.EventName}}
+                                <span ng-show="y.Cancel==true" class="badge-active babge-sm">Canceled</span>
+                            </div>
+                            <span>{{y.CreatedAt | date:'dd-MM-yyyy HH:mm:ss'}}</span>
+                            <br />
+                            <b>{{y.CreatedBy}}</b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row" ng-show="CurrentView=='Table'">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="CounterCard">
+                <b>Total item: </b>  <span id="counts">{{(CapturedCntrTableData | filter: d).length}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="tableView" ng-show="CurrentView=='Table'">
+        <div class="row">
+            <div class="card table-card scrollbar w-100">
+                <table class="table datatable-show-all" id="Table">
+                    <thead>
+                        <tr class="table-card-head">
+                            <th>Container</th>
+                            <th>Event Name</th>
+                            <th>Created at</th>
+                            <th>Created by</th>
+                            <th>Status</th>
+                            <th>Action at</th>
+                            <th>Action by</th>
+                            <th>Risk type</th>
+                            <th>High Risk Reason</th>
+                            <th>Stipped/Stuffed  by</th>
+                            <th>Labor Handling</th>
+                            <th>Contractor</th>
+                            <th>Stripping/Repacking duration</th>
+                            <th>Seal Number</th>
+                            <th>Photos</th>
+                            <th>Repack Checklist</th>
+                            <th>Rejection List</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="x in CapturedCntrTableData">
+                            <td>{{x.Container}}</td>
+                            <td>{{x.DisplayEventName || x.EventName}}</td>
+
+                            <td>{{x.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                            <td>{{x.CreatedBy}}</td>
+                            <td>
+                                <span ng-show="x.Status==1" class="badge badge-approved">Approved</span>
+                                <span ng-show="x.Status==0 && x.PartialRejected == false" class="badge badge-pending">Pending for approval</span>
+                                <span ng-show="x.Status==0 && x.PartialRejected == true" class="badge badge-rejected">Partially rejected</span>
+                                <span ng-show="x.Status==2" class="badge badge-rejected">Rejected</span>
+                                <span ng-show="x.Status==5" class="badge badge-approved">Recorded</span>
+                            </td>
+                            <td>{{x.ApprovedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                            <td>{{x.ApprovedBy}}</td>
+                            <td>{{x.RiskType}}</td>
+                            <td>{{x.Sealcut_HighRiskReason}}</td>
+                            <td>{{x.StripNStuffBy}}</td>
+                            <td>{{x.LaborHandling}}</td>
+                            <td>{{x.Contractor}}</td>
+                            <td>{{x.StripNStuffDuration}}</td>
+                            <td>{{x.SealNumber}}</td>
+                            <td class="text-center">
+                                <div data-toggle="dropdown" class="MainBtn dropdown" ng-init="setupPhotolib(x.Photos,x)" ng-show="x.Photolibraray.length>0">
+                                    <span><i class="icon-image2"></i></span>
+                                    <ul class="dropdown-menu">
+                                        <li ng-repeat="y in x.Photolibraray" ng-show="y.Url!='' && y.Url!=null">
+                                            <a class="dropdown-item" ng-click="OpenImageView(y.Url,x, '')">
+                                                <span> <i class="icon-eye"></i></span>  {{y.Label}}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div ng-click="OpenRepackCheckList(x)" ng-show="x.RepackCheckList.length>0">
+                                    <span><i class="icon-eye"></i></span>
+                                </div>
+                            </td>
+                            <td>
+                                <ul ng-if="x.PRList">
+                                    <li ng-repeat="pritem in x.PRList" style="text-align: left; white-space: nowrap;">
+                                        {{pritem.REJ_TYPE}}
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <button style=" position: fixed; bottom: 3px; right: 22px;" ng-show="CurrentView=='Card'" class="btn btn-primary pull-right mt-3" ng-click="LoadMoreCapturedEvent()">
+        Load More
+    </button>
+    <button style=" position: fixed; bottom: 3px; right: 22px;" ng-show="CurrentView=='Table'" class="btn btn-primary pull-right mt-3" ng-click="LoadMoreCapturedEventTable()">
+        Load More
+    </button>
+    <!-- Export Excel STart       -->
+    <button type="button" id="ImportEXCELID" class="btn btn-primary d-none" data-backdrop="static" data-bs-keyboard="false" data-toggle="modal" data-target="#ImportDriverModal"> </button>
+    <!-- Modal -->
+
+
+    <div class="modal fade" id="ImportDriverModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal">
+                    <i data-dismiss="modal" class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Select Functionality</h5>
+                </div>
+                <div class="modal-body" style=" letter-spacing: 0.8px;">
+                    <div class="row">
+                        <div class="col-md-8 form-group">
+                            <select data-placeholder="Please Select Functionality" id="Functionality" class="form-control select-clear" ng-model="Event.Functionality" data-fouc>
+                                <option></option>
+                                <option ng-repeat="E in CategoryList" value="{{E.Id}}">{{E.Category}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4  form-group">
+                            <button ng-click="ExporttoExcel(Event.Functionality,CapturedEventList)" class="btn btn-secondary">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Export Excel End -->
+
+
+    <div class="modal fade" id="Historymodel" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal">
+                    <i data-dismiss="modal" class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Container History</h5>
+                </div>
+                <div class="modal-body" style=" letter-spacing: 0.8px;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="EventInfo" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal">
+                    <i data-dismiss="modal" class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Repack checklist</h5>
+                </div>
+                <div class="modal-body" style=" letter-spacing: 0.8px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- === REPACK CHECKLIST COMPONENT === -->
+                            <div class="repack-checklist">
+                                <h3>Repack Verification Checklist</h3>
+                                <div ng-repeat="item in EventInfo.RepackCheckList"
+                                     class="repack-item"
+                                     ng-class="{ 'required-missing': item.yesnoMandatory && item.selectedAnswer === null }">
+                                    <div class="repack-question">
+                                        {{ item.question }}
+                                    </div>
+                                    <div class="repack-radio-group">
+                                        <label class="repack-radio">
+                                            <input type="radio"
+                                                   ng-model="item.selectedAnswer"
+                                                   ng-value="true"
+                                                   disabled>
+                                            <span>Yes</span>
+                                        </label>
+                                        <label class="repack-radio">
+                                            <input type="radio"
+                                                   ng-model="item.selectedAnswer"
+                                                   ng-value="false"
+                                                   disabled>
+                                            <span>No</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="overlay" style="flex-direction:column">
+        @*<span id="close-btn" style=" top: 70px;" ng-click="closeOverlay()">&#10006;</span>
+        <div style="height:90vh;overflow:auto;width:100%;text-align:center;">
+            <img src="" id="LargeImageView" alt="Image">
+        </div>*@
+        <div id="zoomContainer">
+            <img id="zoomImg" src="" alt="Zoomable" />
+            <span id="close-btn" ng-click="closeOverlay()">&#10006;</span>
+            <div class="zoom-controls">
+                <button id="zoomIn">+</button>
+                <button id="zoomOut">−</button>
+                <button id="zoomReset">Reset</button>
+            </div>
+        </div>
+        <br />
+        <table class="sliderNav" ng-show="CurrentView=='Table'">
+            <tr>
+                <td ng-repeat="y in currentEvent.Photolibraray" ng-show="y.Url!='' && y.Url!=null">
+                    <img ng-class="{'Active': CurrentopenUrl == y.Url}"
+                         ng-click="OpenImageView(y.Url, currentEvent,'cargostuffedConfrimation')"
+                         src="{{y.Url}}"
+                         alt="{{y.Label}}"
+                         class="thumbnail" />
+                    <div class="image-name">{{y.Label}}</div>
+                </td>
+
+
+
+                @*<td ng-show="currentEvent.SealPhoto!='' && currentEvent.SealPhoto!=null">
+                    <img ng-class="{'Active': CurrentopenUrl == currentEvent.SealPhoto}"
+                         ng-click="OpenImageView(currentEvent.SealPhoto,currentEvent, 'cargostuffedConfrimation')"
+                         src="{{currentEvent.SealPhoto}}"
+                         alt="Seal Photo"
+                         class="thumbnail" />
+                    <div class="image-name">Seal Photo</div>
+                </td>
+
+
+                <td ng-show="currentEvent.CargoFront!='' && currentEvent.CargoFront!=null">
+
+                    <img ng-class="{'Active': CurrentopenUrl == currentEvent.CargoFront}"
+                         ng-click="OpenImageView(currentEvent.CargoFront,currentEvent, 'cargostuffedConfrimation')"
+                         src="{{currentEvent.CargoFront}}"
+                         alt="Cargo Front"
+                         class="thumbnail" />
+                    <div class="image-name">Cargo Front</div>
+
+                </td>
+
+                <td ng-show="currentEvent.DoorAfter!='' && currentEvent.DoorAfter!=null">
+
+                    <img ng-class="{'Active': CurrentopenUrl == currentEvent.DoorAfter}"
+                         ng-click="OpenImageView(currentEvent.DoorAfter,currentEvent, 'cargostuffedConfrimation')"
+                         src="{{currentEvent.DoorAfter}}"
+                         alt="Door After"
+                         class="thumbnail" />
+                    <div class="image-name">Door After</div>
+
+                </td>
+
+                <td ng-show="currentEvent.CargoImage!='' && currentEvent.CargoImage!=null">
+
+                    <img ng-class="{'Active': CurrentopenUrl == currentEvent.CargoImage}"
+                         ng-click="OpenImageView(currentEvent.CargoImage,currentEvent, 'cargostuffedConfrimation')"
+                         src="{{currentEvent.CargoImage}}"
+                         alt="Cargo Image"
+                         class="thumbnail" />
+                    <div class="image-name">Cargo Image</div>
+
+                </td>
+
+                <td ng-show="currentEvent.ContainerNumberImage!='' && currentEvent.ContainerNumberImage!=null">
+
+                    <img ng-class="{'Active': CurrentopenUrl == currentEvent.ContainerNumberImage}"
+                         ng-click="OpenImageView(currentEvent.ContainerNumberImage,currentEvent, 'cargostuffedConfrimation')"
+                         src="{{currentEvent.ContainerNumberImage}}"
+                         alt="Container Image"
+                         class="thumbnail" />
+                    <div class="image-name">Container Image</div>
+
+                </td>
+
+                <td ng-show="currentEvent.DeliveryPhoto1!='' && currentEvent.DeliveryPhoto1!=null">
+
+                    <img ng-class="{'Active': CurrentopenUrl == x.DeliveryPhoto1}"
+                         ng-click="OpenImageView(currentEvent.DeliveryPhoto1,currentEvent, 'cargostuffedConfrimation')"
+                         src="{{currentEvent.DeliveryPhoto1}}"
+                         alt="Delivery Photo 1"
+                         class="thumbnail" />
+                    <div class="image-name">Delivery Photo 1</div>
+
+                </td>
+
+                <td ng-show="currentEvent.DeliveryPhoto2!='' && currentEvent.DeliveryPhoto2!=null">
+
+                    <img ng-class="{'Active': CurrentopenUrl == currentEvent.DeliveryPhoto2}"
+                         ng-click="OpenImageView(currentEvent.DeliveryPhoto2,currentEvent, 'cargostuffedConfrimation')"
+                         src="{{currentEvent.DeliveryPhoto2}}"
+                         alt="Delivery Photo 2"
+                         class="thumbnail" />
+                    <div class="image-name">Delivery Photo 2</div>
+                </td>
+
+                <td ng-show="currentEvent.CargoRightSide!='' && currentEvent.CargoRightSide!=null">
+                    <img ng-class="{'Active': CurrentopenUrl == currentEvent.CargoRightSide}"
+                         ng-click="OpenImageView(currentEvent.CargoRightSide,currentEvent, 'cargostuffedConfrimation')"
+                         src="{{currentEvent.CargoRightSide}}"
+                         alt="Cargo Right Side"
+                         class="thumbnail" />
+                    <div class="image-name">Cargo Right Side</div>
+                </td>
+
+                <td ng-show="currentEvent.CargoRearSide!='' && currentEvent.CargoRearSide!=null">
+
+                    <img ng-class="{'Active': CurrentopenUrl == currentEvent.CargoRearSide}"
+                         ng-click="OpenImageView(currentEvent.CargoRearSide,currentEvent, 'cargostuffedConfrimation')"
+                         src="{{currentEvent.CargoRearSide}}"
+                         alt="Cargo Rear Side"
+                         class="thumbnail" />
+                    <div class="image-name">Cargo Rear Side</div>
+                </td>
+
+                <td ng-show="currentEvent.CargoLeftSide!='' && currentEvent.CargoLeftSide!=null">
+
+                    <img ng-class="{'Active': CurrentopenUrl == currentEvent.CargoLeftSide}"
+                         ng-click="OpenImageView(currentEvent.CargoLeftSide,currentEvent, 'cargostuffedConfrimation')"
+                         src="{{currentEvent.CargoLeftSide}}"
+                         alt="Cargo Left Side"
+                         class="thumbnail" />
+                    <div class="image-name">Cargo Left Side</div>
+
+                </td>*@
+            </tr>
+        </table>
+
+
+
+
+    </div>
+</div>
+<script src="~/Content/ZoomInOut/ZoomInOut.js"></script>
+<script>
+
+
+    //DAte Time
+
+
+    $('.date').bootstrapMaterialDatePicker({
+        format: 'DD/MM/YYYY HH:mm',
+        //maxDate: maxdate,
+        //  endDate: moment(new Date()).format('DD/MM/YYYY HH:mm'),
+        switchOnClick: true,
+        nowButton: true,
+        //currentDate: moment(),
+    });
+
+</script>
+<script src="~/Scripts/DatePicker/CustomIntilizeJS.js"></script>
+
+
+
+
+
+
+

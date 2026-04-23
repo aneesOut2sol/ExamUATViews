@@ -1,0 +1,381 @@
+﻿
+@{
+    ViewBag.Title = "MyProfile";
+}
+
+<!-- Page header -->
+<div class="page-header border-bottom-0">
+    <div class="page-header-content header-elements-md-inline">
+        <div class="page-title d-flex">
+            <h4>
+                <i class="icon-user mr-2"></i>
+                <span class="font-weight-semibold">My Profile </span>
+            </h4>
+        </div>
+    </div>
+</div><hr />
+<!-- Page header End-->
+<div ng-controller="MyProfileCtrl" ng-init="init()" class="ng-cloak" ng-cloak>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <table class="table datatable-show-all text-center headingtable">
+
+
+                    <tr>
+                        <th><b>Employee Name</b></th>
+                        <td>{{EmpName}}</td>
+
+                        <th><b>Employee Id</b></th>
+                        <td>{{EmpId}}</td>
+
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item"><a href="#basic-tab1" class="nav-link active" data-toggle="tab">General</a></li>
+                        <li class="nav-item"><a href="#basic-tab2" class="nav-link " data-toggle="tab">Skills</a></li>
+                        <li class="nav-item"><a href="#basic-tab5" class="nav-link" data-toggle="tab">Training</a></li>
+                        <li class="nav-item"><a href="#basic-tab6" class="nav-link" data-toggle="tab">Medical</a></li>
+                        <li class="nav-item"><a href="#basic-tab8" class="nav-link" data-toggle="tab">License</a></li>
+                        <li ng-show="User == 'SeniorTrainer'" class="nav-item"><a href="#basic-tab9" class="nav-link" data-toggle="tab">Trainers</a></li>
+                        <li ng-show="User == 'ManagerTraining'" class="nav-item"><a href="#basic-tab10" class="nav-link" data-toggle="tab">Senior Trainers</a></li>
+                        
+                        
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade active show" id="basic-tab1">
+                            <div class="row">
+                                <div class="col-md-4">
+
+                                    <div class="card">
+                                        <div class="card-body bg-indigo-400 text-center card-img-top" style="background-image: url(~/Content/images/profile.jpg); background-size: contain;">
+                                            <div class="card-img-actions d-inline-block mb-3">
+                                                <img ng-show="Image != 'https://menaitech.dpworld.sa/MenaITech/application/hrms/MenaImages/Employees_Pictures/'" class="img-fluid rounded-circle" src="{{Image}}" width="170" height="170" alt="">
+                                                <img ng-show="Image == 'https://menaitech.dpworld.sa/MenaITech/application/hrms/MenaImages/Employees_Pictures/'" class="img-fluid rounded-circle" src="~/Content/images/profile-img.jpg" width="170" height="170" alt="">
+                                                @*<div class="card-img-actions-overlay rounded-circle">
+                                                    <a href="#" class="btn btn-outline bg-white text-white border-white border-2 btn-icon rounded-round">
+                                                        <i class="icon-plus3"></i>
+                                                    </a>
+                                                </div>*@
+                                            </div>
+
+                                            <h6 class="font-weight-semibold mb-0">{{EmpName}}</h6>
+                                            <span class="d-block opacity-75">Availability ( ON DUTY )</span>
+                                        </div>
+
+                                        <div class="card-body p-0">
+                                            <ul class="nav nav-sidebar mb-2">
+                                                <li class="nav-item">
+                                                    <a href="#inbox" class="nav-link custom-padding">
+                                                        <i class="icon-stats-bars"></i>
+                                                        Status
+                                                        <span ng-if="Status == true" class="badge badge-success badge-pill ml-auto">Active</span>
+                                                        <span ng-if="Status == false" class="badge badge-Hold badge-pill ml-auto">InActive</span>
+                                                        @*<span class="badge badge-success badge-pill ml-auto">Status</span>*@
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <form>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-4 form-group">
+                                                            <label>Emp Id</label>
+                                                            <input type="text" value="{{EmpId}}" readonly class="form-control">
+                                                        </div>
+                                                 
+                                                        <div class="col-md-4 form-group">
+                                                            <label>Email</label>
+                                                            <input type="text" value="{{Email}}" readonly class="form-control">
+                                                        </div>
+                                                   
+                                                        <div class="col-md-4 form-group">
+                                                            <label>Mobile</label>
+                                                            <input type="text" value="{{Phone}}" readonly class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4 form-group">
+                                                            <label>Position</label>
+                                                            <input type="text" value="{{Position}}" readonly class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4 form-group">
+                                                            <label>Department</label>
+                                                            <input type="text" value="{{Department}}" readonly class="form-control">
+                                                        </div>
+
+                                                        <div class="col-md-4 form-group">
+                                                            <label>Section</label>
+                                                            <input type="text" value="{{Section}}" readonly class="form-control">
+                                                        </div>
+                                                  
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="basic-tab2">
+                            <div class="row">
+                                <table>
+                                    <tr ng-repeat="c in MyProfileTraining">
+                                        <td>
+                                            <div class="col-md-12 form-group">
+                                                <input type="text" placeholder="{{c.Skill}}" readonly class="form-control">
+                                            </div>
+                                        </td>
+                                       
+                                    </tr>
+                                </table>
+
+                                
+                                @*<div class="col-md-3 form-group">
+                                    <input type="text" placeholder="Skill 2" readonly class="form-control">
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <input type="text" placeholder="Skill 3" readonly class="form-control">
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <input type="text" placeholder="Skill 4" readonly class="form-control">
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <input type="text" placeholder="Skill 5" readonly class="form-control">
+                                </div>*@
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="basic-tab5">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="card">
+
+                                            <table class="table datatable-show-all text-center">
+                                                <thead>
+                                                    <tr class="table-card-head">
+                                                        <th>Employee Id</th>
+                                                        <th>Employee</th>
+                                                        <th>Training </th>
+                                                        <th>Trainer</th>
+                                                        <th>Assign Date</th>
+                                                        <th>End Date</th>
+                                                        <th>Status</th>
+                                                        <th>Score</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="a in MyProfileTraining">
+
+                                                        <td>{{a.EmpId}}</td>
+                                                        <td>{{a.EmpName}}</td>
+                                                        <td>{{a.TrainingName}}</td>
+                                                        <td>{{a.TrainerName}}</td>
+                                                        <td>{{a.StartDate | date:'dd/MM/yyyy'}}</td>
+                                                        <td>{{a.EndDate | date:'dd/MM/yyyy'}}</td>
+                                                        
+                                                        <td><span class="badge badge-{{a.Status}}">{{a.Status}}</span></td>
+                                                        <td>
+                                                            <div ng-show="a.Score>0" class="ScoreBadge">{{a.Score}}</div>
+                                                            <div ng-show="a.Score ==null" class="ScoreBadge">0</div>
+                                                        </td>
+                                                    </tr>
+
+                                                  
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="basic-tab6">
+                            <table class="table table-bordered table-responsive-md table-striped text-center">
+                                <thead>
+                                    <tr class="table-card-head">
+                                        <th>C#</th>
+                                        <th>Weight</th>
+                                        <th>Height</th>
+                                        <th>Blood Type</th>
+                                        <th>Chronic Disease</th>
+                                        <th>allergies</th>
+                                        <th>Current Medications</th>
+                                        <th>injuries</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>01</td>
+                                        <td><input type="text" placeholder="Weight" readonly value="60 kG" class="form-control"></td>
+                                        <td><input type="text" placeholder="Height" readonly value="5.5 Ft" class="form-control"></td>
+                                        <td><input type="text" placeholder="Blood Type" readonly value="B+" class="form-control"></td>
+                                        <td><input type="text" placeholder="Chronic Disease" readonly value="diabetes" class="form-control"></td>
+                                        <td><input type="text" placeholder="" value="dust mites" readonly class="form-control"></td>
+                                        <td><textarea type="text" placeholder="Ibuprofen 200 mg" readonly class="form-control"></textarea></td>
+                                        <td><textarea type="text" placeholder="Knee injuries. ..." readonly class="form-control"></textarea></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <div class="tab-pane fade" id="basic-tab8">
+                            <div class="row">
+                                <div class="card">
+                                    <table class="table datatable-show-all text-center">
+                                        <thead>
+                                            <tr class="table-card-head">
+                                                <th>Employee Id</th>
+                                                <th>Employee Name</th>
+                                                <th>License Category</th>
+                                                <th>issue Date</th>
+                                                <th>Expiry Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="b in MyProfileLicense">
+                                                <td>{{b.EmpId}}</td>
+                                                <td>{{b.EmpName}}</td>
+                                                <td>{{b.LicenseCategory}}</td>
+                                                <td>{{b.StartDate | date:'dd/MM/yyyy'}}</td>
+                                                <td>{{b.EndDate | date:'dd/MM/yyyy'}}</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="tab-pane fade" id="basic-tab9">
+                            <div class="row">
+                                <div class="card">
+                                    <table class="table datatable-show-all text-center">
+                                        <thead>
+                                            <tr class="table-card-head">
+                                                <th>Employee Id</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Phone</th>
+                                                <th>Position</th>
+                                                <th>Department</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                      
+                                            <tr ng-repeat="b in JuniorList">
+                                                <td>{{b.EmpId}}</td>
+                                                <td>{{b.Name}}</td>
+                                                <td>{{b.Email}}</td>
+                                                <td>{{b.Phone}}</td>
+                                                <td>{{b.Position}}</td>
+                                                <td>{{b.Department}}</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="tab-pane fade" id="basic-tab10">
+                            <div class="row">
+                                <div class="card">
+                                    <table class="table datatable-show-all text-center">
+                                        <thead>
+                                            <tr class="table-card-head">
+                                                <th>Employee Id</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Phone</th>
+                                                <th>Position</th>
+                                                <th>Department</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-repeat="b in SeniorTrainerList" >
+
+                                            <tr data-toggle="collapse" tabindex="1" id="ttable{{$index+1}}" data-target="#tt{{$index+1}}">
+                                                <td>{{b.EmpId}}</td>
+                                                <td>{{b.Name}}</td>
+                                                <td>{{b.Email}}</td>
+                                                <td>{{b.Phone}}</td>
+                                                <td>{{b.Position}}</td>
+                                                <td>{{b.Department}}</td>
+                                            </tr>
+
+                                            <tr class="collapse table{{$index+1}}" id="tt{{$index+1}}">
+                                                <td colspan="999">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <table class="table table-striped">
+                                                                <thead>
+                                                                    <tr class="table-card-head">
+                                                                        <th>Employee Id</th>
+                                                                        <th>Name</th>
+                                                                        <th>Email</th>
+                                                                        <th>Phone</th>
+                                                                        <th>Position</th>
+                                                                        <th>Department</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody  >
+                                                                   
+                                                                    <tr  tabindex="0" ng-repeat="c in b.JuniorList">
+                                                                        <td>{{c.EmpId}}</td>
+                                                                        <td>{{c.Name}}</td>
+                                                                        <td>{{c.Email}}</td>
+                                                                        <td>{{c.Phone}}</td>
+                                                                        <td>{{c.Position}}</td>
+                                                                        <td>{{c.Department}}</td>
+                                                                    </tr>
+                                                                
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

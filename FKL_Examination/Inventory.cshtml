@@ -1,0 +1,404 @@
+﻿
+@{
+    ViewBag.Title = "Inventory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<style>
+    .RedText{
+        color:red !important;
+    }
+    .CheckInDevices {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 20px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .CheckInDevices:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        .CheckInDevices .header {
+            font-size: 14px;
+            font-weight: 600;
+            color: var( --dpw-bg-color);
+            margin-bottom: 10px;
+        }
+
+        .CheckInDevices .Count {
+            font-size: 20px;
+            font-weight: 700;
+            color: #00be5e;
+        }
+      
+
+    .modal-body {
+        max-height: 70vh !important;
+        overflow: visible !important;
+    }
+
+    span.badge.badge-Active {
+        background: #00946b;
+        color: white;
+    }
+
+    span.badge.badge-Working {
+        background: var( --dpw-bg-color);
+        color: white;
+    }
+
+    span.badge.badge-InActive {
+        background: #cd0202;
+        color: white;
+    }
+
+    .badge-Blocked {
+        background: #c30000;
+        color: white;
+    }
+
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .add-button {
+        background-color: var( --dpw-bg-color);
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+    }
+
+    .CloseModalBtn {
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        z-index: 99999999999 !important;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px !important;
+        padding: 8px;
+        cursor: pointer;
+        background: var( --dpw-bg-color);
+        z-index: 99999999999 !important;
+    }
+
+    .close {
+        display: none;
+    }
+
+    .CloseModalBtn .fa-times-circle-o {
+        color: #ffff !important;
+    }
+
+    .modal-content {
+        background-color: #f4f2fa !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+
+    .modal-title {
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+
+    .modal-footer {
+        border-top: none !important;
+        align-content: center;
+        text-align: center;
+    }
+</style>
+
+<script src="~/Scripts/jquery.min.js"></script>
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.standalone.css" rel="stylesheet" />
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.css" rel="stylesheet" />
+
+ <div class="ng-cloak" ng-cloak ng-controller="FKL_InventoryCtrl" ng-init="init()">
+        <div class="card mt-2 d-flex">
+            <div class="card-body">
+                <div class="header-row">
+                    <h2>Inventory</h2>
+                    <div>
+                        <input type="button" class="btn btn-secondary" value="Filters" data-toggle="collapse" data-target="#demo" />
+                        <button class="add-button" ng-click="OpenAdd()"><i class="icon-add m-r-5 text-white"></i> Add</button>
+                        <button class=" btn btn-reset" ng-click="OpenHistory()"><i class="icon-history m-r-5 text-white"></i> History</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Search Filter Code Start-->
+        <div class="card collapse" id="demo">
+            <div class="card-body">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Devices</label>
+                                <input type="text" class="form-control" ng-model="Search.Device" placeholder="Enter device" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Operator</label>
+                                <input type="text" class="form-control" ng-model="Search.Operator" placeholder="Enter operator" />
+                            </div>
+                        </div>
+                        @*<div class="col-md-3">
+                            <div class="form-group">
+                                <label>Check in from</label>
+                                <div id="sandbox-container">
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control  from" id="CheckOutFrom" placeholder="dd/mm/yyyy"><span class="input-group-addon"><i class="icon-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Check in to</label>
+                                <div id="sandbox-container">
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control  from" id="CheckOutTo" placeholder="dd/mm/yyyy"><span class="input-group-addon"><i class="icon-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Check out from</label>
+                                <div id="sandbox-container">
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control  from" id="CheckOutFrom" placeholder="dd/mm/yyyy"><span class="input-group-addon"><i class="icon-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Check out to</label>
+                                <div id="sandbox-container">
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control  from" id="CheckOutTo" placeholder="dd/mm/yyyy"><span class="input-group-addon"><i class="icon-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+                        <div class="col-md-12 mt-4">
+
+                            <button class="btn btn-reset pull-right" ng-click="ClearFilter(Search)">Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="CheckInDevices">
+                    <div class="header">Chcek in devices</div>
+                    <div class="Count">
+                        {{ CheckInDevices }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="CheckInDevices">
+                    <div class="header">Checked out devices</div>
+                    <div class="Count">
+                        {{ CheckOutDevices }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="CheckInDevices">
+                    <div class="header">Missing devices</div>
+                    <div class="Count"  ng-class="{'RedText':MissingDevices>0}">
+                        {{ MissingDevices }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div id="tblrep" class="card table-card scrollbar">
+                <table class="table datatable-show-all text-center" id="table-id">
+                    <thead>
+                        <tr class="table-card-head">
+                            <th>SR#</th>
+                            <th>Device</th>
+                            <th>Operator</th>
+                            <th>CheckIn</th>
+                            <th>CheckOut</th>
+                            <th>Created By</th>
+                            <th>Updated By</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="ng-cloak" ng-cloak>
+                        <tr ng-repeat="item in InventoryList | filter:Search">
+                            <td>{{$index+1}}</td>
+                            <td>{{item.Device}}</td>
+                            <td>{{item.Operator}}</td>
+                            <td>{{item.CheckInTime | date :'dd/MM/yyyy HH:mm:ss'}}</td>
+                            <td>{{(item.CheckOutTime | date :'dd/MM/yyyy HH:mm:ss') || '-'}}</td>
+                            <td>{{item.CreatedBy || '-'}}</td>
+                            <td>{{item.UpdatedBy || '-'}}</td>
+                            <td><button ng-show="item.CheckOutTime==null || item.CheckOutTime == ''" class="btn btn-success" ng-click="AddInventory(item,'CheckOut')">Check out</button></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <!--pagination Code Start-->
+        <!--modal-->
+        <div class="modal fade" id="AddInventory" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+                <div class="modal-content" style="overflow:visible !important">
+                    <div class="CloseModalBtn" data-dismiss="modal">
+                        <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                        <i class="icon-cross"></i>
+                    </div>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Inventory</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class=" form-group">
+                                    <label class="Starick">Device</label>
+                                    <select data-placeholder="Select area" id="DeviceLOV" ng-model="InventoryObj.Device">
+                                        <option selected hidden disabled value="">Select area</option>
+                                        <option value="{{x.Id}}" ng-repeat="x in DeviceList">{{x.Name}}</option>
+                                    </select>
+                                </div>
+                            </div><div class="col-md-12">
+                                <div class=" form-group">
+                                    <label class="Starick">Operator</label>
+                                    <select data-placeholder="Select area" id="OpertaorLOV" ng-model="InventoryObj.Operator">
+                                        <option selected hidden disabled value="">Select area</option>
+                                        <option value="{{x.Id}}" ng-repeat="x in OperatorList">{{x.EmpId}}-{{x.FullName}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col-md-12" style="text-align:end;">
+                                <button class="btn btn-success" ng-click="AddInventory(InventoryObj,'CheckIn')">
+                                    Check-in
+                                </button>
+                                <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     
+        <div class="modal fade" id="HistoryModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+                <div class="modal-content" style="overflow:visible !important">
+                    <div class="CloseModalBtn" data-dismiss="modal">
+                        <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                        <i class="icon-cross"></i>
+                    </div>
+                    <div class="modal-header">
+                        <h5 class="modal-title">History</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class=" form-group">
+                                    <label class="Starick">Date from</label>
+                                    <div id="sandbox-container">
+                                        <div class="input-group date">
+                                            <input type="text" class="form-control  from" id="HistoryDatefrom" placeholder="dd/mm/yyyy"><span class="input-group-addon"><i class="icon-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><div class="col-md-12">
+                                      <div class=" form-group">
+                                          <label class="Starick">Date to</label>
+                                          <div id="sandbox-container">
+                                              <div class="input-group date">
+                                                  <input type="text" class="form-control  from" id="HistoryDateto" placeholder="dd/mm/yyyy"><span class="input-group-addon"><i class="icon-calendar"></i></span>
+                                              </div>
+                                          </div>
+                                      </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col-md-12" style="text-align:end;">
+                                <button class="btn btn-success" ng-click="ViewHistory()">
+                                    View
+                                </button>
+                                <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--modal-->
+
+
+
+    </div>
+<!--pagination Code End-->
+ <script src="~/Scripts/jquery.min.js"></script>
+ <script src="~/Scripts/DatePicker/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/DatePicker/CustomIntilizeJS.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        var o = new SlimSelect({
+            select: '#DeviceLOV',
+            placeholder: 'Select Device',
+            showSearch: true,
+            allowDeselect: true,
+        });
+          var o = new SlimSelect({
+              select: '#OpertaorLOV',
+            placeholder: 'Select Device',
+            showSearch: true,
+            allowDeselect: true,
+        });
+
+    });
+</script>

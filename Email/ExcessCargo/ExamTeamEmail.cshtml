@@ -1,0 +1,143 @@
+﻿@model ExamPortal.Model.Features.AcitvityCapture.ExcessCargo.ExcessCargo
+@{
+
+    Layout = "~/Views/Shared/_EmailLayoutUpdated.cshtml";
+}
+<style>
+    table {
+        border: none;
+        width: 100%;
+    }
+
+    .notification-content {
+        padding: 8px 16px;
+    }
+
+    td {
+        width: 100%;
+        text-align: center;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .english {
+        text-align: left;
+        /*white-space: nowrap;*/
+    }
+
+    .arabic {
+        text-align: right;
+        /*white-space: nowrap;*/
+    }
+
+    .pilatwidefont {
+        font-family: 'Pilat Wide Light';
+    }
+</style>
+@if (Model.isTruckMsgRequired != true)
+{
+    <table style="width:100%">
+        <tr>
+
+            <td class="notification-content english" style="font-family: 'Pilat Wide Light';width:50%; ">
+                <div>
+
+                    @if (Model.isTruckMsgRequired == true)
+                    {
+                        <span>Container @Model.Container under bayan(@Model.Bayan) has excess cargo.</span>
+                        <a href="@Model.AttachmentUrl" target="_blank"><b>View Report. </b></a>
+                        <span>
+                            Please submit the receiving truck details using the
+                            <a target="_blank" href="@System.Configuration.ConfigurationManager.AppSettings["DpworldDomain"]/ExcessCargo/Index?ContainerNo=@Model.Container"><b>link</b></a>
+                        </span>
+                    }
+                    else if (Model.readyForGatePasss)
+                    {
+                        <span>
+                            Container @Model.Container under bayan(@Model.Bayan) is ready for delivery,Please pay the outstanding charges to issue the gate pass.
+                            <a href="@Model.AttachmentUrl" target="_blank"><b>Excess cargo report</b></a>.
+                        </span>
+                    }
+                    else
+                    {
+                        <span>
+                            Container @Model.Container under bayan(@Model.Bayan) is ready for delivery,Please ensure that the excess cargo and the container are gated out at the same time to avoid any delay in the delivery
+                            <a href="@Model.GatePassUrl" target="_blank"><b>Gate pass</b></a> and <a href="@Model.AttachmentUrl" target="_blank"><b>Excess cargo report</b></a>.
+                        </span>
+                    }
+                </div>
+            </td>
+            <td class="notification-content arabic" style="font-family: 'Makdessi Light','Pilat Wide Light';width:50% " lang="ar" dir="rtl">
+                @if (Model.isTruckMsgRequired == false)
+                {
+                    @*<span>الحاوية @Model.Container برقم بيان(@Model.Bayan) ,تحتوي على بضاعة زائدة</span>*@
+                    <span>
+                        الحاوية @Model.Container برقم بيان (@Model.Bayan) جاهزة للتسليم،
+                        مرفق لكم تصريح الخروج وتقرير البضاعة الزائدة،
+                        يرجى التأكد من خروج البضاعة الزائدة والحاوية جنباً إلى جنب لتفادي أي تأخير في الاستلام
+                        <a href="@Model.GatePassUrl" target="_blank"><b>الاستلام تصريح الخروج</b></a> و
+                        <a href="@Model.AttachmentUrl" target="_blank"><b>تقرير البضاعة الزائدة</b></a>
+                    </span>
+
+
+                }
+                else if (Model.readyForGatePasss)
+                {
+                    <span>
+                        الحاوية @Model.Container برقم بيان (@Model.Bayan) جاهزة للتسليم،
+                        مرفق لكم تقرير البضاعة الزائدة،
+                        يرجى دفع الرسوم المستحقة لإصدار تصريح الخروج
+                        <a href="@Model.AttachmentUrl" target="_blank">تقرير البضاعة الزائدة</a>
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        الحاوية @Model.Container برقم بيان (@Model.Bayan) تحتوي على بضاعة زائدة
+                        <a target="_blank" href="@Model.AttachmentUrl"><b>عرض التقرير</b></a>,
+                        يرجى تسجيل بيانات الشاحنة المكلفة باستلامها عن طريق
+                        <a target="_blank" href="@System.Configuration.ConfigurationManager.AppSettings["DpworldDomain"]/ExcessCargo/Index?ContainerNo={Model.Container}"><b>الرابط</b></a>
+                    </span>
+
+                }
+
+            </td>
+        </tr>
+    </table>
+}
+else
+	{
+    <div class="z-eml-container" style="max-width: 900px; margin: 20px auto; color: #000; line-height: 1.4;">
+
+    <div class="z-eml-arabic-wrapper" dir="rtl" style="font-family: 'Makdessi Light', 'Pilat Wide Light'; text-align: right; margin-bottom: 12px; font-size: 1.2rem;">
+        الحاوية <span class="z-eml-bold" style="font-weight: bold;">@Model.Container</span> برقم بيان (@Model.Bayan) تحتوي على بضاعة زائدة، يرجى تسجيل بيانات الشاحنة المكلفة باستلامها عن طريق
+        <a target="_blank" href="@System.Configuration.ConfigurationManager.AppSettings["DpworldDomain"]/ExcessCargo/Index?ContainerNo=@Model.Container" class="z-eml-link" style="color: #0044cc; text-decoration: underline;">الرابط</a>
+    </div>
+
+    <div class="z-eml-english-wrapper" dir="ltr" style="font-family: 'Pilat Wide Light'; text-align: left; margin-bottom: 35px; font-size: 1.1rem; letter-spacing: 0.5px;">
+        Container <span class="z-eml-bold" style="font-weight: bold;">@Model.Container</span> under bayan (@Model.Bayan) has excess cargo, Please submit the receiving truck details using the
+        <a target="_blank" href="@System.Configuration.ConfigurationManager.AppSettings["DpworldDomain"]/ExcessCargo/Index?ContainerNo=@Model.Container" class="z-eml-link" style="color: #0044cc; text-decoration: underline;">link</a>.
+    </div>
+
+    <div class="z-eml-table-holder" style="width: 100%;">
+        <table class="z-eml-custom-table" style="width: 100%; border-collapse: collapse; border: 1px solid #000; font-family: 'Pilat Wide Light'; table-layout: fixed;">
+            <thead>
+                <tr style="background-color: transparent;">
+                    <th class="z-eml-th" style="padding: 15px 5px; border: 1px solid #000; text-align: center; font-weight: normal; font-size: 1.2rem; width: 25%;">Bayan</th>
+                    <th class="z-eml-th" style="padding: 15px 5px; border: 1px solid #000; text-align: center; font-weight: normal; font-size: 1.2rem; width: 25%;">Container No.</th>
+                    <th class="z-eml-th" style="padding: 15px 5px; border: 1px solid #000; text-align: center; font-weight: normal; font-size: 1.2rem; width: 25%;">Quantity</th>
+                    <th class="z-eml-th" style="padding: 15px 5px; border: 1px solid #000; text-align: center; font-weight: normal; font-size: 1.2rem; width: 25%;">Cargo Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="z-eml-td" style="padding: 20px 10px; border: 1px solid #000; width: 25%; text-align: center; font-size: 1rem; word-wrap: break-word;">@Model.Bayan</td>
+                    <td class="z-eml-td" style="padding: 20px 10px; border: 1px solid #000; width: 25%; text-align: center; font-size: 1rem; word-wrap: break-word;">@Model.Container</td>
+                    <td class="z-eml-td" style="padding: 20px 10px; border: 1px solid #000; width: 25%; text-align: center; font-size: 1rem; word-wrap: break-word;">@Model.Quantity</td>
+                    <td class="z-eml-td" style="padding: 20px 10px; border: 1px solid #000; width: 25%; text-align: center; font-size: 1rem; word-wrap: break-word;">@Model.Type</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+	}

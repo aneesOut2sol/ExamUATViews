@@ -1,0 +1,104 @@
+﻿@model ExamPortal.Model.Features.AcitvityCapture.ExcessCargo.ExcessCargo
+@{
+
+    Layout = "~/Views/Shared/_EmailLayout.cshtml";
+}
+<style>
+    .badge {
+        padding: 3px 8px;
+        width: fit-content;
+        color: white;
+        border-radius: 5px;
+    }
+    .badge-info {
+        background-color: #006fff;
+    }
+    .badge-success {
+        background-color: #007e27;
+    }
+    .badge-danger {
+        background-color: red;
+    }
+    table tr td, table tr th {
+        padding: 5px;
+    } 
+</style>
+Excess Cargo Form Send to You Find the Below Reference Doc 
+<table style="width: 100%; border: 1px solid grey !important;">
+    <thead style="border: 1px solid grey !important;">
+        <tr style="font-weight: bold; border: 1px solid grey !important;">
+
+            <th style="border: 1px solid grey !important; width: fit-content; text-align: center; background-color: var( --dpw-bg-color); color: #fff;">
+                Container
+            </th>
+
+            <th style="border: 1px solid grey !important; width: fit-content; text-align: center; background-color: var( --dpw-bg-color); color: #fff;">
+                Location
+            </th>
+
+            <th style="border: 1px solid grey !important; width: fit-content; text-align: center; background-color: var( --dpw-bg-color); color: #fff;">
+                Type
+            </th>
+
+            <th style="border: 1px solid grey !important; width: fit-content; text-align: center; background-color: var( --dpw-bg-color); color: #fff;">
+                Status
+            </th>
+            <th style="border: 1px solid grey !important; width: fit-content; text-align: center; background-color: var( --dpw-bg-color); color: #fff;">
+                Reference Doc
+            </th>
+            <th style="border: 1px solid grey !important; width: fit-content; text-align: center; background-color: var( --dpw-bg-color); color: #fff;">
+                Created At
+            </th>
+        </tr>
+
+    </thead>
+    <tbody>
+
+
+        <tr style="border: 1px solid grey;">
+
+            <td style="border:1px solid grey;text-align:center;">
+                @Model.Container
+            </td>
+            <td style="border:1px solid grey;text-align:center;">
+                @Model.Loaction
+            </td>
+            <td style="border:1px solid grey;text-align:center;">
+                @Model.Type
+            </td>
+            <td style="border:1px solid grey;text-align:center;">
+                @if (Model.FromStatus == 0)
+                {<span style="background-color: #006fff;" class="badge badge-info">Pending</span>}
+                @if (Model.FromStatus == 1)
+                {<span style="background-color: #007e27;" class="badge badge-success">Accept</span>}
+                @if (Model.FromStatus == 2)
+                {<span style=" background-color: red;" class="badge badge-danger">Reject</span>}
+
+            </td>
+            <td>
+                @if (Model.UploadDoc != null)
+                {
+                <a style="padding: 3px 7px; list-style-type: none; background: var( --dpw-bg-color); color: white; border-radius: 3px; " href="@Model.UploadDoc">View file</a>
+            }
+            else
+            {
+                <span>-</span>
+            }
+            </td>
+
+            @if (Model.CreatedAt != null)
+            {
+                <td style="border:1px solid grey;text-align:center;">
+                    @Model.CreatedAt.Value.ToString("dd/MM/yyyy HH:mm:ss")
+                </td>
+            }
+            else
+            {
+                <td style="border:1px solid grey;text-align:center;">
+                    <span>-</span>
+                </td>
+            }
+        </tr>
+    </tbody>
+</table>
+

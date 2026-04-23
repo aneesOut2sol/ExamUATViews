@@ -1,0 +1,1201 @@
+﻿
+@{
+    ViewBag.Title = "ExamActivitySummary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .DashboardDiv {
+        font-family: 'Pilat Wide';
+    }
+
+    table {
+        width: 100%;
+        overflow: auto;
+    }
+
+    th {
+        font-weight: 900;
+        background: #261d5e00;
+        border-bottom: 2px solid #999;
+    }
+
+    td, th {
+        padding: 2px 4px;
+        text-align: center;
+        border-right: 1px solid #c0c0c0;
+    }
+
+    .lbn {
+        border-right: none;
+    }
+
+    .tablesection {
+        box-shadow: -9px 1px 11px #d2d2d2;
+        overflow-x: auto;
+    }
+
+
+
+    .tbp {
+        padding: 12px 0px;
+    }
+
+    .borderBottom {
+        border-bottom: 1px solid #ccc;
+    }
+
+    .h-40 {
+        height: 40px;
+    }
+
+    .tab {
+        overflow: hidden;
+    }
+
+    .tabheading {
+        padding: 10px;
+        background: #00946b;
+        color: white;
+    }
+
+    .tab button {
+        border-top-right-radius: 10px;
+        border-top-left-radius: 10px;
+        background: #e9e9e9;
+        padding: 15px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 13px;
+    }
+
+        .tab button:hover {
+            background-color: #00946b;
+            color: white;
+            font-size: 13px;
+        }
+
+        .tab button.active {
+            background-color: #00946b;
+            color: white;
+            font-size: 13px;
+        }
+
+    .tab button {
+        width: 100%;
+    }
+
+    .tabcontent {
+        display: none;
+        padding: 0px 10px;
+        border-top: none;
+    }
+
+    .boldborderbottom {
+        border-bottom: 2px solid black;
+    }
+
+    .tablesection thead {
+        background: var( --dpw-bg-color);
+        color: white;
+    }
+
+    .tablesection tr td {
+        background: white;
+    }
+
+    .cardsection {
+        margin-bottom: 30px;
+    }
+
+    .icon-enlarge {
+        font-size: 30px;
+        cursor: pointer;
+    }
+
+    .icon-shrink6 {
+        display: none;
+        font-size: 30px;
+        cursor: pointer;
+        color: white !important;
+    }
+
+    .Control i {
+        font-size: 30px;
+        margin-right: 17px;
+    }
+
+    .timer {
+        float: right;
+        border: none;
+        padding: 2px 5px;
+        width: fit-content;
+        min-width: 10px !IMPORTANT;
+        max-width: 56px;
+        text-align: center;
+        border-radius: 8px;
+        box-shadow: 2px 2px 3px 0px grey;
+        border: 1px solid #ededed;
+        font-family: system-ui;
+        font-size: 15px;
+        color: #898989;
+        font-weight: 500;
+    }
+
+    .FooterTr {
+        background: #d9d9d9 !important;
+    }
+
+        .FooterTr td {
+            background: transparent !IMPORTANT;
+        }
+
+    .carousel-control-next-icon {
+        filter: invert(1);
+    }
+
+    .carousel-control-prev-icon {
+        filter: invert(1);
+    }
+
+    .carousel-control-next, .carousel-control-prev {
+        width: 5%;
+        top: inherit !important;
+    }
+</style>
+
+
+@if (System.Configuration.ConfigurationManager.AppSettings["ManagementOptionDashboard"] == "on")
+{
+
+<div class="DashboardDiv ng-cloak" ng-cloak ng-controller="ExamActivityDashboardCtrl" ng-init="SummaryDashboard_Init()" id="XrayContent">
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4> <span class="font-weight-semibold">Examination snapshot</span></h4>
+            </div>
+            <div class="col-md-6 option">
+                <i class="icon-enlarge pull-right" onclick="Hideheader()"></i>
+                <i class="icon-shrink6 pull-right" onclick="showHeader()"></i>
+
+                @*<span class="Control" ng-click="PlayPause()" id="SCobntrol">
+                        <i class="icon-pause pull-right"></i>
+                    </span>
+                    <span style=" margin-top: 8px; float: right; vertical-align: bottom; color: #898998; margin-right: 17px; margin-left: 6px;">sec</span>
+                    <input class="timer" oninput="this.value = this.value.replace(/^0|\D/g, '')" type="text" ng-model="SlideTime" ng-keyup="DestoryInterval()" name="name" value="" />*@
+
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="DashboardActivity">
+
+        <div class="row ng-cloak" style="margin-top: 13px!important;" ng-cloak>
+            <div class="col-md-12">
+                <div class="tab">
+                    @*<div class="row">
+                            <div class="col-md-2 text-center " ng-click="ChangeSummaryPage('CI')">
+                                <button class="tablinks active" id="CI"> CI (Customs Inspection)</button>
+                            </div>
+                            <div class="col-md-2 text-center " ng-click="ChangeSummaryPage('UI')">
+                                <button class="tablinks" id="UI">UI (Under Inspection)</button>
+                            </div>
+                            <div class="col-md-2 text-center " ng-click="ChangeSummaryPage('FI')">
+                                <button class="tablinks" id="FI">FI (From Inspection)</button>
+                            </div>
+                        </div>*@
+                </div>
+            </div>
+        </div>
+        <div id="carouselExampleIndicators" class="carousel slide" data-interval="false" data-ride="carousel" data-pause="hover">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="cardsection">
+                        <div class="tableheadersection text-center">
+                            <h5 class="font-weight-bold">TI (To Inspection)</h5>
+                        </div>
+                        <div class="tablesection">
+                            <table>
+                                <thead>
+                                    <tr class="borderBottom">
+                                        <th>Category</th>
+                                        <th>Sub-category</th>
+                                        <th>Inspection type	</th>
+                                        <th>1</th>
+                                        <th>2</th>
+                                        <th>3</th>
+                                        <th>4</th>
+                                        <th>5</th>
+                                        <th>6</th>
+                                        <th>7</th>
+                                        <th>8</th>
+                                        <th>9</th>
+                                        <th>10</th>
+                                        <th>11</th>
+                                        <th>12</th>
+                                        <th>13</th>
+                                        <th>14</th>
+                                        <th>15</th>
+                                        <th>Sub total 1</th>
+                                        <th>Sub total 2</th>
+                                        <th>Sub total 3</th>
+
+                                    </tr>
+                                </thead>
+
+                                <tbody ng-if="Summary_CI_List!=undefined">
+                                    <tr>
+                                        <td class="borderBottom" rowspan="6">Dry</td>
+                                        <td rowspan="2">General</td>
+                                        <td class="borderBottom">Palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','Pallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','Pallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','Pallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','Pallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','Pallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','Pallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','Pallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','Pallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','Pallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','Pallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','Pallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','Pallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','Pallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','Pallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','Pallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','Pallette',0,true)}}</td>
+                                        <td rowspan="2" class="borderBottom">{{GetContainerCountCI('Dry','Normal','Dog Sniffing',0,false,true)}}</td>
+                                        <td rowspan="6" class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',0,false,false,true)}}</td>
+
+                                    </tr>
+                                    <tr class="borderBottom">
+                                        <td>Not palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','NONPallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','NONPallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','NONPallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','NONPallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','NONPallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','NONPallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','NONPallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','NONPallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','NONPallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','NONPallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','NONPallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','NONPallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','NONPallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','NONPallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','NONPallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','Normal','NONPallette',0,true)}}</td>
+                                    </tr>
+                                    <tr>
+
+                                        <td rowspan="2">Food</td>
+                                        <td class="borderBottom">Palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',0,true)}}</td>
+                                        <td rowspan="2" class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','Pallette',0,false,true)}}</td>
+
+                                    </tr>
+                                    <tr class="borderBottom">
+                                        <td class="borderBottom">Not palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','NONPallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','NONPallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','NONPallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','NONPallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','NONPallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','NONPallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','NONPallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','NONPallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','NONPallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','NONPallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','NONPallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','NONPallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','NONPallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','NONPallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','NONPallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','FoodStuff','NONPallette',0,true)}}</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="borderBottom" rowspan="2">IMDG</td>
+                                        <td class="borderBottom">Palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Pallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Pallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Pallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Pallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Pallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Pallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Pallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Pallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Pallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Pallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Pallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Pallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Pallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Pallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Pallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Pallette',0,true)}}</td>
+                                        <td rowspan="2" class="borderBottom">{{GetContainerCountCI('Dry','IMDG','Dog Sniffing',0,false,true)}}</td>
+                                    </tr>
+                                    <tr class="boldborderbottom">
+                                        <td class="borderBottom">Not palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','NONPallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','NONPallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','NONPallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','NONPallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','NONPallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','NONPallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','NONPallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','NONPallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','NONPallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','NONPallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','NONPallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','NONPallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','NONPallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','NONPallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','NONPallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Dry','IMDG','NONPallette',0,true)}}</td>
+                                    </tr>
+
+                                    <!--  -------------------------------------- NEXT SECTION STARTED ----------------------------------------------  -->
+                                    <tr>
+                                        <td class="borderBottom" rowspan="4">Reefer</td>
+                                        <td class="borderBottom">UTC-CS</td>
+                                        <td class="borderBottom">---</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','UTC COLD Store','',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','UTC COLD Store','',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','UTC COLD Store','',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','UTC COLD Store','',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','UTC COLD Store','',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','UTC COLD Store','',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','UTC COLD Store','',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','UTC COLD Store','',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','UTC COLD Store','',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','UTC COLD Store','',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','UTC COLD Store','',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','UTC COLD Store','',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','UTC COLD Store','',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','UTC COLD Store','',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','UTC COLD Store','',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','UTC COLD Store','',0,true)}}</td>
+                                        <td rowspan="2" class="borderBottom">{{GetContainerCountCI('Reefer','ColdStore','Dog Sniffing',0,false,true)}}</td>
+                                        <td rowspan="4" class="borderBottom">{{GetContainerCountCI('Reefer','ColdStore','Dog Sniffing',0,false,false,true)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="borderBottom">DPW-CS</td>
+                                        <td class="borderBottom">---</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','DPW ColdStore','',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','DPW ColdStore','',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','DPW ColdStore','',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','DPW ColdStore','',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','DPW ColdStore','',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','DPW ColdStore','',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','DPW ColdStore','',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','DPW ColdStore','',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','DPW ColdStore','',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','DPW ColdStore','',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','DPW ColdStore','',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','DPW ColdStore','',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','DPW ColdStore','',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','DPW ColdStore','',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','DPW ColdStore','',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','DPW ColdStore','',0,true)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan="2">Open door </td>
+                                        <td class="borderBottom">Palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Pallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Pallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Pallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Pallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Pallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Pallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Pallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Pallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Pallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Pallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Pallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Pallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Pallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Pallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Pallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Pallette',0,true)}}</td>
+                                        <td rowspan="2" class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','Dog Sniffing',0,false,true)}}</td>
+                                    </tr>
+                                    <tr class="borderBottom boldborderbottom">
+                                        <td class="borderBottom">Not palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','NONPallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','NONPallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','NONPallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','NONPallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','NONPallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','NONPallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','NONPallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','NONPallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','NONPallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','NONPallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','NONPallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','NONPallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','NONPallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','NONPallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','NONPallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Reefer','Sampling Area','NONPallette',0,true)}}</td>
+                                    </tr>
+
+                                    <!--  -------------------------------------- NEXT SECTION STARTED ----------------------------------------------  -->
+                                    <tr>
+                                        <td colspan="3" class="borderBottom">OOG</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Others','','',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Others','','',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Others','','',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Others','','',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Others','','',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Others','','',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Others','','',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Others','','',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Others','','',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Others','','',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Others','','',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Others','','',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Others','','',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Others','','',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountCI('Others','','',15)}}</td>
+                                        <td colspan="3" class="borderBottom">{{GetContainerCountCI('Others','','',0,true)}}</td>
+
+                                    </tr>
+                                    <tr class="FooterTr">
+                                        <td colspan="3">Total</td>
+                                        <td>{{GetContainerCountCI('','','',1)}}</td>
+                                        <td>{{GetContainerCountCI('','','',2)}}</td>
+                                        <td>{{GetContainerCountCI('','','',3)}}</td>
+                                        <td>{{GetContainerCountCI('','','',4)}}</td>
+                                        <td>{{GetContainerCountCI('','','',5)}}</td>
+                                        <td>{{GetContainerCountCI('','','',6)}}</td>
+                                        <td>{{GetContainerCountCI('','','',7)}}</td>
+                                        <td>{{GetContainerCountCI('','','',8)}}</td>
+                                        <td>{{GetContainerCountCI('','','',9)}}</td>
+                                        <td>{{GetContainerCountCI('','','',10)}}</td>
+                                        <td>{{GetContainerCountCI('','','',11)}}</td>
+                                        <td>{{GetContainerCountCI('','','',12)}}</td>
+                                        <td>{{GetContainerCountCI('','','',13)}}</td>
+                                        <td>{{GetContainerCountCI('','','',14)}}</td>
+                                        <td>{{GetContainerCountCI('','','',15)}}</td>
+                                        <td colspan="3">{{GetContainerCountCI('Dry','FoodStuff','Pallette',0,false,false,false,true)}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="cardsection">
+                        <div class="tableheadersection text-center">
+                            <h5 class="font-weight-bold">UI (Under Inspection)</h5>
+                        </div>
+                        <div class="tablesection">
+                            <table>
+                                <thead>
+                                    <tr class="borderBottom">
+                                        <th>Category</th>
+                                        <th>Sub-category</th>
+                                        <th>Inspection type		</th>
+                                        <th>1</th>
+                                        <th>2</th>
+                                        <th>3</th>
+                                        <th>4</th>
+                                        <th>5</th>
+                                        <th>6</th>
+                                        <th>7</th>
+                                        <th>8</th>
+                                        <th>9</th>
+                                        <th>10</th>
+                                        <th>11</th>
+                                        <th>12</th>
+                                        <th>13</th>
+                                        <th>14</th>
+                                        <th>15</th>
+                                        <th>Sub total 1</th>
+                                        <th>Sub total 2</th>
+                                        <th>Sub total 3</th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-if="Summary_UI_List!=undefined">
+                                    <tr>
+                                        <td class="borderBottom" rowspan="6">Dry</td>
+                                        <td class="borderBottom" rowspan="2">General</td>
+                                        <td class="borderBottom">Palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','Pallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','Pallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','Pallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','Pallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','Pallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','Pallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','Pallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','Pallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','Pallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','Pallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','Pallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','Pallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','Pallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','Pallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','Pallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','Pallette',0,true)}}</td>
+                                        <td rowspan="2" class="borderBottom">{{GetContainerCountUI('Dry','Normal','Dog Sniffing',0,false,true)}}</td>
+                                        <td rowspan="6" class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Dog Sniffing',0,false,false,true)}}</td>
+
+                                    </tr>
+                                    <tr class="boldborderbottom">
+                                        <td class="borderBottom">Not palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','NONPallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','NONPallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','NONPallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','NONPallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','NONPallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','NONPallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','NONPallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','NONPallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','NONPallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','NONPallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','NONPallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','NONPallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','NONPallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','NONPallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','NONPallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','Normal','NONPallette',0,true)}}</td>
+                                    </tr>
+                                    <tr>
+
+                                        <td rowspan="2">Food</td>
+                                        <td class="borderBottom">Palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Pallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Pallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Pallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Pallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Pallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Pallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Pallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Pallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Pallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Pallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Pallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Pallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Pallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Pallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Pallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Pallette',0,true)}}</td>
+                                        <td rowspan="2" class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','Dog Sniffing',0,false,true)}}</td>
+
+                                    </tr>
+                                    <tr class="borderBottom">
+                                        <td class="borderBottom">Not palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','NONPallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','NONPallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','NONPallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','NONPallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','NONPallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','NONPallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','NONPallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','NONPallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','NONPallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','NONPallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','NONPallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','NONPallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','NONPallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','NONPallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','NONPallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','FoodStuff','NONPallette',0,true)}}</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="borderBottom" rowspan="2">IMDG</td>
+                                        <td class="borderBottom">Palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Pallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Pallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Pallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Pallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Pallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Pallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Pallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Pallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Pallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Pallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Pallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Pallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Pallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Pallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Pallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Pallette',0,true)}}</td>
+                                        <td rowspan="2" class="borderBottom">{{GetContainerCountUI('Dry','IMDG','Dog Sniffing',0,false,true)}}</td>
+                                    </tr>
+                                    <tr class="boldborderbottom">
+                                        <td class="borderBottom">Not palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','NONPallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','NONPallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','NONPallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','NONPallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','NONPallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','NONPallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','NONPallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','NONPallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','NONPallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','NONPallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','NONPallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','NONPallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','NONPallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','NONPallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','NONPallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Dry','IMDG','NONPallette',0,true)}}</td>
+                                    </tr>
+
+                                    <!--  -------------------------------------- NEXT SECTION STARTED ----------------------------------------------  -->
+
+                                    <tr>
+                                        <td class="borderBottom" rowspan="4">Reefer</td>
+                                        <td class="borderBottom">UTC-CS</td>
+                                        <td class="borderBottom">---</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','UTC COLD Store','',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','UTC COLD Store','',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','UTC COLD Store','',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','UTC COLD Store','',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','UTC COLD Store','',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','UTC COLD Store','',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','UTC COLD Store','',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','UTC COLD Store','',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','UTC COLD Store','',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','UTC COLD Store','',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','UTC COLD Store','',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','UTC COLD Store','',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','UTC COLD Store','',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','UTC COLD Store','',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','UTC COLD Store','',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','UTC COLD Store','',0,true)}}</td>
+                                        <td rowspan="2" class="borderBottom">{{GetContainerCountUI('Reefer','ColdStore','Dog Sniffing',0,false,true)}}</td>
+                                        <td rowspan="4" class="borderBottom">{{GetContainerCountUI('Reefer','ColdStore','Dog Sniffing',0,false,false,true)}}</td>
+                                    </tr>
+                                    <tr class="borderBottom">
+                                        <td class="borderBottom">DPW-CS</td>
+                                        <td class="borderBottom">---</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','DPW ColdStore','',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','DPW ColdStore','',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','DPW ColdStore','',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','DPW ColdStore','',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','DPW ColdStore','',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','DPW ColdStore','',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','DPW ColdStore','',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','DPW ColdStore','',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','DPW ColdStore','',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','DPW ColdStore','',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','DPW ColdStore','',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','DPW ColdStore','',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','DPW ColdStore','',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','DPW ColdStore','',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','DPW ColdStore','',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','DPW ColdStore','',0,true)}}</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td rowspan="2" class="borderBottom">Open door</td>
+                                        <td class="borderBottom">Palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Pallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Pallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Pallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Pallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Pallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Pallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Pallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Pallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Pallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Pallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Pallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Pallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Pallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Pallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Pallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Pallette',0,true)}}</td>
+                                        <td rowspan="2" class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','Dog Sniffing',0,false,true)}}</td>
+                                    </tr>
+                                    <tr class="borderBottom">
+                                        <td class="borderBottom">Not palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','NONPallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','NONPallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','NONPallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','NONPallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','NONPallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','NONPallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','NONPallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','NONPallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','NONPallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','NONPallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','NONPallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','NONPallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','NONPallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','NONPallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','NONPallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Reefer','Sampling Area','NONPallette',0,true)}}</td>
+
+                                    </tr>
+
+
+
+
+                                    <!--  -------------------------------------- NEXT SECTION STARTED ----------------------------------------------  -->
+                                    <tr>
+                                        <td colspan="3" class="borderBottom">OOG</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Others','Normal','Dog Sniffing',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Others','Normal','Dog Sniffing',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Others','Normal','Dog Sniffing',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Others','Normal','Dog Sniffing',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Others','Normal','Dog Sniffing',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Others','Normal','Dog Sniffing',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Others','Normal','Dog Sniffing',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Others','Normal','Dog Sniffing',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Others','Normal','Dog Sniffing',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Others','Normal','Dog Sniffing',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Others','Normal','Dog Sniffing',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Others','Normal','Dog Sniffing',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Others','Normal','Dog Sniffing',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Others','Normal','Dog Sniffing',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountUI('Others','Normal','Dog Sniffing',15)}}</td>
+                                        <td colspan="3" class="borderBottom">{{GetContainerCountUI('Others','Normal','Dog Sniffing',0,true)}}</td>
+
+                                    </tr>
+                                    <tr class="FooterTr">
+                                        <td colspan="3">Total</td>
+                                        <td>{{GetContainerCountUI('','','',1)}}</td>
+                                        <td>{{GetContainerCountUI('','','',2)}}</td>
+                                        <td>{{GetContainerCountUI('','','',3)}}</td>
+                                        <td>{{GetContainerCountUI('','','',4)}}</td>
+                                        <td>{{GetContainerCountUI('','','',5)}}</td>
+                                        <td>{{GetContainerCountUI('','','',6)}}</td>
+                                        <td>{{GetContainerCountUI('','','',7)}}</td>
+                                        <td>{{GetContainerCountUI('','','',8)}}</td>
+                                        <td>{{GetContainerCountUI('','','',9)}}</td>
+                                        <td>{{GetContainerCountUI('','','',10)}}</td>
+                                        <td>{{GetContainerCountUI('','','',11)}}</td>
+                                        <td>{{GetContainerCountUI('','','',12)}}</td>
+                                        <td>{{GetContainerCountUI('','','',13)}}</td>
+                                        <td>{{GetContainerCountUI('','','',14)}}</td>
+                                        <td>{{GetContainerCountUI('','','',15)}}</td>
+                                        <td colspan="3">{{GetContainerCountUI('Dry','FoodStuff','Pallette',0,false,false,false,true)}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="cardsection">
+                        <div class="tableheadersection text-center">
+                            <h5 class="font-weight-bold">
+                                FI (From Inspection)
+                            </h5>
+                        </div>
+                        <div class="tablesection">
+                            <table>
+                                <thead>
+                                    <tr class="borderBottom">
+                                        <th>Category</th>
+                                        <th>Sub-category</th>
+                                        <th>Inspection type	</th>
+                                        <th>1</th>
+                                        <th>2</th>
+                                        <th>3</th>
+                                        <th>4</th>
+                                        <th>5</th>
+                                        <th>6</th>
+                                        <th>7</th>
+                                        <th>8</th>
+                                        <th>9</th>
+                                        <th>10</th>
+                                        <th>11</th>
+                                        <th>12</th>
+                                        <th>13</th>
+                                        <th>14</th>
+                                        <th>15</th>
+                                        <th>Sub total 1</th>
+                                        <th>Sub total 2</th>
+                                        <th>Sub total 3</th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-if="Summary_FI_List!=undefined">
+                                    <tr>
+                                        <td class="borderBottom" rowspan="6">Dry</td>
+                                        <td class="borderBottom" rowspan="2">General</td>
+                                        <td class="borderBottom">Palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','Pallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','Pallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','Pallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','Pallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','Pallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','Pallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','Pallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','Pallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','Pallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','Pallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','Pallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','Pallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','Pallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','Pallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','Pallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','Pallette',0,true)}}</td>
+                                        <td rowspan="2" class="borderBottom">{{GetContainerCountFI('Dry','Normal','Dog Sniffing',0,false,true)}}</td>
+                                        <td rowspan="6" class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Dog Sniffing',0,false,false,true)}}</td>
+                                    </tr>
+                                    <tr class="boldborderbottom">
+                                        <td class="borderBottom">Not palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','NONPallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','NONPallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','NONPallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','NONPallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','NONPallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','NONPallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','NONPallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','NONPallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','NONPallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','NONPallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','NONPallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','NONPallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','NONPallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','NONPallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','NONPallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','Normal','NONPallette',0,true)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td rowspan="2">Food</td>
+                                        <td class="borderBottom">Palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Pallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Pallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Pallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Pallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Pallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Pallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Pallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Pallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Pallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Pallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Pallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Pallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Pallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Pallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Pallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Pallette',0,true)}}</td>
+                                        <td rowspan="2" class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','Dog Sniffing',0,false,true)}}</td>
+
+                                    </tr>
+                                    <tr class="borderBottom">
+                                        <td class="borderBottom">Not palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','NONPallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','NONPallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','NONPallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','NONPallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','NONPallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','NONPallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','NONPallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','NONPallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','NONPallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','NONPallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','NONPallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','NONPallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','NONPallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','NONPallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','NONPallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','FoodStuff','NONPallette',0,true)}}</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="borderBottom" rowspan="2">IMDG</td>
+                                        <td class="borderBottom">Palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Pallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Pallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Pallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Pallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Pallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Pallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Pallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Pallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Pallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Pallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Pallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Pallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Pallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Pallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Pallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Pallette',0,true)}}</td>
+                                        <td rowspan="2" class="borderBottom">{{GetContainerCountFI('Dry','IMDG','Dog Sniffing',0,false,true)}}</td>
+                                    </tr>
+                                    <tr class="boldborderbottom">
+                                        <td class="borderBottom">Not palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','NONPallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','NONPallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','NONPallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','NONPallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','NONPallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','NONPallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','NONPallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','NONPallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','NONPallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','NONPallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','NONPallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','NONPallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','NONPallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','NONPallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','NONPallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Dry','IMDG','NONPallette',0,true)}}</td>
+                                    </tr>
+
+                                    <!--  -------------------------------------- NEXT SECTION STARTED ----------------------------------------------  -->
+
+                                    <tr>
+                                        <td class="borderBottom" rowspan="4">Reefer</td>
+                                        <td class="borderBottom">UTC-CS</td>
+                                        <td class="borderBottom">---</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','UTC COLD Store','',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','UTC COLD Store','',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','UTC COLD Store','',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','UTC COLD Store','',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','UTC COLD Store','',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','UTC COLD Store','',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','UTC COLD Store','',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','UTC COLD Store','',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','UTC COLD Store','',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','UTC COLD Store','',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','UTC COLD Store','',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','UTC COLD Store','',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','UTC COLD Store','',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','UTC COLD Store','',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','UTC COLD Store','',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','UTC COLD Store','',0,true)}}</td>
+                                        <td rowspan="2" class="borderBottom">{{GetContainerCountFI('Reefer','ColdStore','Dog Sniffing',0,false,true)}}</td>
+                                        <td rowspan="4" class="borderBottom">{{GetContainerCountFI('Reefer','ColdStore','Dog Sniffing',0,false,false,true)}}</td>
+                                    </tr>
+                                    <tr class="borderBottom">
+                                        <td class="borderBottom">DPW-CS</td>
+                                        <td class="borderBottom">---</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','DPW ColdStore','',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','DPW ColdStore','',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','DPW ColdStore','',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','DPW ColdStore','',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','DPW ColdStore','',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','DPW ColdStore','',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','DPW ColdStore','',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','DPW ColdStore','',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','DPW ColdStore','',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','DPW ColdStore','',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','DPW ColdStore','',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','DPW ColdStore','',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','DPW ColdStore','',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','DPW ColdStore','',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','DPW ColdStore','',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','DPW ColdStore','',0,true)}}</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td rowspan="2" class="borderBottom">Open door</td>
+                                        <td class="borderBottom">Palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Pallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Pallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Pallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Pallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Pallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Pallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Pallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Pallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Pallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Pallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Pallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Pallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Pallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Pallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Pallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Pallette',0,true)}}</td>
+                                        <td rowspan="2" class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','Dog Sniffing',0,false,true)}}</td>
+                                    </tr>
+                                    <tr class="borderBottom">
+                                        <td class="borderBottom">Not palletized</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','NONPallette',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','NONPallette',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','NONPallette',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','NONPallette',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','NONPallette',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','NONPallette',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','NONPallette',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','NONPallette',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','NONPallette',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','NONPallette',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','NONPallette',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','NONPallette',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','NONPallette',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','NONPallette',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','NONPallette',15)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Reefer','Sampling Area','NONPallette',0,true)}}</td>
+
+                                    </tr>
+
+                                    <!--  -------------------------------------- NEXT SECTION STARTED ----------------------------------------------  -->
+                                    <tr>
+                                        <td colspan="3" class="borderBottom">OOG</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Others','Normal','Dog Sniffing',1)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Others','Normal','Dog Sniffing',2)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Others','Normal','Dog Sniffing',3)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Others','Normal','Dog Sniffing',4)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Others','Normal','Dog Sniffing',5)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Others','Normal','Dog Sniffing',6)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Others','Normal','Dog Sniffing',7)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Others','Normal','Dog Sniffing',8)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Others','Normal','Dog Sniffing',9)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Others','Normal','Dog Sniffing',10)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Others','Normal','Dog Sniffing',11)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Others','Normal','Dog Sniffing',12)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Others','Normal','Dog Sniffing',13)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Others','Normal','Dog Sniffing',14)}}</td>
+                                        <td class="borderBottom">{{GetContainerCountFI('Others','Normal','Dog Sniffing',15)}}</td>
+                                        <td colspan="3" class="borderBottom">{{GetContainerCountFI('Others','Normal','Dog Sniffing',0,true)}}</td>
+                                    </tr>
+                                    <tr class="FooterTr">
+                                        <td colspan="3">Total</td>
+                                        <td>{{GetContainerCountFI('','','',1)}}</td>
+                                        <td>{{GetContainerCountFI('','','',2)}}</td>
+                                        <td>{{GetContainerCountFI('','','',3)}}</td>
+                                        <td>{{GetContainerCountFI('','','',4)}}</td>
+                                        <td>{{GetContainerCountFI('','','',5)}}</td>
+                                        <td>{{GetContainerCountFI('','','',6)}}</td>
+                                        <td>{{GetContainerCountFI('','','',7)}}</td>
+                                        <td>{{GetContainerCountFI('','','',8)}}</td>
+                                        <td>{{GetContainerCountFI('','','',9)}}</td>
+                                        <td>{{GetContainerCountFI('','','',10)}}</td>
+                                        <td>{{GetContainerCountFI('','','',11)}}</td>
+                                        <td>{{GetContainerCountFI('','','',12)}}</td>
+                                        <td>{{GetContainerCountFI('','','',13)}}</td>
+                                        <td>{{GetContainerCountFI('','','',14)}}</td>
+                                        <td>{{GetContainerCountFI('','','',15)}}</td>
+                                        <td colspan="3">{{GetContainerCountFI('Dry','FoodStuff','Pallette',0,false,false,false,true)}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+
+
+
+
+
+
+    </div>
+
+
+</div>
+
+}
+<script src="~/Scripts/jquery.min.js"></script>
+<script>
+    window.onload = function () {
+        document.getElementById('minisidebar').className = 'sidebar-xs';
+    };
+    function Hideheader() {
+        fullMode = true;
+        //$('.DashboardActivity').css('color', "white");
+        //$(".navbar").css("display", "none");
+        //$(".sidebar").css("display", "none");
+        $('.carousel-control-prev-icon').css('filter', 'invert(0)');
+        $('.carousel-control-next-icon').css('filter', 'invert(0)');
+        $(".icon-enlarge").css("display", "none");
+        $(".icon-shrink6").css("display", "block");
+        //$('.tablesection tr td').css("background", "#2d2d2d");
+        //$('.tablesection tr td').css('cssText', 'Background: #2d2d2d !important');
+        $('.page-title.d-flex h4').css('cssText', 'color: white !important');
+        $('.tableheadersection h5').css('cssText', "color:white !important");
+        $('.option').css('cssText', "color:white");
+        const content = document.getElementById('XrayContent');
+        if (content.requestFullscreen) {
+            content.requestFullscreen();
+        } else if (content.mozRequestFullScreen) { // Firefox
+            content.mozRequestFullScreen();
+        } else if (content.webkitRequestFullscreen) { // Chrome, Safari, Opera
+            content.webkitRequestFullscreen();
+        } else if (content.msRequestFullscreen) { // Internet Explorer and Edge
+            content.msRequestFullscreen();
+        }
+
+    }
+
+
+    function showHeader() {
+        fullMode = false;
+        //$('.DashboardActivity').css('color', "#333");
+        //$(".navbar").css("display", "block");
+        //$(".sidebar").css("display", "block");
+        //document.getElementById("navbar-mobile").classList.add("RemoveNav");
+        //$('.tablesection tr td').css("background", "white");
+        //$('.tablesection tr td').css('cssText', 'Background: white !important');
+        $('.carousel-control-prev-icon').css('filter', 'invert(1)');
+        $('.carousel-control-next-icon').css('filter', 'invert(1)');
+        $('.page-title.d-flex h4').css('cssText', 'color: #1E1343 !important');
+        $('.tableheadersection h5').css('cssText', "color:black !important");
+        $('.option').css('cssText', "color:black");
+
+        $(".icon-enlarge").css("display", "block");
+
+        $(".icon-shrink6").css("display", "none");
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+
+
+    }
+    document.addEventListener('fullscreenchange', onFullScreenChange);
+    function onFullScreenChange() {
+        console.log(document.fullscreenElement);
+
+        if (document.fullscreenElement == null) {
+            $('.page-title.d-flex h4').css('cssText', 'color: #1E1343 !important');
+            $('.tableheadersection h5').css('cssText', "color:black !important");
+            $('.carousel-control-prev-icon').css('filter', 'invert(1)');
+            $('.carousel-control-next-icon').css('filter', 'invert(1)');
+
+            $(".icon-enlarge").css("display", "block");
+
+            $(".icon-shrink6").css("display", "none");
+            $('.carousel-control-prev-icon').css('filter', 'invert(1)');
+            $('.carousel-control-next-icon').css('filter', 'invert(1)');
+        }
+    }
+
+
+</script>

@@ -1,0 +1,138 @@
+﻿
+@{
+    ViewBag.Title = "Submit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #PostMortemModule .w-60{
+        width:60% !important;
+    }
+    #PostMortemModule .w-10{
+        width:10% !important;
+    }
+    #PostMortemModule .w-20{
+        width:20% !important;
+    }
+    #PostMortemModule th{
+        background:var( --dpw-bg-color) !important;
+        color:#fff;
+    }
+    #PostMortemModule .p-0 {
+       padding:0 !important;
+       margin:0 !important;
+    }
+    #PostMortemModule table td .form-control {
+        border: 0;        
+        box-shadow: none !important;
+    }
+    input[type="radio"] {
+        transform: scale(1.5);
+    }
+    input[type="radio"]:checked {
+        accent-color: var( --dpw-bg-color); /* Change color when checked */
+    }
+    #PostMortemModule .img-thumbnail {
+        border: 2px solid var( --dpw-bg-color);
+    }
+    #PostMortemModule .img-thumbnail {
+        border: 2px solid var( --dpw-bg-color);
+    }
+    #PostMortemModule i {
+        position: absolute;
+        top: 5px;
+        right: 15px;
+        cursor: pointer;
+        font-size: 18px;
+        background: #fff;
+        border: 1px solid red;
+        padding: 4px;
+        border-radius: 8px;
+    }
+
+</style>
+<div ng-controller="PostMortemCtrl" ng-init="submitpage_init()" ng-cloak class="ng-cloak">
+
+
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-copy mr-2"></i> <span class="font-weight-semibold">Post Mortem Comments</span></h4>
+                <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+            </div>
+            <div class="float-right">
+                <a href="@Url.Action("Index","PostMortem")" class="btn btn-dark ">
+                    <i class="icon-backward m-r-5 text-white"></i>
+                    Go Back!
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" id="PostMortemModule">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Vessel</label>
+                    <div class="form-group">
+                        <select data-placeholder="Please Select Vessel" id="Vessel" class="form-control select-clear" ng-model="PostMortem.RefNo" required data-fouc>
+                            <option></option>
+                            <option ng-repeat="R in VesselList" value="{{R.VisitRefNo}}">{{R.VisitRefNo}}-{{R.VesselName}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="w-60">Comments</th>
+                        <th class="w-10 text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in PostMortemChecklist">
+                        <td class="text-left">{{item.LOV}}</td>
+                        <td>
+                            <input type="radio" value="true" ng-model="item.Action" name="Radio{{$index}}" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr />
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Upload Attachments (Maximum 10 Images)</label>
+                        <input type="file" multiple accept="image/*" id="imageUpload" class="form-control-file"
+                               onchange="angular.element(this).scope().previewImages(this.files)" />
+                        <div class="row mt-2">
+                            <div class="col-md-3 mb-2" ng-repeat="img in imagePreviews">
+                                <img ng-src="{{img}}" class="img-thumbnail" style="height: 150px; width: 100%; object-fit: cover;" ng-click="OpenImageView(img)" />
+                                <!-- Delete Icon -->
+                                <i class="icon-bin2 text-danger"
+                                   ng-click="RemoveImage($index)"
+                                   title="Remove image">
+                                </i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Additional Notes</label>
+                        <textarea class="form-control" placeholder="Please input your notes here..." rows="3" maxlength="500" ng-model="PostMortem.Comments"></textarea>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary pull-right mt-2" ng-click="Submit()">Submit</button>
+        </div>
+
+    </div>
+
+</div>
+<script src="@Url.Content("~/Scripts/crypto-js.min.js")"></script>
+

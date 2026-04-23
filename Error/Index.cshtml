@@ -1,0 +1,150 @@
+﻿@model ExamPortal.Web.Models.ErrorViewModel
+@{
+    ViewBag.Title = "System Error";
+    Layout = null; // Keeping it consistent with your Login/Lockout design
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>DPWorld Jeddah Exam - @ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="~/Content/css/icons/icomoon/styles.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" sizes="16x16" href="~/Content/images/favicon.ico">
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/bootstrap_limitless.min.css" rel="stylesheet" />
+    <link href="~/Content/css/layout.min.css" rel="stylesheet" />
+    <link href="~/Content/css/colors.min.css" rel="stylesheet" />
+
+    <style>
+        :root {
+            --dpw-primary-dark: #1E1450;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            background: linear-gradient(to bottom right, #1E1450 0%, #3b2a8d 50%, #5c4aa8 100%);
+        }
+
+        .page-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .ErrorCard {
+            width: 100%;
+            max-width: 600px; /* Slightly wider for stack trace readability */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .card-body {
+            background: #ffffff;
+            padding: 40px 30px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .icon-wrapper {
+            margin-bottom: 20px;
+        }
+
+            .icon-wrapper i {
+                font-size: 60px;
+                color: #ef5350; /* Alert Red */
+                background: rgba(239, 83, 80, 0.1);
+                padding: 20px;
+                border-radius: 50%;
+            }
+
+        .card-title {
+            color: var(--dpw-primary-dark);
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .error-message {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+
+        /* Stack Trace area */
+        .debug-info {
+            text-align: left;
+            background: #263238; /* Dark Material theme for code */
+            color: #ffca28;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            max-height: 250px;
+            overflow: auto;
+            margin-top: 20px;
+            border: 1px solid #111;
+        }
+
+        .btn-primary {
+            background-color: var(--dpw-primary-dark) !important;
+            border-color: var(--dpw-primary-dark) !important;
+            height: 48px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            padding: 0 25px;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-content">
+        <div class="ErrorCard">
+            <div class="card mb-0">
+                <div class="card-body">
+                    <div class="icon-wrapper">
+                        <i class="icon-wrench-hard"></i>
+                    </div>
+
+                    <h2 class="card-title">Oops! Something went wrong</h2>
+                    <p class="error-message">@Model.Message</p>
+
+                    @if (Request.IsLocal)
+                    {
+                        <div class="text-left mb-2">
+                            <span class="badge badge-danger">Developer Mode - Stack Trace:</span>
+                        </div>
+                        <pre class="debug-info">@Model.StackTrace</pre>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info border-0">
+                            <i class="icon-info22 mr-2"></i> Our technical team has been notified and we are working to resolve the issue.
+                        </div>
+                    }
+
+                    <div class="mt-4">
+                        <a href="/" class="btn btn-primary">
+                            <i class="icon-home4 mr-2"></i> Return to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <p class="footer-text">&copy; @DateTime.Now.Year DP World. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

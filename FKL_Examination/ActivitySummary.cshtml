@@ -1,0 +1,506 @@
+﻿
+@{
+    ViewBag.Title = "ActivitySummary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .CloseModalBtn {
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        z-index: 99999999999 !important;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px !important;
+        padding: 8px;
+        cursor: pointer;
+        background: var( --dpw-bg-color);
+        z-index: 99999999999 !important;
+    }
+
+    .close {
+        display: none;
+    }
+
+    .CloseModalBtn .fa-times-circle-o {
+        color: #ffff !important;
+    }
+
+    .modal-content {
+        background-color: #f4f2fa !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+
+    .modal-title {
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+
+    .modal-footer {
+        border-top: none !important;
+        align-content: center;
+        text-align: center;
+    }
+    /*TAB CSS*/
+    .CardHeaderLink {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .tab button {
+        border-top-right-radius: 10px;
+        border-top-left-radius: 10px;
+        background: #e9e9e9;
+        padding: 15px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 13px;
+    }
+
+    .CardHeaderLink {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .tab button.active {
+        background-color: #00946b;
+        color: white;
+        font-size: 13px;
+    }
+
+    .layerTab {
+        display: inline-block;
+        background: white;
+        padding: 4px 10px;
+        font-size: 14px;
+        margin-right: 4px;
+        border-radius: 3px;
+        box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+        .layerTab label {
+            margin-bottom: 0px;
+            margin-right: 10px;
+        }
+
+        .layerTab input {
+            vertical-align: sub;
+        }
+
+    .HistoryTab .tab {
+        padding: 6px 22px;
+        border-bottom: 1px solid #b4b4b4;
+        cursor: pointer;
+        background: #ffffff;
+    }
+
+    .HistoryTab {
+        display: flex;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .tabActive {
+        border: 1px solid #b4b4b4 !important;
+        border-bottom: none !important;
+        background: #f4f2fa !important;
+        font-weight: 600;
+    }
+
+    .lasttab {
+        border-bottom: 1px solid #b4b4b4;
+    }
+
+    .HistoryTable tr td, .HistoryTable tr th {
+        background: white;
+        border: 1px solid #bebebe !important;
+    }
+
+    .HistoryTable tr th {
+        background: var( --dpw-bg-color) !important;
+        color: white !important;
+    }
+
+    .CheckListStyle {
+        background-color: #e0eeff !important;
+    }
+</style>
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.css" rel="stylesheet" />
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.standalone.css" rel="stylesheet" />
+<div ng-controller="FKL_ActivitySumnaryCtrl" ng-init="init()" class="ng-cloak" ng-cloak>
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-stack-text mr-2"></i><span class="font-weight-semibold">Completed Activity </span></h4>
+                <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+            </div>
+            <div class="page-title d-flex">
+                <button class=" btn btn-success" data-toggle="collapse" data-target="#demo">Filter</button>
+            </div>
+        </div>
+    </div>
+    <hr />
+    @*filter*@
+    <div class="card collapse" id="demo">
+        <div class="card-body">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Operator</label>
+                            <input type="text" class="form-control" ng-model="Filter.EmpId" placeholder="Enter Operator" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Activity</label>
+                            <input type="text" class="form-control" ng-model="Filter.Activity" placeholder="Enter Activity" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Container</label>
+                            <input type="text" class="form-control" ng-model="Filter.Cntr" placeholder="Enter Cntr" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Forklift</label>
+                            <input type="text" class="form-control" ng-model="Filter.Forklift" placeholder="Enter Forklift" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>From Date</label>
+                            <div id="sandbox-container">
+                                <div class="input-group date">
+                                    <input type="text" class="form-control" id="DateFrom" placeholder="dd/mm/yyyy"><span class="input-group-addon"><i class="mi-insert-invitation"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>To Date</label>
+                            <div id="sandbox-container">
+                                <div class="input-group date">
+                                    <input type="text" class="form-control" id="DateTo" placeholder="dd/mm/yyyy"><span class="input-group-addon"><i class="mi-insert-invitation"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-4">
+                        <button class="btn btn-primary pull-right mr-2" ng-click="Search(Filter)">Search</button>
+                        <button class="btn btn-secondary pull-right mr-2" ng-click="ClearFilter(Search)">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*count*@
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="CounterCard">
+                <b>Total item: </b>  <span id="counts">{{TotalCount}}</span>
+            </div>
+        </div>
+    </div>
+    @*table*@
+    <div class="card table-card scrollbar w-100">
+        <table class="table datatable-show-all" id="Table">
+            <thead>
+                <tr class="table-card-head">
+                    <th>Container</th>
+                    <th>Activity</th>
+                    <th>Location</th>
+                    <th>Operator</th>
+                    <th>Forklift</th>
+                    <th>Created at</th>
+                    <th>Action</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="x in ContainerList">
+                    <td>{{x.Cntr}}</td>
+                    <td>{{x.Activity}}</td>
+                    <td>{{x.location}}</td>
+                    <td>{{x.EmpId}}-{{x.Name}}</td>
+                    <td>{{x.Forklift}}</td>
+                    <td>{{x.CreatedAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                    <td>
+                        <span ng-click="XLReport(x.Id)"><i class="icon-file-excel"></i></span>
+                        @*<span><i class="icon-file-check"></i></span>*@
+                        <span ng-click="GetDetails(x.Id)"><i class="icon-info22"></i></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="loadmore">
+        <div class="btn btn-primary pull-right" ng-click="LoadMore()">Load more</div>
+    </div>
+    @*info*@
+    <div class="modal fade" id="ActivityInfo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:1000px;">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ActivityInfo.Cntr}}</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="HistoryTab">
+                            <div ng-class="{'tabActive':HistoryTab=='Summary'}" ng-click="HistoryTab='Summary'" class="tab">Summary</div>
+                            <div ng-class="{'tabActive':HistoryTab=='Delays'}" ng-click="HistoryTab='Delays'" class="tab">Delays</div>
+                            <div ng-class="{'tabActive':HistoryTab=='History'}" ng-click="HistoryTab='History'" class="tab">History</div>
+                            <div ng-class="{'tabActive':HistoryTab=='Checklist'}" ng-click="HistoryTab='Checklist'" class="tab">Forklift & Checklist</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div ng-show="HistoryTab=='Summary'">
+                            <table class="table HistoryTable">
+                                <tr>
+                                    <th>Container</th>
+                                    <td>{{ActivityInfo.Cntr}}</td>
+                                    <th>Assigned at</th>
+                                    <td>{{ActivityInfo.AssignedAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+
+
+                                </tr>
+                                <tr>
+                                    <th>Activity</th>
+                                    <td>{{ActivityInfo.Activity}}</td>
+                                    <th>Start time</th>
+                                    <td>{{ActivityInfo.StartTime  | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+
+                                </tr>
+                                <tr>
+                                    <th>Location</th>
+                                    <td>{{ActivityInfo.Location}}</td>
+                                    <th>End time</th>
+                                    <td>{{ActivityInfo.EndTime  | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+
+
+                                </tr>
+                                <tr>
+                                    <th>Size</th>
+                                    <td>{{ActivityInfo.Size}}</td>
+                                    <th>Activity duration</th>
+                                    <td>{{ActivityInfo.ActivityDuration}}</td>
+
+                                </tr>
+                                <tr>
+                                    <th>Package type</th>
+                                    <td>{{ActivityInfo.PackageType}}</td>
+                                    <th>Activity SLA</th>
+                                    <td>{{ActivityInfo.ActivityETC}}</td>
+
+
+                                </tr>
+                                <tr>
+                                    <th>Forklift</th>
+                                    <td>{{ActivityInfo.Forklift}}</td>
+                                    <th>Delay duration</th>
+                                    <td>{{ActivityInfo.DelayDuration}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Operator</th>
+                                    <td>{{ActivityInfo.EmpId}}-{{ActivityInfo.Operator}}</td>
+                                    <th>Shift</th>
+                                    <td>{{ActivityInfo.Shift}}</td>
+
+                                </tr>
+                            </table>
+                        </div>
+                        <div ng-show="HistoryTab=='Delays'">
+                            <table class="table HistoryTable">
+                                <thead>
+                                    <tr>
+
+                                        <th>Delays</th>
+                                        <th>Start at</th>
+                                        <th>Start by</th>
+                                        <th>Closed at</th>
+                                        <th>Closed by</th>
+                                        <th>Duration</th>
+
+                                    </tr>
+                                </thead>
+                                <tr ng-repeat="x in ActivityInfo.Delays">
+                                    <td>{{x.Reason}}</td>
+                                    <td>{{x.DelayRaisedAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                                    <td>{{x.CreatedBy}}</td>
+                                    <td>{{x.DelayResolvedAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                                    <td>{{x.UpdatedBy}}</td>
+                                    <td>{{x.Duration}}</td>
+                                </tr>
+                            </table>
+
+                        </div>
+                        <div ng-show="HistoryTab=='History'">
+                            <table class="table HistoryTable">
+                                <tr>
+                                    <th>Container</th>
+                                    <th>Location</th>
+                                    <th>Activity</th>
+                                    <th>Operator</th>
+                                    <th>Forklift</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                    <th>Created at</th>
+                                    <th>Created by</th>
+                                </tr>
+                                <tr ng-repeat="x in ActivityInfo.History">
+                                    <td>{{x.Cntr}}</td>
+                                    <td>{{ActivityInfo.Location}}</td>
+                                    <td>{{ActivityInfo.Activity}}</td>
+                                    <td>{{x.EmpId}}-{{x.Name}}</td>
+                                    <td>{{x.Forklift}}</td>
+                                    <td>{{x.Status}}</td>
+                                    <td>{{x.Detail}}</td>
+                                    <td>{{x.CreatedAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                                    <td>{{x.CreatedBy}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div ng-show="HistoryTab=='Checklist'">
+                            <table class="table HistoryTable">
+                                <thead>
+                                    <tr>
+                                        <th>Forklift</th>
+                                        <th>Pickup at</th>
+                                        <th>Pickup by</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody ng-repeat="Fk in ActivityInfo.CheckList" ng-init="PIndex = $index">
+                                    <!-- Main Row - Forklift Summary -->
+                                    <tr>
+                                        <td>{{Fk.Forklift}}</td>
+                                        <td>{{Fk.CreatedAt | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                        <td>{{Fk.CreatedBy}}</td>
+                                        <td>
+                                            <span ng-show="CurrentCheckIndex != PIndex"
+                                                  ng-click="CurrentCheckIndex = PIndex"
+                                                  style="cursor: pointer;">
+                                                <i class="icon-plus2"></i>
+                                            </span>
+                                            <span ng-show="CurrentCheckIndex == PIndex"
+                                                  ng-click="CurrentCheckIndex = -1"
+                                                  style="cursor: pointer;">
+                                                <i class="icon-minus2"></i>
+                                            </span>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Expanded Details - Only shown when this row is selected -->
+                                    <tr ng-show="CurrentCheckIndex == PIndex">
+                                        <td colspan="4" style=" background: #e0eeff;">
+                                            <table class="table table-bordered table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="4" class="text-center bg-light">FL Checklist</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Question</th>
+                                                        <th>Answer</th>
+                                                        <th>Uploaded photo</th>
+                                                        <th>Remarks</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="Chk in Fk.CheckList">
+                                                        <td class="CheckListStyle">{{Chk.Question}}</td>
+                                                        <td class="CheckListStyle">{{Chk.Answer}}</td>
+                                                        <td class="CheckListStyle">
+                                                            <a ng-if="Chk.UploadedPhoto"
+                                                               href="{{Chk.UploadedPhoto}}"
+                                                               target="_blank"
+                                                               title="View Photo">
+                                                                <i class="icon-eye"></i>
+                                                            </a>
+                                                            <span ng-if="!Chk.UploadedPhoto">-</span>
+                                                        </td>
+                                                        <td class="CheckListStyle">{{Chk.Remarks || '-'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <!-- PSC Form Data - Categories and Questions -->
+                                            <div ng-repeat="psc in Fk.PSCFormData.QuestionsCategory"
+                                                 ng-if="Fk.PSCFormData && Fk.PSCFormData.QuestionsCategory && Fk.PSCFormData.QuestionsCategory.length > 0">
+                                                <table class="table table-bordered table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colspan="4" class="text-center bg-info text-white">
+                                                                {{psc.CategoryName}}
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Question</th>
+                                                            <th>Answer</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="Pq in psc.QList">
+                                                            <td class="CheckListStyle">{{Pq.Question}}</td>
+                                                            <td class="CheckListStyle">{{Pq.Action || '-'}}</td>
+
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:center">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/DatePicker/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/js/plugins/moment/moment_locales.min.js"></script>
+<script src="~/Scripts/DatePicker/CustomIntilizeJS.js"></script>
+
+
+
+
+
+

@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "EditFunctionality";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div ng-controller="ActivityCaptureCtrl" class="ng-cloak" ng-cloak ng-init="FuntionalityEditInit()">
+
+
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <fieldset>
+                    <div class="card">
+                        <h3 class="card-header" style="background-color:var( --dpw-bg-color) !important; color:#fff; padding:10px;">
+                            Edit Functionality
+                        </h3>
+                        <div class="card-body mt-3">
+                            <div class="row">
+
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Functionality Name</label>
+                                        <input type="text" ng-model="Funtionality.FunctionalityName" placeholder="Functionality Name" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 ">
+                                    <div class="text-right mt-4">
+                                        <button type="submit" ng-click="UpdateFuntionality(Funtionality)" class="btn btn-secondary">Update </button>
+                                        <a href="/ActivityCapture/FunctionalityIndex" class="btn btn-primary"> Cancel </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+
+</div>

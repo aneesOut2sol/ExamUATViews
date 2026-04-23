@@ -1,0 +1,242 @@
+﻿@{
+    ViewBag.Title = "High Risk Cargo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/popup/jquery-confirm.min.css" rel="stylesheet" />
+<link href="~/Content/ZoomInOut/ZoomInOut.css" rel="stylesheet" />
+<link href="~/Content/css/FileUploadToastCSS.css" rel="stylesheet" />
+<link href="~/Content/css/ExamCSS.css" rel="stylesheet" />
+
+<div class="ng-clock mt-2" ng-cloak ng-controller="HighRiskCargoCtrl" ng-init="loadHighRiskCargo()">
+
+    <div class="page-header page-header-light border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4>
+                    <i class="icon-warning22 mr-2"></i>
+                    <span class="font-weight-semibold">High Risk Cargo Tracking</span>
+                    <small class="text-muted ml-2">(Total: {{(highRiskItems | filter:searchText).length}})</small>
+                </h4>
+            </div>
+
+            <div class="header-elements">
+                <div class="d-flex justify-content-center">
+                    <div class="form-group-feedback form-group-feedback-left">
+                        <input type="text" class="form-control form-control-sm w-search" placeholder="Search by Container, Location, or Status..." ng-model="searchText">
+                        <div class="form-control-feedback form-control-feedback-sm">
+                            <i class="icon-search4 text-muted"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="card">
+            <div class="table-container-fixed">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead class="bg-indigo-800 text-white sticky-header">
+                        <tr>
+                            <th class="font-weight-bold">Container</th>
+                            <th class="font-weight-bold cursor-pointer" ng-click="sortType = 'Location'; sortReverse = !sortReverse">
+                                Location
+                                <i class="ml-1" ng-show="sortType == 'Location'" ng-class="sortReverse ? 'icon-arrow-down8' : 'icon-arrow-up8'"></i>
+                            </th>
+                            <th class="font-weight-bold cursor-pointer" ng-click="sortType = 'Duration'; sortReverse = !sortReverse">
+                                Duration
+                                <i class="ml-1" ng-show="sortType == 'Duration'" ng-class="sortReverse ? 'icon-arrow-down8' : 'icon-arrow-up8'"></i>
+                            </th>
+                            <th class="font-weight-bold text-center">Cut Seal Photos</th>
+                            <th class="font-weight-bold text-center">Reason</th>
+                            <th class="font-weight-bold text-center">Status</th>
+                            <th class="font-weight-bold text-center">Q&A</th>
+                            <th class="font-weight-bold">Supervision Assigned</th>
+                            <th class="text-center font-weight-bold" style="width: 180px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in highRiskItems | filter:searchText | orderBy:(sortType == 'Duration' ? getDurationMinutes : sortType):sortReverse">
+                            <td><span class="font-weight-bold text-indigo-800">{{item.Cntr}}</span></td>
+                            <td>{{item.Location}}</td>
+                            <td>
+                                <span class="badge badge-flat border-danger text-danger-600">
+                                    {{item.Duration}}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-outline bg-indigo-400 text-indigo-400 btn-icon rounded-round" ng-click="showSealCutPhotos(item)"
+                                        ng-if="item.CargoFrontView != null && item.DoorAfterSeal!= null">
+                                    <i class="icon-images3"></i>
+                                </button>
+                            </td>
+                            <td>
+                                {{item.Sealcut_HighRiskReason}}
+                            </td>
+                            <td>
+                                <span class="badge badge-danger" ng-if="item.ActivityHold">HOLD</span>
+                                <span class="badge badge-success" ng-if="!item.ActivityHold">PROCEEDED</span>
+                            </td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-sm alpha-primary text-primary-800 border-primary" ng-click="viewCheckList(item)"
+                                        ng-if="item.Questions != null && item.Questions.length>0">
+                                    View
+                                </button>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center" ng-if="item.SuperVisorAssigned==true">
+                                    <div class="btn bg-indigo-400 rounded-round btn-icon btn-sm mr-2 initital-text">
+                                        <span class="letter-icon" style="font-size: 10px;">{{getSuperVisorInitial(item.SuperVisorLoginId)}}</span>
+                                    </div>
+                                    <span class="font-size-sm">{{getSuperVisorName(item.SuperVisorLoginId)}}</span>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" ng-if="item.CargoFrontView != null && item.DoorAfterSeal!= null">
+                                    <button type="button" class="btn btn-danger btn-sm px-2 font-weight-bold" ng-click="onHold(item)"
+                                            ng-if="!item.ActivityHold">
+                                        HOLD
+                                    </button>
+                                    <button type="button" class="btn btn-success btn-sm px-2 font-weight-bold" ng-click="onProceed(item)"
+                                            ng-if="item.ActivityHold">
+                                        PROCEED
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm px-2 font-weight-bold" ng-click="ShowHistory(item)"
+                                            ng-if="item.HistoryCount>1">
+                                        HISTORY
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr ng-if="(highRiskItems | filter:searchText).length === 0">
+                            <td colspan="9" class="text-center py-5">
+                                <i class="icon-search4 icon-3x text-muted opacity-25 mb-3"></i>
+                                <h5 class="text-muted">No cargo records found matching your criteria.</h5>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="overlay" style="flex-direction:column">
+        <div id="zoomContainer">
+            <img id="zoomImg" src="" alt="Zoomable" />
+            <span id="close-btn" ng-click="closeOverlay()">&#10006;</span>
+            <div class="zoom-controls">
+                <button id="zoomIn">+</button>
+                <button id="zoomOut">−</button>
+                <button id="zoomReset">Reset</button>
+            </div>
+        </div>
+        <br />
+        <table class="sliderNav">
+            <tr>
+                <td ng-show="PhotoLibrary!=null && PhotoLibrary!=undefined && PhotoLibrary.length>0" ng-repeat="item in PhotoLibrary">
+                    <img ng-class="{'Active': CurrentopenUrl == item.Url}"
+                         ng-click="OpenImageView(item.Url, 'ImageViewModel')"
+                         src="{{item.Url}}"
+                         alt="N/A"
+                         class="thumbnail" />
+                    <div class="image-name">{{item.Label}}</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    @Html.Partial("_Models")
+
+</div>
+<script src="~/Content/ZoomInOut/ZoomInOut.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .table-container-fixed {
+        height: 70vh;
+        overflow-y: auto;
+        background: #fff;
+    }
+
+    .sticky-header th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: #1E1450 !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .table thead th {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-top: none !important;
+    }
+
+    .table td {
+        vertical-align: middle;
+        padding: 10px 15px;
+    }
+
+    .w-search {
+        width: 350px !important;
+        transition: width 0.3s ease;
+    }
+
+        .w-search:focus {
+            width: 500px !important;
+            border-color: #1E1450;
+        }
+
+    .badge {
+        padding: 5px 10px;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 10px;
+    }
+
+    #modal_checklist .table td {
+        vertical-align: middle;
+        font-size: 13px;
+    }
+
+    .border-round {
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    }
+
+    .text-right {
+        direction: rtl;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .animate__fadeIn {
+        animation: fadeIn 0.4s;
+    }
+
+    .bg-indigo-800 {
+        background-color: #1E1450;
+    }
+
+    .initital-text {
+        width: 38px;
+        height: 38px;
+        line-height: 26px;
+        white-space: nowrap;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

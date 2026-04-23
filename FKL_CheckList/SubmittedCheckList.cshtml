@@ -1,0 +1,295 @@
+﻿@model ExamPortal.Model.Features.FKL_Examinxation.CheckList.GetSubmittedCheckListResponse
+@{
+    Layout = null;
+}
+
+<!--This Will Show Multiple Exception List-->
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <title>Forklift checklist</title>
+    <link rel="icon" type="~/Content/images/favicon.ico" sizes="16x16" href="~/Content/images/favicon.ico">
+    <style>
+        .heading-print {
+            color: var( --dpw-bg-color);
+            font-weight: bold;
+        }
+
+        .row {
+            margin: 0px !important;
+        }
+
+        .badge {
+            font-size: 15px;
+            width: 90px;
+        }
+
+        body {
+            background-color: white !important;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: white !important;
+        }
+
+        .table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 23px;
+        }
+        .table thead th {
+            background: #e7e7e7 !important;
+        }
+
+        .table th {
+            background: #e7e7e7 !important;
+        }
+
+        .table tbody td {
+            font-weight: 500;
+        }
+
+        .badge-size {
+            width: 70px;
+            padding: 8px 6px 5px 7px;
+        }
+
+        .table-bordered td, .table-bordered th {
+            border: 1px solid #979797 !important;
+        }
+
+        .badge-xs {
+            font-size: 9px;
+            -webkit-transform: translate(0, -2px);
+            -ms-transform: translate(0, -2px);
+            -o-transform: translate(0, -2px);
+            transform: translate(0, -2px);
+        }
+
+        .badge-sm {
+            -webkit-transform: translate(0, -2px);
+            -ms-transform: translate(0, -2px);
+            -o-transform: translate(0, -2px);
+            transform: translate(0, -2px);
+        }
+        /*All Table Badges*/
+
+        .badge-Completed {
+            /*background-color: #2cb97c!important;*/
+            background-color: #6c757d !important;
+            text-transform: uppercase;
+        }
+
+        .badge-InProgress {
+            background-color: #65becc !important;
+            text-transform: uppercase;
+        }
+
+        .badge-OverDue {
+            background-color: red !important;
+            text-transform: uppercase;
+        }
+
+        .badge-News {
+            background-color: #c776aa !important;
+            text-transform: uppercase;
+        }
+
+        .badge-Closed {
+            background-color: #463d32 !important;
+            text-transform: uppercase;
+        }
+
+        .badge-Rejected {
+            background-color: #dc3545 !important;
+            text-transform: uppercase;
+        }
+
+        img {
+            height: 80px;
+            border: none;
+        }
+
+        @@font-face {
+            font-family: 'AvenirLTStd-Book';
+            src: url('../../fonts/AvenirLTStd-Book.otf') format('opentype');
+        }
+
+        @@font-face {
+            font-family: 'AvenirLTStd-Medium';
+            src: url('../../fonts/AvenirLTStd-Medium.otf') format('opentype');
+        }
+
+        @@font-face {
+            font-family: 'AvenirLTStd-Roman';
+            src: url('../../fonts/AvenirLTStd-Roman.otf') format('opentype');
+        }
+
+        /*h2 {
+            font-family: AvenirLTStd-Medium !important;
+        }*/
+
+        .testRotate {
+            transform: rotate(180deg);
+            writing-mode: vertical-rl;
+        }
+
+        #StudyHeading {
+            margin-left: 20px;
+            margin-top: 70px;
+        }
+
+        #otherheading {
+            margin-left: 20px;
+        }
+
+
+        .tblue {
+            color: var( --dpw-bg-color) !important;
+        }
+
+        .thWidht tr th {
+            width: 22% !important;
+        }
+
+        .thWidht tr td {
+            width: 22% !important;
+        }
+
+        /*.pageBreak {
+            page-break-after: always;
+        }*/
+        .pull-textleft {
+            text-align: left;
+        }
+
+        .sectionHeadingh2 {
+            /* padding: 10px 8px;*/
+            text-transform: uppercase;
+            color: red;
+            font-weight: 600;
+            margin: 0px !important;
+        }
+
+        th, td {
+            padding: 5px !important
+        }
+
+        p {
+            margin: 0px !important
+        }
+
+        @@media Print {
+            .general {
+                page-break-inside: avoid !important;
+            }
+
+                .general table tr td {
+                    page-break-inside: avoid !important;
+                }
+        }
+    </style>
+</head>
+
+<body>
+    @if (Model.li.Count > 0)
+    {
+
+        <div>
+            <div class="row page-titles">
+                <table class="table-bordered tblue table" style="border: 1px solid black;">
+                    <tr style="border: 1px solid black; text-align:center">
+                        <td style="width:25%;text-align:center">
+
+                            <img src="~/Content/images/dpworldlogo.png" style="height:70px;margin: 17px;" />
+                        </td>
+                        <td align="center" style="vertical-align:inherit">
+                            <h1 class="tblue" style="font-size:30px">
+                                <b>
+                                    Forklift Checklist @Model.li.FirstOrDefault().ForkliftName -@Model.li.FirstOrDefault().ForkliftNumber
+                                </b>
+
+                            </h1>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- STart New Item-->
+        <div class="container-fluid general">
+            <table class="table table_heading table-bordered table-striped text-center">
+                <tr>
+                    <th width="20%">Forklift name	</th>
+                    <td class="pull-textleft">@Model.li.FirstOrDefault().ForkliftName</td>
+                </tr>
+                <tr>
+                    <th width="20%">Forklift number		</th>
+                    <td class="pull-textleft">@Model.li.FirstOrDefault().ForkliftNumber</td>
+                </tr>
+                <tr>
+                    <th width="30%">Submitted by		</th>
+                    <td class="pull-textleft">@Model.li.FirstOrDefault().SubmitteBy</td>
+                </tr>
+                <tr>
+                    <th width="20%">Submitted at		</th>
+                    <td class="pull-textleft">@Model.li.FirstOrDefault().SubmittedAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                </tr>
+            </table>
+        </div>
+        <div class="container-fluid general">
+            <h2 class="sectionHeadingh2">Checklist Details</h2>
+            <table class="table table_heading table-bordered table-striped text-center">
+                <tr>
+                    <th width="50%">
+                        Question
+                    </th>
+                    <th width="10%">
+                        Anwser
+                    </th>
+                    <th width="10%">
+                        Remarks
+                    </th>
+                    <th width="30%">
+                        Photo
+                    </th>
+                </tr>
+
+
+                @foreach (var item in Model.li)
+                {
+
+                    <tr>
+                        <td class="pull-textleft">
+                            @item.Question
+                        </td>
+                        <td class="pull-textleft">
+                            @item.Answer
+                        </td>
+                        <td class="pull-textleft">
+                            @item.Remraks
+                        </td>
+                        <td class="pull-textleft">
+                            @if (!string.IsNullOrEmpty(item.Photo))
+                            {
+                                <img src="@item.Photo"/>
+
+                            }
+                        </td>
+                    </tr>
+
+                }
+            </table>
+        </div>
+
+    }
+</body>
+</html>
+
+<script>
+
+    window.print();
+</script>

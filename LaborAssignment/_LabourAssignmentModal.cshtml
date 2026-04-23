@@ -1,0 +1,699 @@
+﻿
+<style>
+    .Indicator {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        font-weight: 700;
+        margin-bottom: 7px;
+    }
+
+        .Indicator div::before {
+            content: '';
+            height: 8px;
+            width: 8px;
+            display: inline-block;
+            border-radius: 50%;
+            vertical-align: middle;
+        }
+
+    .AssignedIndicator::before {
+        background: #1e1450;
+    }
+
+    .MissingIndicator::before {
+        background: red;
+    }
+
+    .ArrivedIndicator::before {
+        background: #85b9a5;
+    }
+
+    .TransferedIndicator::before {
+        background: #cccccc;
+    }
+
+    li.Transfered {
+        background: #b7b7b7 !IMPORTANT;
+        opacity: 0.7;
+    }
+
+    .Camuploader {
+        width: fit-content;
+        /* width: 100%; */
+        padding: 7px 14px;
+        border-radius: 5px;
+        height: fit-content;
+        border: 1px solid #d7d7d7;
+        color: gray;
+        cursor: pointer;
+    }
+
+    .HistoryTab .tab {
+        padding: 6px 22px;
+        border-bottom: 1px solid #b4b4b4;
+        cursor: pointer;
+        background: #ffffff;
+    }
+
+    .HistoryTab {
+        display: flex;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .tabActive {
+        border: 1px solid #b4b4b4 !important;
+        border-bottom: none !important;
+        background: #f4f2fa !important;
+        font-weight: 600;
+    }
+
+    .lasttab {
+        border-bottom: 1px solid #b4b4b4;
+    }
+
+    .HistoryTable tr td, .HistoryTable tr th {
+        background: white;
+        border: 1px solid #bebebe !important;
+    }
+
+    .HistoryTable tr th {
+        background: var( --dpw-bg-color) !important;
+        color: white !important;
+    }
+
+    input[type="checkbox"] {
+        float: right;
+        margin-top: 7px;
+    }
+
+    .Selected {
+        background: #1e1450 !important;
+        color: white !IMPORTANT;
+    }
+
+    .Arrived {
+        background: #85b9a5 !important;
+        color: white;
+    }
+
+    .MissingLabor {
+        background: #de7e91 !important;
+        text-decoration: line-through;
+    }
+
+    li.ng-scope.MissingLabor label {
+        text-decoration: line-through;
+    }
+</style>
+
+@*Container Info*@
+<div class="modal fade" id="ContainerDetails" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">Container Action</h5>
+            </div>
+            <div class="modal-body" style=" min-height: 0px;overflow:visible !important">
+                <div class="row">
+                    <div class="col-md-12">
+                        <button ng-show="ContainerDetails.Started==true" class="btn btn-sm btn-primary" ng-click="Inspectiondelay(x.InspectionDelayRPT==5||x.InspectionDelayRPT==2||x.InspectionDelayRPT==3,x.Unitgkey,x.Cntr,x.OperatorDatails.ActivityId,x.Activity,x.Location)"
+                                ng-class="{'approvalrequierd' : ContainerDetails.InspectionDelayRPT==5 ,'approved' : ContainerDetails.InspectionDelayRPT==2,'Rejected':ContainerDetails.InspectionDelayRPT==3 }">
+                            Inspection Delays
+                            <div class="DelayBadge" style="position: absolute; bottom: 20px;" ng-if="GetOverallInspeDelayDuration(x) != '' && ContainerDetails.Started==true">
+                                <div ng-class="{'approved' : ContainerDetails.InspectionDelayRPT==2,'Rejected':ContainerDetails.InspectionDelayRPT!=2 }" class="CountBadge">{{GetOverallInspeDelayDuration(x)}}</div>
+                            </div>
+                        </button>
+                        <button ng-show="ContainerDetails.Started==true" class="btn btn-sm  btn-primary" ng-click="DamageReport(x.DamageStatus==5 || x.DamageStatus==1,x)"
+                                ng-class="{'approvalrequierd' : ContainerDetails.DamageStatus==5 ,'approved' : ContainerDetails.DamageStatus==1,'Rejected':x.DamageStatus==3 }">
+                            Cargo Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:center">
+                        <button ng-show="ContainerDetails.Started==false" ng-click="StartActivity(ContainerDetails)" class="btn btn-primary">Start Activity</button>
+                        <button ng-show="ContainerDetails.Started==true && ContainerDetails.Repack50Done==false" ng-click="EndActivity(ContainerDetails)" class="btn btn-primary">Repack 50%</button>
+                        <button ng-show="ContainerDetails.Started==true && ContainerDetails.Repack50Done==true" ng-click="EndActivity(ContainerDetails)" class="btn btn-primary">End Activity</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*camera*@
+<div id="CamModel_small" data-backdrop="static" class="modal fade" style="z-index: 999999">
+    <div class="modal-dialog" style=" width: 100% !important; margin: auto; max-width: 100%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-weight:bolder"><i style="font-size: 18px;" class="icon-inbox"></i>Camera</h5>
+            </div>
+            <form action="#">
+                <div class="modal-body" style="text-align:center;max-height:80vh !important;">
+                    <div id="my_camera" style="width:100% !important"></div>
+                </div>
+                <div class="modal-footer">
+                    <a href=""><i class="icon-cross2 btn btn-secondary" title="Close" ng-click="cameClose()"></i></a>
+                    <a href=""><i class="icon-switch2 btn btn-danger" title="Switch Camera" ng-click="SwitchCamera()"></i></a>
+                    <a href=""><i class="icon-shutter btn btn-dark" title="Take Photo" ng-click="take_snapshot()"></i></a>
+                    <a href=""><i class="icon-floppy-disk btn btn-success" title="Save Photo" ng-click="saveImage()"></i></a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@*strip*@
+<div class="modal ZoominAnimate jqueryConfrim" id="cargostripConfrimationLabor" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="min-width:30%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="">
+                    <b>{{CurrentCntr}}</b>  Cargo Strip Confirmation!
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Container location</label>
+                        <input type="text" ng-model="CargoStrip.location" ng-disabled="Cargostuffed.approvalRequired == true" class="form-control" value="" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="Starick">Strip%</label>
+                        <select data-placeholder="Please Select Strip Percentage" class="form-control select-clear" id="StripPerDD" ng-model="CargoStrip.StripPercentage" required data-fouc>
+                            <option></option>
+                            <option value="0">0</option>
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" ng-if="SealCutDetails != undefined && (SealCutDetails.DoorAfterSeal != null || SealCutDetails.CargoFrontView != null)">
+                    <div class="col-md-6">
+                        <label>Door after seal (SEAL CUT)</label>
+                        <div class="imguplaoder" ng-show="SealCutDetails.DoorAfterSeal!=''&& SealCutDetails.DoorAfterSeal!=null">
+                            <a style=" text-decoration: none; color: inherit;" href="#" ng-click="OpenImageView(SealCutDetails.DoorAfterSeal,'cargostripConfrimation')">
+                                <span><i class="icon-eye"></i></span> View photo
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Cargo front view (SEAL CUT)</label>
+                        <div class="imguplaoder" ng-show="SealCutDetails.CargoFrontView!=''&& SealCutDetails.CargoFrontView!=null">
+                            <a style=" text-decoration: none; color: inherit;" ng-click="OpenImageView(SealCutDetails.CargoFrontView,'cargostripConfrimation')" href="#">
+                                <span><i class="icon-eye"></i></span> View photo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!--V5.8-->
+                    <div class="col-md-12">
+                        <ul class="Damage_Images">
+                            <li ng-repeat="x in CargoStrip.PhotoLibrary">
+                                <b>{{x.Label}}<span ng-if="x.required" class="Starick"></span> </b>
+                                <div class="Icon" ng-show="x.Url==null || x.Url==''">
+                                    <span title="Open Camera" ng-click="OpenCam($index,'CargoStrip')"><i class="icon-camera"></i></span>
+                                    <label title="Upload Image" style="margin:0px;">
+                                        <span><i class="icon-images2"></i></span>
+                                        <input type="file" style="display:none" accept="image/*" id="{{x.Id}}" index="{{$index}}" name="pic" accept="image/*" onchange="angular.element(this).scope().CargoStripLibraryUpload(this)">
+                                    </label>
+                                </div>
+                                <div class="Icon" ng-show="x.Url!=null && x.Url!=''">
+                                    <a title="View Image" ng-click="OpenImageView(x.Url,'cargostripConfrimation')"><span><i class="icon-eye"></i></span></a>
+                                    <span title="Delete Image" ng-click="RemovePhotoFromStripLibrary($index)"><i class="icon-bin"></i></span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer" style=" padding: 9px;">
+                <button class="btn btn-primary" ng-click="Applycargostrip(CargoStrip,'Approve')">End Activity</button>
+                <button class="btn btn-reset" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*50 Percent Repack*@
+<div class="modal ZoominAnimate jqueryConfrim" id="CargoRepack50PercentModalLabor" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="min-width:30%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="">
+                    <b>{{CurrentCntr}}</b>Upload Photo on 50% repack!
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="Starick">Repack photo</label>
+                        <div class="imguplaoderwithCam d-flex">
+                            <label class="imguplaoder" for="RepackPhoto" ng-show="Cargorepack50Per.ContainerNumberImage==''||Cargorepack50Per.ContainerNumberImage==null">
+                                <input style="display:none" type="file" id="RepackPhoto" accept="image/*" onchange="angular.element(this).scope().UploadRepack50Photo(this,'RepackPhoto')" class="form-control" value="" />
+                                <div class="">
+                                    Upload photo <span class="pull-right"><i class="icon-file-upload"></i></span>
+                                </div>
+                            </label>
+                            <div ng-show="Cargorepack50Per.ContainerNumberImage==''||Cargorepack50Per.ContainerNumberImage==null" class="Camuploader" ng-click="OpenCam($index,'Cargorepack50Per')">
+                                <span><i class="icon-camera"></i></span>
+                            </div>
+                        </div>
+                        <div class="imguplaoder" ng-show="Cargorepack50Per.ContainerNumberImage!=''&& Cargorepack50Per.ContainerNumberImage!=null">
+                            <a style=" text-decoration: none; color: inherit;" href="{{Cargorepack50Per.ContainerNumberImage}}" target="_blank"> <span><i class="icon-eye"></i></span> View photo</a>
+                            <span ng-click="Cargorepack50Per.ContainerNumberImage=''" class="pull-right"><i class="icon-bin"></i></span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style=" padding: 9px; ">
+                <button class="btn btn-primary" ng-click="SubmitPhoto50PerRepack(Cargorepack50Per)">Submit</button>
+                <button class="btn btn-reset" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*Repack*@
+<div class="modal ZoominAnimate jqueryConfrim" id="cargostuffedConfrimationLabor" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="min-width:30%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="">
+                    <b>Transfer {}
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Container location</label>
+                        <input type="text" ng-model="Cargostuffed.location" class="form-control" value="" />
+                    </div>
+                </div>
+                <br />
+                <div class="row" ng-show="!stringNullorEmpty(Cargostuffed.Contractor) || Cargostuffed.StuffAction == 'NoRepack'">
+                    <div class="col-md-6">
+                        <label class="Starick">Cargo</label>
+                        <div class="imguplaoderwithCam d-flex">
+                            <label class="imguplaoder" for="StuffedCargoImage" ng-show="Cargostuffed.CargoImage==''||Cargostuffed.CargoImage==null">
+                                <input style="display:none" type="file" id="StuffedCargoImage" accept="image/*" onchange="angular.element(this).scope().CargostuffedPhoto(this,'StuffedCargoImage','CargoImage')" class="form-control" value="" />
+                                <div class="">
+                                    Upload photo <span class="pull-right"><i class="icon-file-upload"></i></span>
+                                </div>
+                            </label>
+                            <div class="Camuploader" ng-show="Cargostuffed.CargoImage==''||Cargostuffed.CargoImage==null" ng-click="OpenCam($index,'Cargostuffed-CargoImage')">
+                                <span><i class="icon-camera"></i></span>
+                            </div>
+                        </div>
+                        <div class="imguplaoder" ng-show="Cargostuffed.CargoImage!=''&& Cargostuffed.CargoImage!=null">
+                            <a style=" text-decoration: none; color: inherit;" href="{{Cargostuffed.CargoImage}}" target="_blank"> <span><i class="icon-eye"></i></span> View photo</a> <span ng-click="Cargostuffed.CargoImage=''" class="pull-right"><i class="icon-bin" ng-if="Cargostuffed.approvalRequired != true"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="Starick">Container number</label>
+                        <div class="imguplaoderwithCam d-flex">
+                            <label class="imguplaoder" for="CargostuffedContainerNumberImage" ng-show="Cargostuffed.ContainerNumberImage==''||Cargostuffed.ContainerNumberImage==null">
+                                <input style="display:none" type="file" id="CargostuffedContainerNumberImage" accept="image/*" onchange="angular.element(this).scope().CargostuffedPhoto(this,'CargostuffedContainerNumberImage','ContainerNumberImage')" class="form-control" value="" />
+                                <div class="">
+                                    Upload photo <span class="pull-right"><i class="icon-file-upload"></i></span>
+                                </div>
+                            </label>
+                            <div class="Camuploader" ng-show="Cargostuffed.ContainerNumberImage==''||Cargostuffed.ContainerNumberImage==null" ng-click="OpenCam($index,'Cargostuffed-ContainerNumberImage')">
+                                <span><i class="icon-camera"></i></span>
+                            </div>
+                        </div>
+                        <div class="imguplaoder" ng-show="Cargostuffed.ContainerNumberImage!=''&& Cargostuffed.ContainerNumberImage!=null">
+                            <a style=" text-decoration: none; color: inherit;" href="{{Cargostuffed.ContainerNumberImage}}" target="_blank"> <span><i class="icon-eye"></i></span> View photo</a> <span ng-click="Cargostuffed.ContainerNumberImage=''" class="pull-right"><i class="icon-bin" ng-if="Cargostuffed.approvalRequired != true"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- === REPACK CHECKLIST COMPONENT === -->
+                        <div class="repack-checklist">
+                            <h3>Repack Verification Checklist</h3>
+
+                            <div ng-repeat="item in Cargostuffed.RepackCheckList"
+                                 class="repack-item"
+                                 ng-class="{ 'required-missing': item.yesnoMandatory && item.selectedAnswer === null }">
+
+                                <div class="repack-question">
+                                    <div class="row">
+                                        <div class="col-6 p-0">
+                                            {{item.question}} <span ng-show="item.yesnoMandatory" style="color:#e67e22; font-weight:bold;"> *</span>
+                                        </div>
+                                        <div class="col-6 p-0 text-right" dir="rtl">
+                                            {{item.arquestion}} <span ng-show="item.yesnoMandatory" style="color:#e67e22; font-weight:bold;"> *</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="repack-radio-group">
+                                    <label class="repack-radio">
+                                        <input type="radio"
+                                               ng-model="item.selectedAnswer"
+                                               ng-value="true">
+                                        <span>Yes</span>
+                                    </label>
+                                    <label class="repack-radio">
+                                        <input type="radio"
+                                               ng-model="item.selectedAnswer"
+                                               ng-value="false">
+                                        <span>No</span>
+                                    </label>
+                                </div>
+
+                                <span class="repack-required"
+                                      ng-show="item.yesnoMandatory && item.selectedAnswer === null">
+                                    This field is required
+                                </span>
+                            </div>
+
+                            <div class="repack-footer">
+                                All mandatory fields must be answered before submission.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="modal-footer" style=" padding: 9px; " ng-show="Cargostuffed.approvalRequired != true">
+                <button class="btn btn-primary" ng-click="Applycargostuffed(Cargostuffed,'Approve')">End Activity</button>
+                <button class="btn btn-reset" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*ArrivedLabor*@
+<div class="modal fade" id="ArrivedLabor" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">Assigned Labor</h5>
+            </div>
+            <div class="modal-body" style=" min-height: 120px;overflow:auto !important">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="Indicator">
+                            <div class="AssignedIndicator">   Assigned Labor : {{ (AssignedLaborList | filter:{ Status: 'Assigned'}).length }}</div>
+                            <div class="ArrivedIndicator">   Arrived Labor : {{ (AssignedLaborList | filter:{ Status: 'Arrived'}).length }}</div>
+                            <div class="MissingIndicator">   Missing Labor : {{ (AssignedLaborList | filter:{ Status: 'Missing'}).length }}</div>
+                            <div class="TransferedIndicator">   Transfered Labor : {{ (AssignedLaborList | filter:{ Status: 'Transfered'}).length }}</div>
+
+                        </div>
+                        <div class="LaborCard">
+                            <ul>
+                                <li ng-class="{'MissingLabor':x.Status=='Missing','Selected':x.Checked==true,'Arrived':x.Status=='Arrived','Transfered':x.Status=='Transfered'}" ng-repeat="x in AssignedLaborList">
+                                    <label class="w-100 mb-0" for="labor{{$index+1}}">
+                                        <img style=" height: 26px; border-radius: 50%; margin-right: 11px;" src="~/Content/images/profile.jpg" /> {{x.EmpId}}-{{x.EmpName}}
+                                        <input ng-show="x.Status=='Assigned'" type="checkbox" id="labor{{$index+1}}" ng-model="x.Checked" ng-disabled="x.Status!='Assigned'" ng-checked="x.IsArrived==true" value="" />
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:center">
+                        <button class="btn btn-primary" ng-click="MarkLabor(AssignedLaborList,'Arrived')">Arrived</button>
+                        <button class="btn btn-danger" ng-click="MarkLabor(AssignedLaborList,'Missing')">Missing</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Comepletd Labor*@
+<div class="modal fade" id="CompletedLabor" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">Assigned Labor</h5>
+            </div>
+            <div class="modal-body" style=" min-height: 120px;overflow:visible !important">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="LaborCard">
+                            <ul>
+                                <li class="Arrived" ng-repeat="x in ComepletedLabor">
+                                    <label class="w-100 mb-0" for="labor{{$index+1}}">
+                                        <img style=" height: 26px; border-radius: 50%; margin-right: 11px;" src="~/Content/images/profile.jpg" /> {{x.EmpId}}-{{x.EmpName}}
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:center">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Manual assignment*@
+<div class="modal fade" id="ManualAssignment" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">Manual Assignment</h5>
+            </div>
+            <div class="modal-body" style=" min-height: 120px;overflow:visible !important">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="Starick">Labors</label>
+                            <select id="ManualLaborList" ng-model="ManualLaborIds" multiple>
+                                <option hidden selected value="">Select labor</option>
+                                <option ng-repeat="x in ManualLaborList" value="{{x.Id}}">{{x.EmpId}}-{{x.EmpName}}</option>
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:center">
+                        <button class="btn btn-primary" ng-click="ManualAssign(ManualLaborIds)">Assign</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Container Details*@
+<div class="modal fade" id="ActivityInfo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:1000px;">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">{{ActivityInfo.Cntr}}</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="HistoryTab">
+                        <div ng-class="{'tabActive':HistoryTab=='Summary'}" ng-click="HistoryTab='Summary'" class="tab">Summary</div>
+                        <div ng-class="{'tabActive':HistoryTab=='History'}" ng-click="HistoryTab='History'" class="tab">History</div>
+                        <div ng-class="{'tabActive':HistoryTab=='Labors'}" ng-click="HistoryTab='Labors'" class="tab">Labors</div>
+                    </div>
+                </div>
+
+                <div>
+                    <div ng-show="HistoryTab=='Summary'">
+                        <table class="table HistoryTable">
+                            <tr>
+                                <th>Container</th>
+                                <td>{{ActivityInfo.Cntr}}</td>
+                                <th>Created at</th>
+                                <td>{{ActivityInfo.CreatedAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+
+
+                            </tr>
+                            <tr>
+                                <th>Activity</th>
+                                <td>{{ActivityInfo.Activity}}</td>
+                                <th>Start time</th>
+                                <td>{{ActivityInfo.StartTime  | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+
+                            </tr>
+                            <tr>
+                                <th>Location</th>
+                                <td>{{ActivityInfo.Location}}</td>
+                                <th>End time</th>
+                                <td>{{ActivityInfo.EndTime  | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+
+
+                            </tr>
+                            <tr>
+                                <th>Size</th>
+                                <td>{{ActivityInfo.Size}}</td>
+                                <th>Activity duration</th>
+                                <td>{{ActivityInfo.ActivityDuration}}</td>
+
+                            </tr>
+                            <tr>
+                                <th>Package type</th>
+                                <td>{{ActivityInfo.PackageType}}</td>
+                                <th>Activity SLA</th>
+                                <td>{{ActivityInfo.ActivityETC}}</td>
+
+
+                            </tr>
+                            <tr>
+                                <th>Required Labor</th>
+                                <td>{{ActivityInfo.AssignedLabor}}</td>
+                                <th>Assigned Labor</th>
+                                <td>{{ActivityInfo.AssignedLabor}}</td>
+                            </tr>
+
+                        </table>
+                    </div>
+                    <div ng-show="HistoryTab=='Delays'">
+                        <table class="table HistoryTable">
+                            <thead>
+                                <tr>
+                                    <th>Delays</th>
+                                    <th>Start at</th>
+                                    <th>Start by</th>
+                                    <th>Closed at</th>
+                                    <th>Closed by</th>
+                                    <th>Duration</th>
+                                </tr>
+                            </thead>
+                            <tr ng-repeat="x in ActivityInfo.Delays">
+                                <td>{{x.Reason}}</td>
+                                <td>{{x.DelayRaisedAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                                <td>{{x.CreatedBy}}</td>
+                                <td>{{x.DelayResolvedAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                                <td>{{x.UpdatedBy}}</td>
+                                <td>{{x.Duration}}</td>
+                            </tr>
+                        </table>
+
+                    </div>
+                    <div ng-show="HistoryTab=='History'">
+                        <table class="table HistoryTable">
+                            <tr>
+                                <th>Container</th>
+                                <th>Location</th>
+                                <th>Activity</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                                <th>Created at</th>
+                                <th>Created by</th>
+                            </tr>
+                            <tr ng-repeat="x in ActivityInfo.History">
+                                <td>{{x.Cntr}}</td>
+                                <td>{{ActivityInfo.Location}}</td>
+                                <td>{{ActivityInfo.Activity}}</td>
+                                <td>{{x.Status}}</td>
+                                <td>{{x.Detail}}</td>
+                                <td>{{x.CreatedAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                                <td>{{x.CreatedBy}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div ng-show="HistoryTab=='Labors'">
+                        <table class="table HistoryTable">
+                            <tr>
+                                <th>Action</th>
+                                <th>Empoyee</th>
+                                <th>Status</th>
+                                <th>Arrived at</th>
+                                <th>Missing at</th>
+                                <th>Assigned at</th>
+                                <th>Assigned by</th>
+                            </tr>
+                            <tr ng-repeat="x in ActivityInfo.Labors| orderBy: '-AssignedAt'">
+                                <td>
+                                    <span ng-show="x.Status=='Assigned'||x.Status=='Arrived'" title="Transfer labor" ng-click="OpenTransferLabor(x)"><i class="icon-history"></i></span>
+                                    <span ng-show="ActivityInfo.Status=='Assigned' && (x.Status=='Assigned'||x.Status=='Arrived')" title="Cancel labor" ng-click="CancelJob(x)"><i class="icon-cross"></i></span>
+                                </td>
+                                <td>{{x.Employee}}</td>
+                                <td>{{x.Status}}</td>
+                                <td>{{x.ArrivedAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                                <td>{{x.MissingAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                                <td>{{x.AssignedAt | date:'dd-MM-yyyy HH:mm:ss'}}</td>
+                                <td>{{x.AssignedBy}}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:center">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Transfer labor*@
+<div class="modal fade" id="TransferLabor" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">Transfer {{TransferLabor.EmpId}} to {{ActivityInfo.Cntr}}</h5>
+            </div>
+            <div class="modal-body" style=" min-height: 120px;overflow:visible !important">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="Starick">Container</label>
+                        <select id="TransferCntrDD" ng-model="TransferToUnitgkey">
+                            <option ng-repeat="x in TransferCntrList" value="{{x.Unitgkey}}">{{x.Cntr}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-md-12" style="text-align:center">
+                        <button class="btn btn-primary" ng-click="SubmitTransferLabor()">Transfer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

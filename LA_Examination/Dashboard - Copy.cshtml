@@ -1,0 +1,427 @@
+﻿
+@{
+    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .CloseModalBtn {
+        background: var( --dpw-bg-color);
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px;
+        padding: 8px;
+        cursor: pointer
+    }
+
+        .CloseModalBtn .fa-times-circle-o {
+            color: #ffff !important;
+        }
+
+    .modal-title {
+        color: var( --dpw-bg-color);
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+
+    h3 {
+        font-weight: bold;
+        line-height: 50px;
+        padding-left: 20px;
+    }
+
+    .badge {
+        font-size: 13px;
+        width: 50px;
+       
+    }
+
+    .badge-Maintenance {
+        background: #f69f00 !important;
+    }
+
+    #tblrep {
+        max-height: 500px !important;
+        min-height: auto !important;
+        overflow-y: auto;
+        border: 2px solid #444;
+    }
+
+    .tblrep:hover {
+        border-color: red;
+    }
+
+    .prevent-select {
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
+    }
+
+    .card {
+        box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;
+        border-radius: 15px;
+    }
+
+    .available-icon {
+        color: forestgreen;
+        font-size: 17px;
+    }
+
+    .Maintenance-icon {
+        color: #f69f00;
+        font-size: 17px;
+    }
+
+    .not-available-icon {
+        color: #c51f41 !important;
+        font-size: 17px;
+    }
+
+    .available-border {
+        width: 100%;
+        border: 3px solid forestgreen !important;
+        border-radius: 5px;
+        height: 350px !important;
+    }
+
+    .Maintenance-border {
+        width: 100%;
+        border: 3px solid #f69f00 !important;
+        border-radius: 5px;
+        height: 350px !important;
+    }
+
+    .not-available-border {
+        width: 100%;
+        /*border: 3px solid #c51f41 !important;
+        border-radius: 5px;*/
+        height: 350px !important;
+    }
+
+    .available-header {
+        background: #00a172 !important;
+        color: #fff !important;
+    }
+
+    .not-available-header {
+        background: var( --dpw-bg-color) !important;
+        color: #fff !important;
+    }
+
+    .Maintenance-header {
+        background: #f69f00 !important;
+        color: #fff !important;
+    }
+
+    h3 .badge {
+        font-size: 20px !important;
+        width: 98% !important;
+        border: 1px solid #fff;
+    }
+
+   /* .MaintenanceNotificationText {
+        position: relative;
+        background: #f69f00;
+        top: -110px;
+        box-shadow: 0px 2px 20px 0px #333 !important;
+        padding: 6px 14px;
+        max-width: fit-content;
+        text-align: center;
+        border-radius: 5px;
+    }*/
+
+    .card {
+        width: 98% !important
+    }
+
+    .pulse {
+        width: 98% !important;
+        animation: pulse 1s infinite;
+    }
+
+    .Accept {
+        padding: 10px;
+        text-align: center;
+        padding: 15px 0px !important;
+        background: darkgreen;
+        color: white;
+        font-size: 15px;
+        font-weight: 500;
+        border-bottom-left-radius: 10px;
+        cursor: pointer;
+    }
+
+    .Reject {
+        background-color: darkred !important;
+        padding: 10px;
+        text-align: center;
+        padding: 15px 0px !important;
+        background: #fd6060;
+        color: white;
+        font-size: 15px;
+        font-weight: 500;
+        border-bottom-right-radius: 10px;
+        cursor: pointer;
+    }
+
+    @@-webkit-keyframes pulse {
+        0% {
+            -webkit-transform: scale3d(1, 1, 1);
+            transform: scale3d(1, 1, 1);
+        }
+
+        50% {
+            -webkit-transform: scale3d(1.05, 1.05, 1.05);
+            transform: scale3d(1.05, 1.05, 1.05);
+        }
+
+        100% {
+            -webkit-transform: scale3d(1, 1, 1);
+            transform: scale3d(1, 1, 1);
+        }
+    }
+
+    @@keyframes pulse {
+        0% {
+            -webkit-transform: scale3d(1, 1, 1);
+            transform: scale3d(1, 1, 1);
+        }
+
+        50% {
+            -webkit-transform: scale3d(1.05, 1.05, 1.05);
+            transform: scale3d(1.05, 1.05, 1.05);
+        }
+
+        100% {
+            -webkit-transform: scale3d(1, 1, 1);
+            transform: scale3d(1, 1, 1);
+        }
+    }
+
+    .modal-content {
+        border-radius: 18px;
+    }
+
+    [class*=" icon-"], [class^=icon-] {
+        font-family: Roboto,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+        speak: none;
+    }
+
+    .icon-enlarge {
+        font-size: 30px;
+        cursor: pointer;
+    }
+
+    .icon-shrink6 {
+        display: none;
+        font-size: 30px;
+        cursor: pointer;
+    }
+
+    .RemoveNav {
+        display: none !important;
+    }
+</style>
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+</head>
+<body>
+    <div class="ng-cloak" ng-cloak ng-controller="LA_ExaminationCtrl" ng-init="Dashboardinit()">
+        <div class="XrayHeader">
+            <h3 class="card-text blur d-inline-block">Dashboard</h3>
+        </div>
+
+        <div class="row blur">
+            <div class="col-md-6" ng-repeat="(type, groupItems) in groupBy(ExaminationArea, 'pendingFor')">
+                <div class="card" ng-class="{'pulse':(row.Status==0 || row.Status ==2)}">
+                    <div ng-class="{'Maintenance-border':row.Status==2,'available-border':row.Status,'not-available-border':!row.Status}">
+                        <div class="card-header p-0" ng-class="{'Maintenance-header':row.Status==2,'available-header':row.Status, 'not-available-header':!row.Status}">
+                            <div class="row" style=" background-color: var( --dpw-bg-color); color: white;">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-6">
+                                    <h3 style="font-size: 25px; font-weight: bold; padding: 15px; display:inline-block">
+                                        Cargo {{type}}
+                                    </h3>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xl-6">
+                                    <h3 style="padding: 15px; float: right;">
+                                        <span style="padding: 12px;" class="badge badge-success">
+                                            Total: {{getTotalCount(groupItems)}} Containers
+                                        </span>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body mt-3">
+                            <div class="row" @*ng-repeat="row in groupItems"*@>
+                                <div class="col-md-12">
+                                    <div><b>Size:</b> {{groupItems[0].size}} ft <span class="pull-right"><i class="icon-eye pull-right" style=" margin-top: 2px; margin-left: 2px;" data-toggle="modal" data-target="#exampleModal" ng-click="getDetails(groupItems[0])"></i> {{groupItems[0].ContainerCount}} </span> </div>
+                                    <div><b>Size:</b> 40 ft <span class="pull-right">0 </span></div>
+                                    <div><b>Size:</b> {{groupItems[1].size}} ft <span class="pull-right"><i class="icon-eye pull-right" style=" margin-top: 2px; margin-left: 2px;" data-toggle="modal" data-target="#exampleModal" ng-click="getDetails(groupItems[1])"></i> {{groupItems[1].ContainerCount}} </span></div>
+                                    @*<p>
+                                        Size: <b>{{row.size}} ft <span class="pull-right">{{row.ContainerCount}} </span> <i class="icon-eye pull-right" style=" margin-top: 2px; margin-right: 2px;" data-toggle="modal" data-target="#exampleModal" ng-click="getDetails(row)"></i></b>
+                                    </p>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+
+            <!--Modal-->
+            <!-- Modal Body -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Cargo {{CntrDetails[0].pendingFor}} Container</h5>
+                        </div>
+                        <div>
+                            <label class="col-form-label ml-3">Search</label>
+                            <input type="text" ng-model="searchText" placeholder="Search..." style="width:58%;" class="form-control ml-3" />
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <div class="row">
+                                    <div id="tblrep" class="card table-card scrollbar">
+                                        <table class="table datatable-show-all text-center" id="table-id">
+                                            <thead>
+                                                <tr class="table-card-head">
+                                                    <th>SR#</th>
+                                                    <th>Bayan #</th>
+                                                    <th>Container #</th>
+                                                    <th>Location</th>
+                                                    <th>Package Type</th>
+                                                    <th>Size</th>
+                                                    <th>Required Labor</th>
+                                                    <th>Assigned Labor</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="ng-cloak" ng-cloak>
+                                                <tr  ng-repeat="Dtl in CntrDetails | filter:searchText">
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{Dtl.flex_string05}}</td>
+                                                    <td>{{Dtl.cntr}}</td>
+                                                    <td>{{Dtl.last_pos_slot}}</td>
+                                                    <td>{{Dtl.custdff_pktype}}</td>
+                                                    <td>{{Dtl.size}}</td>
+                                                    <td>
+                                                        <span>{{ Dtl.size == 20 ? 3 : (Dtl.size == 40 || Dtl.size == 45 ? 4 : '') }}</span>
+                                                    </td>
+                                                    <td class="badge badge-danger mt-2">N/A</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="footer">
+                                <button type="button" class="btn btn-success pull-right" data-dismiss="modal" aria-label="Close">Cancel</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+</body>
+</html>
+<script src="~/Scripts/jquery.min.js"></script>
+<script>
+    //Hide Side Menu
+    window.onload = function () {
+        document.getElementById('minisidebar').className = 'sidebar-xs';
+        speechSynthesis.cancel();
+    };
+    window.onbeforeunload = function () {
+        speechSynthesis.pause();
+    };
+
+
+    // Tabel Animation Code Start
+    var $el = $("#tblrep");
+    function anim() {
+        var st = $el.scrollTop();
+        var sb = $el.prop("scrollHeight") - $el.innerHeight();
+        $el.animate({ scrollTop: st < sb / 2 ? sb : 0 }, 7000, anim);
+    }
+    function stop() {
+        $el.stop();
+    }
+    anim();
+    $el.hover(stop, anim);
+    //End
+
+
+    var fullMode = false;
+
+
+    function Hideheader() {
+        fullMode = true;
+        //$(".navbar").css("display", "none");
+        //$(".sidebar").css("display", "none");
+        $(".icon-enlarge").css("display", "none");
+        $(".icon-shrink6").css("display", "block");
+        const content = document.getElementById('XrayContent');
+        if (content.requestFullscreen) {
+            content.requestFullscreen();
+        } else if (content.mozRequestFullScreen) { // Firefox
+            content.mozRequestFullScreen();
+        } else if (content.webkitRequestFullscreen) { // Chrome, Safari, Opera
+            content.webkitRequestFullscreen();
+        } else if (content.msRequestFullscreen) { // Internet Explorer and Edge
+            content.msRequestFullscreen();
+        }
+
+    }
+
+
+    function showHeader() {
+        fullMode = false;
+        //$(".navbar").css("display", "block");
+        //$(".sidebar").css("display", "block");
+        //document.getElementById("navbar-mobile").classList.add("RemoveNav");
+        $(".icon-enlarge").css("display", "block");
+        $(".icon-shrink6").css("display", "none");
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+
+
+    }
+
+    document.addEventListener('fullscreenchange', onFullScreenChange);
+    function onFullScreenChange() {
+        console.log(document.fullscreenElement);
+
+        if (document.fullscreenElement == null) {
+            $(".icon-enlarge").css("display", "block");
+            $(".icon-shrink6").css("display", "none");
+        }
+    }
+
+</script>

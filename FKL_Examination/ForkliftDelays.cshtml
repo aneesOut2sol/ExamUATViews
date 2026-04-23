@@ -1,0 +1,324 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<link href="~/Content/css/DashboardStyle.css" rel="stylesheet" />
+
+<style>
+    .btn-small {
+        font-size: 10px;
+        padding: 3px 4px;
+    }
+    .DashboardContainersSection td {
+        border: 1px solid #dfe4ee;
+    }
+        .DashboardContainersSection th,td{
+        text-align:center;
+    }
+    .RedSection {
+        background: #ed292961 !important;
+    }
+    .GreenSection {
+        background: #37ff8a7a;
+    }
+    .DashboardDiv {
+        font-family: 'Pilat Wide';
+    }
+    span.badge.badge-Active {
+        background: #00946b;
+        color: white;
+    }
+
+    span.badge.badge-InActive {
+        background: #cd0202;
+        color: white;
+    }
+
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .add-button {
+        background-color: var(--dpw-bg-color);
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+    }
+
+    .CloseModalBtn {
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        z-index: 99999999999 !important;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px !important;
+        padding: 8px;
+        cursor: pointer;
+        background: var(--dpw-bg-color);
+    }
+
+    .modal-content {
+        background-color: #f4f2fa !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+
+    .modal-title {
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+
+    .modal-footer {
+        border-top: none !important;
+        align-content: center;
+        text-align: center;
+    }
+</style>
+
+<div class="ng-cloak DashboardDiv" ng-cloak ng-controller="FKL_ForkliftDelayCtrl" ng-init="init()">
+    <div class="card mt-2 d-flex">
+        <div class="card-body">
+            <div class="header-row">
+                <h2>Forklift Delays</h2>
+                <div>
+                    <input type="button" class="btn btn-secondary" value="Filters" data-toggle="collapse" data-target="#delayFilter" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Filter -->
+    <div class="card collapse" id="delayFilter">
+        <div class="card-body">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Forklift ID</label>
+                            <input type="text" class="form-control" ng-model="Search.Forklift" placeholder="Enter Forklift" />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" ng-model="Search.Status">
+                                <option value="" selected hidden disabled>Select Status</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Resolved">Resolved</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>OPR Waiting</label>
+                            <select class="form-control" ng-model="Search.OPRisWaiting">
+                                <option value="" selected hidden disabled>Select</option>
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-4">
+                        <button class="btn btn-secondary pull-right mr-2" ng-click="ClearFilter()">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @*Pending*@
+        <div class="col-md-6 col-sm-6 col-lg-6 p-1">
+            <div class="DashboardContainersSection">
+                <div class="text-center Cutsom-Table-title RedSection">
+                    Pending
+                </div>
+                <div class="custom-table-header">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Forklift</th>
+                                <th>Area</th>
+                                <th>Created at</th>
+                                <th>Created by</th>
+                                <th>Waiting</th>
+                                <th>DUR</th>
+                                <th>OPR ID</th>
+                                <th>Reason</th>
+                                <th>Charge %</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in PendingDelayList | filter:Search">
+                                <td>{{item.Forklift}}</td>
+                                <td><div style="min-width: 60px; white-space: normal;">{{item.Area}}</div></td>
+                                <td><div style="min-width: 60px; white-space: normal;">{{item.CreatedAt | date :'dd-MM-yyyy HH:mm:ss'}}</div></td>
+                                <td>{{item.CreatedBy}}</td>
+                                <td>
+                                    <span class="text-success" ng-show="item.OPRisWaiting==true"><i class="icon-check"></i></span>
+                                    <span class="text-danger" ng-show="item.OPRisWaiting==false"><i class="icon-cross"></i></span>
+                                </td>
+                                <td>{{getDuration(item.CreatedAt,item.UpdatedAt)}}</td>
+                                <td>{{item.OPRId}}</td>
+                                <td><div style="min-width: 60px; white-space: normal;">Forklift low battery</div></td>
+                                <td>{{item.ChargePercentage}}</td>
+                                
+                                <td>
+
+                                    <span class="btn btn-sm btn-small btn-primary"
+                                          ng-show="item.Status != 'Resolved'"
+                                          title="Close this Delay"
+                                          ng-click="ResolveDelay(item.Id)">Close</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-container-count-section">
+                    <div class="row">
+                        <div class="col-md-12 p-0">
+                            <b>Total</b>
+                            <b class="pull-right">{{PendingDelayList.length}}</b>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="d-sm-flex d-md-flex d-lg-none" style=" justify-content: center;">
+                <div class="more-detail-section">
+                    <p class="text-center" ng-click="opendetailpage('CI')">
+                        View Detail <i class="icon-arrow-right7"></i>
+                    </p>
+                </div>
+            </div>
+        </div>
+        @*Completed*@
+        <div class="col-md-6 col-sm-6 col-lg-6 p-1">
+            <div class="DashboardContainersSection">
+                <div class="text-center Cutsom-Table-title GreenSection">
+                    Closed
+                </div>
+                <div class="custom-table-header">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Forklift</th>
+                                <th>Area</th>
+                                <th>Created at</th>
+                                <th>Created by</th>
+                                <th>Closed at</th>
+                                <th>Closed by</th>
+                                <th>DUR</th>
+                                <th>Waiting</th>
+                                <th>OPR ID</th>
+                                <th>Reason</th>
+                                <th>Charge %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in CompletedDelayList | filter:Search">
+                                <td>{{item.Forklift}}</td>
+                                <td><div style="min-width: 60px; white-space: normal;">{{item.Area}}</div></td>
+                                <td><div style="min-width: 60px; white-space: normal;">{{item.CreatedAt | date :'dd-MM-yyyy HH:mm:ss'}}</div></td>
+                                <td>{{item.CreatedBy}}</td>
+                                <td><div style="min-width: 60px; white-space: normal;">{{item.UpdatedAt | date :'dd-MM-yyyy HH:mm:ss'}}</div></td>
+                                <td>{{item.UpdatedBy}}</td>
+                                <td>{{getDuration(item.CreatedAt,item.UpdatedAt)}}</td>
+                                <td>
+                                    <span class="text-success" ng-show="item.OPRisWaiting==true"><i class="icon-check"></i></span>
+                                    <span class="text-danger" ng-show="item.OPRisWaiting==false"><i class="icon-cross"></i></span>
+                                </td>
+                                <td>{{item.OPRId}}</td>
+                                <td><div style="min-width: 60px; white-space: normal;">Forklift low battery</div></td>
+                                <td>{{item.ChargePercentage}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-container-count-section">
+                    <div class="row">
+                        <div class="col-md-12 p-0">
+                            <b>Total</b>
+                            <b class="pull-right">{{CompletedDelayList.length}}</b>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Table - List of all raised delays -->
+    <div class="row d-none">
+        <div id="tblrep" class="card table-card scrollbar">
+            <table class="table datatable-show-all text-center" id="table-id">
+                <thead>
+                    <tr class="table-card-head">
+                        <th>SR#</th>
+                        <th>Forklift</th>
+                        <th>Created at</th>
+                        <th>Created by</th>
+                        <th>Waiting</th>
+                        <th>OPR ID</th>
+                        <th>Reason</th>
+                        <th>Charge %</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="ng-cloak" ng-cloak>
+                    <tr ng-repeat="item in DelayList | filter:Search">
+                        <td>{{$index+1}}</td>
+                        <td>{{item.Forklift}}</td>
+                        <td>{{item.CreatedAt | date :'dd/MM/yyyy HH:mm:ss'}}</td>
+                        <td>{{item.CreatedBy}}</td>
+                        <td>
+                            <span class="text-success" ng-show="item.OPRisWaiting==true"><i class="icon-check"></i></span>
+                            <span class="text-danger" ng-show="item.OPRisWaiting==false"><i class="icon-cross"></i></span>
+                        </td>
+                        <td>{{item.OPRId}}</td>
+                        <td>{{item.Reason}}</td>
+                        <td>{{item.ChargePercentage}}</td>
+                        <td>
+                            <span class="badge badge-{{item.Status == 'Resolved' ? 'Active' : 'InActive'}}">
+                                {{item.Status}}
+                            </span>
+                        </td>
+                        <td>
+
+                            <span class="btn btn-small btn-primary"
+                                  ng-show="item.Status != 'Resolved'"
+                                  title="Close this Delay"
+                                  ng-click="ResolveDelay(item.Id)">Close</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

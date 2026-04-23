@@ -1,0 +1,337 @@
+﻿
+@{
+    ViewBag.Title = "_DamageReport";
+    Layout = null;
+}
+<style>
+    table.DetailsTable {
+        width: 100%;
+        border: 1px solid #bcbcbc !important;
+    }
+
+    .DetailsTable tr td, .DetailsTable tr th {
+        padding: 9px 16px;
+        border-bottom: 1px solid #bcbcbc;
+        background: #ffffff;
+    }
+
+</style>
+<!--Record Damage-->
+<div ng-controller="DamagePartailCtrl">
+    <div class="modal fade" id="AddDamageModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Cargo report</h5>
+                </div>
+                <div class="modal-body" style="max-height:500px;overflow-x:auto;">
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label>Damage By</label><span class="required-starig">*</span>
+                            <select data-placeholder="Please Select option" class="form-control select-clear" id="Occ" ng-model="Damage.Occurs" required data-fouc ng-change="SetDMGreasonDD(Damage.Occurs)">
+                                <option></option>
+                                <option value="Origin">Origin</option>
+                                <option value="Customs">Customs Inspection</option>
+                                <option value="Terminal (INCIDENT)">Terminal (INCIDENT)</option>
+                                <option value="Weather">Weather</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group" ng-show="!stringNullorEmpty(Damage.Occurs) && Damage.Occurs!='Weather'">
+                            <label>{{Damage.Occurs}} Reason</label><span class="required-starig">*</span>
+                            <select data-placeholder="Please Select option" class="form-control select-clear" id="OccReason" ng-model="Damage.OccursReason" ng-change="Cargo_GetDeprt(Damage.OccursReason)" required data-fouc>
+                                <option></option>
+                                <option ng-repeat="item in ReasonDDList" value="{{item.Options}}">{{item.Options}}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12" ng-if="!stringNullorEmpty(Damage.OccursReason)">
+                            <div class="card p-2 shadow-sm w-100" style=" border-radius: 8px; background: #ffffff78;">
+                                <div ng-repeat="item in SelectedDMGrsnDeparts">
+                                    <div class="cursor-pointer" title="{{item.Emails}}"><b><u>{{item.ReportDepartment}}</u></b></div>
+                                    <div class="depMessage" style="text-align: right; font-family: makdessi-regular">
+                                        {{item.ArMessage}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 form-group">
+                            <label>Severity <span class="required-starig">*</span></label>
+                            <select data-placeholder="Please Select Severity" class="form-control select-clear" id="BSSeverity" ng-model="Damage.Severity" required data-fouc>
+                                <option></option>
+                                <option value="MINOR">MINOR</option>
+                                <option value="MAJOR">MAJOR</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-lg-6">
+                            <div class="form-group">
+                                <label>Cargo type</label><span class="required-starig">*</span>
+                                <select data-placeholder="Please Select option" class="form-control select-clear" id="Pck" ng-model="Damage.CargoType" required data-fouc>
+                                    <option></option>
+                                    <option value="CARTON - CT">CARTON - CT</option>
+                                    <option value="PALLET - PL">PALLET - PL</option>
+                                    <option value="BUNDLE - BE">BUNDLE - BE</option>
+                                    <option value="PIECES - PCS">PIECES - PCS</option>
+                                    <option value="PACKAGE - PKG">PACKAGE - PKG</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-lg-6">
+                            <div class="form-group">
+                                <label>Cargo quantity</label><span class="required-starig">*</span>
+                                <input type="text" class="form-control" onkeypress="return event.charCode>=48 && event.charCode<=57" ng-model="Damage.CargoQuantity" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="Starick">Damage Images</label>
+                            <ul class="Damage_Images">
+                                <li ng-repeat="x in Damage.Images">
+                                    <b>{{x.Label}}</b>
+                                    <div class="Icon" ng-show="x.Url==null || x.Url==''">
+                                        <span title="Open Camera" ng-click="OpenCam($index,'Damage')"><i class="icon-camera"></i></span>
+                                        <label title="Upload Image" style="margin:0px;">
+                                            <span><i class="icon-images2"></i></span>
+                                            <input type="file" style="display:none" accept="image/*" id="Damg{{$index}}" index="{{$index}}" name="pic" accept="image/*" onchange="angular.element(this).scope().DamageImagesUpload(this,'Damage')">
+                                        </label>
+
+                                    </div>
+                                    <div class="Icon" ng-show="x.Url!=null && x.Url!=''">
+                                        <a title="View Image" ng-click="OpenImageView(x.Url,'AddDamageModel')"><span><i class="icon-eye"></i></span></a>
+                                        <span title="Delete Image" ng-click="RemoveDmageImage($index,'Damage')"><i class="icon-bin"></i></span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-success" ng-click="SubmitDamage(Damage,true)">Save</button>
+                            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="DamageReports" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Damage by {{DamageCntr}}
+                    </h5>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row text-center mb-2" ng-repeat="x in DamageReports">
+                        <div class="card" style=" border-radius: 7px; overflow: hidden;">
+                            <table class="DetailsTable">
+                                <tr>
+                                    <th>Seq.No</th>
+                                    <th>{{$index+1}}</th>
+                                </tr>
+                                <tr>
+                                    <th>Capture date</th>
+                                    <th>{{x.CreatedAt |date:'dd/MM/yyyy HH:mm:ss'}}</th>
+                                </tr>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>
+                                        <span class="badge approvedStatus " ng-show="x.Status==2">Approved</span>
+                                        <span class="badge waitingForApprovalStatus" ng-show="x.Status==5||x.Status==1">Waiting for approval </span>
+                                        <span class="badge rejectStatus" ng-show="x.Status==3">Rejected</span>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>
+                                        <span ng-click="PrintDamage(x.Id)" class="mr-2" ng-show="x.Status==2"><i class="icon-printer"></i></span>
+                                        <span ng-click="ShowDamageOnCntrById(x.Id)" class="mr-2"><i class="icon-info22"></i></span>
+                                    </th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                            <span class="btn btn-primary pull-right ml-2" ng-click="AddDamage(DamageCntr,DamageFKOPRActivityId,DamageFKActivity ,DamageFKOPRActivityId,DamageLAActivityId)">Record Damage</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ShowDamage" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn"data-dismiss="modal" aria-label="Close">
+                    <button class="close" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Cargo report
+                        <span title="Print report" ng-show="ApproveStatus == 2" class="printBdage">
+                            <a target="_blank" href="{{ShowDamageData.ReportLink}}">
+                                <i class="icon-printer"></i>
+                            </a>
+                        </span>
+                    </h5>
+
+                </div>
+                <div class="modal-body">
+                    <table style="width: 100%; border: none !important;">
+                        <tr>
+                            <th class="p-2">Damage By</th>
+                            <td class="p-2">{{ShowDamageData.DamageBy}}</td>
+                        </tr>
+                        <tr ng-if="!stringNullorEmpty(ShowDamageData.DamageByReason)">
+                            <th class="p-2">Terminal (INCIDENT) Reason</th>
+                            <td class="p-2">{{ShowDamageData.DamageByReason}}</td>
+                        </tr>
+                        <tr>
+                            <th class="p-2">Damage Type</th>
+                            <td class="p-2">{{ShowDamageData.DamageType}}</td>
+                        </tr>
+                        <tr ng-if="ApproveStatus !=1">
+                            <th class="p-2">Approved By</th>
+                            <td class="p-2">{{ShowDamageData.UpdatedBy}}</td>
+                        </tr>
+                        <tr ng-if="ShowDamageData.CargoType !=null && ShowDamageData.CargoType !=''">
+                            <th class="p-2">Cargo type </th>
+                            <td class="p-2">{{ShowDamageData.CargoType}}</td>
+                        </tr>
+                        <tr ng-if="ShowDamageData.CargoQuantity !=null && ShowDamageData.CargoQuantity !=''">
+                            <th class="p-2">Cargo Quantity </th>
+                            <td class="p-2">{{ShowDamageData.CargoQuantity}}</td>
+                        </tr>
+                        <tr>
+                            <th class="p-2">Status</th>
+                            <td class="p-2">
+                                <b ng-show="ApproveStatus == 0" class="badge inProgressStatus">InProgress</b>
+                                <b ng-show="ApproveStatus == 1" class="badge waitingForApprovalStatus">Waiting for approval</b>
+                                <b ng-show="ApproveStatus == 2" class="badge approvedStatus">Approved</b>
+                                <b ng-show="ApproveStatus == 3" class="badge rejectStatus">Rejected</b>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="row">
+                        <div class="col-md-6" ng-repeat="c in ShowDamageData.Images">
+                            <div class="imageBox">
+                                <div class="Imgheader" title="{{c.Label}}">
+                                    <b>{{c.Label}}</b>
+                                </div>
+                                <div class="ImgContent" ng-click="OpenImageView(c.Url,'ShowDamage')">
+                                    <img src="{{c.Url}}" style="height:50px!important;cursor:pointer" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end">
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+
+
+                            @if (User.IsInRole(ExamPortal.Model.EntityModel.Enums.UserRole.Admin.ToString()) || User.IsInRole(ExamPortal.Model.EntityModel.Enums.UserRole.ExamSuperVisor.ToString()))
+                            {
+                                <button ng-show="ApproveStatus == 1" class="btn btn-danger" data-dismiss="modal" ng-click="ShowConfirmation(ShowDamageData,false)">Reject</button>
+                                <button ng-show="ApproveStatus == 1" class="btn btn-success" data-dismiss="modal" ng-click="ShowConfirmation(ShowDamageData,true)">Approve</button>
+
+                            }
+                            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="DamagePreview" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" ng-click="CloseDamagePreview()">
+                    <i ng-click="CloseDamagePreview()" class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Cargo report preview!</h5>
+                </div>
+                <div class="modal-body" style=" letter-spacing: 0.8px; max-height: 500px; overflow:auto">
+                    <div class="row">
+                        <table class="DetailsTable">
+                            <tr>
+                                <th>Container</th>
+                                <td>{{DamagePreview.Cntr}}</td>
+                            </tr>
+                            <tr>
+                                <th>Damage By</th>
+                                <td>{{DamagePreview.Occurs}}</td>
+                            </tr>
+                            <tr>
+                                <th>{{DamagePreview.Occurs}} Reason</th>
+                                <td>{{DamagePreview.OccursReason}}</td>
+                            </tr>
+
+                            <tr>
+                                <th>Severity</th>
+                                <td>{{DamagePreview.Severity}}</td>
+                            </tr>
+                            <tr>
+                                <th>Cargo type</th>
+                                <td>{{DamagePreview.CargoType}}</td>
+                            </tr>
+                            <tr>
+                                <th>Cargo quantity</th>
+                                <td>{{DamagePreview.CargoQuantity}}</td>
+                            </tr>
+
+                            <tr ng-repeat="x in DamagePreview.Images">
+                                <th>{{x.Label}}</th>
+                                <td>
+                                    <div ng-click="OpenImageView(x.Url, 'DamagePreview')" class="viewImag d-inline-block"><i class="icon-eye"></i> View </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <div ng-repeat="item in SelectedDMGrsnDeparts">
+                                        <div class="cursor-pointer" title="{{item.Emails}}"><b><u>{{item.ReportDepartment}}</u></b></div>
+                                        <div class="depMessage" style="text-align: right; font-family: makdessi-regular">
+                                            {{item.ArMessage}}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer" style=" padding: 9px; ">
+                    <button class="btn btn-primary" ng-click="SubmitDamage(DamagePreview,false)" data-dismiss="modal">Confirm</button>
+                    <button class="btn btn-reset" ng-click="CloseDamagePreview()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+ 
+<!--Record Damage-->

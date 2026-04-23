@@ -1,0 +1,1123 @@
+﻿@using ExamPortal.Model.Resources
+@using ExamPortal.Model.EntityModel.Enums
+<!DOCTYPE html>
+<html lang="en" ng-app="ExamPortalApp">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Vessel System will help to reduce paper work!.">
+    <meta name="author" content="DpWorld">
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <!-- Favicon icon -->
+    <link rel="icon" type="~/Content/images/favicon.ico" sizes="16x16" href="~/Content/images/favicon.ico">
+    <title>DPWorld Jeddah Exam</title>
+
+    <!-- Global stylesheets -->
+    @{
+        Random rnd = new Random();
+        int random_number = rnd.Next(100000, 999999);
+    }
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+    <link href="~/Content/css/icons/icomoon/styles.min.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/css/icons/material/styles.min.css" rel="stylesheet" />
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/css/bootstrap_limitless.min.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/css/layout.min.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/css/components.min.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/css/colors.min.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/popup/jquery-confirm.min.css" rel="stylesheet" />
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+    <link href="~/Content/RemixIcon_Fonts_v4.7.0/fonts/remixicon.css" rel="stylesheet" />
+    <link href="~/Content/css/Style.css" rel="stylesheet" />
+    <link href="~/Scripts/SlimSelect/SlimSelectCustomStyle.css" rel="stylesheet" />
+    <link href="~/Scripts/SlimSelect/slimselect.min.css" rel="stylesheet" />
+    <link href="~/Content/css/FileUploadToastCSS.css" rel="stylesheet" />
+    <style>
+
+
+        .sidebar-light .nav-sidebar .nav-item > .nav-link.active {
+            background-color: #00be5e !important;
+            color: white;
+        }
+    </style>
+
+    <!-- /global stylesheets -->
+    @*<script>
+            function CheckInternet() {
+                let Check = "online";
+                $.ajax({
+                    url: 'https://www.google.com/',
+                    dataType: 'jsonp',
+                    timeout: 1000,
+
+                    error: function (xhr) {
+                        x = xhr.status;
+                        //     console.log(angular.element(document.querySelector('[ng-controller="baseCtrl"]')).scope().activeService=0);
+                        if (xhr.status == 404) {
+                            //internet connection working
+                            toastr.warning("Internet Conectivity Issue, please check your internet", "Alert Message");
+                            Check = "offline";
+                        }
+
+                    }
+                });
+                return Check;
+            }
+        </script>*@
+</head>
+<body ng-controller="baseCtrl" ng-init="initializeBase('@System.Configuration.ConfigurationManager.AppSettings["hardRefreshVersion"]','@System.Configuration.ConfigurationManager.AppSettings["BypassOperatorLocation"]')" id="minisidebar" class="ng-cloak" ng-cloak>
+    <div ng-if="(activeService > 0 || BackgroundactiveService > 0) && Verifed=='Check'">
+        <div ng-init="RunInAjaxServices()"></div>
+    </div>
+
+
+
+    <!-- Main navbar -->
+
+    <div class="navbar navbar-expand-md navbar-light navbar-static" style="z-index: 999999;">
+        <div class="navbar-brand" style="padding:0px!important;margin-top: 8px;">
+            <a href="#" class="d-inline-block">
+                <img src="~/Content/images/dpworld-logo.png" style="height:45px!important;" />
+            </a>
+        </div>
+        <div class="d-md-none">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
+                <i class="icon-tree5" style="color:white"></i>
+            </button>
+            <button class="navbar-toggler sidebar-mobile-main-toggle" type="button">
+                <i class="icon-paragraph-justify3" style="color:white"></i>
+            </button>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-mobile">
+            <ul class="navbar-nav" style="margin-right:auto">
+                <li class="nav-item">
+                    <a href="#" class="navbar-nav-link sidebar-control sidebar-main-toggle d-none d-md-block">
+                        <i class="icon-paragraph-justify3"></i>
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav" style="margin-right:auto">
+                <li class="nav-item text-white" id="RefreshTime">
+
+                </li>
+            </ul>
+            <ul class="navbar-nav" style="margin-left:auto">
+                <li class="nav-item text-white d-none">
+                    <div class="dropdown mr-2 mt-2" ng-show="Alerts.length > 0">
+                        <a href="#" class="" data-toggle="dropdown" style="cursor:pointer; color:white; text-decoration:none;">
+                            <i class="icon-bell2" ng-class="{'pulse-red': Alerts.length > 0}"></i>
+                            <sup ng-if="Alerts != undefined && Alerts.length > 0"><span class="badge-pill heartbit bg-warning-400  mr-2" style="width: auto; margin-left: -16px; font-size: inherit; padding: 7px 5px ">{{Alerts.length}}</span></sup>
+
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right" style="min-width: 250px; max-height: 300px; overflow-y: auto; padding: 0px;">
+                            <div style="padding: 9px 9px; font-weight: 700; font-size: 14px; background: #483d81; color: white; position: sticky; top: 0px; z-index: 99999; box-shadow: 1px 1px 7px 5px #79777742; ">FKJA Alerts</div>
+                            <ul style="padding:0px;">
+                                <li class="dropdown-item" ng-repeat="x in Alerts" style="white-space: normal; border-bottom: 1px solid #eee;">
+                                    <div><i class="icon-warning22 mr-2"></i>{{x.Message}}</div> <span title="Copy to clipboard" ng-click="copytoClipBoard(x.Cntr)"><i class="icon-copy3"></i></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item text-white" id="DashboardInfo" style="display:none;">
+                    <a style="color:white !important" href="/Dashboard/DashboardDictionary" target="_blank">  <span style=" margin-right: 13px; margin-top: 12px;display:flex"><i class="icon-help"></i></span></a>
+                </li>
+
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"></li>
+
+                @{Html.RenderPartial("_LoginPartial"); }
+
+            </ul>
+        </div>
+    </div>
+    <!-- /main navbar -->
+    <!-- Page content -->
+    <div class="page-content ">
+        <!-- Main sidebar -->
+        <div class="sidebar sidebar-light sidebar-main sidebar-expand-md" style="z-index: 999999">
+            <!-- Sidebar mobile toggler -->
+            <div class="sidebar-mobile-toggler text-center">
+                <a href="#" class="sidebar-mobile-main-toggle">
+                    <i class="icon-arrow-left8"></i>
+                </a>
+                Navigation
+                <a href="#" class="sidebar-mobile-expand">
+                    <i class="icon-screen-full"></i>
+                    <i class="icon-screen-normal"></i>
+                </a>
+            </div>
+            <!-- /sidebar mobile toggler -->
+            <!-- Sidebar content -->
+            <div class="sidebar-content">
+
+                <div class="card card-sidebar-mobile">
+                    <ul class="nav nav-sidebar ng-cloak" data-nav-type="accordion" ng-cloak>
+
+
+                        <!--OOG End-->
+                        <!--Record Exam Events Start-->
+
+                        @if ((User.IsInRole("Admin") || User.IsInRole("ExamSuperVisor") || User.IsInRole("SeniorSuperVisor") || User.IsInRole("TallyClerk")) && (ViewBag.CurrentUser.UsersApplication.Contains("Exam_Activity") || ViewBag.CurrentUser.UsersApplication.Contains("LCL_Container")))
+                        {
+                            <li class="nav-item nav-item-submenu" ng-show="_currentUser.UsersApplication.includes('LCL_Container') && (_currentUser.UserType.includes('SeniorSuperVisor') || _currentUser.UserType.includes('ExamSuperVisor') || _currentUser.UserType.includes('Admin'))">
+                                <a href="@Url.Action("Index", "LCL")" class="nav-link">
+                                    <i class="icon-calculator"></i>
+                                    <span>
+                                        LCL Container
+                                    </span>
+                                </a>
+                            </li>
+
+                            <li ng-show="(_currentUser.UsersApplication.includes('Exam_Activity')  && (_currentUser.UserType.includes('Operations') || _currentUser.UserType.includes('ExamOfficer') || _currentUser.UserType.includes('SeniorSuperVisor')|| _currentUser.UserType.includes('ExamSuperVisor') || _currentUser.UserType.includes('TallyClerk') || _currentUser.UserType.includes('Admin')))" class="nav-item nav-item-submenu">
+
+                                <a href="#" class="nav-link" id="RecordServices">
+                                    <i class="ri-ship-fill"></i>
+                                    <span>
+                                        Record Service Events <br />
+                                        <small>V.5.8.1</small>
+                                    </span>
+                                </a>
+
+                                <ul class="nav nav-group-sub collapse" data-submenu-title="Record Service Events">
+
+                                    @if (User.IsInRole(UserRole.ExamSuperVisor.ToString()) || User.IsInRole(UserRole.SeniorSuperVisor.ToString()) || User.IsInRole(UserRole.Admin.ToString()))
+                                    {
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("Index", "ContainerLocation")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Container Location Update
+                                                </span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (User.IsInRole(UserRole.ExamSuperVisor.ToString()) || User.IsInRole(UserRole.SeniorSuperVisor.ToString()) || User.IsInRole(UserRole.Admin.ToString()))
+                                    {
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("VipCargo", "ActivityCapture")" class="nav-link">
+                                                <sup ng-if="VIPCargoCount != undefined && VIPCargoCount != null"><span class="badge-pill heartbit bg-warning-400  mr-2" style="width: auto; margin-left: -16px; font-size: inherit; padding: 7px 5px ">{{VIPCargoCount}}</span></sup>
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    VIP Cargoes
+                                                </span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (User.IsInRole(UserRole.ExamSuperVisor.ToString()) || User.IsInRole(UserRole.SeniorSuperVisor.ToString()) || User.IsInRole(UserRole.Admin.ToString()) || User.IsInRole(UserRole.TallyClerk.ToString()))
+                                    {
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("InspectionGang", "ActivityCapture")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Inspection Gang
+                                                </span>
+                                            </a>
+                                        </li>
+                                    }
+                                    <li class="nav nav-item">
+                                        <a href="@Url.Action("RecordEvent", "ActivityCapture")" class="nav-link">
+                                            <i class="ri-circle-fill"></i>
+                                            <span>
+                                                Inspection Events
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav nav-item">
+                                        <a href="@Url.Action("IncidentReport", "ActivityCapture")" class="nav-link">
+                                            <i class="ri-circle-fill"></i>
+                                            <span>
+                                                Incident Report
+                                            </span>
+                                        </a>
+                                    </li>
+                                    @if (User.IsInRole("ExamSuperVisor") || User.IsInRole("Admin") || User.IsInRole("SeniorSuperVisor"))
+                                    {
+                                        <li class="nav nav-item">
+                                            <a href="/ActivityCapture/EventPage?Event=UNIT_GENERATE_OUTLOC_EDI&IsManualEvent=false&Display=Submit location to customs" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Submit location to customs
+                                                </span>
+                                            </a>
+                                        </li>
+                                    }
+
+                                    @if (User.IsInRole(UserRole.TallyClerk.ToString()))
+                                    {
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("RejectedReports", "ActivityCapture")" class="nav-link">
+                                                <sup><span class="badge-pill heartbit bg-warning-400  mr-2" style="width: auto; margin-left: -16px; font-size: inherit; padding: 7px 5px ">{{RejectedReportsCount.BadStowageStatus+RejectedReportsCount.DamageStatus+RejectedReportsCount.ExcessCargoStatus+RejectedReportsCount.RequestTechnicianStatus+RejectedReportsCount.DifficultToStripStatus}}</span></sup>
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Rejected Reports
+                                                </span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (User.IsInRole(UserRole.ExamSuperVisor.ToString()))
+                                    {
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("ReadyforREpack", "ActivityCapture")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Pending for Repack
+                                                </span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (User.IsInRole(UserRole.ExamSuperVisor.ToString()) || User.IsInRole(UserRole.SeniorSuperVisor.ToString()) || User.IsInRole("Admin"))
+                                    {
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("PendingApprovalReports", "ActivityCapture")" class="nav-link">
+                                                <sup ng-if="ApprovalCountForLayout != undefined && ApprovalCountForLayout != null"><span class="badge-pill heartbit bg-warning-400  mr-2" style="width: auto; margin-left: -16px; font-size: inherit; padding: 7px 5px ">{{ApprovalCountForLayout}}</span></sup>
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Pending Approval Reports
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("PendingApprovalEvents", "ActivityCapture")" class="nav-link">
+                                                <sup ng-if="ApprovalEventCountForLayout != undefined && ApprovalEventCountForLayout != null"><span class="badge-pill heartbit bg-warning-400  mr-2" style="width: auto; margin-left: -16px; font-size: inherit; padding: 7px 5px ">{{ApprovalEventCountForLayout}}</span></sup>
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Pending Approval Events
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("Index", "HighRiskCargo")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    High-risk cargo monitoring
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("OngoingDelays", "ActivityCapture")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Ongoing Delays
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("CapturedEvents", "ActivityCapture")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Inspection Events History
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                        if (User.IsInRole(UserRole.SeniorSuperVisor.ToString()) || User.IsInRole(UserRole.ExamSuperVisor.ToString()) || User.IsInRole("Admin"))
+                                        {
+                                            <li class="nav nav-item">
+                                                <a href="@Url.Action("LOCbyBayan", "ActivityCapture")" class="nav-link">
+                                                    <i class="ri-circle-fill"></i>
+                                                    <span>
+                                                        Bayan level LOC
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        }
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("ExamUploadedFiles", "ActivityCapture")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Exam Gallery
+                                                </span>
+                                            </a>
+                                        </li>
+                                        @*<li class="nav nav-item">
+                                                <a href="@Url.Action("CaptureHold", "ActivityCapture")" class="nav-link">
+                                                    <i class="ri-circle-fill"></i>
+                                                    <span>
+                                                        Captured Holds
+                                                    </span>
+                                                </a>
+                                            </li>*@
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("ReopenContainer", "ActivityCapture")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Re-Exam Container
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("RequestReexam", "ActivityCapture")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Request Re-exam
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("LOCReport", "ActivityCapture")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    LOC Report
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                    }
+
+
+
+
+                                    @if (User.IsInRole("Admin") || User.IsInRole("SeniorSuperVisor"))
+                                    {
+                                        @*<ul class="nav nav-group-sub">*@
+                                        <li class="nav nav-item nav-item-submenu">
+                                            <a href="#" class="nav-link nav-item-subitem cursor-pointer">
+                                                <i class="icon-cog52"></i>
+                                                <span>
+                                                    Settings
+                                                </span>
+                                            </a>
+                                            <ul class="nav nav-group-sub" data-submenu-title="Setting" style="display:none">
+
+                                                <li class="nav-item">
+
+                                                    @if (User.IsInRole("Admin"))
+                                                    {
+                                                        <a href="@Url.Action("AddEvent", "ActivityCapture")" class="nav-link">
+                                                            <span>
+                                                                Manage TOS Events
+                                                            </span>
+                                                        </a>
+                                                        <a href="@Url.Action("AddEventManually", "ActivityCapture")" class="nav-link">
+                                                            <span>
+                                                                Manage Manual Events
+                                                            </span>
+                                                        </a>
+                                                        <a href="@Url.Action("AddCustomHold", "ActivityCapture")" class="nav-link">
+                                                            <span>
+                                                                Manage Custom Hold
+                                                            </span>
+                                                        </a>
+                                                        @*5.8 salman*@
+                                                        <a href="@Url.Action("ContractorMemberSetup", "ActivityCapture")" class="nav-link">
+                                                            <span>
+                                                                Contractor Member Setup
+                                                            </span>
+                                                        </a>
+                                                    }
+                                                    <a href="@Url.Action("ContractorSetup", "ActivityCapture")" class="nav-link">
+                                                        <span>
+                                                            Contractor Setup
+                                                        </span>
+                                                    </a>
+
+                                                </li>
+
+                                            </ul>
+                                        </li>
+                                    }
+                                </ul>
+
+                            </li>
+                            if (User.IsInRole("SeniorSuperVisor") || User.IsInRole("Admin"))
+                            {
+                                <li ng-show="(_currentUser.UsersApplication.includes('Exam_Activity')  && (_currentUser.UserType.includes('Operations') || _currentUser.UserType.includes('ExamOfficer') || _currentUser.UserType.includes('SeniorSuperVisor')|| _currentUser.UserType.includes('ExamSuperVisor') || _currentUser.UserType.includes('TallyClerk') || _currentUser.UserType.includes('Admin')))" class="nav-item nav-item-submenu">
+
+                                    <a href="#" class="nav-link" id="RecordServices">
+                                        <i class="ri-file-check-fill"></i>
+                                        <span>
+                                            Exam Inquiry
+                                        </span>
+                                    </a>
+                                    <ul class="nav nav-group-sub collapse" data-submenu-title="Exam Inquiry">
+                                        <li class="nav-item">
+
+
+                                            <a href="/ExamVerification/index?Type=INI" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    INI Inquiry
+                                                </span>
+                                            </a>
+                                            <a href="/ExamVerification/index?Type=Journey" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Container Journey
+                                                </span>
+                                            </a>
+
+                                        </li>
+
+                                    </ul>
+                                </li>
+                            }
+
+
+
+
+
+
+
+
+
+
+                        }
+                        <!--Record Exam Events End-->
+                        <!--Auction Containers Start-->
+                        <li ng-show="_currentUser.UsersApplication.includes('Auction_Cntr') || _currentUser.UserType.includes('ExamOfficer') || _currentUser.UserType.includes('LegalTeam')  || _currentUser.UserType.includes('Admin')" class="nav-item nav-item-submenu">
+
+                            <a href="#" class="nav-link" id="AuctionContainers">
+                                <i class="ri-safe-2-fill"></i>
+                                <span>
+                                    Auction Containers
+                                </span>
+                            </a>
+                            <ul class="nav nav-group-sub collapse" data-submenu-title="AuctionContainers">
+                                <li class="nav-item">
+
+
+                                    <a href="/AuctionCntr/Index" class="nav-link">
+                                        <i class="ri-circle-fill"></i>
+                                        <span>
+                                            Awaiting Actions
+                                        </span>
+                                    </a>
+                                    <a href="/AuctionCntr/ExamAuctionDashboardIndex" class="nav-link" ng-show="_currentUser.UserType.includes('ExamOfficer') || _currentUser.UserType.includes('Admin')">
+                                        <i class="ri-circle-fill"></i>
+                                        <span>
+                                            Overage Containers Dashboard
+                                        </span>
+                                    </a>
+
+                                </li>
+                            </ul>
+                        </li>
+                        <!--Auction Containers End-->
+
+                        @if (User.IsInRole("Admin") || User.IsInRole("ReeferModule"))
+                        {
+                            <li ng-show="((_currentUser.UsersApplication.includes('ExamActivity_Reefer')  && _currentUser.UserType.includes('ReeferModule')) || _currentUser.UserType.includes('Admin'))" class="nav-item nav-item-submenu">
+                                <a href="#" class="nav-link" id="ReeferService">
+                                    <i class="ri-list-check-3"></i>
+
+                                    <span>
+                                        Reefer Checklist
+                                    </span>
+                                </a>
+                                <ul class="nav nav-group-sub collapse" data-submenu-title="Reefer Module Checklist" id="ReeferCollapse">
+
+                                    <li class="nav-item">
+
+                                        <a href="@Url.Action("Index", "ReeferChecklist")" class="nav-link" id="R_History">
+                                            <i class="ri-circle-fill"></i>
+                                            <span>
+                                                History
+                                            </span>
+                                        </a>
+                                        <a href="@Url.Action("Submit", "ReeferChecklist")" class="nav-link" id="R_Submit">
+                                            <i class="ri-circle-fill"></i>
+                                            <span>
+                                                Report new checklist
+                                            </span>
+                                        </a>
+                                        @if (User.IsInRole("Admin") || User.IsInRole("SeniorSuperVisor"))
+                                        {
+                                            <a href="@Url.Action("DepartmentSettings", "ReeferChecklist")" class="nav-link" id="R_Department">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Department settings
+                                                </span>
+                                            </a>
+                                        }
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+
+
+                        @if (User.IsInRole("Admin") || User.IsInRole("ExamDashboard") || User.IsInRole("Operations"))
+                        {
+
+                            <li class="nav-item nav-item-submenu" ng-show="_currentUser.UsersApplication.includes('Exam_Activity')">
+
+                                <a href="#" class="nav-link">
+                                    <i class="ri-dashboard-fill"></i>
+                                    <span>
+                                        Management Options
+                                        <br />
+                                        <small>V.5.5</small>
+                                    </span>
+
+                                </a>
+
+                                <ul class="nav nav-group-sub collapse" data-submenu-title="Management Options">
+                                    <li class="nav nav-item">
+                                        <a href="@Url.Action("ExamActivitySummary", "Dashboard")" class="nav-link">
+                                            <i class="ri-circle-fill"></i>
+                                            <span>
+                                                Examination Snapshot
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav nav-item">
+                                        <a href="@Url.Action("BuildingScan", "Dashboard")" class="nav-link">
+                                            <i class="ri-circle-fill"></i>
+                                            <span>
+                                                Examination Building / Mobile Scan
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav nav-item">
+                                        <a href="@Url.Action("ExamActivity", "Dashboard")" class="nav-link">
+                                            <i class="ri-circle-fill"></i>
+                                            <span>
+                                                Examination Details
+                                            </span>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav nav-item">
+                                        <a href="/Dashboard/ShiftPerformance" class="nav-link">
+                                            <i class="ri-circle-fill"></i>
+                                            <span>
+                                                Shift Performance
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav nav-item">
+                                        <a href="/Dashboard/ContainerInquiry" class="nav-link">
+                                            <i class="ri-circle-fill"></i>
+                                            <span>
+                                                Container Inquiry
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav nav-item">
+                                        <a href="/Dashboard/ContainerInquiryReport" class="nav-link">
+                                            <i class="ri-circle-fill"></i>
+                                            <span>
+                                                Container Inquiry Report
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav nav-item">
+                                        <a href="@Url.Action("DashboardDictionary", "Dashboard")" class="nav-link">
+                                            <i class="ri-circle-fill"></i>
+                                            <span>
+                                                Dictionary
+                                            </span>
+                                        </a>
+                                    </li>
+                                    @if (User.IsInRole("Admin") || User.IsInRole("SuperUser"))
+                                    {
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("SLAConfig", "Dashboard")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    SLA Configuration
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                        @*faisal request to Change  the Access Permission only to SuperUser Pervious Condition User.IsInRole("HSCodeModifier") 13-04-2026*@
+
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("index", "HScodeConfig")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    HS Code Configuration
+                                                </span>
+                                            </a>
+                                        </li>
+                                    }
+
+                                </ul>
+
+                            </li>
+
+                        }
+
+                        @if (User.IsInRole("Customs") || User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item" ng-show="_currentUser.UsersApplication.includes('CntrInquiry') || _currentUser.UsersApplication.includes('Container Inquiry')">
+                                <a href="@Url.Action("Index", "ContainerInquiry")" class="nav-link">
+                                    <i class="ri-safe-2-fill"></i>
+
+                                    <span>
+                                        Container Inquiry
+                                    </span>
+                                </a>
+                            </li>
+
+                        }
+                        @if (User.IsInRole(UserRole.Admin.ToString()) || User.IsInRole(UserRole.ForkliftOperator.ToString()) || User.IsInRole(UserRole.FK_DTSOperator.ToString()) || User.IsInRole(UserRole.Exam_Runner.ToString()) || User.IsInRole(UserRole.SuperUser.ToString()) || User.IsInRole(UserRole.SeniorSuperVisor.ToString()) || User.IsInRole(UserRole.ExamSuperVisor.ToString()) || User.IsInRole(UserRole.FK_ForkliftTechnician.ToString()))
+                        {
+
+                            <li class="nav-item nav-item-submenu" ng-show="_currentUser.UsersApplication.includes('Forklift_Assignment')">
+
+                                <a href="#" class="nav-link">
+                                    <i class="ri-apps-fill"></i>
+                                    <span>
+                                        FOS <br />
+                                        <small>V.1.3</small>
+                                    </span>
+                                </a>
+                                <ul class="nav nav-group-sub collapse" data-submenu-title="Fork Lift App">
+
+                                    @if (User.IsInRole(UserRole.FK_ForkliftTechnician.ToString()) || User.IsInRole(UserRole.Admin.ToString()))
+                                    {
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("ForkliftDelays","FKL_Examination")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Forklift Delays
+                                                </span>
+                                            </a>
+                                        </li>
+
+
+                                    }
+                                    @if (User.IsInRole(UserRole.Admin.ToString()) || User.IsInRole(UserRole.SeniorSuperVisor.ToString()) || User.IsInRole(UserRole.ExamSuperVisor.ToString()) || User.IsInRole(UserRole.SuperUser.ToString()))
+                                    {
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("NewDashboard","FKL_Examination")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Dashboard
+                                                </span>
+                                            </a>
+                                        </li>
+
+
+                                    }
+                                    @if (User.IsInRole(UserRole.Admin.ToString()) || User.IsInRole(UserRole.SuperUser.ToString()))
+                                    {
+                                        <li class="nav nav-item">
+                                            <a href="/LA_Examination/Index" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    KPI
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="nav nav-item">
+                                            <a href="/FKL_Examination/ActivitySummary" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Completed Activity
+                                                </span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (User.IsInRole(UserRole.ForkliftOperator.ToString()) || User.IsInRole(UserRole.FK_DTSOperator.ToString()))
+                                    {
+
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("OperatorActivity", "FKL_Examination")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Operator Activity
+                                                </span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (User.IsInRole(UserRole.SuperUser.ToString()) || User.IsInRole(UserRole.Admin.ToString()) || User.IsInRole(UserRole.SeniorSuperVisor.ToString()))
+                                    {
+
+                                        <li class="nav nav-item  nav-item-submenu">
+                                            <a class="nav-link nav-item-subitem cursor-pointer">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Settings
+                                                </span>
+                                            </a>
+
+                                            <ul class="nav nav-group-sub collapse" data-submenu-title="Settings">
+                                                @if (User.IsInRole(UserRole.SuperUser.ToString()) || User.IsInRole(UserRole.Admin.ToString()))
+                                                {
+                                                    <li class="nav nav-item">
+                                                        <a href="@Url.Action("Index", "FKL_CheckList")" class="nav-link">
+                                                            <i class="ri-circle-fill"></i>
+                                                            <span>
+                                                                Checklist
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav nav-item">
+                                                        <a href="@Url.Action("Inventory", "FKL_Examination")" class="nav-link">
+                                                            <i class="ri-circle-fill"></i>
+                                                            <span>
+                                                                Inventory
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (User.IsInRole(UserRole.SuperUser.ToString()) || User.IsInRole(UserRole.Admin.ToString()) || User.IsInRole(UserRole.SeniorSuperVisor.ToString()))
+                                                {
+                                                    <li class="nav nav-item">
+                                                        <a href="@Url.Action("ForkLiftSetup", "FKL_Examination")" class="nav-link">
+                                                            <i class="ri-circle-fill"></i>
+                                                            <span>
+                                                                Forklift Setup
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (User.IsInRole(UserRole.SuperUser.ToString()) || User.IsInRole(UserRole.Admin.ToString()))
+                                                {
+                                                    <li class="nav nav-item">
+                                                        <a href="@Url.Action("YardArea", "FKL_Examination")" class="nav-link">
+                                                            <i class="ri-circle-fill"></i>
+                                                            <span>
+                                                                Yard Area
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @*Faizan Work 08042026 Start*@
+                                                @if (User.IsInRole(UserRole.SuperUser.ToString()) || User.IsInRole(UserRole.Admin.ToString()))
+                                                {
+                                                    <li class="nav nav-item">
+                                                        <a href="@Url.Action("DeviceMapping", "FKL_Examination")" class="nav-link">
+                                                            <i class="ri-circle-fill"></i>
+                                                            <span>
+                                                                Device Mapping
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @*Faizan Work 08042026 End*@
+                                            </ul>
+                                        </li>
+
+                                    }
+                                </ul>
+                            </li>
+                        }
+
+                        @if (User.IsInRole(UserRole.Admin.ToString()) || User.IsInRole(UserRole.Exam_Runner.ToString()) || User.IsInRole(UserRole.ExamSuperVisor.ToString()) || User.IsInRole(UserRole.SeniorSuperVisor.ToString()))
+                        {
+                            <li class="nav-item nav-item-submenu" ng-show="_currentUser.UsersApplication.includes('Labour_Assignment')">
+
+                                <a href="#" class="nav-link">
+                                    <i class="ri-apps-fill"></i>
+                                    <span>
+                                        Labor Assignment <br />
+                                        <small>V.1.0</small>
+                                    </span>
+                                </a>
+                                <ul class="nav nav-group-sub collapse" data-submenu-title="Labor Assignment">
+                                    @if (User.IsInRole(UserRole.Admin.ToString()) || User.IsInRole(UserRole.ExamSuperVisor.ToString()) || User.IsInRole(UserRole.SeniorSuperVisor.ToString()))
+                                    {
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("Dashboard", "LaborAssignment")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Dashboard
+                                                </span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (User.IsInRole(UserRole.Admin.ToString()) || User.IsInRole(UserRole.Exam_Runner.ToString()))
+                                    {
+                                        <li class="nav nav-item">
+                                            <a href="@Url.Action("RunnerTab", "LaborAssignment")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Runner Activity
+                                                </span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (User.IsInRole(UserRole.Admin.ToString()) || User.IsInRole(UserRole.ExamSuperVisor.ToString()) || User.IsInRole(UserRole.SeniorSuperVisor.ToString()))
+                                    {
+                                        <li class="nav nav-item d-none">
+                                            <a href="@Url.Action("RequestTechnicianRetained", "LaborAssignment")" class="nav-link">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    DTS Retain
+                                                </span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (User.IsInRole(UserRole.Admin.ToString()) || User.IsInRole(UserRole.ExamSuperVisor.ToString()) || User.IsInRole(UserRole.SeniorSuperVisor.ToString()))
+                                    {
+                                        <li class="nav nav-item  nav-item-submenu">
+                                            <a class="nav-link nav-item-subitem cursor-pointer">
+                                                <i class="ri-circle-fill"></i>
+                                                <span>
+                                                    Settings
+                                                </span>
+                                            </a>
+                                            <ul class="nav nav-group-sub collapse" data-submenu-title="Settings">
+                                                <li class="nav nav-item">
+                                                    <a href="@Url.Action("Index", "LA_Examination")" class="nav-link">
+                                                        <i class="ri-circle-fill"></i>
+                                                        <span>
+                                                            KPI
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li class="nav nav-item">
+                                                    <a href="@Url.Action("RequiredLabor", "LaborAssignment")" class="nav-link">
+                                                        <i class="ri-circle-fill"></i>
+                                                        <span>
+                                                            Required Labor Setup
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    }
+
+
+                                </ul>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item" id="UsersPage">
+                                <a href="@Url.Action("Index", "Users")" class="nav-link">
+                                    <i class="ri-user-2-fill"></i>
+                                    <span>
+                                        Users
+                                    </span>
+                                </a>
+                            </li>
+
+                        }
+
+
+                        <!-- /page kits -->
+                    </ul>
+                </div>
+                <!-- /main navigation -->
+            </div>
+            <!-- /sidebar content -->
+
+        </div>
+        <!-- /main sidebar -->
+        <!-- End Page wrapper  -->
+        <!-- Main content -->
+        <div class="content-wrapper">
+            <div ng-if="activeService > 0" class="preloader activeServices">
+                <img src="~/Content/images/ajax-loader.gif" alt="Alternate Text" />
+            </div>
+            <!-- Content area -->
+            <div class="content pt-0">
+                @RenderBody()
+                <div id="fu-toast-container-main"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- End Wrapper -->
+    <!--Image View Modal Start-->
+    <div id="myModal" class="modal-img">
+        <span class="close-img" ng-click="HideModel2('myModal')">&times;</span>
+        <img class="modal-content-img" id="img01">
+        <div id="caption-img"></div>
+
+    </div>
+    <!--Image View Modal End-->
+    <!-- All Jquery -->
+
+    @{Html.RenderPartial("_ChangePasswordPartial"); }
+    <script type="text/javascript">
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <text>
+            var _currentUser = JSON.parse('@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.CurrentUser))');
+            </text>
+            }
+
+
+        //$(document).on('click', 'activeli', function () {
+
+        //    $(this).addClass('activeclick').siblings().removeClass('activeclick');
+
+        //})
+
+
+    </script>
+    @*<script>
+
+            jQuery(function ($) {
+                $("ul a")
+                    .click(function (e) {
+                        var link = $(this);
+
+                        var item = link.parent("li");
+
+                        if (item.hasClass("active")) {
+                            item.removeClass("active").children("a").removeClass("active");
+                        } else {
+                            item.addClass("active").children("a").addClass("active");
+                        }
+
+                        if (item.children("ul").length > 0) {
+                            var href = link.attr("href");
+                            link.attr("href", "#");
+                            setTimeout(function () {
+                                link.attr("href", href);
+                            }, 300);
+                            e.preventDefault();
+                        }
+                    })
+                    .each(function () {
+                        var link = $(this);
+                        if (link.get(0).href === location.href) {
+                            link.addClass("active").parents("li").addClass("active");
+                            return false;
+                        }
+                    });
+            });
+        </script>*@
+    <!-- Core JS files -->
+    <script src="~/Scripts/jquery.min.js"></script>
+    @*<script src="~/Scripts/js/main/jquery.min.js"></script>*@
+    <script src="https://code.jquery.com/jquery-migrate-3.4.1.min.js"></script>
+    <script src="~/Scripts/js/main/bootstrap.bundle.min.js"></script>
+    @*<script src="~/Scripts/js/plugins/blockui.min.js"></script>*@
+    <script src="~/Scripts/SlimSelect/slimselect.min.js"></script>
+
+    <!-- Theme JS files -->
+    @*<script src="~/Scripts/js/plugins/uniform.min.js"></script>
+        <script src="~/Scripts/js/plugins/echarts.min.js"></script>
+        <script src="~/Scripts/js/plugins/d3.min.js"></script>
+        <script src="~/Scripts/js/plugins/d3_tooltip.js"></script>
+        <script src="~/Scripts/js/plugins/switchery.min.js"></script>*@
+    <script src="~/Scripts/js/plugins/moment/moment.min.js"></script>
+    <script src="~/Scripts/js/plugins/daterangepicker.js"></script>
+    <script src="~/Scripts/js/app.js"></script>
+
+    <script src="~/Scripts/js/plugins/interactions.min.js"></script>
+    <script src="~/Scripts/js/plugins/selects/select2.min.js"></script>
+    <script src="~/Scripts/js/plugins/selects/form_select2.js"></script>
+    <script src="~/Scripts/js/plugins/datatables.min.js"></script>
+    <script src="~/Scripts/js/plugins/datatables_basic.js"></script>
+    <script src="~/Scripts/plugin/angular.js"></script>
+    <script src="~/Scripts/toastr.js"></script>
+
+    <script src="~/Content/popup/jquery-confirm.min.js"></script>
+    @*<script src="~/Scripts/plugin/pdfmake.js"></script>*@
+    @*<script src="~/Scripts/plugin/vfs_fonts.js"></script>*@
+    @*<script src="~/Scripts/plugin/ui-grid.js"></script>*@
+    @*<script src="~/Scripts/select.js"></script>*@
+    @*<script src="~/Scripts/ui-grid.min.js"></script>*@
+
+    @*<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.js"></script>*@
+    <script src="~/Scripts/plugin/angular-sanitize.js"></script>
+
+    <link href="~/Content/TagInput/bootstrap-tagsinput.css" rel="stylesheet" />
+    <script src="~/Content/TagInput/bootstrap-tagsinput.js">
+    </script>
+    <!-- /theme JS files -->
+    @Scripts.Render("~/Scripts/angularApp/main")
+    @*@RenderSection("scripts", required: false)*@
+
+
+    <div class="modal fade" id="AutoRefreshModal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #002a3a; color: white; padding: 12px;">
+                    <h5 class="modal-title" id="exampleModalLabel">ERROR</h5>
+                    @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>*@
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-1 co-lg-1">   <img src="~/Content/images/warning (2).png" style=" height: 35px;" /></div>
+                        <div class="col-md-11 co-lg-11"> The version of the application running on your browser is out of date. we will auto-reload the web page to get the latest version. You may need to login again after the reload</div>
+
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-primary" onclick="location.reload(true)">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                setInterval(function () {
+                    var $scope = angular.element($("body")).scope();
+                    $scope.$apply(function () { });
+                }, 1000);
+            });
+        </script>*@
+    <div class="toast-bottom-parent">
+
+        <div class="bottom-toast" id="bottomToast{{$index}}" ng-repeat="item in NotificationList">
+            <div class="bottom-toast-header">
+                <img height="30px" src="~/Content/images/container.png" class="rounded me-2" ng-click="RedirectPendingNotification(item)">
+                <strong class="me-auto" ng-click="RedirectPendingNotification(item)">{{item.SubmittedBy}}</strong>
+                <button type="button" class="toast-bottom-close" ng-click="hidenotification($index)">
+                    <i class="icon-close2"></i>
+                </button>
+                <small class="text-muted" style="font-size: 9px; float: right; margin-top: 6px "> {{item.SubmittedAt | date:'dd:MM:yy HH:mm:ss'}}</small>
+
+            </div>
+            <div class="bottom-toast-body" ng-click="RedirectPendingNotification(item)">
+                {{item.Notification}} is waiting for approval on {{item.Container}}.
+            </div>
+        </div>
+
+    </div>
+
+    <div class="toast-bottom-parent RejectedReports">
+
+
+    </div>
+
+    <div class="toast-bottom-parent NotificationBox">
+
+
+    </div>
+
+</body>
+</html>
+<script>
+    function hidePushNotification(currentele) {
+        $(currentele).closest('.bottom-toast').fadeOut(300, function () { $(this).remove(); });
+    }
+    window.onload = function () {
+        document.getElementById('minisidebar').className = 'sidebar-xs';
+
+        $(".modal-dialog").addClass("modal-dialog-centered");
+    };
+
+    $(document).ready(function () {
+        $('.modal').on('show.bs.modal', function (e) {
+            console.log('A modal was opened:', this.id);
+            $('.navbar').addClass('modal-open-custom');
+            $('.sidebar').addClass('modal-open-custom');
+        });
+        $('.modal').on('hidden.bs.modal', function (e) {
+            if ($('.modal.show').length === 0) {
+                $('.navbar').removeClass('modal-open-custom');
+                $('.sidebar').removeClass('modal-open-custom');
+            }
+        });
+
+
+    })
+</script>

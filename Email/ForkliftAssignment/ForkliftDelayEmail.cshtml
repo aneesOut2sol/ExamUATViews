@@ -1,0 +1,19 @@
+﻿@model ExamPortal.Model.Features.FKL_Examinxation.ForkliftSetup.Delays.ForkliftDetailsEmail
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_EmailLayoutUpdated.cshtml";
+    var index = 0;
+}
+
+<div style=" text-align:left;">
+    <b>
+        Dear Eng Team,
+    </b>
+
+    <p>
+        Forklift number @(Model.FKNumber)
+        Low battery @(Model.BatteryCharging) Delay at @DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss") Click <a href="@System.Configuration.ConfigurationManager.AppSettings["ProjectSchedulerUrl"]/Fkl_Examination/ForkliftDelays">FOS</a> to login/update
+    </p>
+</div>
+
+<b>Reported By: </b> @Model.EmpId

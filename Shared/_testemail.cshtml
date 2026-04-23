@@ -1,0 +1,197 @@
+﻿   <!--EasyTrn Start-->
+
+<li class="nav-item nav-item-submenu" @*ng-show="_currentUser.UsersApplication.includes('DPW_EasyTrn')"*@>
+    <a href="#" class="nav-link">
+        <i class="icon-stack-text"></i>
+
+        <span>
+            EasyTraning 
+        </span>
+    </a>
+    <ul class="nav nav-sidebar" data-nav-type="accordion">
+        <!-- Main -->
+        @if (User.IsInRole("Trainer") || User.IsInRole("Admin") || User.IsInRole("ManagerTraining") || User.IsInRole("SeniorTrainer"))
+        {
+            <li class="nav-item ">
+                <a href="@Url.Action("Index","Home")" class="nav-link">
+                    <i class="icon-home"></i>
+                    <span>
+                        Dashboard
+                    </span>
+                </a>
+            </li>
+
+        }
+
+        @if (User.IsInRole("Admin") || User.IsInRole("SeniorTrainer") || User.IsInRole("ManagerTraining"))
+        {
+            <li class="nav-item ">
+                <a href="@Url.Action("Index","EmployeeProfile")" class="nav-link">
+                    <i class="icon-user"></i>
+                    <span>
+                        Employee's Profile
+                    </span>
+                </a>
+            </li>
+
+        }
+        @if (User.IsInRole("Trainer") || User.IsInRole("Admin") || User.IsInRole("ManagerTraining") || User.IsInRole("SeniorTrainer"))
+        {
+            <li class="nav-item">
+                <a href="@Url.Action("Index","Training")" class="nav-link">
+                    <i class="icon-clipboard3"></i>
+                    <span>
+                        Employee's Trainings
+                    </span>
+                </a>
+            </li>
+        }
+
+
+        @if (User.IsInRole("Admin") || User.IsInRole("SeniorTrainer") || User.IsInRole("ManagerTraining"))
+        {
+            <li class="nav-item">
+                <a href="@Url.Action("Index","GroupTraining")" class="nav-link">
+                    <i class="icon-clipboard3"></i>
+                    <span>
+                        Group Trainings
+                    </span>
+                </a>
+            </li>
+        }
+
+
+        @*<li class="nav-item">
+                <a href="@Url.Action("AssessmentForm","Asssesment")" class="nav-link">
+                    <i class="icon-magazine "></i>
+                    <span>
+                        Assesment Forms
+                    </span>
+                </a>
+            </li>*@
+
+        @if (User.IsInRole("Trainer") || User.IsInRole("Admin") || User.IsInRole("ManagerTraining") || User.IsInRole("SeniorTrainer"))
+        {
+            <li class="nav-item nav-item-submenu">
+                <a class="nav-link">
+
+                    <i class="icon-magazine"></i>
+                    <span>
+                        Assessment
+                    </span>
+                </a>
+                <ul class="nav nav-group-sub" data-submenu-title="Forms" style="display: none;">
+                    <li class="nav-item"><a href="@Url.Action("AssessmentForm","Asssesment")" class="nav-link">Assessments +</a></li>
+                    <li class="nav-item"><a href="@Url.Action("AssessmentList", "Asssesment")" class="nav-link">All Assesments</a></li>
+
+                </ul>
+            </li>
+        }
+        @if (User.IsInRole("Staff"))
+        {
+            <li class="nav-item">
+                <a href="@Url.Action("AssessmentList", "Asssesment")" class="nav-link">
+                    <i class="icon-magazine"></i>
+                    <span>
+                        My Assesments
+                    </span>
+                </a>
+            </li>
+        }
+
+
+
+
+
+
+        <li class="nav-item nav-item-submenu">
+            <a class="nav-link">
+                <i class="icon-calendar52"></i>
+                <span>
+                    Calendar
+                </span>
+            </a>
+            <ul class="nav nav-group-sub" data-submenu-title="Forms" style="display: none;">
+                <li class="nav-item"><a href="@Url.Action("TrnCal","TrainingCalendar")" class="nav-link">Training Calendar</a></li>
+                <li class="nav-item"><a href="@Url.Action("TrainerCal","TrainingCalendar")" class="nav-link">Trainer Calendar</a></li>
+                <li class="nav-item"><a href="@Url.Action("DailyActivitiesOTC","TrainingCalendar")" class="nav-link">Daily Calendar</a></li>
+
+            </ul>
+        </li>
+
+        <li class="nav-item nav-item-submenu">
+            <a class="nav-link">
+                <i class="icon-snowflake"></i>
+                <span>
+                    Library
+                </span>
+            </a>
+            <ul class="nav nav-group-sub" data-submenu-title="Forms" style="display: none;">
+                <li class="nav-item"><a href="@Url.Action("Index","SOP")" class="nav-link">SOP Specs</a></li>
+                <li class="nav-item"><a href="@Url.Action("TraininigContent","SOP")" class="nav-link">Traininig Content</a></li>
+
+            </ul>
+        </li>
+
+
+
+
+        @if (User.IsInRole("Trainer") || User.IsInRole("Staff") || User.IsInRole("ManagerTraining") || User.IsInRole("SeniorTrainer"))
+        {
+            <li class="nav-item">
+                <a href="@Url.Action("MyProfile","User")" class="nav-link">
+                    <i class="icon-user"></i>
+                    <span>
+                        My Profile
+                    </span>
+                </a>
+            </li>
+        }
+
+
+        @*<li class="nav-item">
+                <a href="@Url.Action("Index", "KnowledgeBase")" class="nav-link">
+                    <i class="icon-stack3"></i>
+                    <span>
+                        Training Content
+                    </span>
+                </a>
+            </li>*@
+
+        @if (User.IsInRole("Admin"))
+        {
+            <li class="nav-item nav-item-submenu">
+                <a href="@Url.Action("Index","ScheduleSetup")" class="nav-link">
+                    <i class="icon-cog52"></i>
+                    <span>
+                        Settings
+                    </span>
+                </a>
+                <ul class="nav nav-group-sub" data-submenu-title="Forms" style="display: none;">
+                    <li class="nav-item "><a href="@Url.Action("Index","User")" class="nav-link"> Users</a></li>
+                    <li class="nav-item"><a href="@Url.Action("Index","Position")" class="nav-link">Position</a></li>
+                    <li class="nav-item"><a href="@Url.Action("AllTraining","Training")" class="nav-link">Training</a></li>
+                    <li class="nav-item"><a href="@Url.Action("Index","Asssesment")" class="nav-link">Assessment Form</a></li>
+                    <li class="nav-item"><a href="@Url.Action("ConnectAssessment","Asssesment")" class="nav-link">Connect Assessment</a></li>
+                    <li class="nav-item"><a href="@Url.Action("Add","SOP")" class="nav-link">SOP Doc's</a></li>
+                    <li class="nav-item"><a href="@Url.Action("Index","Voilation")" class="nav-link">Violation</a></li>
+                    @*<li class="nav-item">
+                            <a href="@Url.Action("AssessmentForm", "Asssesment")" class="nav-link">
+                                <i class="icon-clipboard3"></i>
+                                <span>
+                                    Assessment Form
+                                </span>
+                            </a>
+                        </li>*@
+
+                    @*<li class="nav-item"><a href="@Url.Action("Index","TrainingHours")" class="nav-link">Training Hours</a></li>
+                        <li class="nav-item"><a href="@Url.Action("Index","TrainingContent")" class="nav-link">Training Content</a></li>*@
+                </ul>
+            </li>
+        }
+        <!-- /page kits -->
+    </ul>
+</li>
+
+
+<!--EasyTrn End-->

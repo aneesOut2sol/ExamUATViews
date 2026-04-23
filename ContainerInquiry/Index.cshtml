@@ -1,0 +1,323 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .windowmode::-webkit-scrollbar-track, .mobileview::-webkit-scrollbar-track {
+        display: none !important;
+    }
+    tbody tr:nth-child(even) td {
+        background: none !important;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f7f7ff !important;
+    }
+
+    .table td, .table th {
+        border: none !important;
+    }
+
+    .table td, .table tr {
+        border: none;
+    }
+
+    #FiltersCollapse .card-body {
+        background: none !important;
+    }
+
+    .windowmode {
+        height: 450px;
+        overflow-y: scroll;
+        overflow-x: visible !important;
+        padding: 0px;
+        width: 100%;
+    }
+
+    .mobileview {
+        height: 450px;
+        overflow-y: scroll;
+        overflow-x: visible !important;
+        padding: 0px;
+        width: 100%;
+        background: #fff !important;
+        display: none;
+    }
+
+    .mobileviewcontent {
+        display: inline-block;
+        position: relative;
+        top: 10px;
+        left: 5px;
+        font-family: 'Pilat Wide';
+    }
+
+    .mobileview .card {
+        margin-bottom: 18px !important;
+    }
+
+    .mobileview td {
+        font-size: 10px;
+        color: #898989
+    }
+
+    @@media(min-width: 300px) and (max-width: 790px) {
+        .windowmode {
+            display: none;
+        }
+
+        .mobileview {
+            display: block;
+        }
+    }
+</style>
+<div class="ng-cloak" ng-cloak ng-controller="CustomCntrInquiryCtrl" ng-init="init()">
+
+
+    <!--Filter Section Start-->
+    <div class="card mt-5 shadow" id="FiltersCollapse">
+        <h3 class="card-header" style="background-color: var( --dpw-bg-color) !important; color: #fff; padding: 10px;">
+            Container Inquiry
+        </h3>
+        <div class="card-body mt-3 ">
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label>Search by container</label>
+                    <input type="text" name="" autocomplete="off" class="form-control width-fix autoCaps" ng-model="search.Container">
+
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Search by Bayan</label>
+                    <input type="text" class="form-control " ng-model="search.Bayan">
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Search by Stage</label>
+                    <select data-placeholder="Stage" multiple="multiple" ng-model="searchStage" class="form-control select" ng-change="SearchByStage(searchStage)" data-fouc>
+                        <option value="Waiting for customs seal cut">Waiting for customs seal cut</option>
+                        <option value="Cargo strip in progress">Cargo strip in progress</option>
+                        <option value="Waiting for customs clearance">Waiting for customs clearance</option>
+                        <option value="Waiting for customs seal apply">Waiting for customs seal apply</option>
+                        <option value="Cargo repack in progress">Cargo repack in progress</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Filter Section End-->
+    <!-- Item Counter -->
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="CounterCard">
+                <b>Total item: </b>  <span id="counts">{{(ContainerRecords | filter:search).length}}</span>
+            </div>
+        </div>
+    </div>
+    <!-- /Item Counter -->
+
+    <div class="windowmode">
+        <table class="table table-striped">
+            <thead>
+                <tr class="table-card-head">
+                    <th>
+
+                        <span class="Dsc" ng-click="SortRecords('Container','Asc',$event)" ng-show="ContainerAsc">
+                            Container
+                            <i class="icon-arrow-down22"></i>
+                        </span>
+                        <span class="Asc" ng-click="SortRecords('Container','Dsc',$event)" ng-show="ContainerDsc">
+                            Container
+                            <i class="icon-arrow-up22"></i>
+                        </span>
+                    </th>
+                    <th>
+
+                        <span class="Dsc" ng-click="SortRecords('Location','Asc',$event)" ng-show="LocationAsc">
+                            Location
+                            <i class="icon-arrow-down22"></i>
+                        </span>
+                        <span class="Asc" ng-click="SortRecords('Location','Dsc',$event)" ng-show="LocationDsc">
+                            Location
+                            <i class="icon-arrow-up22"></i>
+                        </span>
+                    </th>
+                    <th>
+                        <span class="Dsc" ng-click="SortRecords('Bayan','Asc',$event)" ng-show="BayanAsc">
+                            Bayan No
+                            <i class="icon-arrow-down22"></i>
+                        </span>
+                        <span class="Asc" ng-click="SortRecords('Bayan','Dsc',$event)" ng-show="BayanDsc">
+                            Bayan No
+                            <i class="icon-arrow-up22"></i>
+                        </span>
+
+                    </th>
+
+                    <th title=" 'Elapsed HRS' indicates the total hours that have elapsed since the last exam related activity is performed.">
+
+                        <span class="Dsc" ng-click="SortRecords('Elapsedhrs','Asc',$event)" ng-show="ElapsedhrsAsc">
+                            Elapsed HRS
+                            <i class="icon-arrow-down22"></i>
+                        </span>
+                        <span class="Asc" ng-click="SortRecords('Elapsedhrs','Dsc',$event)" ng-show="ElapsedhrsDsc">
+                            Elapsed HRS
+                            <i class="icon-arrow-up22"></i>
+                        </span>
+                    </th>
+                    <th title="The OverAll HRS indicates the total hours that has been elapsed since the container is booked for inspection.">
+                        <span class="Dsc" ng-click="SortRecords('Overallhrs','Asc',$event)" ng-show="OverallhrsAsc">
+                            Overall HRS
+                            <i class="icon-arrow-down22"></i>
+                        </span>
+                        <span class="Asc" ng-click="SortRecords('Overallhrs','Dsc',$event)" ng-show="OverallhrsDsc">
+                            Overall HRS
+                            <i class="icon-arrow-up22"></i>
+                        </span>
+                    </th>
+                    <th>
+
+                        <span class="Dsc" ng-click="SortRecords('Stage','Asc',$event)" ng-show="StageAsc">
+                            Stage
+                            <i class="icon-arrow-down22"></i>
+                        </span>
+                        <span class="Asc" ng-click="SortRecords('Stage','Dsc',$event)" ng-show="StageDsc">
+                            Stage
+                            <i class="icon-arrow-up22"></i>
+                        </span>
+                    </th>
+                    <th>
+
+                        <span class="Dsc" ng-click="SortRecords('HSCode','Asc',$event)" ng-show="StageAsc">
+                            HSCode
+                            <i class="icon-arrow-down22"></i>
+                        </span>
+                        <span class="Asc" ng-click="SortRecords('HSCode','Dsc',$event)" ng-show="StageDsc">
+                            HSCode
+                            <i class="icon-arrow-up22"></i>
+                        </span>
+                    </th>
+                    <th>
+
+                        <span class="Dsc" ng-click="SortRecords('Cargotype','Asc',$event)" ng-show="StageAsc">
+                            Cargotype
+                            <i class="icon-arrow-down22"></i>
+                        </span>
+                        <span class="Asc" ng-click="SortRecords('Cargotype','Dsc',$event)" ng-show="StageDsc">
+                            Cargotype
+                            <i class="icon-arrow-up22"></i>
+                        </span>
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in ContainerRecords | filter:search ">
+                    <td class="autoCaps">{{item.Container}}</td>
+                    <td>{{item.Location}}</td>
+                    <td>{{item.Bayan}}</td>
+                    <td>{{item.DwellHrs}}</td>
+                    <td>{{item.OverallHrs}}</td>
+                    <td>{{item.CustomStage}}</td>
+                    <td>{{item.HSCode}}</td>
+                    <td>{{item.Cargotype}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+    <div class="mobileview">
+
+        <div class="card shadow m-0" ng-repeat="x in ContainerRecords | filter :search" style="overflow:visible">
+            <table width="100%">
+                <thead class="shadow">
+                    <tr>
+                        <th style="padding: 5px 18px; color: var( --dpw-bg-color) " colspan="3">{{x.Container}} ({{x.Bayan}})</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align:center">
+                            <img style="height:30px;" src="~/Content/images/output-onlinepngtools.png" />
+                        </td>
+                        <td>
+                            <table width="100%">
+                                <tr>
+                                    <td>Location:</td>
+                                    <td>{{x.Location}}</td>
+                                </tr>
+                                <tr>
+                                    <td title=" 'Elapsed HRS' indicates the total hours that have elapsed since the last exam related activity is performed.">
+                                        Elapsed HRS:
+                                    </td>
+                                    <td>{{x.DwellHrs}}</td>
+                                </tr>
+                                <tr>
+                                    <td title="The OverAll HRS indicates the total hours that has been elapsed since the container is booked for inspection.">
+                                        Overall HRS:
+                                    </td>
+                                    <td>{{x.OverallHrs}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Stage:</td>
+                                    <td>{{x.CustomStage}}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+    <div class="ColumnsDescription mt-5">
+
+
+        <div class="row">
+            <div class="col-md-6 col-lg-6 col-12">
+                <div class="accordion" id="accordionElapsed">
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Elapsed HRS
+                                </button>
+                            </h2>
+                        </div>
+
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionElapsed">
+                            <div class="card-body">
+                                "Elapsed HRS" indicates the total hours that have elapsed since the last exam related activity is performed.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-6 col-12">
+                <div class="accordion" id="accordionExample">
+                    <div class="card">
+                        <div class="card-header" id="headingTwo">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Overall HRS
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                            <div class="card-body">
+                                The OverAll HRS indicates the total hours that has been elapsed since the container is booked for inspection.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+

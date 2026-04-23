@@ -1,0 +1,81 @@
+﻿
+
+@{
+
+    Layout = "~/Views/Shared/_EmailLayout.cshtml";
+}
+<style>
+    .badge {
+        padding: 3px 8px;
+        width: fit-content;
+        color: white;
+        border-radius: 5px;
+    }
+
+    .badge-info {
+        background-color: #006fff;
+    }
+
+    .badge-success {
+        background-color: #007e27;
+    }
+
+    .badge-danger {
+        background-color: red;
+    }
+
+    table tr td, table tr th {
+        padding: 5px;
+    }
+</style>
+
+<p>
+    The Customs inspection for the container @Model.Cntr is completed. please book the TAS appointment after container moved to delivery area
+    <br />
+    <table align="right" style="text-align: right; float: right; color: #666666">
+        <tr>
+            <td style="width: fit-content; text-align: right; color: #666666">
+                الرجاء حجز موعد الاستلام بعد نقل الحاوية الى منطقة التسليم ,@Model.Cntr تم الانتهاء من الفحص الجمركي للحاوية
+            </td>           
+        </tr>
+    </table>
+</p>
+
+@*<table style="width: 100%; border: 1px solid grey !important;">
+        <thead style="border: 1px solid grey !important;">
+            <tr style="font-weight: bold; border: 1px solid grey !important;">
+
+                <th style="border: 1px solid grey !important; width: fit-content; text-align: center; background-color: var( --dpw-bg-color); color: #fff;">
+                    Container
+                </th>
+
+                <th style="border: 1px solid grey !important; width: fit-content; text-align: center; background-color: var( --dpw-bg-color); color: #fff;">
+                    Event
+                </th>
+
+                <th style="border: 1px solid grey !important; width: fit-content; text-align: center; background-color: var( --dpw-bg-color); color: #fff;">
+                    Action
+                </th>
+            </tr>
+
+        </thead>
+        <tbody>
+
+
+            <tr style="border: 1px solid grey;">
+
+                <td style="border:1px solid grey;text-align:center;">
+                    @Model.Cntr
+                </td>
+                <td style="border:1px solid grey;text-align:center;">
+                    @Model.EventName
+                </td>
+                <td style="border:1px solid grey;text-align:center;">
+                    @Model.Action
+                </td>
+            </tr>
+        </tbody>
+    </table>*@
+
+
+

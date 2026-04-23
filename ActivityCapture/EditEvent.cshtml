@@ -1,0 +1,328 @@
+﻿
+@{
+    ViewBag.Title = "EditEvent";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .btnSecondary {
+        padding: 0px 100px;
+        line-height: 30px;
+        border: 1px solid var( --dpw-bg-color);
+        color: var( --dpw-bg-color);
+        border-radius: 5px;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .btnPrimary {
+        padding: 0px 100px;
+        line-height: 32px;
+        border: none;
+        background: var( --dpw-bg-color);
+        color: white;
+        border-radius: 3px;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .nowrap {
+        white-space: nowrap;
+    }
+
+    .bootstrap-tagsinput input {
+        width: 100% !important;
+        MARGIN-TOP: 8PX;
+        BACKGROUND: #ffffff;
+    }
+
+    .bootstrap-tagsinput {
+        BACKGROUND: whitesmoke;
+        min-height: 77PX !important;
+    }
+
+    .MasterDropDown {
+        position: absolute;
+        z-index: 9999999;
+    }
+
+    .CustomDropDown ul {
+        padding: 10px;
+    }
+
+    .CustomDropDown {
+        display: none;
+        position: relative;
+        top: -39px;
+        left: 13px;
+        z-index: 9999;
+        background: #f2f2f2f7;
+        padding: 0px;
+        border-radius: 7px;
+        border: 1px #00000026 solid;
+    }
+
+    .MasterDropDown .CustomDropDown ul li {
+        list-style-type: none;
+        padding: 4px;
+        color: #4a4848;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .bootstrap-tagsinput .tag:not([class*=bg-]) {
+        background-color: var( --dpw-bg-color);
+        color: #fff;
+    }
+
+    .bootstrap-tagsinput {
+        overflow-y: auto;
+        cursor: pointer;
+    }
+</style>
+
+<div class="ng-cloak" ng-cloak ng-controller="ActivityCaptureCtrl" ng-init="EditInit()">
+    <br />
+
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-stack-text mr-2"></i><span class="font-weight-semibold">Update Event</span></h4>
+            </div>
+            <div class="page-title d-flex">
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Simple list -->
+            <div class="card">
+                <h3 class="card-header" style="background-color:var( --dpw-bg-color) !important; color:#fff; padding:10px;">
+                    Update Event
+                </h3>
+                <div class="card-body mt-3">
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label> Functionality</label><span class="required-starig">*</span>
+                            <select data-placeholder="Please Select Functionality" class="form-control select-clear" ng-model="N4Event.FunctionalityId" id="EditFunc" data-fouc>
+                                <option></option>
+                                <option ng-selected="E.Id==N4Event.FunctionalityId" ng-repeat="E in CategoryList" value="{{E.Id}}">{{E.Category}}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 form-group">
+                            <label>Event </label><span class="required-starig">*</span>
+                            <select data-placeholder="Please Select Event" class="form-control select-clear" ng-model="N4Event.EventsName" id="EditEventName" data-fouc>
+                                <option></option>
+                                <option ng-selected="E.EventId==N4Event.EventsName" ng-repeat="E in EventsList" value="{{E.EventId}}">{{E.EventId}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Event Name</label><span class="required-starig">*</span>
+                            <input type="text" ng-model="N4Event.DisplayName" placeholder="Enter Event Name" class="form-control">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Hold</label>
+                            <select data-placeholder="Select Hold" id="HoldDD21" class="form-control select-clear" ng-model="N4Event.Hold" data-fouc>
+                                <option></option>
+                                <option ng-repeat="hold in HoldList" ng-selected="hold==N4Event.Hold" value="{{hold}}">{{hold}}</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-6 col-sm-6">
+                            <div class="form-group">
+                                <label>Sort Order</label><span class="required-starig">*</span>
+                                <input type="text" ng-model="N4Event.SortOrder" placeholder="Sorrt Order" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label class="">
+                                Pervious Seq Event
+                            </label>
+                            <select data-placeholder="Please Select  Pervious Seq Event" id="Vessels" class="form-control select-clear" ng-model="N4Event.DependOnEvent" data-fouc>
+                                <option></option>
+                                <option ng-selected="N4Event.DependOnEvent==E" ng-repeat="E in AllEvent track by $index" value="{{E}}">{{E}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label class="Starick">
+                                Status
+                            </label>
+                            <select data-placeholder="Please Select Status" id="Status" class="form-control select-clear" ng-model="N4Event.Status" data-fouc>
+                                <option></option>
+                                <option ng-selected="N4Event.Status=='true'" value="true">Active</option>
+                                <option ng-selected="N4Event.Status!='true'" value="false">InActive</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label>Additional Settings</label>
+                            <div class="check-group">
+                                <input ng-checked="N4Event.SendEmail" ng-model="N4Event.SendEmail" type="checkbox" />
+                                <label class="">
+                                    Send Email
+                                </label>
+                            </div>
+                            <div class="check-group">
+                                <input ng-model="N4Event.FieldChanges" ng-checked="N4Event.FieldChanges" type="checkbox" />
+                                <label class="">
+                                    Field Updates
+                                </label>
+                            </div>
+                            <div class="check-group">
+                                <input id="ReExam" ng-checked="N4Event.IsReExam" ng-model="N4Event.IsReExam" type="checkbox">
+                                <label for="ReExam">
+                                    Allow in Re-Exam
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label>Role Access</label>
+                            <div class="check-group">
+                                <input id="TallyClerk" ng-checked="N4Event.TallyClerkRole" ng-model="N4Event.TallyClerkRole" type="checkbox">
+                                <label class="" for="TallyClerk">
+                                    Tally Clerk
+                                </label>
+                            </div>
+                            <div class="check-group">
+                                <input id="ExamSuper" ng-checked="N4Event.ExamSuperRole" ng-model="N4Event.ExamSuperRole" type="checkbox">
+                                <label class="" for="ExamSuper">
+                                    Exam Supervisor
+                                </label>
+                            </div>
+                            <div class="check-group">
+                                <input id="ExamOfficer" ng-checked="N4Event.ExamOfficerRole" ng-model="N4Event.ExamOfficerRole" type="checkbox">
+                                <label class="" for="ExamOfficer">
+                                    Exam Officer
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" ng-show="N4Event.SendEmail">
+                <div class="card-header" style="background-color:var( --dpw-bg-color) !important; color:#fff; padding:10px;">
+                    <b>Email Settings</b>
+                </div>
+                <div class="card-body mt-3">
+                    <div class="row">
+                        <div class="col-md-4 col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                <label class="">Email Team</label><span class="required-starig">*</span>
+                                <select data-placeholder="Select Email" id="EmailTeam2" class="form-control select-clear" ng-model="N4Event.EmailTeam" data-fouc>
+                                    <option ng-selected="N4Event.EmailTeam=='Broker'" value="Broker">Broker</option>
+                                    <option ng-selected="N4Event.EmailTeam=='Committee'" value="Committee">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 col-md-4 col-sm-4" ng-show="N4Event.SendEmail && N4Event.EmailTeam=='Committee'">
+                            <div class="form-group">
+                                <label class="Starick">
+                                    Other Emails
+                                </label>
+                                <input type="text" id="CommiteeEditValue" />
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-4 col-sm-4" ng-show="N4Event.SendEmail">
+                            <div class="form-group">
+                                <label class="">
+                                    CC Emails
+                                </label>
+                                <input type="text" id="EditCCEmail" />
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-4 col-sm-4" ng-show="N4Event.SendEmail">
+                            <div class="form-group">
+                                <label class="Starick">
+                                    Email Message (Eng)
+                                </label>
+                                <textarea class="form-control" rows="3" ng-keydown="CheckKeyword($event,'EditEngMes')" ng-blur="DismisKeyword('EditEngMes')" ng-model="N4Event.EngMessage">{{N4Event.EngMessage}}</textarea>
+                                <div class="MasterDropDown">
+                                    <div class="CustomDropDown" id="EditEngMes" prop="EngMessage" Parent="N4Event">
+                                        <ul>
+                                            <li>Container_number </li>
+                                            <li>Container_location </li>
+                                            <li>Vessel_ref </li>
+                                            <li>Event_update_time </li>
+                                            <li>Updated_by </li>
+                                            <li>Event_name </li>
+                                            <li>Bayan_Number</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-4 col-sm-4" ng-show="N4Event.SendEmail">
+                            <div class="form-group">
+                                <label class="">
+                                    Email Message (Ar)
+                                </label>
+                                <textarea class="form-control" rows="3" ng-keydown="CheckKeyword($event,'EditArMes')" ng-blur="DismisKeyword('EditArMes')" ng-model="N4Event.ArMessage">{{N4Event.ArMessage}}</textarea>
+                                <div class="MasterDropDown">
+                                    <div class="CustomDropDown" id="EditArMes" prop="ArMessage" Parent="N4Event">
+                                        <ul>
+                                            <li>Container_number </li>
+                                            <li>Container_location </li>
+                                            <li>Vessel_ref </li>
+                                            <li>Event_update_time </li>
+                                            <li>Updated_by </li>
+                                            <li>Event_name </li>
+                                            <li>Bayan_Number</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" ng-show="N4Event.FieldChanges">
+                <h3 class="card-header" style="background-color:var( --dpw-bg-color) !important; color:#fff; padding:10px;">
+                    Event Field Update
+                </h3>
+                <div class="card-body mt-3">
+                    <div class="row" ng-show="N4Event.FieldChanges">
+                        <div class="col-md-3 form-group">
+                            <label class="Starick">
+                                Table Name
+                            </label>
+                            <br />
+                            <select ng-change="GetFieldName(N4Event.SrvEFTable)" data-placeholder="Please Select Table Name" id="TableName" class="form-control select-clear" ng-model="N4Event.SrvEFTable" data-fouc>
+                                <option></option>
+                                <option ng-repeat="E in EventUpdatTable" ng-selected="N4Event.SrvEFTable==E" value="{{E}}">{{E}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 form-group" ng-show="N4Event.SrvEFTable!=null && N4Event.SrvEFTable!=''">
+                            <label class="Starick">
+                                Field Name
+                            </label>
+                            <br />
+                            <select data-placeholder="Please Select Field Name" id="FieldName" class="form-control select-clear" ng-model="N4Event.SrvEFFieldName" data-fouc>
+                                <option></option>
+                                <option ng-repeat="E in EventUpdatField" ng-selected="N4Event.SrvEFFieldName==E" value="{{E}}">{{E}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 form-group" ng-show="N4Event.SrvEFFieldName!=null && N4Event.SrvEFFieldName!=''">
+                            <label class="Starick">
+                                Field value
+                            </label>
+                            <br />
+                            <input ng-model="N4Event.SrvValue" class="form-control" type="text" placeholder="Field Value">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="text-align:end;">
+                    <button type="submit" class="btnSecondary" ng-click="CloseN4EventModal()">Cancel</button>
+                    <button class="btnPrimary" ng-click="UpdateN4Event(N4Event)">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#EditEventName').trigger('change')
+    });
+</script>

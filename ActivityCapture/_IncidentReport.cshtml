@@ -1,0 +1,533 @@
+﻿<link href="~/Content/BootsrapDatetime/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+<link href="~/Content/BootsrapDatetime/css.css" rel="stylesheet" />
+<link href="~/Content/BootsrapDatetime/icon.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Content/BootsrapDatetime/ripples.min.js"></script>
+<script src="~/Content/BootsrapDatetime/material.min.js"></script>
+
+<script src="~/Scripts/js/plugins/moment/moment_locales.min.js"></script>
+<script src="~/Content/BootsrapDatetime/bootstrap-material-datetimepicker.js"></script>
+
+<div ng-controller="IncidentReportCtrl">
+
+    <!-- Incident Report--->
+    <div class="modal fade" id="incidentReportSubmitModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <div class="w-100">
+                        <h5 class="modal-title">
+                            #{{SelectedCntrDetailsForIncidentReport.Cntr}} Incident Report
+                            <span class="NewEventBadge pull-right">@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")</span>
+                        </h5>
+                    </div>
+                </div>
+                <div class="modal-body" style="max-height: 680px; overflow-y: auto; overflow-x: hidden;">
+                    <form autocomplete="off" class="was-validated">
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="Starick">Incident Type</label>
+                                <select data-placeholder="Please select incident type" class="form-control select-clear is-invalid" id="incidentTypeDD" ng-model="IR.ReportType" required data-fouc ng-change="IR_typechangetrigger(IR.ReportType)">
+                                    <option></option>
+                                    <option value="{{type.Type}}" ng-repeat="type in IR_TYPES">{{type.Type}}</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6" ng-show="IR.ReportType != 'Other'">
+                                <label class="Starick">Sub Category</label>
+                                <select data-placeholder="Please select sub category" class="form-control select-clear is-invalid" id="incidentSubCategoryDD" ng-model="IR.SubCategory" required data-fouc ng-show="IR.ReportType != undefined && IR_SubCategoryList.length>0">
+                                    <option></option>
+                                    <option value="{{sub}}" ng-repeat="sub in IR_SubCategoryList">{{sub}}</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6" ng-show="IR.ReportType == 'Other'">
+                                <label class="Starick">Sub Category</label>
+                                <input type="text" maxlength="100" ng-model="IR.SubCategory" required class="form-control is-invalid" />
+                            </div>
+                        </div>
+
+                        <div class="report-section mt-4">
+                            <h6><i class="icon-user"></i> Reported By</h6>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <table class="DetailsTable IncidentReportTable">
+                                    <tr>
+                                        <th>Employee Id</th>
+                                        <td><span ng-if="_currentUser.EmpId != null">{{_currentUser.EmpId}}</span><span ng-if="_currentUser.EmpId == null">0</span></td>
+                                        <th>Name</th>
+                                        <td>{{_currentUser.FullName}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Job Title</th>
+                                        <td>
+                                            <span ng-if="_currentUser.UserType.includes('Admin')">Admin</span>
+                                            <span ng-if="_currentUser.UserType.includes('SeniorSuperVisor')">Senior Supervisor</span>
+                                            <span ng-if="_currentUser.UserType.includes('ExamSuperVisor')">Yard Supervisor</span>
+                                            <span ng-if="_currentUser.UserType.includes('TallyClerk')">Tallyclerk</span>
+                                        </td>
+                                        <th>Shift</th>
+                                        <td>{{IR.Shift}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><Label class="Starick">Group</Label></th>
+                                        <td colspan="3">
+                                            <select class="form-control is-invalid" ng-model="IR.Group">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="report-section mt-4">
+                            <h6><i class="icon-info"></i> Incident Details</h6>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <table class="DetailsTable IncidentReportTable">
+                                    <!-- Existing rows remain same until Photos -->
+                                    <tr>
+                                        <th><label class="Starick">Date</label></th>
+                                        <td>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control date is-invalid" id="IncidentReportDate" placeholder="DD/MM/YYYY" readonly ng-model="IR.IncidentDate">
+                                                <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                            </div>
+                                        </td>
+                                        <th><label class="Starick">Time</label></th>
+                                        <td>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control date is-invalid" id="IncidentReportTime" placeholder="HH:mm" readonly ng-model="IR.IncidentTime">
+                                                <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Location</th>
+                                        <td>
+                                            <span  ng-if="!isStandAlonePage">{{IR.Block}}</span>
+                                            <input ng-if="isStandAlonePage" type="text" class="form-control" ng-model="IR.Block"  maxlength="6" />
+                                        </td>
+                                        <th>Sub Location</th>
+                                        <td>                                          
+                                            <span ng-if="!isStandAlonePage">{{IR.SubLocation}}</span>
+                                            <input ng-if="isStandAlonePage" type="text" class="form-control" ng-model="IR.SubLocation" maxlength="6" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th><label class="Starick">DPW Employee</label></th>
+                                        <td>
+                                            <select class="form-control is-invalid" ng-model="IR.DPWEmployee">
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        </td>
+                                        <th class="Starick">Contractor Name</th>
+                                        <td>
+                                            <select data-placeholder="Contractor" class="form-control select-clear" id="IR_ContractorAddDD" ng-model="IR.Contractor" ng-change="IR_GetContractorMember(IR.Contractor)" required data-fouc>
+                                                <option></option>
+                                                <option ng-repeat="contractor in ContractorList" ng-if="IR.DPWEmployee=='false' && contractor != 'DP World'" value="{{contractor}}">{{contractor}}</option>
+                                                <option ng-if="IR.DPWEmployee=='true'" value="DP World">DP World</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="Starick">Involved Person ID / Iqama / Name</th>
+                                        <td colspan="3">
+                                            <select data-placeholder="Involved person ID" class="form-control select-clear" id="IR_InvolvePersonAddDD" ng-model="IR.InvolvePersonIqamaId" ng-change="IR_PopulateInvolvePerson(IR.InvolvePersonIqamaId)" required data-fouc>
+                                                <option></option>
+                                                <option ng-repeat="mem in IR_ContractorMembers" ng-if="mem.EmpId != null" value="{{mem.EmpId}}">
+                                                    {{mem.EmpId}} - {{mem.EmpName}}
+                                                </option>
+                                            </select>
+
+                                        </td>
+                                        @*<th>Involved Person's Name</th>
+                                        <td>{{IR.InvovledPersonName}}</td>*@
+                                    </tr>
+                                    <tr>
+                                        <th>Position</th>
+                                        <td colspan="3">{{IR.InvovledPersonPosition}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="Starick">Human Injuries?</th>
+                                        <td>
+                                            <select class="form-control is-invalid" ng-model="IR.HumanInjury">
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        </td>
+                                        <th class="Starick">First Aid?</th>
+                                        <td>
+                                            <select class="form-control is-invalid" ng-model="IR.FirstAid">
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="Starick">Describe Injuries:</th>
+                                        <td colspan="3"><input type="text" class="form-control is-invalid" ng-model="IR.InjuriesDESC" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="Starick">Damages?</th>
+                                        <td>
+                                            <select class="form-control is-invalid" ng-model="IR.AnyDamage">
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        </td>
+                                        <th>Identify Damages:</th>
+                                        <td>
+                                            <select class="form-control" ng-class="{'is-invalid':IR.AnyDamage}" ng-model="IR.DamageType">
+                                                <option ng-repeat="item in IR_DamageTypes" value="{{item}}">{{item}}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th ng-class="{'Starick':IR.AnyDamage}">Describe Damages:</th>
+                                        <td colspan="3"><input type="text" class="form-control" ng-class="{'is-invalid':IR.AnyDamage}" ng-model="IR.DamageDESC" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="Starick">WI / SOP Available?</th>
+                                        <td>
+                                            <select class="form-control" ng-model="IR.WI_SOP_Available">
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        </td>
+                                        <th>Remark:</th>
+                                        <td><input type="text" class="form-control" ng-class="{'is-invalid':IR.WI_SOP_Available}" ng-model="IR.WI_SOP_Remarks" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="Starick">WI / SOP Followed?</th>
+                                        <td>
+                                            <select class="form-control" ng-model="IR.WI_SOP_Followed">
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        </td>
+                                        <th>Remark:</th>
+                                        <td><input type="text" class="form-control" ng-class="{'is-invalid':IR.WI_SOP_Followed}" ng-model="IR.WI_SOP_Followed_Remarks" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="Starick">Incident Description:</th>
+                                        <td colspan="3"><textarea rows="3" class="form-control is-invalid" ng-model="IR.IncidentDESC"></textarea></td>
+                                    </tr>
+
+                                    <!-- PHOTO UPLOAD SECTION -->
+                                    <tr>
+                                        <th class="Starick">Photos <span class="text-danger">(Min 1, Max 6)</span></th>
+                                        <td colspan="3">
+                                            <div class="photo-upload-container" id="photoDropZone">
+                                                <input type="file" id="photoInput" multiple accept="image/*" style="display:none;" />
+                                                <i class="fas fa-cloud-upload-alt"></i>
+                                                <p><strong>Click to upload</strong> or drag and drop</p>
+                                                <small class="text-muted">PNG, JPG, JPEG (Max 6 photos)</small>
+                                            </div>
+                                            <div id="photoPreview" class="photo-grid"></div>
+                                            <div class="photo-count" id="photoCount">0 photos selected</div>
+                                            <small id="photoError" class="text-danger" style="display:none;">Please upload at least 1 photo.</small>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th class="Starick">Action Taken:</th>
+                                        <td colspan="3"><textarea rows="2" class="form-control is-invalid" ng-model="IR.ActionTaken"></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="Starick">Initial Impact:</th>
+                                        <td colspan="3"><textarea rows="2" class="form-control is-invalid" ng-model="IR.InitalImpact"></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="Starick">Involved Person Statement:</th>
+                                        <td colspan="3">
+                                            <!-- Involved Person Photo Upload -->
+                                            <div class="mt-3">
+                                                <label class="form-label fw-bold text-primary">
+                                                    <i class="fas fa-camera me-1"></i><span class="text-danger">(Required - 1 photo)</span>
+                                                </label>
+                                                <div class="photo-upload-container statement-upload" id="statementPhotoDrop">
+                                                    <input type="file" id="statementPhotoInput" accept="image/*" style="display:none;" />
+                                                    <i class="fas fa-cloud-upload-alt"></i>
+                                                    <p><strong>Click to upload</strong> or drag and drop</p>
+                                                    <small class="text-muted">One photo of the involved person (required)</small>
+                                                </div>
+                                                <div id="statementPhotoPreview" class="d-flex align-items-center gap-2 mt-2"></div>
+                                                <small id="statementPhotoError" class="text-danger" style="display:none;">Please upload 1 photo of the involved person.</small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="Starick">Person In Charge Statement:</th>
+                                        <td colspan="3"><textarea rows="2" class="form-control is-invalid" ng-model="IR.InchargeStatement"></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="Starick">Witnesses:</th>
+                                        <td colspan="3"><textarea rows="2" class="form-control is-invalid" ng-model="IR.Witnesses"></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="3">
+                                            <span class="pull-right Starick">Verified by:</span>
+                                        </th>
+                                        <td>
+                                            <input type="text" class="form-control is-invalid" ng-model="IR.VerifiedBy" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-success" ng-click="SubmitIncidentReport(IR)">Save</button>
+                            <button class="btn btn-cancel" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Incident Report end--->
+    <!-- Incident Report--->
+    <div class="modal fade" id="showincidentReportModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <div class="w-100">
+                        <h5 class="modal-title">
+                            #{{IR_Data.Cntr}} <span ng-if="IR_Data.bl_nbr != null">({{IR_Data.bl_nbr}})</span> Incident Report
+                            <span ng-if="IR_Data.ApproveStatus == 0" class="PendingApprovalEvent pull-right">Pending for approval</span>
+                            <span ng-if="IR_Data.ApproveStatus == 1" class="Approvebadge pull-right">Approved</span>
+                            <span ng-if="IR_Data.ApproveStatus == 2" class="RejectedApprovalEvent pull-right">Rejected</span>
+                        </h5>
+                    </div>
+
+
+                </div>
+                <div class="modal-body" style="max-height: 680px; overflow-y: auto; overflow-x: hidden;">
+                    <div class="row">
+                        <div class="col-12">
+                            <table class="DetailsTable ViewIncidentReportTable">
+                                <tr>
+                                    <th>Date:</th>
+                                    <td colspan="3">{{IR_Data.CreatedAt | date:'dd/MM/yyyy'}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Time:</th>
+                                    <td colspan="3">{{IR_Data.CreatedAt | date:'HH:mm'}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Incident Type:</th>
+                                    <td colspan="3">{{IR_Data.ReportType}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Sub Category:</th>
+                                    <td colspan="3">{{IR_Data.SubCategory}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="report-section mt-4">
+                        <h6><i class="icon-user"></i> Reported By</h6>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <table class="DetailsTable ViewIncidentReportTable">
+                                <tr>
+                                    <th>Employee Id</th>
+                                    <td>{{IR_Data.Submittor_EmpId}}</td>
+                                    <th>Name</th>
+                                    <td>{{IR_Data.SubmittorFullName}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Job Title</th>
+                                    <td>{{IR_Data.Submittor_JobTitle}}</td>
+                                    <th>Shift</th>
+                                    <td>{{IR_Data.Shift}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Group</th>
+                                    <td colspan="3">{{IR_Data.Group}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="report-section mt-4">
+                        <h6><i class="icon-info"></i> Incident Details</h6>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <table class="DetailsTable ViewIncidentReportTable">
+                                <!-- Existing rows remain same until Photos -->
+                                <tr>
+                                    <th>Date:</th>
+                                    <td>{{IR_Data.IncidentDatetime | date:'dd/MM/yyyy'}}</td>
+                                    <th>Time:</th>
+                                    <td>{{IR_Data.IncidentDatetime | date:'HH:mm'}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Location</th>
+                                    <td>{{IR_Data.Block}}</td>
+                                    <th>Sub Location</th>
+                                    <td>{{IR_Data.SubLocation}}</td>
+                                </tr>
+                                <tr>
+                                    <th>DPW Employee</th>
+                                    <td>
+                                        <span ng-if="IR_Data.DPWEmployee==true">YES</span>
+                                        <span ng-if="IR_Data.DPWEmployee==false">NO</span>
+                                    </td>
+                                    <th>Contractor Name</th>
+                                    <td>{{IR_Data.Contractor}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Involved Person ID / Iqama</th>
+                                    <td>{{IR_Data.InvolvePersonIqamaId}}</td>
+                                    <th>Involved Person's Name</th>
+                                    <td>{{IR_Data.InvovledPersonName}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Position</th>
+                                    <td colspan="3">{{IR_Data.InvovledPersonPosition}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Human Injuries?</th>
+                                    <td>
+                                        <span ng-if="IR_Data.HumanInjury==true">YES</span>
+                                        <span ng-if="IR_Data.HumanInjury==false">NO</span>
+
+                                    </td>
+                                    <th>First Aid?</th>
+                                    <td>
+                                        <span ng-if="IR_Data.FirstAid==true">YES</span>
+                                        <span ng-if="IR_Data.FirstAid==false">NO</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Describe Injuries:</th>
+                                    <td colspan="3">{{IR_Data.InjuriesDESC}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Damages?</th>
+                                    <td>
+                                        <span ng-if="IR_Data.AnyDamage==true">YES</span>
+                                        <span ng-if="IR_Data.AnyDamage==false">NO</span>
+                                    </td>
+                                    <th>Identify Damages:</th>
+                                    <td>{{IR_Data.DamageType}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Describe Damages:</th>
+                                    <td colspan="3">{{IR_Data.DamageDESC}}</td>
+                                </tr>
+                                <tr>
+                                    <th>WI / SOP Available?</th>
+                                    <td>
+                                        <span ng-if="IR_Data.WI_SOP_Available==true">YES</span>
+                                        <span ng-if="IR_Data.WI_SOP_Available==false">NO</span>
+                                    </td>
+                                    <th>Remark:</th>
+                                    <td>{{IR_Data.WI_SOP_Remarks}}}</td>
+                                </tr>
+                                <tr>
+                                    <th>WI / SOP Followed?</th>
+                                    <td>
+                                        <span ng-if="IR_Data.WI_SOP_Followed==true">YES</span>
+                                        <span ng-if="IR_Data.WI_SOP_Followed==false">NO</span>
+                                    </td>
+                                    <th>Remark:</th>
+                                    <td>{{IR_Data.WI_SOP_Followed_Remarks}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Incident Description:</th>
+                                    <td colspan="3">{{IR_Data.IncidentDESC}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Photos</th>
+                                    <td colspan="3">
+                                        <div class="photo-item" ng-repeat="photo in IR_Data.IR_PhotoLibrary" style=" width: 100px; display: inline-block; margin-right: 20px; border: 1px solid grey;">
+                                            <img src="{{photo}}" ng-click="OpenImageView(photo,'showincidentReportModal')" />
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Action Taken:</th>
+                                    <td colspan="3">{{IR_Data.ActionTaken}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Initial Impact:</th>
+                                    <td colspan="3">{{IR_Data.InitalImpact}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Involved Person Statement:</th>
+                                    <td colspan="3">
+                                        <div class="photo-item" style=" width: 100px; display: inline-block; margin-right: 20px; border: 1px solid grey;">
+                                            <img src="{{IR_Data.StatementPhoto}}" ng-click="OpenImageView(IR_Data.StatementPhoto,'showincidentReportModal')" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Person In Charge Statement:</th>
+                                    <td colspan="3">{{IR_Data.InchargeStatement}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Witnesses:</th>
+                                    <td colspan="3">{{IR_Data.Witnesses}}</td>
+                                </tr>
+                                <tr>
+                                    <th colspan="3"><span class="pull-right">Verified by:</span></th>
+                                    <td>
+                                        {{IR_Data.VerifiedBy}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" ng-if="IR_ApproveRejectBtnsVisibiity(IR_Data)">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            @if (User.IsInRole("Admin") || User.IsInRole("SeniorSuperVisor") || User.IsInRole("ExamSuperVisor"))
+                            {
+                                <div class="btn btn-danger d-inline-block cursor-pointer" ng-click="ApproveRejectIncidentReport(IR_Data,'Reject')">Reject</div>
+                                <div class="btn btn-primary d-inline-block  cursor-pointer" ng-click="ApproveRejectIncidentReport(IR_Data,'Approve')">Approve</div>
+                            }
+                            <button class="btn btn-cancel d-inline-block  cursor-pointer" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Incident Report end--->
+
+
+
+</div>
+@*Inspection delays end*@
+
+

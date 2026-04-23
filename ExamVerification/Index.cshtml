@@ -1,0 +1,307 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+    .Capture-CardFlex div {
+        display: inline-block;
+    }
+
+    .Capture-Card {
+        background: #ebebeb;
+        padding: 11px 18px;
+        box-shadow: 1px 1px 2px 1px #80808042 inset;
+        border-radius: 4px;
+        margin-bottom: 17px;
+    }
+
+    .evenetTab {
+        padding: 7px 16px;
+        border-radius: 5px;
+        color: #006517;
+        margin-bottom: 15px;
+        background: #00ad271f;
+        border: 1px solid #006517;
+    }
+
+        .evenetTab span {
+            font-size: 11px;
+        }
+
+    .evenetTitle {
+        min-width: 11px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 700;
+    }
+
+    .DetailsCard {
+        background: #d7ffd7;
+        border: 1px solid #0cd70c;
+        padding: 4px 11px;
+        border-radius: 4px;
+    }
+
+    .badge_IMPRT {
+        color: #166616;
+        background: #c2ffc2;
+        padding: 1px 5px;
+        border: 1px solid green;
+        border-radius: 3px;
+        font-size: 11px;
+    }
+
+    .badge_EXPRT {
+        color: #66161e;
+        background: #ffc2c2;
+        padding: 1px 5px;
+        border: 1px solid #800000;
+        border-radius: 3px;
+        font-size: 11px;
+    }
+
+    .badge_STRGE {
+        color: #165366;
+        background: #c2f2ff;
+        padding: 1px 5px;
+        border: 1px solid #005b80;
+        border-radius: 3px;
+        font-size: 11px;
+    }
+
+    .badge_THRGH {
+        color: #bb5419;
+        background: #ffe4c2;
+        padding: 1px 5px;
+        border: 1px solid #b85319;
+        border-radius: 3px;
+        font-size: 11px;
+    }
+
+    .badge_TRSHP {
+        color: #6f19bb;
+        background: #e8c2ff;
+        padding: 1px 5px;
+        border: 1px solid #8719b8;
+        border-radius: 3px;
+        font-size: 11px;
+    }
+
+    .badge_DMSTC {
+        color: #4c4c4c;
+        background: #c2c2c2;
+        padding: 1px 5px;
+        border: 1px solid #464646;
+        border-radius: 3px;
+        font-size: 11px;
+    }
+
+    .CardContent {
+        padding: 8px 14px;
+        width: 100%;
+        MARGIN-TOP: 11PX;
+        background: #ffffff;
+        BORDER-RADIUS: 3PX;
+        box-shadow: -1px -1px 3px 1px inset #c8c1c1;
+        border: 1px solid #80808042;
+    }
+
+        .CardContent div {
+            padding: 3px 6px;
+        }
+
+    .Capture-Card.Active {
+        background: #edfced;
+        border: 1px solid #568d56;
+        box-shadow: none;
+    }
+
+    .CardContent table tr {
+        BORDER-BOTTOM: 1PX SOLID #80808030;
+    }
+
+    .CardContent table th {
+        COLOR: #7d7d7d;
+        font-weight: 400;
+    }
+
+    .CardContent table td {
+        COLOR: #7d7d7d;
+        font-weight: 400;
+    }
+
+    .searchBox input {
+        float: right;
+        box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
+        border-radius: 4px;
+        border: 1px solid #d8d8d8;
+        padding: 6px 11px;
+    }
+
+    .searchBox i {
+        float: right;
+        position: relative;
+        left: 161px;
+        top: 11px;
+        font-size: 12px;
+        color: gray;
+    }
+
+    .cardScoller {
+        height: 200px;
+        overflow: auto;
+    }
+
+    .btn-outline-danger {
+        border: 1px solid #e74c3c !important;
+    }
+</style>
+
+<div ng-controller="ExamVerificationCtrl" ng-init="init()">
+    <div class="page-header border-bottom-0 blur">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-details mr-2"></i> <span class="font-weight-semibold"><i class="icon-stack-text"></i>&nbsp; {{Type}}</span></h4>
+            </div>
+            <div class="col-md-6">
+
+            </div>
+        </div>
+    </div>
+    <hr />
+    @Html.Partial("_LOCDetails")
+    @Html.Partial("_LOCSTSDetails")
+    @Html.Partial("_ContainerJourney")
+    @Html.Partial("_INIVerification")
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label">Search by</label>
+                        <select class="form-control" ng-model="Search.by" ng-change="Search.Bayan = '';Search.Container=''">
+                            <option selected disabled hidden value="">select search by</option>
+                            <option value="Bayan">Bayan no</option>
+                            <option value="Container">Container no</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4" ng-show="Search.by=='Bayan'">
+                    <div class="form-group">
+                        <label class="form-label Starick">Bayan no</label>
+                        <input type="text" ng-model="Search.Bayan" class="form-control" placeholder="Enter Bayan no" />
+                    </div>
+                </div>
+                <div class="col-md-4" ng-show="Search.by=='Container'">
+                    <div class="form-group">
+                        <label class="form-label Starick">Container no</label>
+                        <input type="text" ng-model="Search.Container" class="form-control" placeholder="Enter Container no" />
+                    </div>
+                </div>
+                <div class="col-md-4" ng-show="Search.by!=''&&Search.by!=null && Type=='INI'">
+                    <div class="form-group">
+                        <label class="form-label Starick">Category</label>
+                        <select class="form-control" ng-model="Search.Category">
+                            <option selected disabled hidden value="">select Category</option>
+                            <option ng-repeat="x in CategoryList" value="{{x}}">{{x}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-12" ng-show="Search.by!=''&&Search.by!=null">
+                    <button class="pull-right btn btn-primary" ng-click="SearchData(Search)">Search</button>
+                    <button class="pull-right btn btn-reset mr-2" ng-click="Reset()">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" ng-show="CntrList.length > 0 && Search.by!='Container'">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="CounterCard">
+                <b>Total item: </b>  <span id="counts">{{(CntrList).length}}</span>
+            </div>
+        </div>
+        <div class="col-md-12 mb-2 text-end searchBox">
+            <input placeholder="Search Container.." type="text" ng-model="Filter.Cntr" />
+            <i class="icon-search4"></i>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-12 col-md-12 col-sm-12 col-xs-12 col-lg-6 col-xl-4" ng-repeat="x in CntrList | filter:Filter">
+
+            <div class="Capture-Card" ng-class="{'Active' :x.CreatedAt!=null}">
+                <div class="row">
+                    <div class="col-2 col-md-3">
+                        <div class=""><img src="~/Content/images/output-onlinepngtools.png" class="img-fluid" style=" MAX-HEIGHT: 40PX;" /></div>
+                    </div>
+                    <div class="col-8 col-md-7 my-auto">
+                        <div style=" font-size: 14px; font-weight: 500;">
+                            {{x.Cntr}}
+                        </div>
+                    </div>
+                    <div class="col-2 my-auto">
+                        <span class="pull-right badge_{{x.Category}}">{{x.Category}}</span>
+                    </div>
+                </div>
+                <div class="row p-0">
+                    <div class="col-12 p-0">
+                        <div class="CardContent">
+                            <table class="w-100">
+                                <tr>
+                                    <th>Location :</th>
+                                    <td><span>{{x.Location}}</span></td>
+                                </tr>
+                                <tr>
+                                    <th>Bayan :</th>
+                                    <td><span>{{x.Bayano}}</span></td>
+                                </tr>
+                                <tr>
+                                    <th>Bayan Date :</th>
+                                    <td><span>{{x.BayanDate | date:'dd/MM/yyyy HH:mm'}}</span></td>
+                                </tr>
+                                <tr>
+                                    <th>ISN :</th>
+                                    <td><span>{{x.ISNnumber}}</span></td>
+                                </tr>
+                                <tr ng-show="Type=='INI'">                                    
+                                    <th>Last INI post datetime : </th>
+                                    <td><span>{{x.CreatedAt | date:'dd/MM/yyyy HH:mm'}}</span></td>
+                                </tr>                                    
+                                <tr ng-show="Type=='INI'">
+                                    <th>File details:</th>
+                                    <td><i class="icon-eye" ng-click="openINIDetailsModal(x)"></i></td>
+                                </tr>                               
+                                <tr ng-show="Type=='Container Journey'">
+                                    <th>Details:</th>
+                                    <td><i class="icon-eye" ng-click="OpenCntrJourney(x)"></i></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-show="Type=='INI' && x.CreatedAt==null ">
+                    <div class="col-12">
+                        <button class="btn pull-right btn-sm m-1 btn-primary" ng-click="GetINIContent(x)">Repost</button>
+                    </div>
+                </div>
+
+                @*<div class="row" ng-show="Type!='INI' && x.CreatedAt==null">
+                        <div class="col-12">
+                            <span class="pull-right m-1" ng-click="GetDetails(x.Gkey)"><i class="icon-info22"></i></span>
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+

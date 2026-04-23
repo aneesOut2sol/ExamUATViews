@@ -1,0 +1,513 @@
+﻿@model ExamPortal.Web.Controllers.Api.FKL_ExaminationApiController.OpertaorMisMatchEmail
+@{
+    Layout = "~/Views/Shared/_EmailLayoutUpdated.cshtml"; // Emails should not inherit website layout
+    var TIStrip20ft = Model.TIsection.Count(x => x.Activity == "Strip" && x.Size == "20");
+    var TIStrip40ft = Model.TIsection.Count(x => x.Activity == "Strip" && x.Size == "40");
+    var TIStrip45ft = Model.TIsection.Count(x => x.Activity == "Strip" && x.Size == "45");
+    var TItotalOperator = Model.TIsection.Count;
+    var TItotalContainer = Model.TIsection.Count;
+
+    var UIStrip20ft = Model.UIsection.Count(x => x.Activity == "Strip" && x.Size == "20");
+    var UIStrip40ft = Model.UIsection.Count(x => x.Activity == "Strip" && x.Size == "40");
+    var UIStrip45ft = Model.UIsection.Count(x => x.Activity == "Strip" && x.Size == "45");
+    var UIStuff20ft = Model.UIsection.Count(x => x.Activity == "Repack" && x.Size == "20");
+    var UIStuff40ft = Model.UIsection.Count(x => x.Activity == "Repack" && x.Size == "40");
+    var UIStuff45ft = Model.UIsection.Count(x => x.Activity == "Repack" && x.Size == "45");
+    var UItotalOperator = Model.UIsection.Count;
+    var UItotalContainer = Model.UIsection.Count;
+
+    var PlannedShift1 = Model.PlannedOperatorList.Count(x => x.Shift == "Shift1");
+    var PlannedShift2 = Model.PlannedOperatorList.Count(x => x.Shift == "Shift2");
+    var TotalPlanned = PlannedShift1 + PlannedShift2;
+
+    var ActualShift1 = Model.LiveOperatorList.Count(x => x.Shift == "Shift1");
+    var ActualShift2 = Model.LiveOperatorList.Count(x => x.Shift == "Shift2");
+    var TotalActual = ActualShift1 + ActualShift2;
+    string RosterClass, Rostertext, LiveClass, LiveText, PlannedShift1ForkliftClass, PlannedShift2ForkliftClass, LiveShift1ForkliftClass, LiveShift2ForkliftClass;
+    var FKPlannedShift1Differnece = (Model.ForkliftCount - PlannedShift1);
+    PlannedShift1ForkliftClass = FKPlannedShift1Differnece > 0 ? "text-green" :
+FKPlannedShift1Differnece == 0 ? "text-gray" :
+"text-red";
+    var FKPlannedShift2Differnece = (Model.ForkliftCount - PlannedShift2);
+    PlannedShift2ForkliftClass = FKPlannedShift2Differnece > 0 ? "text-green" :
+FKPlannedShift2Differnece == 0 ? "text-gray" :
+"text-red";
+
+    var FKLiveShift1Differnece = (Model.ForkliftCount - ActualShift1);
+    LiveShift1ForkliftClass = FKLiveShift1Differnece > 0 ? "text-green" :
+FKLiveShift1Differnece == 0 ? "text-gray" :
+"text-red";
+
+    var FKLiveShift2Differnece = (Model.ForkliftCount - ActualShift2);
+    LiveShift2ForkliftClass = FKLiveShift2Differnece > 0 ? "text-green" :
+FKLiveShift2Differnece == 0 ? "text-gray" :
+"text-red";
+
+    if (Model.CurrentShift == "Shift1")
+    {
+        var difference = PlannedShift1 - UItotalOperator;
+        RosterClass = difference > 0 ? "backgreen" :
+                  difference == 0 ? "backgray" :
+                  "backred";
+        Rostertext = difference > 0 ? "text-green" :
+  difference == 0 ? "text-gray" :
+  "text-red";
+        var difference2 = ActualShift1 - UItotalOperator;
+        LiveClass = difference2 > 0 ? "backgreen" :
+          difference2 == 0 ? "backgray" :
+          "backred";
+        LiveText = difference2 > 0 ? "text-green" :
+difference == 0 ? "text-gray" :
+"text-red";
+
+
+    }
+    else
+    {
+        var difference = PlannedShift2 - UItotalOperator;
+        RosterClass = difference > 0 ? "backgreen" :
+          difference == 0 ? "backgray" :
+          "backred";
+        Rostertext = difference > 0 ? "text-green" :
+difference == 0 ? "text-gray" :
+"text-red";
+        RosterClass = difference > 0 ? "backgreen" :
+difference == 0 ? "backgray" :
+"backred";
+
+        var difference2 = ActualShift2 - UItotalOperator;
+        LiveClass = difference2 > 0 ? "backgreen" :
+          difference2 == 0 ? "backgray" :
+          "backred";
+        LiveText = difference2 > 0 ? "text-green" :
+difference == 0 ? "text-gray" :
+"text-red";
+    }
+
+    var Idle = new
+    {
+        Cntr20 = Model.UIsection
+          .Where(x => x.Size == "20" &&
+                      !Model.Assigned.Strip.Container20.Contains(x.unit_gkey) &&
+                      !Model.Assigned.Stuff.Container20.Contains(x.unit_gkey) &&
+                      !Model.Assigned.Completed.Container20.Contains(x.unit_gkey))
+          .Select(x => x.unit_gkey)
+          .ToList(),
+
+        Cntr40 = Model.UIsection
+          .Where(x => x.Size == "40" &&
+                      !Model.Assigned.Strip.Container40.Contains(x.unit_gkey) &&
+                      !Model.Assigned.Stuff.Container40.Contains(x.unit_gkey) &&
+                      !Model.Assigned.Completed.Container40.Contains(x.unit_gkey))
+          .Select(x => x.unit_gkey)
+          .ToList(),
+
+        Cntr45 = Model.UIsection
+          .Where(x => x.Size == "45" &&
+                      !Model.Assigned.Strip.Container45.Contains(x.unit_gkey) &&
+                      !Model.Assigned.Stuff.Container45.Contains(x.unit_gkey) &&
+                      !Model.Assigned.Completed.Container45.Contains(x.unit_gkey))
+          .Select(x => x.unit_gkey)
+          .ToList()
+    };
+
+
+    List<string> idleOperators;
+
+    if (Model.CurrentShift == "Shift1")
+    {
+        idleOperators = Model.LiveOperatorList
+            .Where(x => x.Shift == "Shift1" &&
+                        !Model.Assigned.Strip.Operator20.Contains(x.employeeNumber) &&
+                        !Model.Assigned.Strip.Operator40.Contains(x.employeeNumber) &&
+                        !Model.Assigned.Strip.Operator45.Contains(x.employeeNumber) &&
+                        !Model.Assigned.Stuff.Operator20.Contains(x.employeeNumber) &&
+                        !Model.Assigned.Stuff.Operator40.Contains(x.employeeNumber) &&
+                        !Model.Assigned.Stuff.Operator45.Contains(x.employeeNumber))
+            .Select(x => x.employeeNumber.ToString())
+            .ToList();
+    }
+    else
+    {
+        idleOperators = Model.LiveOperatorList
+            .Where(x => x.Shift == "Shift2" &&
+                        !Model.Assigned.Strip.Operator20.Contains(x.employeeNumber) &&
+                        !Model.Assigned.Strip.Operator40.Contains(x.employeeNumber) &&
+                        !Model.Assigned.Strip.Operator45.Contains(x.employeeNumber) &&
+                        !Model.Assigned.Stuff.Operator20.Contains(x.employeeNumber) &&
+                        !Model.Assigned.Stuff.Operator40.Contains(x.employeeNumber) &&
+                        !Model.Assigned.Stuff.Operator45.Contains(x.employeeNumber))
+            .Select(x => x.employeeNumber.ToString())
+            .ToList();
+    }
+
+    int totalContainer =
+    Model.Assigned.Stuff.Container20.Count +
+    Model.Assigned.Stuff.Container40.Count +
+    Model.Assigned.Stuff.Container45.Count +
+    Model.Assigned.Strip.Container20.Count +
+    Model.Assigned.Strip.Container40.Count +
+    Model.Assigned.Strip.Container45.Count;
+
+    int totalOperator =
+        Model.Assigned.Stuff.Operator20.Count +
+        Model.Assigned.Stuff.Operator40.Count +
+        Model.Assigned.Stuff.Operator45.Count +
+        Model.Assigned.Strip.Operator20.Count +
+        Model.Assigned.Strip.Operator40.Count +
+        Model.Assigned.Strip.Operator45.Count;
+
+
+}
+
+
+<style>
+    .backgreen {
+        background: #0a6440 !important;
+    }
+
+    .backred {
+        background: #640a0a !important;
+    }
+
+    .backgray {
+        background: #454545 !important;
+    }
+
+    .text-green {
+        color: green !important;
+    }
+
+    .text-red {
+        color: red !important;
+    }
+
+    .text-gray {
+        color: gray !important;
+    }
+</style>
+
+<div style="text-align:left">
+    <b>Dear Team,</b>
+    <p>
+        Exam operation requires additional resources to carry out the operation on @DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+    </p>
+
+    <b>Summary of Operator Check:</b>
+    <ul>
+        <li>Required  Operator: @(UItotalOperator)</li>
+        <li>Operator Planned for Current Shift: @Model.PlannedOperatorList.Count(x => x.Shift == Model.CurrentShift) </li>
+        <li>Operator Available for Assignment: @Model.LiveOperatorList.Count(x => x.Shift == Model.CurrentShift) </li>
+        <li class="@LiveText">Operator Mismatch for Assignment:@(Model.LiveOperatorList.Count(x => x.Shift == Model.CurrentShift)- UItotalOperator) </li>
+    </ul>
+    <p>
+        As a result, there are insufficient resources to cover all examination activities effectively. Kindly review the labor planning and take necessary action to resolve the gap.
+    </p>
+</div>
+
+<table cellpadding="0" cellspacing="0" width="100%" style="font-family: Arial, sans-serif; background-color: #f4f4f4;">
+    <tr>
+        <td align="center" style="padding: 10px; width: 50%">
+            <div style=" padding:0px; overflow: hidden;border-radius: 6px; border: 1px solid #e7e7e7;">
+                <table cellpadding="10" cellspacing="0" width="100%" style="background-color: #ffffff; border-collapse: collapse;">
+                    <tr>
+                        <td colspan="3" style="background-color: var( --dpw-bg-color); color: white; font-weight: bold; text-align: center;">
+                            TI (To
+                            Inspection)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Sizes</b>
+                        </td>
+                        <td>
+                            <b>Cntr</b>
+                        </td>
+                        <td>
+                            <b>Slots</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 10px;">20ft:</td>
+                        <td style="padding: 4px 10px;"><b>@TIStrip20ft</b></td>
+                        <td style="padding: 4px 10px;"><b>@(TIStrip20ft*2)</b></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 10px;">40ft:</td>
+                        <td style="padding: 4px 10px;"><b>@TIStrip40ft</b></td>
+                        <td style="padding: 4px 10px;"><b>@(TIStrip40ft*4)</b></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 10px;">45ft:</td>
+                        <td style="padding: 4px 10px;"><b>@TIStrip45ft</b></td>
+                        <td style="padding: 4px 10px;"><b>@(TIStrip45ft*4)</b></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 10px;">Req. slots:</td>
+                        <td colspan="2" style="padding: 4px 10px;text-align:end;"><b>@((TIStrip45ft*4)+ (TIStrip40ft * 4)+ (TIStrip20ft * 2))</b></td>
+                    </tr>
+
+                    <tr style="    background: #d3d3d3;">
+                        <td style="padding: 4px 10px;">  <img src="http://test-dpwops.dpworld.sa/Content/images/container3.png" width="20" /> Total Container :</td>
+                        <td style="padding: 4px 10px; text-align: right;" colspan="2"> <b>@TItotalContainer</b></td>
+                    </tr>
+                    <tr style="    background: #d3d3d3;">
+                        <td style="padding: 4px 10px;"><img src="http://test-dpwops.dpworld.sa/Content/images/LabourIcon.png" width="20" /> Required Operator :</td>
+                        <td style="padding: 4px 10px; text-align: right; " colspan="2"><b>@TItotalOperator</b></td>
+                    </tr>
+                    <tr style="    background: #d3d3d3;">
+                        <td style="padding: 4px 10px;"><img src="http://test-dpwops.dpworld.sa/Content/images/ForkLift.png" width="20" /> Required Operator :</td>
+                        <td style="padding: 4px 10px; text-align: right; " colspan="2"><b>@Model.ForkliftCount</b></td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+        <td align="center" style="padding: 10px; width: 50%">
+            <div style=" padding:0px; overflow: hidden;border-radius: 6px; border: 1px solid #e7e7e7;">
+                <table cellpadding="10" cellspacing="0" width="100%" style="background-color: #ffffff; border-collapse: collapse;">
+                    <tr>
+                        <td colspan="3" style="background-color: var( --dpw-bg-color); color: white; font-weight: bold; text-align: center;">
+                            UI (Under Inspection)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Sizes</b>
+                        </td>
+                        <td>
+                            <b>Strip</b>
+                        </td>
+                        <td>
+                            <b>Repack</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 10px;">20ft:</td>
+                        <td style="padding: 4px 10px;"><b>@UIStrip20ft</b></td>
+                        <td style="padding: 4px 10px;"><b>@UIStuff20ft</b></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 10px;">40ft:</td>
+                        <td style="padding: 4px 10px;"><b>@UIStrip40ft</b></td>
+                        <td style="padding: 4px 10px;"><b>@UIStuff40ft</b></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 10px;">45ft:</td>
+                        <td style="padding: 4px 10px;"><b>@UIStrip45ft</b></td>
+                        <td style="padding: 4px 10px;"><b>@UIStuff45ft</b></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                    </tr>
+
+                    <tr style="    background: #d3d3d3;">
+                        <td style="padding: 4px 10px;">  <img src="http://test-dpwops.dpworld.sa/Content/images/container3.png" width="20" /> Total Container:</td>
+                        <td style="padding: 4px 10px; text-align:right" colspan="2"> <b>@UItotalContainer</b></td>
+                    </tr>
+                    <tr style="    background: #d3d3d3;">
+                        <td style="padding: 4px 10px;"><img src="http://test-dpwops.dpworld.sa/Content/images/LabourIcon.png" width="20" /> Required Operator :</td>
+                        <td style="padding: 4px 10px; text-align: right" colspan="2"><b>@UItotalOperator</b></td>
+                    </tr>
+                    <tr style="    background: #d3d3d3;">
+                        <td style="padding: 4px 10px;"><img src="http://test-dpwops.dpworld.sa/Content/images/ForkLift.png" width="20" /> Required Operator :</td>
+                        <td style="padding: 4px 10px; text-align: right; " colspan="2"><b>@Model.ForkliftCount</b></td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+
+    </tr>
+    <tr>
+        <td align="center" style="padding: 10px;width:50%">
+            <div style=" padding:0px; overflow: hidden;border-radius: 6px; border: 1px solid #e7e7e7;">
+                <table cellpadding="10" cellspacing="0" width="100%" style="background-color: #ffffff; border-collapse: collapse;">
+                    <tr>
+                        <td class="@RosterClass" colspan="2" style="color: white; font-weight: bold; text-align: center;">
+                            ROSTER Operator
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <b>Planned Operator</b>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 4px 10px;">Shift 1 :</td>
+                        <td style="padding: 4px 10px;"><b>@PlannedShift1</b></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 10px;">Shift 2 :</td>
+                        <td style="padding: 4px 10px;"><b>@PlannedShift2</b></td>
+                    </tr>
+                    <tr style="color:red;">
+                        <td style="padding: 4px 10px;" class="@Rostertext">Target Shift 1:</td>
+                        <td style="padding: 4px 10px;"><b class="@Rostertext">@((PlannedShift1- UItotalOperator))</b></td>
+                    </tr>
+                    <tr style="color:red;">
+                        <td style="padding: 4px 10px;" class="@Rostertext">Target Shift 2:</td>
+                        <td style="padding: 4px 10px;"><b class="@Rostertext">@((PlannedShift2- UItotalOperator))</b></td>
+                    </tr>
+                    <tr style="color:red;">
+                        <td style="padding: 4px 10px;" class="@PlannedShift1ForkliftClass">Forklift target Shift 1:</td>
+                        <td style="padding: 4px 10px;"><b class="@PlannedShift1ForkliftClass">@((Model.ForkliftCount - PlannedShift1))</b></td>
+                    </tr>
+                    <tr style="color:red;">
+                        <td style="padding: 4px 10px;" class="@PlannedShift2ForkliftClass">Forklift target Shift 2:</td>
+                        <td style="padding: 4px 10px;"><b class="@PlannedShift2ForkliftClass">@((Model.ForkliftCount - PlannedShift2))</b></td>
+                    </tr>
+                    <tr style="    background: #d3d3d3;">
+                        <td style="padding: 4px 10px;">  <img src="http://test-dpwops.dpworld.sa/Content/images/LabourIcon.png" width="20" /> Planned Operator:</td>
+                        <td style="padding: 4px 10px;"> <b>@(PlannedShift1+ PlannedShift2)</b></td>
+                    </tr>
+
+
+                    <tr style="    background: #d3d3d3;">
+                        <td style="padding: 4px 10px;"><img src="http://test-dpwops.dpworld.sa/Content/images/LabourIcon.png" width="20" />  Required Operator:</td>
+                        <td style="padding: 4px 10px;"><b>@(UItotalOperator)</b></td>
+                    </tr>
+                    <tr style="    background: #d3d3d3;">
+                        <td style="padding: 4px 10px;"><img src="http://test-dpwops.dpworld.sa/Content/images/ForkLift.png" width="20" /> Required Operator :</td>
+                        <td style="padding: 4px 10px; text-align: right; " colspan="2"><b>@Model.ForkliftCount</b></td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+        <td align="center" style="padding: 10px; width: 50%">
+            <div style=" padding:0px; overflow: hidden;border-radius: 6px; border: 1px solid #e7e7e7;">
+                <table cellpadding="10" cellspacing="0" width="100%" style="background-color: #ffffff; border-collapse: collapse;">
+                    <tr>
+                        <td class="@LiveClass" colspan="2" style=" color: white; font-weight: bold; text-align: center;">
+                            LIVE Labors/Resource
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <b>Available Labor</b>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="padding: 4px 10px;">Shift 1 :</td>
+                        <td style="padding: 4px 10px;"><b>@ActualShift1</b></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 10px;">Shift 2 :</td>
+                        <td style="padding: 4px 10px;"><b>@ActualShift2</b></td>
+                    </tr>
+                    <tr style="color:red">
+                        <td style="padding: 4px 10px;" class="@LiveText">Target Shift 1 :</td>
+                        <td style="padding: 4px 10px;"><b class="@LiveText">@((ActualShift1-UItotalOperator))</b></td>
+                    </tr>
+                    <tr style="color:red">
+                        <td style="padding: 4px 10px;" class="@LiveText">Target Shift 2 :</td>
+                        <td style="padding: 4px 10px;"><b class="@LiveText">@((ActualShift2-UItotalOperator))</b></td>
+                    </tr>
+                    <tr style="color:red;">
+                        <td style="padding: 4px 10px;" class="@LiveShift1ForkliftClass">Forklift target Shift 1:</td>
+                        <td style="padding: 4px 10px;"><b class="@LiveShift1ForkliftClass">@((Model.ForkliftCount - ActualShift1))</b></td>
+                    </tr>
+                    <tr style="color:red;">
+                        <td style="padding: 4px 10px;" class="@LiveShift2ForkliftClass">Forklift target Shift 2:</td>
+                        <td style="padding: 4px 10px;"><b class="@LiveShift2ForkliftClass">@((Model.ForkliftCount - ActualShift2))</b></td>
+                    </tr>
+                    <tr style="    background: #d3d3d3;">
+                        <td style="padding: 4px 10px;">  <img src="http://test-dpwops.dpworld.sa/Content/images/LabourIcon.png" width="20" /> Available Operator:</td>
+                        <td style="padding: 4px 10px;"> <b>@(ActualShift1+ActualShift2)</b></td>
+                    </tr>
+                    <tr style="    background: #d3d3d3;">
+                        <td style="padding: 4px 10px;">  <img src="http://test-dpwops.dpworld.sa/Content/images/LabourIcon.png" width="20" /> Required Operator:</td>
+                        <td style="padding: 4px 10px;"> <b>@UItotalOperator</b></td>
+                    </tr>
+                    <tr style="    background: #d3d3d3;">
+                        <td style="padding: 4px 10px;"><img src="http://test-dpwops.dpworld.sa/Content/images/ForkLift.png" width="20" /> Required Operator :</td>
+                        <td style="padding: 4px 10px; text-align: right; " colspan="2"><b>@Model.ForkliftCount</b></td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td align="center" style="padding: 10px; width: 100%" colspan="2">
+            <div style=" padding:0px; overflow: hidden;border-radius: 6px; border: 1px solid #e7e7e7;">
+                <table cellpadding="10" cellspacing="0" width="100%" style="background-color: #ffffff; border-collapse: collapse;">
+                    <tr>
+                        <td colspan="7" style="background-color: var( --dpw-bg-color); color: white; font-weight: bold; text-align: center;">
+                            Live monitoring
+                        </td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th style="padding: 4px 10px;" colspan="2">20ft</th>
+                        <th style="padding: 4px 10px;" colspan="2">40ft</th>
+                        <th style="padding: 4px 10px;" colspan="2">45ft</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th><img src="http://test-dpwops.dpworld.sa/Content/images/container3.png" width="20" /></th>
+                        <th><img src="http://test-dpwops.dpworld.sa/Content/images/LabourIcon.png" width="20" /></th>
+                        <th><img src="http://test-dpwops.dpworld.sa/Content/images/container3.png" width="20" /></th>
+                        <th><img src="http://test-dpwops.dpworld.sa/Content/images/LabourIcon.png" width="20" /></th>
+                        <th><img src="http://test-dpwops.dpworld.sa/Content/images/container3.png" width="20" /></th>
+                        <th><img src="http://test-dpwops.dpworld.sa/Content/images/LabourIcon.png" width="20" /></th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 10px;">Strip</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Strip.Container20.Count()</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Strip.Operator20.Count()</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Strip.Container40.Count()</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Strip.Operator40.Count()</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Strip.Container45.Count()</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Strip.Operator45.Count()</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 10px;">Repack</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Stuff.Container20.Count()</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Stuff.Operator20.Count()</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Stuff.Container40.Count()</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Stuff.Operator40.Count()</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Stuff.Container45.Count()</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Stuff.Operator45.Count()</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 10px;">Delay Container</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Delays.Container20.Count()</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Delays.Operator20.Count()</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Delays.Container40.Count()</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Delays.Operator40.Count()</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Delays.Container45.Count()</td>
+                        <td style="padding: 4px 10px;">@Model.Assigned.Delays.Operator45.Count()</td>
+                    </tr>
+                    <tr>
+                        <td>Completed Container</td>
+                        <td style="padding: 4px 10px;" colspan="2">@Model.Assigned.Completed.Container20.Count()</td>
+                        <td style="padding: 4px 10px;" colspan="2">@Model.Assigned.Completed.Container40.Count()</td>
+                        <td style="padding: 4px 10px;" colspan="2">@Model.Assigned.Completed.Container45.Count()</td>
+                    </tr>
+                    <tr>
+                        <td class="text-red">Idle Container</td>
+                        <td class="text-red" style="padding: 4px 10px;" colspan="2">@Idle.Cntr20.Count()</td>
+                        <td class="text-red" style="padding: 4px 10px;" colspan="2">@Idle.Cntr40.Count()</td>
+                        <td class="text-red" style="padding: 4px 10px;" colspan="2">@Idle.Cntr45.Count()</td>
+                    </tr>
+                    <tr>
+                        <td class="text-red">Idle Operator</td>
+                        <td class="text-red" style="padding: 4px 10px;text-align:center;" colspan="6">@idleOperators.Count()</td>
+                    </tr>
+                    <tr>
+                        <td class="text-red">Missing Operator</td>
+                        <td class="text-red" style="padding: 4px 10px; text-align: center;" colspan="6">@Model.MissingOperator.Count()</td>
+                    </tr>
+                    <tr style="    background: #d3d3d3;">
+                        <td style="padding: 4px 10px;">  <img src="http://test-dpwops.dpworld.sa/Content/images/container3.png" width="20" /> Total Container:</td>
+                        <td style="padding: 4px 10px; text-align: center;" colspan="6"> <b>@totalContainer</b></td>
+                    </tr>
+                    <tr style="    background: #d3d3d3;">
+                        <td style="padding: 4px 10px;"><img src="http://test-dpwops.dpworld.sa/Content/images/LabourIcon.png" width="20" /> Required Operator :</td>
+                        <td style="padding: 4px 10px; text-align: center;" colspan="6"><b>@totalOperator</b></td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+</table>

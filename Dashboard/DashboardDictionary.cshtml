@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewBag.Title = "DashboardDictionary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+
+    .table tbody tr td {
+        text-align: left !important;
+        font-family: 'Pilat Wide';
+    }
+</style>
+<div ng-controller="DashboardDictionaryCtrl" ng-init="init()" style=" font-family: 'Pilat Wide';">
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline" style="padding:0px;">
+            <div class="page-title d-flex">
+                <h4> <span class="font-weight-semibold">Management Options Dictionary</span></h4>
+
+            </div>
+            <div class="col-md-6 p-0">
+                <div class="form-group">
+                    <button type="button" class="btn btn-secondary pull-right mr-2 mt-2" data-toggle="collapse" data-target="#demo" aria-expanded="true"> <i class="icon-filter3"></i> Filters</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="collapse" id="demo">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" class="form-control" ng-model="Filter.Title" value="" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Area</label>
+                            <input type="text" class="form-control" ng-model="Filter.Area" value="" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" class="form-control" ng-model="Filter.Description" value="" />
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-end" style="text-align:end">
+                        <button class="btn btn-reset" ng-click="resetFilter()">Reset</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="CounterCard">
+                <b>Total item: </b>  <span id="counts">{{(DictionaryData | filter :Filter).length}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="card table-card scrollbar">
+            <table class="table datatable-show-all" id="table-id">
+                <thead>
+                    <tr class="table-card-head">
+                        <th>Title</th>
+                        <th>Area</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="x in DictionaryData | filter :Filter">
+                        <td>{{x.Title}}</td>
+                        <td>{{x.Area}}</td>
+                        <td style="text-align:left">
+                            <div ng-bind-html="renderHtml(x.Description)">
+
+                            </div>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

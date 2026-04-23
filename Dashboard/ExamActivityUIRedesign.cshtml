@@ -1,0 +1,1699 @@
+@{
+    ViewBag.Title = "ExamView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var showPkgHs = System.Configuration.ConfigurationManager.AppSettings["CheckPkgTypeNHSCodemapping"] == "1";
+}
+<link href="~/Content/css/Dashboard_ExamActivityUI.css" rel="stylesheet" />
+<link href="~/Content/BootsrapDatetime/icon.css" rel="stylesheet" />
+<link href="~/Content/BootsrapDatetime/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+<link href="~/Content/BootsrapDatetime/css.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/js/plugins/moment/moment_locales.min.js"></script>
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.css" rel="stylesheet" />
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.standalone.css" rel="stylesheet" />
+<script src="~/Scripts/DatePicker/bootstrap-datepicker.js"></script>
+<script src="~/Content/BootsrapDatetime/ripples.min.js"></script>
+<script src="~/Content/BootsrapDatetime/material.min.js"></script>
+<link href="~/Scripts/SlimSelect/SlimSelectCustomStyle.css" rel="stylesheet" />
+<link href="~/Scripts/SlimSelect/slimselect.min.css" rel="stylesheet" />
+<script src="~/Scripts/SlimSelect/slimselect.min.js"></script>
+<script src="~/Content/BootsrapDatetime/bootstrap-material-datetimepicker.js"></script>
+
+<style>
+    /* Modern Resposive Design System */
+    body {
+        font-family: 'Inter', 'Roboto', sans-serif !important;
+        background-color: #f8fafc;
+    }
+
+    .DashboardDiv {
+        padding: 8px 15px;
+    }
+
+    .page-title h3 {
+        font-size: 16px;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0;
+    }
+
+    .top-action-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .btn-modern {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        color: #475569;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        transition: all 0.2s;
+    }
+
+        .btn-modern:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            color: #0f172a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .btn-modern i {
+            font-size: 16px;
+        }
+
+    .modern-search-box {
+        background: rgba(255,255,255,0.9);
+        backdrop-filter: blur(10px);
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 8px 12px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 10px 0;
+        align-items: center;
+    }
+
+    .modern-search-input {
+        position: relative;
+        flex: 1;
+        min-width: 250px;
+    }
+
+        .modern-search-input i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        .modern-search-input input {
+            width: 100%;
+            padding: 6px 12px 6px 36px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 12px;
+            box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02);
+            transition: all 0.2s;
+        }
+
+            .modern-search-input input:focus {
+                border-color: #1E1450;
+                box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+                outline: none;
+            }
+
+    .stats-scroller {
+        display: flex;
+        overflow-x: auto;
+        gap: 12px;
+        padding: 14px 4px 8px 4px;
+        margin-bottom: 6px;
+        align-items: center;
+    }
+
+        .stats-scroller::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .stats-scroller::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 10px;
+        }
+
+    .stat-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 6px 12px;
+        min-width: 50px;
+        text-align: center;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: visible;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        transition: all 0.2s;
+    }
+
+        .stat-card.active {
+            background: #1E1450;
+            border-color: #1E1450;
+            box-shadow: 0 4px 6px rgba(59,130,246,0.2);
+            color: white;
+        }
+
+        .stat-card .UICountBadge {
+            position: absolute;
+            top: -10px;
+            left: 6px;
+            background: #059669;
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 8px;
+            line-height: 1.2;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .stat-card .label {
+            font-size: 11px;
+            font-weight: 800;
+            color: #475569;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .stat-card.active .label {
+            color: white;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        }
+
+    .modern-panel {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        transition: all 0.2s;
+        overflow: hidden;
+    }
+
+    .modern-panel-header {
+        background: #f8fafc;
+        border-bottom: 1px solid #f1f5f9;
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: 700;
+        color: #0f172a;
+        font-size: 13px;
+    }
+
+    .modern-panel-body {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: auto;
+        max-height: 400px;
+    }
+
+        .modern-panel-body::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .modern-panel-body::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 10px;
+        }
+
+    .modern-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .modern-table th {
+            background: #f8fafc;
+            padding: 8px 12px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .modern-table td {
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 500;
+            color: #334155;
+            border-bottom: 1px solid #f1f5f9;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        .modern-table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+    .modern-panel-footer {
+        background: #f8fafc;
+        border-top: 1px solid #f1f5f9;
+        padding: 10px 15px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .footer-subtotals {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px dashed #cbd5e0;
+        font-size: 12px;
+        color: #475569;
+        font-weight: 600;
+    }
+
+
+    .ss-main {
+        font-family: 'Inter', sans-serif !important;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02);
+    }
+
+        .ss-main .ss-multi-selected {
+            min-height: 32px !important;
+            padding: 4px 12px;
+            border: none;
+            background: transparent;
+        }
+
+    span.textGreen {
+        color: #166534;
+        background: #dcfce7;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+    span.textRed {
+        color: #991b1b;
+        background: #fee2e2;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+    .dot {
+        display: inline-block;
+        font-size: 10px;
+        padding: 3px 6px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+    .dynamic-card-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .dynamic-card {
+        flex: 1 1 calc(33.333% - 15px);
+        min-width: 320px;
+        transition: all 0.3s;
+    }
+
+    /* Ensure Location and Bayan columns are completely visible without wrapping OR truncation */
+    .modern-table td:nth-child(2),
+    .modern-table td:nth-child(3) {
+        white-space: nowrap !important;
+    }
+
+        .modern-table td:nth-child(2) .truncate,
+        .modern-table td:nth-child(3) .truncate {
+            white-space: nowrap !important;
+            overflow: visible !important;
+            text-overflow: clip !important;
+            max-width: none !important;
+            width: auto !important;
+        }
+</style>
+
+@if (System.Configuration.ConfigurationManager.AppSettings["ManagementOptionDashboard"] == "on")
+{
+    <div class="ng-cloak DashboardDiv" id="MainDiv" ng-cloak ng-controller="ExamActivityDashboardCtrl" ng-init="showCard1=true; showCard2=false; showCard3=false; showCard4=false; showCard5=false; showCard6=false; showCard7=false; ExamView_Init('@System.Configuration.ConfigurationManager.AppSettings["ManagementOptionDashboard_RefreshTime"]')">
+        @*@Html.Partial("_ExamActivityUIModals")*@
+        <input type="text" class="d-none" tabindex="1" name="name" value="" />
+
+        <div class="d-flex flex-wrap align-items-center justify-content-between mb-4" style="gap: 10px;">
+            <!-- Title -->
+            <div class="d-flex align-items-center mb-2 mb-xl-0">
+                <h3 class="page-title m-0 text-nowrap">UI Dashboard</h3>
+            </div>
+
+            <!-- Card Visibility Controls -->
+            <div class="d-flex flex-wrap align-items-center p-1 border justify-content-center flex-grow-1" style="background: rgba(255,255,255,0.9); border-radius: 8px; gap: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; margin: 0 10px; min-width: 320px;">
+                <span class="font-weight-bold text-muted text-uppercase d-none d-lg-block ml-2 mr-1" style="font-size:10px; letter-spacing:0.5px;"><i class="icon-eye mr-1"></i> Quick Display:</span>
+                @*<button class="btn btn-sm shadow-none font-weight-bold" ng-style="showCard1 ? {'background-color':'#1E1450', 'color':'white'} : {'background':'#e2e8f0', 'color':'#475569'}" ng-click="showCard1 = !showCard1; showCard2 = false; showCard3 = false; showCard4 = false; showCard5 = false; showCard6 = false; showCard7 = false" style="font-size: 11px; padding: 2px 7px; border-radius:4px;">SealCut</button>
+                    <button class="btn btn-sm shadow-none font-weight-bold" ng-style="showCard2 ? {'background-color':'#1E1450', 'color':'white'} : {'background':'#e2e8f0', 'color':'#475569'}" ng-click="showCard2 = !showCard2; showCard1 = false; showCard3 = false; showCard4 = false; showCard5 = false; showCard6 = false; showCard7 = false" style="font-size: 11px; padding: 2px 7px; border-radius:4px;">Start Strip</button>
+                    <button class="btn btn-sm shadow-none font-weight-bold" ng-style="showCard3 ? {'background-color':'#1E1450', 'color':'white'} : {'background':'#e2e8f0', 'color':'#475569'}" ng-click="showCard3 = !showCard3; showCard1 = false; showCard2 = false; showCard4 = false; showCard5 = false; showCard6 = false; showCard7 = false" style="font-size: 11px; padding: 2px 7px; border-radius:4px;">Strip In Progress</button>
+                    <button class="btn btn-sm shadow-none font-weight-bold" ng-style="showCard4 ? {'background-color':'#1E1450', 'color':'white'} : {'background':'#e2e8f0', 'color':'#475569'}" ng-click="showCard4 = !showCard4; showCard1 = false; showCard2 = false; showCard3 = false; showCard5 = false; showCard6 = false; showCard7 = false" style="font-size: 11px; padding: 2px 7px; border-radius:4px;">Inspection</button>
+                    <button class="btn btn-sm shadow-none font-weight-bold" ng-style="showCard5 ? {'background-color':'#1E1450', 'color':'white'} : {'background':'#e2e8f0', 'color':'#475569'}" ng-click="showCard5 = !showCard5; showCard1 = false; showCard2 = false; showCard3 = false; showCard4 = false; showCard6 = false; showCard7 = false" style="font-size: 11px; padding: 2px 7px; border-radius:4px;">Start Repack</button>
+                    <button class="btn btn-sm shadow-none font-weight-bold" ng-style="showCard6 ? {'background-color':'#1E1450', 'color':'white'} : {'background':'#e2e8f0', 'color':'#475569'}" ng-click="showCard6 = !showCard6; showCard1 = false; showCard2 = false; showCard3 = false; showCard4 = false; showCard5 = false; showCard7 = false" style="font-size: 11px; padding: 2px 7px; border-radius:4px;">Repack In Progress</button>
+                    <button class="btn btn-sm shadow-none font-weight-bold" ng-style="showCard7 ? {'background-color':'#1E1450', 'color':'white'} : {'background':'#e2e8f0', 'color':'#475569'}" ng-click="showCard7 = !showCard7; showCard1 = false; showCard2 = false; showCard3 = false; showCard4 = false; showCard5 = false; showCard6 = false" style="font-size: 11px; padding: 2px 7px; border-radius:4px;">Apply Seal</button>*@
+
+                <button class="btn btn-sm shadow-none font-weight-bold" ng-style="showCard1 ? {'background-color':'#1E1450', 'color':'white'} : {'background':'#e2e8f0', 'color':'#475569'}" ng-click="showCard1 = !showCard1; showCard2 = false; showCard3 = false; showCard4 = false; showCard5 = false; showCard6 = false; showCard7 = false" style="font-size: 11px; padding: 2px 7px; border-radius:4px;">Waiting Time SealCut</button>
+                <button class="btn btn-sm shadow-none font-weight-bold" ng-style="showCard2 ? {'background-color':'#1E1450', 'color':'white'} : {'background':'#e2e8f0', 'color':'#475569'}" ng-click="showCard2 = !showCard2; showCard1 = false; showCard3 = false; showCard4 = false; showCard5 = false; showCard6 = false; showCard7 = false" style="font-size: 11px; padding: 2px 7px; border-radius:4px;">Waiting Time Start Strip</button>
+                <button class="btn btn-sm shadow-none font-weight-bold" ng-style="showCard3 ? {'background-color':'#1E1450', 'color':'white'} : {'background':'#e2e8f0', 'color':'#475569'}" ng-click="showCard3 = !showCard3; showCard1 = false; showCard2 = false; showCard4 = false; showCard5 = false; showCard6 = false; showCard7 = false" style="font-size: 11px; padding: 2px 7px; border-radius:4px;">Cargo Strip In Progress</button>
+                <button class="btn btn-sm shadow-none font-weight-bold" ng-style="showCard4 ? {'background-color':'#1E1450', 'color':'white'} : {'background':'#e2e8f0', 'color':'#475569'}" ng-click="showCard4 = !showCard4; showCard1 = false; showCard2 = false; showCard3 = false; showCard5 = false; showCard6 = false; showCard7 = false" style="font-size: 11px; padding: 2px 7px; border-radius:4px;">Waiting Time Custom Inspection</button>
+                <button class="btn btn-sm shadow-none font-weight-bold" ng-style="showCard5 ? {'background-color':'#1E1450', 'color':'white'} : {'background':'#e2e8f0', 'color':'#475569'}" ng-click="showCard5 = !showCard5; showCard1 = false; showCard2 = false; showCard3 = false; showCard4 = false; showCard6 = false; showCard7 = false" style="font-size: 11px; padding: 2px 7px; border-radius:4px;">Waiting Time Start Repack</button>
+                <button class="btn btn-sm shadow-none font-weight-bold" ng-style="showCard6 ? {'background-color':'#1E1450', 'color':'white'} : {'background':'#e2e8f0', 'color':'#475569'}" ng-click="showCard6 = !showCard6; showCard1 = false; showCard2 = false; showCard3 = false; showCard4 = false; showCard5 = false; showCard7 = false" style="font-size: 11px; padding: 2px 7px; border-radius:4px;">Cargo Repack In Progress</button>
+                <button class="btn btn-sm shadow-none font-weight-bold" ng-style="showCard7 ? {'background-color':'#1E1450', 'color':'white'} : {'background':'#e2e8f0', 'color':'#475569'}" ng-click="showCard7 = !showCard7; showCard1 = false; showCard2 = false; showCard3 = false; showCard4 = false; showCard5 = false; showCard6 = false" style="font-size: 11px; padding: 2px 7px; border-radius:4px;">Waiting to Apply Seal</button>
+
+                <div class="ml-auto border-left pl-2 d-flex gap-1" style="border-color: #cbd5e1 !important;">
+                    <button class="btn btn-sm btn-dark font-weight-bold shadow-none" ng-click="showCard1=true;showCard2=true;showCard3=true;showCard4=true;showCard5=true;showCard6=true;showCard7=true;" style="font-size: 11px; padding: 2px 7px; border-radius:4px;">All</button>
+                    <button class="btn btn-sm btn-light border font-weight-bold shadow-none" ng-click="showCard1=false;showCard2=false;showCard3=false;showCard4=false;showCard5=false;showCard6=false;showCard7=false;" style="font-size: 11px; padding: 2px 7px; border-radius:4px; color: #475569;">None</button>
+                </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="mb-2 mb-xl-0 flex-shrink-0">
+                <div class="top-action-bar">
+                    <button class="btn-modern" onclick="Hideheader()" id="btnFullscreen"><i class="icon-enlarge text-primary"></i> Fullscreen</button>
+                    <button class="btn-modern d-none" onclick="showHeader()" id="btnExitFullscreen"><i class="icon-shrink6 text-danger"></i> Exit</button>
+                    <button class="btn-modern" ng-click="OpenExcelModal('UI (Under Inspection) Details')"><i class="icon-file-excel text-success"></i> Export</button>
+                    <button class="btn-modern" ng-click="OpenEmailModal('UI (Under Inspection) Details')"><i class="icon-paperplane text-info"></i> Email</button>
+                    <button class="btn-modern" ng-click="PrintReport('UI (Under Inspection) Details',Dashboard_UI_List)"><i class="icon-printer text-warning"></i> Print</button>
+
+                    <div class="dropdown">
+                        <button class="btn-modern" data-toggle="dropdown"><i class="icon-sort-alpha-asc"></i> Sort: {{sortfield || 'Default'}} <i class="icon-arrow-down5 ml-1"></i></button>
+                        <div class="dropdown-menu dropdown-menu-right shadow border-0" style="border-radius: 12px; min-width: 200px;">
+                            <a class="dropdown-item d-flex justify-content-between align-items-center py-2" href="#" ng-click="SortAll('Location')">
+                                Location
+                                <span ng-show="LocationSort=='Dsc'"><i class="icon-sort-amount-asc"></i></span><span ng-show="LocationSort=='Asc' || LocationSort==''"><i class="icon-sort-amount-desc"></i></span>
+                            </a>
+                            <a class="dropdown-item d-flex justify-content-between align-items-center py-2" href="#" ng-click="SortAll('OverAll')">
+                                Overall HRS
+                                <span ng-show="OverallSort=='Dsc'"><i class="icon-sort-amount-asc"></i></span><span ng-show="OverallSort=='Asc' || OverallSort==''"><i class="icon-sort-amount-desc"></i></span>
+                            </a>
+                            <a class="dropdown-item d-flex justify-content-between align-items-center py-2" href="#" ng-click="SortAll('Elapsed HRS')">
+                                Stage Elapsed HRS
+                                <span ng-show="ElapsedSort=='Dsc'"><i class="icon-sort-amount-asc"></i></span><span ng-show="ElapsedSort=='Asc' || ElapsedSort==''"><i class="icon-sort-amount-desc"></i></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between mb-3" style="gap: 15px;">
+
+            <div class="stats-scroller m-0 flex-grow-1" style="max-width: 100%;">
+                <div class="stat-card" ng-click="BlockFilter('null')" ng-class="{'active' : CheckBlockIsActive('null')}">
+                    <span class="UICountBadge">{{Dashboard_UI_ListExtra.length}}</span><span class="label">All</span>
+                </div>
+                <div class="stat-card" ng-repeat="B in BlockList" ng-click="BlockFilter(B.Block)" ng-class="{'active' : CheckBlockIsActive(B.Block)}">
+                    <span class="UICountBadge">{{B.Count}}</span><span class="label">{{B.Block}}</span>
+                </div>
+                @*<div ng-repeat="Block in BlockList | unique:'Area'">
+                        <div class="d-flex">
+                            <div class="stat-card" ng-repeat="B in BlockList | filter:{Area: Block.Area}" ng-click="BlockFilter(B.Block)" ng-class="{'active' : CheckBlockIsActive(B.Block)}">
+                                <span class="UICountBadge">{{B.Count}}</span><span class="label">{{B.Block}}</span>
+                            </div>
+                        </div>
+                        <label style=" color: #808080; width: 100%; text-align: center;" class="mb-2">{{Block.Area}}</label>
+                    </div>*@
+            </div>
+
+            <div class="modern-search-box m-0 flex-shrink-0">
+                <div class="modern-search-input">
+                    <i class="icon-search4"></i><input type="text" placeholder="Search Bayan..." ng-model="FBayan" ng-keyup="Applyfilter()" />
+                </div>
+                <div class="modern-search-input">
+                    <i class="icon-search4"></i><input type="text" placeholder="Search Container..." ng-model="FCntr" ng-keyup="Applyfilter()" />
+                </div>
+                <div style="width: 200px;">
+                    <select id="FCargoType" multiple ng-model="FCargoType" ng-change="Applyfilter()">
+                        @*<option ng-repeat="x in HScodegroup" value="{{x.Name}}">{{x.Name}}</option>
+                            <option value="N">N</option>*@
+
+                        <option ng-repeat="x in CargoTypeList4DashboardFilter" value="{{x}}">{{x}}</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <div class="dynamic-card-grid">
+
+            <div class="dynamic-card d-flex align-items-stretch" ng-show="showCard1">
+                <div class="modern-panel w-100">
+                    <div class="modern-panel-header">
+                        <span>Waiting Time SealCut</span>
+                        <div class="dropdown">
+                            <i class="icon-more2 cursor-pointer text-muted font-size-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding:5px;"></i>
+                            <div class="dropdown-menu dropdown-menu-right shadow border-0" style="border-radius: 8px;">
+                                <a class="dropdown-item py-2 text-success font-weight-bold" href="#" ng-click="OpenExcelModal('Waiting Time SealCut')"><i class="icon-file-excel mr-2"></i> Export to Excel</a>
+                                <a class="dropdown-item py-2 text-primary font-weight-bold" href="#" ng-click="OpenEmailModal('Waiting Time SealCut')"><i class="icon-paperplane mr-2"></i> Send Email Report</a>
+                                <a class="dropdown-item py-2 text-danger font-weight-bold" href="#" ng-click="PrintReport('Waiting Time SealCut',UIAwaitingsealcutRecords)"><i class="icon-file-pdf mr-2"></i> Print Report</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modern-panel-body">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th class="w-35">Container</th>
+                                    <th class="w-35">Bayan</th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','Location','Asc',$event,'UIAwaitingsealcutRecords')">
+                                            Location
+                                            <i class="icon-arrow-down22"></i>
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','Location','Dsc',$event,'UIAwaitingsealcutRecords')">
+                                            Location
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','hrs','Asc',$event,'UIAwaitingsealcutRecords')">
+                                            Stage Elapsed HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','hrs','Dsc',$event,'UIAwaitingsealcutRecords')">
+                                            Stage Elapsed HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','OverAll','Asc',$event,'UIAwaitingsealcutRecords')">
+                                            Overall HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','OverAll','Dsc',$event,'UIAwaitingsealcutRecords')">
+                                            Overall HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    @if (showPkgHs)
+                                    {
+                                        <th>
+                                            <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','Palletized','Asc',$event,'UIAwaitingsealcutRecords')">
+                                                Palletized
+                                                <i class="icon-arrow-down22"></i>
+
+                                            </span>
+                                            <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','Palletized','Dsc',$event,'UIAwaitingsealcutRecords')">
+                                                Palletized
+                                                <i class="icon-arrow-up22"></i>
+                                            </span>
+                                        </th>
+                                        <th>Cargo Type </th>
+                                    }
+                                    <th class="w-35">
+                                        <span>
+                                            @*LOC Sent*@
+                                            Grounded in exam yard
+                                        </span>
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in UIAwaitingsealcutRecords" ng-click="OpenContainerEvnets(item.Container)" style="cursor:pointer;">
+                                    <td class="w-35" ng-class="{
+                                            'imprtbg': item.category === 'IMPRT' && !item.IsTransitContainer,
+                                            'exprtbg': item.category === 'EXPRT' && !item.IsTransitContainer,
+                                            'imprtbgTransit': item.category === 'IMPRT' && item.IsTransitContainer,
+                                            'exprtbgTransit': item.category === 'EXPRT' && item.IsTransitContainer
+                                        }">
+                                        <div class="truncate tw-100px">{{item.Container}}</div>
+                                    </td>
+                                    <td ng-class="{'bgColdStore':item.result == 'Cold Store','bgoog':item.result == 'Others','bgdry':item.result =='Dry','bgReefer':item.result =='Reefer'}"><div class="truncate">{{item.Bayan}}</div></td>
+                                    <td class="w-35" ng-class="{'bgdogsniffing':item.InspectionType == 'Dog Sniffing','bgmobilescan':item.InspectionType == 'MobileScan','bgBuidling':item.InspectionType =='BuildingScan'}"><div class="truncate">{{item.Location}}</div></td>
+                                    <td class="w-30"><div ng-class="{'ColorRed':item.SLAExceding==true}" class="truncate">{{item.DwellHrs}}</div></td>
+                                    <td class="w-30"><div class="truncate"> <span ng-class="{'HighlightOverallHrs':HighlightOverAllHrs(item.OverallHrs)}">{{item.OverallHrs}}</span></div></td>
+                                    @if (showPkgHs)
+                                    {
+                                        <td>
+                                            <span ng-show="item.packageType=='Pallette'" class="textGreen">Yes</span>
+                                            <span ng-show="item.packageType=='NONPallette'" class="textRed">No</span>
+
+                                        </td>
+                                        <td>
+                                            {{item.CargoType}}
+                                        </td>
+                                    }
+                                    <td class="w-30">
+                                        <div class="" ng-if="item.LOCSent && item.category =='IMPRT'">{{item.LOCTime | date:'dd/MM/yyyy HH:mm'}}</div>
+                                        <div ng-if="!item.LOCSent && item.category =='IMPRT'">
+                                            <span ng-if="item.FailedCount>0" class="text-danger">
+                                                Failed({{item.FailedCount}})
+                                                <i class="icon-info22" ng-if="item.FailureReason != null" title="{{item.FailureReason}}"></i>
+                                            </span>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modern-panel-footer">
+                        <div class="row">
+                            <div class="col-md-6 col-6">
+                                <h6 class="text-center"><b>Total</b></h6>
+                            </div>
+                            <div class="col-md-6 col-6">
+                                <h6 class="text-center"><b>{{UIAwaitingsealcutRecords.length}}</b></h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dynamic-card d-flex align-items-stretch" ng-show="showCard2">
+                <div class="modern-panel w-100">
+                    <div class="modern-panel-header">
+                        <span>Waiting Time Start Strip</span>
+                        <div class="dropdown">
+                            <i class="icon-more2 cursor-pointer text-muted font-size-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding:5px;"></i>
+                            <div class="dropdown-menu dropdown-menu-right shadow border-0" style="border-radius: 8px;">
+                                <a class="dropdown-item py-2 text-success font-weight-bold" href="#" ng-click="OpenExcelModal('Waiting Time Start Strip')"><i class="icon-file-excel mr-2"></i> Export to Excel</a>
+                                <a class="dropdown-item py-2 text-primary font-weight-bold" href="#" ng-click="OpenEmailModal('Waiting Time Start Strip')"><i class="icon-paperplane mr-2"></i> Send Email Report</a>
+                                <a class="dropdown-item py-2 text-danger font-weight-bold" href="#" ng-click="PrintReport('Waiting Time Start Strip',UIStartCargoStripRecords)"><i class="icon-file-pdf mr-2"></i> Print Report</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modern-panel-body">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th class="w-30">Container</th>
+                                    <th class="w-30">Bayan</th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','Location','Asc',$event,'UIStartCargoStripRecords')">
+                                            Location
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','Location','Dsc',$event,'UIStartCargoStripRecords')">
+                                            Location
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-35">Photos Done</th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','PhotoOpenElapsedHr','Asc',$event,'UIStartCargoStripRecords')">
+                                            Photo Elapsed HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','PhotoOpenElapsedHr','Dsc',$event,'UIStartCargoStripRecords')">
+                                            Photo Elapsed HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','hrs','Asc',$event,'UIStartCargoStripRecords')">
+                                            Stage Elapsed HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','hrs','Dsc',$event,'UIStartCargoStripRecords')">
+                                            Stage Elapsed HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+
+
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','OverAll','Asc',$event,'UIStartCargoStripRecords')">
+                                            Overall HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','OverAll','Dsc',$event,'UIStartCargoStripRecords')">
+                                            Overall HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    @if (showPkgHs)
+                                    {
+                                        <th>
+                                            <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','Palletized','Asc',$event,'UIStartCargoStripRecords')">
+                                                Palletized
+                                                <i class="icon-arrow-down22"></i>
+
+                                            </span>
+                                            <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','Palletized','Dsc',$event,'UIStartCargoStripRecords')">
+                                                Palletized
+                                                <i class="icon-arrow-up22"></i>
+                                            </span>
+                                        </th>
+                                        <th>Cargo Type</th>
+                                    }
+                                    <th class="w-35">
+                                        <span>
+                                            @*STS Received*@
+                                            Sealcut recieved
+                                        </span>
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in UIStartCargoStripRecords" ng-click="OpenContainerEvnets(item.Container)" style="cursor:pointer;">
+
+                                    <td class="w-35" ng-class="{
+                                            'imprtbg': item.category === 'IMPRT' && !item.IsTransitContainer,
+                                            'exprtbg': item.category === 'EXPRT' && !item.IsTransitContainer,
+                                            'imprtbgTransit': item.category === 'IMPRT' && item.IsTransitContainer,
+                                            'exprtbgTransit': item.category === 'EXPRT' && item.IsTransitContainer
+                                        }">
+                                        <div class="truncate tw-100px">{{item.Container}}</div>
+                                    </td>
+                                    <td ng-class="{'bgColdStore':item.result == 'Cold Store','bgoog':item.result == 'Others','bgdry':item.result =='Dry','bgReefer':item.result =='Reefer'}"> <div class="truncate">{{item.Bayan}}</div></td>
+                                    <td class="w-35" ng-class="{'bgdogsniffing':item.InspectionType == 'Dog Sniffing','bgmobilescan':item.InspectionType == 'MobileScan','bgBuidling':item.InspectionType =='BuildingScan'}">
+                                        <div class="truncate">{{item.Location}}</div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div ng-class="{ 'green-color': item.SealCutPhotoUpdated==true, 'red-dot': item.SealCutPhotoUpdated==false}">
+                                            <span ng-show="item.SealCutPhotoUpdated==true">
+                                                {{ handleByMap[item.HandleBy] }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="w-30"><div class="truncate" ng-class="{'ColorRed':item.PhotoSLAExceding==true}">{{item.PhotoOpenElapsedHr||'-'}}</div></td>
+
+                                    <td class="w-30">
+                                        <div class="truncate" ng-class="{'ColorRed':item.SLAExceding==true}">{{item.DwellHrs||'-'}}</div>
+                                    </td>
+
+                                    <td class="w-30">
+                                        <div class="truncate"> <span ng-class="{'HighlightOverallHrs':HighlightOverAllHrs(item.OverallHrs)}">{{item.OverallHrs}}</span></div>
+                                    </td>
+                                    @if (showPkgHs)
+                                    {
+                                        <td>
+                                            <span ng-show="item.packageType=='Pallette'" class="textGreen">Yes</span>
+                                            <span ng-show="item.packageType=='NONPallette'" class="textRed">No</span>
+                                        </td>
+                                        <td>
+                                            {{item.CargoType}}
+                                        </td>
+                                    }
+                                    <td class="w-30">
+                                        <div class="" ng-if="item.STSReceived">{{item.STSTime | date:'dd/MM/yyyy HH:mm'}}</div>
+                                        <div ng-if="!item.STSReceived"><i class="icon-cross2 text-danger font-size-lg"></i></div>
+                                    </td>
+                                    <td>
+                                        <div ng-show="item.LAS==true" class="dot LAS">LA</div>
+                                        <div ng-show="item.FAS==true" class="dot FAS">FA</div>
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modern-panel-footer">
+                        <div class="row">
+                            <div class="col-md-6 col-6">
+                                <h6 class="text-center"><b>Total</b></h6>
+                            </div>
+                            <div class="col-md-6 col-6">
+                                <h6 class="text-center"><b>{{UIStartCargoStripRecords.length}}</b></h6>
+                            </div>
+                        </div>
+                        <div class="row Subtotal" ng-show="UIStartCargoStripRecords!=null">
+                            <div class="text-center col-3 col-md-3 br-1"><div class="p-1">FK = {{SubtotalHandleBy(UIStartCargoStripRecords,'forklift')}}</div></div>
+                            <div class="text-center col-3 col-md-3 br-1"><div class="p-1">LAB = {{SubtotalHandleBy(UIStartCargoStripRecords,'labor')}}</div></div>
+                            <div class="text-center col-3 col-md-3 br-1"><div class="p-1">MC = {{SubtotalHandleBy(UIStartCargoStripRecords,'mobilecrane')}}</div></div>
+                            <div class="text-center col-3 col-md-3"><div class="p-1">NST = {{SubtotalHandleBy(UIStartCargoStripRecords,'nostrip')}}</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dynamic-card d-flex align-items-stretch" ng-show="showCard3">
+                <div class="modern-panel w-100">
+                    <div class="modern-panel-header">
+                        <span>Cargo Strip In Progress</span>
+                        <div class="dropdown">
+                            <i class="icon-more2 cursor-pointer text-muted font-size-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding:5px;"></i>
+                            <div class="dropdown-menu dropdown-menu-right shadow border-0" style="border-radius: 8px;">
+                                <a class="dropdown-item py-2 text-success font-weight-bold" href="#" ng-click="OpenExcelModal('Cargo Strip In Progress')"><i class="icon-file-excel mr-2"></i> Export to Excel</a>
+                                <a class="dropdown-item py-2 text-primary font-weight-bold" href="#" ng-click="OpenEmailModal('Cargo Strip In Progress')"><i class="icon-paperplane mr-2"></i> Send Email Report</a>
+                                <a class="dropdown-item py-2 text-danger font-weight-bold" href="#" ng-click="PrintReport('Cargo Strip In Progress',UIAwatingCargoStripRecords)"><i class="icon-file-pdf mr-2"></i> Print Report</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modern-panel-body">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th class="w-30">Container</th>
+                                    <th class="w-30">Bayan</th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','Location','Asc',$event,'UIAwatingCargoStripRecords')">
+                                            Location
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','Location','Dsc',$event,'UIAwatingCargoStripRecords')">
+                                            Location
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-30">Handle by</th>
+                                    <th class="w-30">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','DTS','Asc',$event,'UIAwatingCargoStripRecords')">
+                                            DTS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','DTS','Dsc',$event,'UIAwatingCargoStripRecords')">
+                                            DTS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','hrs','Asc',$event,'UIAwatingCargoStripRecords')">
+                                            Stage Elapsed HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','hrs','Dsc',$event,'UIAwatingCargoStripRecords')">
+                                            Stage Elapsed HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','StripApprovalElapsedHr','Asc',$event,'UIAwatingCargoStripRecords')">
+                                            Approval Elapsed HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','StripApprovalElapsedHr','Dsc',$event,'UIAwatingCargoStripRecords')">
+                                            Approval Elapsed HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','OverAll','Asc',$event,'UIAwatingCargoStripRecords')">
+                                            Overall HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','OverAll','Dsc',$event,'UIAwatingCargoStripRecords')">
+                                            Overall HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    @if (showPkgHs)
+                                    {
+                                        <th>
+                                            <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','Palletized','Asc',$event,'UIAwatingCargoStripRecords')">
+                                                Palletized
+                                                <i class="icon-arrow-down22"></i>
+
+                                            </span>
+                                            <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','Palletized','Dsc',$event,'UIAwatingCargoStripRecords')">
+                                                Palletized
+                                                <i class="icon-arrow-up22"></i>
+                                            </span>
+                                        </th>
+                                        <th>Cargo Type</th>
+                                    }
+                                    @*<th class="w-35">
+                                            <span>
+                                                STS Received
+                                            </span>
+                                        </th>*@
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in UIAwatingCargoStripRecords" ng-click="OpenContainerEvnets(item.Container)" style="cursor:pointer;">
+
+                                    <td class="w-35" ng-class="{
+                                            'imprtbg': item.category === 'IMPRT' && !item.IsTransitContainer,
+                                            'exprtbg': item.category === 'EXPRT' && !item.IsTransitContainer,
+                                            'imprtbgTransit': item.category === 'IMPRT' && item.IsTransitContainer,
+                                            'exprtbgTransit': item.category === 'EXPRT' && item.IsTransitContainer
+                                        }">
+                                        <div class="truncate tw-100px">{{item.Container}}</div>
+                                    </td>
+                                    <td ng-class="{'bgColdStore':item.result == 'Cold Store','bgoog':item.result == 'Others','bgdry':item.result =='Dry','bgReefer':item.result =='Reefer'}"> <div class="truncate">{{item.Bayan}}</div></td>
+                                    <td class="w-35" ng-class="{'bgdogsniffing':item.InspectionType == 'Dog Sniffing','bgmobilescan':item.InspectionType == 'MobileScan','bgBuidling':item.InspectionType =='BuildingScan'}">
+                                        <div class="truncate">{{item.Location}}</div>
+                                    </td>
+                                    <td>
+                                        <div ng-class="{ 'green-color': item.HandleBy!='' && item.HandleBy!=null && item.HandleBy!='NoStrip', 'red-dot': item.HandleBy=='' || item.HandleBy==null,'red-color': item.HandleBy=='NoStrip'}">
+                                            <span>
+                                                {{handleByMap[item.HandleBy]}}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="textGreen" ng-show="item.Difficulties==true">Yes</span>
+                                        <span class="textRed" ng-show="item.Difficulties==false">No</span>
+                                    </td>
+                                    <td class="w-30">
+                                        <div ng-class="{'ColorRed':item.SLAExceding==true}" class="truncate">{{item.DwellHrs}}</div>
+                                    </td>
+                                    <td class="w-30">
+                                        <div ng-class="{'ColorRed':item.ApprovalSLAExceding==true}" class="truncate">{{item.StripApprovalElapsedHr||'-'}}</div>
+                                    </td>
+
+                                    <td class="w-30">
+                                        <div class="truncate"> <span ng-class="{'HighlightOverallHrs':HighlightOverAllHrs(item.OverallHrs)}">{{item.OverallHrs}}</span></div>
+                                    </td>
+                                    @if (showPkgHs)
+                                    {
+                                        <td>
+                                            <span ng-show="item.packageType=='Pallette'" class="textGreen">Yes</span>
+                                            <span ng-show="item.packageType=='NONPallette'" class="textRed">No</span>
+                                        </td>
+                                        <td>
+                                            {{item.CargoType}}
+                                        </td>
+                                    }
+                                    <td>
+                                        <div ng-show="item.LAS==true" class="dot LAS">LA</div>
+                                        <div ng-show="item.FAS==true" class="dot FAS">FA</div>
+                                    </td>
+
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modern-panel-footer">
+                        <div class="row">
+                            <div class="col-md-6 col-6">
+                                <h6 class="text-center"><b>Total</b></h6>
+                            </div>
+                            <div class="col-md-6 col-6">
+                                <h6 class="text-center"><b>{{UIAwatingCargoStripRecords.length}}</b></h6>
+                            </div>
+                        </div>
+                        <div class="row Subtotal" ng-show="UIAwatingCargoStripRecords!=null">
+                            <div class="text-center col-3 col-md-3 br-1"><div class="p-1">FK = {{SubtotalHandleBy(UIAwatingCargoStripRecords,'forklift')}}</div></div>
+                            <div class="text-center col-3 col-md-3 br-1"><div class="p-1">LAB = {{SubtotalHandleBy(UIAwatingCargoStripRecords,'labor')}}</div></div>
+                            <div class="text-center col-3 col-md-3 br-1"><div class="p-1">MC = {{SubtotalHandleBy(UIAwatingCargoStripRecords,'mobilecrane')}}</div></div>
+                            <div class="text-center col-3 col-md-3"><div class="p-1">NST = {{SubtotalHandleBy(UIAwatingCargoStripRecords,'nostrip')}}</div></div>
+                            <div class="text-center col-3 col-md-3"><div class="p-1">DTS = {{SubtotalHandleBy(UIAwatingCargoStripRecords,'DTS')}}</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dynamic-card d-flex align-items-stretch" ng-show="showCard4">
+                <div class="modern-panel w-100">
+                    <div class="modern-panel-header">
+                        <span>Waiting Time Custom Inspection</span>
+                        <div class="dropdown">
+                            <i class="icon-more2 cursor-pointer text-muted font-size-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding:5px;"></i>
+                            <div class="dropdown-menu dropdown-menu-right shadow border-0" style="border-radius: 8px;">
+                                <a class="dropdown-item py-2 text-success font-weight-bold" href="#" ng-click="OpenExcelModal('Waiting Time Custom Inspection')"><i class="icon-file-excel mr-2"></i> Export to Excel</a>
+                                <a class="dropdown-item py-2 text-primary font-weight-bold" href="#" ng-click="OpenEmailModal('Waiting Time Custom Inspection')"><i class="icon-paperplane mr-2"></i> Send Email Report</a>
+                                <a class="dropdown-item py-2 text-danger font-weight-bold" href="#" ng-click="PrintReport('Waiting Time Custom Inspection',UIAwaitingInspctionRecords)"><i class="icon-file-pdf mr-2"></i> Print Report</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modern-panel-body">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th class="w-35">Container</th>
+                                    <th class="w-35">Bayan</th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','Location','Asc',$event,'UIAwaitingInspctionRecords')">
+                                            Location
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','Location','Dsc',$event,'UIAwaitingInspctionRecords')">
+                                            Location
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-35">
+                                        Handle by
+                                    </th>
+                                    <th>
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','DTS','Asc',$event,'UIAwaitingInspctionRecords')">
+                                            DTS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','DTS','Dsc',$event,'UIAwaitingInspctionRecords')">
+                                            DTS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','hrs','Asc',$event,'UIAwaitingInspctionRecords')">
+                                            Stage  Elapsed HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','hrs','Dsc',$event,'UIAwaitingInspctionRecords')">
+                                            Stage   Elapsed HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','OverAll','Asc',$event,'UIAwaitingInspctionRecords')">
+                                            Overall HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','OverAll','Dsc',$event,'UIAwaitingInspctionRecords')">
+                                            Overall HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    @if (showPkgHs)
+                                    {
+                                        <th>
+                                            <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','Palletized','Asc',$event,'UIAwaitingInspctionRecords')">
+                                                Palletized
+                                                <i class="icon-arrow-down22"></i>
+
+                                            </span>
+                                            <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','Palletized','Dsc',$event,'UIAwaitingInspctionRecords')">
+                                                Palletized
+                                                <i class="icon-arrow-up22"></i>
+                                            </span>
+                                        </th>
+                                        <th>
+                                            Cargo Type
+                                        </th>
+                                    }
+                                    <th class="w-35">
+                                        <span>
+                                            @*LOC Sent*@
+                                            Strip done notified
+                                        </span>
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in UIAwaitingInspctionRecords" ng-click="OpenContainerEvnets(item.Container)" style="cursor:pointer;">
+
+                                    <td class="w-35" ng-class="{
+                                            'imprtbg': item.category === 'IMPRT' && !item.IsTransitContainer,
+                                            'exprtbg': item.category === 'EXPRT' && !item.IsTransitContainer,
+                                            'imprtbgTransit': item.category === 'IMPRT' && item.IsTransitContainer,
+                                            'exprtbgTransit': item.category === 'EXPRT' && item.IsTransitContainer
+                                        }">
+                                        <div class="truncate tw-100px">{{item.Container}}</div>
+                                    </td>
+                                    <td ng-class="{'bgColdStore':item.result == 'Cold Store','bgoog':item.result == 'Others','bgdry':item.result =='Dry','bgReefer':item.result =='Reefer'}"><div class="truncate">{{item.Bayan}}</div></td>
+                                    <td class="w-35" ng-class="{'bgdogsniffing':item.InspectionType == 'Dog Sniffing','bgmobilescan':item.InspectionType == 'MobileScan','bgBuidling':item.InspectionType =='BuildingScan'}"><div class="truncate">{{item.Location}}</div></td>
+                                    <td class="w-30">
+                                        <div ng-class="{ 'green-color': item.HandleBy!='' && item.HandleBy!=null && item.HandleBy!='NoStrip', 'red-dot': item.HandleBy=='' || item.HandleBy==null,'red-color': item.HandleBy=='NoStrip'}">
+                                            <span>
+                                                {{handleByMap[item.HandleBy]}}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="textGreen" ng-show="item.Difficulties==true">Yes</span>
+                                        <span class="textRed" ng-show="item.Difficulties==false">No</span>
+                                    </td>
+                                    <td class="w-30"><div class="truncate" ng-class="{'ColorRed':item.SLAExceding==true}">{{item.DwellHrs}}</div></td>
+                                    <td class="w-30"><div class="truncate"> <span ng-class="{'HighlightOverallHrs':HighlightOverAllHrs(item.OverallHrs)}">{{item.OverallHrs}}</span></div></td>
+                                    @if (showPkgHs)
+                                    {
+                                        <td>
+                                            <span ng-show="item.packageType=='Pallette'" class="textGreen">Yes</span>
+                                            <span ng-show="item.packageType=='NONPallette'" class="textRed">No</span>
+                                        </td>
+                                        <td>
+                                            {{item.CargoType}}
+                                        </td>
+                                    }
+                                    <td class="w-30">
+                                        <div class="" ng-if="item.LOCSent && item.category =='IMPRT'">{{item.LOCTime | date:'dd/MM/yyyy HH:mm'}}</div>
+                                        <div ng-if="!item.LOCSent && item.category =='IMPRT'">
+                                            <span ng-if="item.FailedCount>0" class="text-danger">
+                                                Failed({{item.FailedCount}})
+                                                <i class="icon-info22" ng-if="item.FailureReason != null" title="{{item.FailureReason}}"></i>
+                                            </span>
+
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div ng-if="item.CustomsStage == 'Awaiting Clearance'" class="holdCircle"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modern-panel-footer">
+                        <div class="row">
+                            <div class="col-md-6 col-6">
+                                <h6 class="text-center"><b>Total</b></h6>
+                            </div>
+                            <div class="col-md-6 col-6">
+                                <h6 class="text-center"><b>{{UIAwaitingInspctionRecords.length}}</b></h6>
+                            </div>
+                        </div>
+                        <div class="row Subtotal" ng-show="UIAwaitingInspctionRecords!=null">
+                            <div class="text-center col-3 col-md-3 br-1"><div class="p-1">FK = {{SubtotalHandleBy(UIAwaitingInspctionRecords,'forklift')}}</div></div>
+                            <div class="text-center col-3 col-md-3 br-1"><div class="p-1">LAB = {{SubtotalHandleBy(UIAwaitingInspctionRecords,'labor')}}</div></div>
+                            <div class="text-center col-3 col-md-3 br-1"><div class="p-1">MC = {{SubtotalHandleBy(UIAwaitingInspctionRecords,'mobilecrane')}}</div></div>
+                            <div class="text-center col-3 col-md-3"><div class="p-1">NST = {{SubtotalHandleBy(UIAwaitingInspctionRecords,'nostrip')}}</div></div>
+                            <div class="text-center col-3 col-md-3"><div class="p-1">DTS = {{SubtotalHandleBy(UIAwaitingInspctionRecords,'DTS')}}</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dynamic-card d-flex align-items-stretch" ng-show="showCard5">
+                <div class="modern-panel w-100">
+                    <div class="modern-panel-header">
+                        <span>Waiting Time Start Repack</span>
+                        <div class="dropdown">
+                            <i class="icon-more2 cursor-pointer text-muted font-size-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding:5px;"></i>
+                            <div class="dropdown-menu dropdown-menu-right shadow border-0" style="border-radius: 8px;">
+                                <a class="dropdown-item py-2 text-success font-weight-bold" href="#" ng-click="OpenExcelModal('Waiting Time Start Repack')"><i class="icon-file-excel mr-2"></i> Export to Excel</a>
+                                <a class="dropdown-item py-2 text-primary font-weight-bold" href="#" ng-click="OpenEmailModal('Waiting Time Start Repack')"><i class="icon-paperplane mr-2"></i> Send Email Report</a>
+                                <a class="dropdown-item py-2 text-danger font-weight-bold" href="#" ng-click="PrintReport('Waiting Time Start Repack',UIStartRepackandSealRecords)"><i class="icon-file-pdf mr-2"></i> Print Report</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modern-panel-body">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th class="w-35">Container</th>
+                                    <th class="w-35">Bayan</th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','Location','Asc',$event,'UIStartRepackandSealRecords')">
+                                            Location
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','Location','Dsc',$event,'UIStartRepackandSealRecords')">
+                                            Location
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-35">
+                                        Handle by
+                                    </th>
+                                    <th>
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','DTS','Asc',$event,'UIStartRepackandSealRecords')">
+                                            DTS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','DTS','Dsc',$event,'UIStartRepackandSealRecords')">
+                                            DTS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','hrs','Asc',$event,'UIStartRepackandSealRecords')">
+                                            Stage  Elapsed HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','hrs','Dsc',$event,'UIStartRepackandSealRecords')">
+                                            Stage  Elapsed HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','OverAll','Asc',$event,'UIStartRepackandSealRecords')">
+                                            Overall HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','OverAll','Dsc',$event,'UIStartRepackandSealRecords')">
+                                            Overall HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    @if (showPkgHs)
+                                    {
+                                        <th>
+                                            <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','Palletized','Asc',$event,'UIStartRepackandSealRecords')">
+                                                Palletized
+                                                <i class="icon-arrow-down22"></i>
+
+                                            </span>
+                                            <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','Palletized','Dsc',$event,'UIStartRepackandSealRecords')">
+                                                Palletized
+                                                <i class="icon-arrow-up22"></i>
+                                            </span>
+                                        </th>
+                                        <th>Cargo Type</th>
+                                    }
+                                    <th class="w-35">
+                                        <span>
+                                            @*STS Received*@
+                                            Inspection done noti: recieved
+                                        </span>
+                                    </th>
+                                    <th></th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in UIStartRepackandSealRecords" ng-click="OpenContainerEvnets(item.Container)" style="cursor:pointer;">
+
+                                    <td class="w-35" ng-class="{
+                                            'imprtbg': item.category === 'IMPRT' && !item.IsTransitContainer,
+                                            'exprtbg': item.category === 'EXPRT' && !item.IsTransitContainer,
+                                            'imprtbgTransit': item.category === 'IMPRT' && item.IsTransitContainer,
+                                            'exprtbgTransit': item.category === 'EXPRT' && item.IsTransitContainer
+                                        }">
+                                        <div class="truncate tw-100px">{{item.Container}}</div>
+                                    </td>
+                                    <td ng-class="{'bgColdStore':item.result == 'Cold Store','bgoog':item.result == 'Others','bgdry':item.result =='Dry','bgReefer':item.result =='Reefer'}"><div class="truncate">{{item.Bayan}}</div></td>
+                                    <td class="w-35" ng-class="{'bgdogsniffing':item.InspectionType == 'Dog Sniffing','bgmobilescan':item.InspectionType == 'MobileScan','bgBuidling':item.InspectionType =='BuildingScan'}"><div class="truncate">{{item.Location}}</div></td>
+                                    <td>
+                                        <div ng-class="{ 'green-color': item.HandleBy!='' && item.HandleBy!=null && item.HandleBy!='NoStrip', 'red-dot': item.HandleBy=='' || item.HandleBy==null,'red-color': item.HandleBy=='NoStrip'}">
+                                            <span>
+                                                {{handleByMap[item.HandleBy]}}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="textGreen" ng-show="item.Difficulties==true">Yes</span>
+                                        <span class="textRed" ng-show="item.Difficulties==false">No</span>
+                                    </td>
+                                    <td class="w-30"><div ng-class="{'ColorRed':item.SLAExceding==true}" class="truncate">{{item.DwellHrs}}</div></td>
+                                    <td class="w-30"><div class="truncate"> <span ng-class="{'HighlightOverallHrs':HighlightOverAllHrs(item.OverallHrs)}">{{item.OverallHrs}}</span></div></td>
+                                    @if (showPkgHs)
+                                    {
+                                        <td>
+                                            <span ng-show="item.packageType=='Pallette'" class="textGreen">Yes</span>
+                                            <span ng-show="item.packageType=='NONPallette'" class="textRed">No</span>
+                                        </td>
+                                        <td>
+                                            {{item.CargoType}}
+                                        </td>
+                                    }
+                                    <td class="w-30">
+                                        <div class="" ng-if="item.STSReceived">{{item.STSTime | date:'dd/MM/yyyy HH:mm'}}</div>
+                                        <div ng-if="!item.STSReceived"><i class="icon-cross2 text-danger font-size-lg"></i></div>
+                                    </td>
+                                    <td>
+                                        <div ng-show="item.LAR==true" class="dot LAR">LA</div>
+                                        <div ng-show="item.FAR==true" class="dot FAR">FA</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modern-panel-footer">
+                        <div class="row">
+                            <div class="col-md-6 col-6">
+                                <h6 class="text-center"><b>Total</b></h6>
+                            </div>
+                            <div class="col-md-6 col-6">
+                                <h6 class="text-center"><b>{{UIStartRepackandSealRecords.length}}</b></h6>
+                            </div>
+
+                        </div>
+                        <div class="row Subtotal" ng-show="UIStartRepackandSealRecords!=null">
+                            <div class="text-center col-3 col-md-3 br-1"><div class="p-1">FK = {{SubtotalHandleBy(UIStartRepackandSealRecords,'forklift')}}</div></div>
+                            <div class="text-center col-3 col-md-3 br-1"><div class="p-1">LAB = {{SubtotalHandleBy(UIStartRepackandSealRecords,'labor')}}</div></div>
+                            <div class="text-center col-3 col-md-3 br-1"><div class="p-1">MC = {{SubtotalHandleBy(UIStartRepackandSealRecords,'mobilecrane')}}</div></div>
+                            <div class="text-center col-3 col-md-3"><div class="p-1">NST = {{SubtotalHandleBy(UIStartRepackandSealRecords,'nostrip')}}</div></div>
+                            <div class="text-center col-3 col-md-3"><div class="p-1">DTS = {{SubtotalHandleBy(UIStartRepackandSealRecords,'DTS')}}</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dynamic-card d-flex align-items-stretch" ng-show="showCard6">
+                <div class="modern-panel w-100">
+                    <div class="modern-panel-header">
+                        <span>Cargo Repack In Progress</span>
+                        <div class="dropdown">
+                            <i class="icon-more2 cursor-pointer text-muted font-size-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding:5px;"></i>
+                            <div class="dropdown-menu dropdown-menu-right shadow border-0" style="border-radius: 8px;">
+                                <a class="dropdown-item py-2 text-success font-weight-bold" href="#" ng-click="OpenExcelModal('Cargo Repack In Progress')"><i class="icon-file-excel mr-2"></i> Export to Excel</a>
+                                <a class="dropdown-item py-2 text-primary font-weight-bold" href="#" ng-click="OpenEmailModal('Cargo Repack In Progress')"><i class="icon-paperplane mr-2"></i> Send Email Report</a>
+                                <a class="dropdown-item py-2 text-danger font-weight-bold" href="#" ng-click="PrintReport('Cargo Repack In Progress',UIRepackandSealRecords)"><i class="icon-file-pdf mr-2"></i> Print Report</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modern-panel-body">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th class="w-35">Container</th>
+                                    <th class="w-35">Bayan</th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','Location','Asc',$event,'UIRepackandSealRecords')">
+                                            Location
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','Location','Dsc',$event,'UIRepackandSealRecords')">
+                                            Location
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-35">
+                                        Handle by
+                                    </th>
+                                    <th>
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','DTS','Asc',$event,'UIRepackandSealRecords')">
+                                            DTS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','DTS','Dsc',$event,'UIRepackandSealRecords')">
+                                            DTS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','hrs','Asc',$event,'UIRepackandSealRecords')">
+                                            Stage Elapsed HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','hrs','Dsc',$event,'UIRepackandSealRecords')">
+                                            Stage Elapsed HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','RepackApprovalElapsedHr','Asc',$event,'UIRepackandSealRecords')">
+                                            Approval Elapsed HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','RepackApprovalElapsedHr','Dsc',$event,'UIRepackandSealRecords')">
+                                            Approval Elapsed HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','OverAll','Asc',$event,'UIRepackandSealRecords')">
+                                            Overall HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','OverAll','Dsc',$event,'UIRepackandSealRecords')">
+                                            Overall HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    @if (showPkgHs)
+                                    {
+                                        <th>
+                                            <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','Palletized','Asc',$event,'UIRepackandSealRecords')">
+                                                Palletized
+                                                <i class="icon-arrow-down22"></i>
+
+                                            </span>
+                                            <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','Palletized','Dsc',$event,'UIRepackandSealRecords')">
+                                                Palletized
+                                                <i class="icon-arrow-up22"></i>
+                                            </span>
+                                        </th>
+                                        <th>Cargo Type</th>
+                                    }
+                                    @*<th class="w-35">
+                                            <span>
+                                                STS Received
+                                            </span>
+                                        </th>*@
+                                    <th></th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in UIRepackandSealRecords" ng-click="OpenContainerEvnets(item.Container)" style="cursor:pointer;">
+                                    <td class="w-35" ng-class="{
+                                            'imprtbg': item.category === 'IMPRT' && !item.IsTransitContainer,
+                                            'exprtbg': item.category === 'EXPRT' && !item.IsTransitContainer,
+                                            'imprtbgTransit': item.category === 'IMPRT' && item.IsTransitContainer,
+                                            'exprtbgTransit': item.category === 'EXPRT' && item.IsTransitContainer
+                                        }">
+                                        <div class="truncate tw-100px">{{item.Container}}</div>
+                                    </td>
+                                    <td ng-class="{'bgColdStore':item.result == 'Cold Store','bgoog':item.result == 'Others','bgdry':item.result =='Dry','bgReefer':item.result =='Reefer'}"><div class="truncate">{{item.Bayan}}</div></td>
+                                    <td class="w-35" ng-class="{'bgdogsniffing':item.InspectionType == 'Dog Sniffing','bgmobilescan':item.InspectionType == 'MobileScan','bgBuidling':item.InspectionType =='BuildingScan'}"><div class="truncate">{{item.Location}}</div></td>
+                                    <td>
+
+                                        <div ng-class="{ 'green-color': item.HandleBy!='' && item.HandleBy!=null && item.HandleBy!='NoStrip', 'red-dot': item.HandleBy=='' || item.HandleBy==null,'red-color': item.HandleBy=='NoStrip'}">
+                                            <span>
+                                                {{handleByMap[item.HandleBy]}}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="textGreen" ng-show="item.Difficulties==true">Yes</span>
+                                        <span class="textRed" ng-show="item.Difficulties==false">No</span>
+                                    </td>
+                                    <td class="w-30"><div ng-class="{'ColorRed':item.SLAExceding==true}" class="truncate">{{item.DwellHrs}}</div></td>
+                                    <td class="w-30"><div ng-class="{'ColorRed':item.ApprovalSLAExceding==true}" class="truncate">{{item.RepackApprovalElapsedHr||'-'}}</div></td>
+
+                                    <td class="w-30"><div class="truncate"> <span ng-class="{'HighlightOverallHrs':HighlightOverAllHrs(item.OverallHrs)}">{{item.OverallHrs}}</span></div></td>
+                                    @if (showPkgHs)
+                                    {
+                                        <td>
+                                            <span ng-show="item.packageType=='Pallette'" class="textGreen">Yes</span>
+                                            <span ng-show="item.packageType=='NONPallette'" class="textRed">No</span>
+                                        </td>
+                                        <td>
+                                            {{item.CargoType}}
+                                        </td>
+                                    }
+                                    @*<td class="w-30">
+                                            <div class="" ng-if="item.STSReceived">{{item.STSTime | date:'dd/MM/yyyy HH:mm'}}</div>
+                                            <div ng-if="!item.STSReceived"><i class="icon-cross2 text-danger font-size-lg"></i></div>
+                                        </td>*@
+                                    <td>
+                                        <div ng-show="item.LAR==true" class="dot LAR">LA</div>
+                                        <div ng-show="item.FAR==true" class="dot FAR">FA</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modern-panel-footer">
+                        <div class="row">
+                            <div class="col-md-6 col-6">
+                                <h6 class="text-center"><b>Total</b></h6>
+                            </div>
+                            <div class="col-md-6 col-6">
+                                <h6 class="text-center"><b>{{UIRepackandSealRecords.length}}</b></h6>
+                            </div>
+                        </div>
+                        <div class="row Subtotal" ng-show="UIRepackandSealRecords!=null">
+                            <div class="text-center col-3 col-md-3 br-1"><div class="p-1">FK = {{SubtotalHandleBy(UIRepackandSealRecords,'forklift')}}</div></div>
+                            <div class="text-center col-3 col-md-3 br-1"><div class="p-1">LAB = {{SubtotalHandleBy(UIRepackandSealRecords,'labor')}}</div></div>
+                            <div class="text-center col-3 col-md-3 br-1"><div class="p-1">MC = {{SubtotalHandleBy(UIRepackandSealRecords,'mobilecrane')}}</div></div>
+                            <div class="text-center col-3 col-md-3"><div class="p-1">NST = {{SubtotalHandleBy(UIRepackandSealRecords,'nostrip')}}</div></div>
+                            <div class="text-center col-3 col-md-3"><div class="p-1">DTS = {{SubtotalHandleBy(UIRepackandSealRecords,'DTS')}}</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dynamic-card d-flex align-items-stretch" ng-show="showCard7">
+                <div class="modern-panel w-100">
+                    <div class="modern-panel-header">
+                        <span>Waiting to Apply Seal</span>
+                        <div class="dropdown">
+                            <i class="icon-more2 cursor-pointer text-muted font-size-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding:5px;"></i>
+                            <div class="dropdown-menu dropdown-menu-right shadow border-0" style="border-radius: 8px;">
+                                <a class="dropdown-item py-2 text-success font-weight-bold" href="#" ng-click="OpenExcelModal('Waiting to Apply Seal')"><i class="icon-file-excel mr-2"></i> Export to Excel</a>
+                                <a class="dropdown-item py-2 text-primary font-weight-bold" href="#" ng-click="OpenEmailModal('Waiting to Apply Seal')"><i class="icon-paperplane mr-2"></i> Send Email Report</a>
+                                <a class="dropdown-item py-2 text-danger font-weight-bold" href="#" ng-click="PrintReport('Waiting to Apply Seal',UIWaitingtoApplySealRecords)"><i class="icon-file-pdf mr-2"></i> Print Report</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modern-panel-body">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th class="w-30">Container</th>
+                                    <th class="w-30">Bayan</th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','Location','Asc',$event,'UIWaitingtoApplySealRecords')">
+                                            Location
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','Location','Dsc',$event,'UIWaitingtoApplySealRecords')">
+                                            Location
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','hrs','Asc',$event,'UIWaitingtoApplySealRecords')">
+                                            Stage   Elapsed HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','hrs','Dsc',$event,'UIWaitingtoApplySealRecords')">
+                                            Stage   Elapsed HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    <th class="w-35">
+                                        <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','OverAll','Asc',$event,'UIWaitingtoApplySealRecords')">
+                                            Overall HRS
+                                            <i class="icon-arrow-down22"></i>
+
+                                        </span>
+                                        <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','OverAll','Dsc',$event,'UIWaitingtoApplySealRecords')">
+                                            Overall HRS
+                                            <i class="icon-arrow-up22"></i>
+                                        </span>
+                                    </th>
+                                    @if (showPkgHs)
+                                    {
+                                        <th>
+                                            <span class="Dsc" ng-click="SortDetailsNewDetailsPage('UI','Palletized','Asc',$event,'UIWaitingtoApplySealRecords')">
+                                                Palletized
+                                                <i class="icon-arrow-down22"></i>
+
+                                            </span>
+                                            <span class="Asc" style="display:none;" ng-click="SortDetailsNewDetailsPage('UI','Palletized','Dsc',$event,'UIWaitingtoApplySealRecords')">
+                                                Palletized
+                                                <i class="icon-arrow-up22"></i>
+                                            </span>
+                                        </th>
+                                        <th>Cargo Type</th>
+                                    }
+                                    <th>
+                                        <span>
+                                            @*LOC Sent*@
+                                            Repack done notified
+                                        </span>
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in UIWaitingtoApplySealRecords" ng-click="OpenContainerEvnets(item.Container)" style="cursor:pointer;">
+
+                                    <td class="w-35" ng-class="{
+                                            'imprtbg': item.category === 'IMPRT' && !item.IsTransitContainer,
+                                            'exprtbg': item.category === 'EXPRT' && !item.IsTransitContainer,
+                                            'imprtbgTransit': item.category === 'IMPRT' && item.IsTransitContainer,
+                                            'exprtbgTransit': item.category === 'EXPRT' && item.IsTransitContainer
+                                        }">
+                                        <div class="truncate tw-100px">{{item.Container}}</div>
+                                    </td>
+                                    <td ng-class="{'bgColdStore':item.result == 'Cold Store','bgoog':item.result == 'Others','bgdry':item.result =='Dry','bgReefer':item.result =='Reefer'}"> <div class="truncate">{{item.Bayan}}</div></td>
+                                    <td class="w-35" ng-class="{'bgdogsniffing':item.InspectionType == 'Dog Sniffing','bgmobilescan':item.InspectionType == 'MobileScan','bgBuidling':item.InspectionType =='BuildingScan'}">
+                                        <div class="truncate">{{item.Location}}</div>
+                                    </td>
+                                    <td class="w-30">
+                                        <div ng-class="{'ColorRed':item.SLAExceding==true}" class="truncate">{{item.DwellHrs}}</div>
+                                    </td>
+                                    <td class="w-30">
+                                        <div class="truncate"> <span ng-class="{'HighlightOverallHrs':HighlightOverAllHrs(item.OverallHrs)}">{{item.OverallHrs}}</span></div>
+                                    </td>
+                                    @if (showPkgHs)
+                                    {
+                                        <td>
+                                            <span ng-show="item.packageType=='Pallette'" class="textGreen">Yes</span>
+                                            <span ng-show="item.packageType=='NONPallette'" class="textRed">No</span>
+                                        </td>
+                                        <td>
+                                            {{item.CargoType}}
+                                        </td>
+                                    }
+                                    <td class="w-30">
+                                        <div class="" ng-if="item.LOCSent && item.category =='IMPRT'">{{item.LOCTime | date:'dd/MM/yyyy HH:mm'}}</div>
+                                        <div ng-if="!item.LOCSent && item.category =='IMPRT'">
+                                            <span ng-if="item.FailedCount>0" class="text-danger">
+                                                Failed({{item.FailedCount}})
+                                                <i class="icon-info22" ng-if="item.FailureReason != null" title="{{item.FailureReason}}"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modern-panel-footer">
+                        <div class="row">
+                            <div class="col-md-6 col-6">
+                                <h6 class="text-center"><b>Total</b></h6>
+                            </div>
+                            <div class="col-md-6 col-6">
+                                <h6 class="text-center"><b>{{UIWaitingtoApplySealRecords.length}}</b></h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="BaseFilter">
+            <div class="row">
+                <div class="col-md-12 p-0">
+                    <div>
+                        <input type="checkbox" value="IMPRT" class="imprtbg" /> Import
+                    </div>
+                    <div>
+                        <input type="checkbox" value="EXPRT" class="exprtbg" /> Export
+                    </div>
+                    <div>
+                        <input type="checkbox" class="imprtbgTransit" value="IMPRT_Transit" /> Import Transit
+                    </div>
+                    <div>
+                        <input type="checkbox" class="exprtbgTransit" value="EXPRT_Transit" /> Export Transit
+                    </div>
+                    <div>
+                        <input type="checkbox" value="TRSHP" class="trshpbg" /> TRSHP
+                    </div>
+                    <div>
+                        <input type="checkbox" class="bgColdStore" value="Cold Store" /> Cold Store
+                    </div>
+                    <div>
+                        <input type="checkbox" class="bgdry" value="Dry" /> Dry
+                    </div>
+                    <div>
+                        <input type="checkbox" class="bgoog" value="OOG" /> OOG
+                    </div>
+                    @*<div>
+                            <input type="checkbox" class="bgReefer" value="Reefer" /> Reefer
+                        </div>*@
+                    <div>
+                        <input type="checkbox" class="bgdogsniffing" value="Dog_sniffing" /> K-9
+                    </div>
+                    <div>
+                        <input type="checkbox" class="Reexambg" value="Re_exam" /> Re Exam
+                    </div>
+                    <div>
+                        <input type="checkbox" class="foodbg" value="Food" /> Food
+                    </div>
+                    <div>
+                        <input type="checkbox" class="Forkliftbg" value="Forklift" /> Forklift
+                    </div>
+                    <div>
+                        <input type="checkbox" class="Laborbg" value="Labor" /> Labour
+                    </div>
+                    <div>
+                        <input type="checkbox" class="Mobilecranebg" value="Mobilecrane" />Mobile crane
+                    </div>
+                    <div>
+                        <input type="checkbox" class="Nostripbg" value="Nostrip" />No strip
+                    </div>
+                    @*<div>
+                            <input type="checkbox" class="UTCCSbg" value="UTC COLD Store" /> UTC-CS
+                        </div>
+                        <div>
+                            <input type="checkbox" class="DPWCSbg" value="DPW ColdStore" /> DPW-CS
+                        </div>*@
+                    @*<div>
+                            <input type="checkbox" class="bgmobilescan" value="MobileScan" /> Mobile Scan
+                        </div>
+                        <div>
+                            <input type="checkbox" class="bgBuidling" value="BuildingScan" /> Building Scan
+                        </div>*@
+                    <div>
+                        <input type="checkbox" class="ExceddingSLA" value="ExceedingSLA" /> Exceeding SLA
+                    </div>
+
+                    <div>
+                        <input type="checkbox" class="bgDifficulties" value="Difficulties" /> DTS
+                    </div>
+                    <div>
+                        <input type="checkbox" class="pallattebg" value="Pallatte" /> Pallet
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    var ssInstances = [];
+    $(document).ready(function () {
+        if ($('#FCargoType').length > 0) {
+            ssInstances.push(new SlimSelect({
+                select: '#FCargoType',
+                placeholder: 'Select Cargo type',
+                showSearch: true,
+                allowDeselect: true,
+            }));
+        }
+    });
+
+    window.onload = function () {
+        document.getElementById('minisidebar').className = 'sidebar-xs';
+    };
+
+    $('.date').bootstrapMaterialDatePicker({
+        format: 'DD/MM/YYYY HH:mm',
+        switchOnClick: false,
+        nowButton: true,
+    });
+
+    function Hideheader() {
+        $('.page-title').css('color', 'white');
+        $("#btnFullscreen").addClass("d-none");
+        $("#btnExitFullscreen").removeClass("d-none");
+
+        const content = document.getElementById('MainDiv');
+        if (content.requestFullscreen) content.requestFullscreen();
+        else if (content.mozRequestFullScreen) content.mozRequestFullScreen();
+        else if (content.webkitRequestFullscreen) content.webkitRequestFullscreen();
+        else if (content.msRequestFullscreen) content.msRequestFullscreen();
+    }
+
+    document.addEventListener('fullscreenchange', function () {
+        if (!document.fullscreenElement) {
+            $('.page-title').css('color', '');
+            $("#btnFullscreen").removeClass("d-none");
+            $("#btnExitFullscreen").addClass("d-none");
+        }
+    });
+
+    function showHeader() {
+        $('.page-title').css('color', '');
+        $("#btnFullscreen").removeClass("d-none");
+        $("#btnExitFullscreen").addClass("d-none");
+
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        else if (document.msExitFullscreen) document.msExitFullscreen();
+    }
+</script>

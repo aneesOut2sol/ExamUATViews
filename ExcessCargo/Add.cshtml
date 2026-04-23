@@ -1,0 +1,317 @@
+﻿
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .SignBox {
+        text-align: center;
+        border: 1px solid;
+        border-color: lightgray;
+        padding: 0px 0px 10px 0px;
+    }
+
+    .SignHeader {
+        background: var( --dpw-bg-color);
+        color: white;
+        padding: 5px;
+    }
+
+    .Image-view img {
+        height: 50% !important;
+        width: 50% !important;
+        float: none !important
+    }
+
+    .Image-view {
+        float: none !IMPORTANT;
+        margin: 0 !IMPORTANT;
+        height: auto !IMPORTANT;
+        width: auto !important;
+    }
+</style>
+<div class="page-header border-bottom-0">
+    <div class="page-header-content header-elements-md-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-details mr-2"></i> <span class="font-weight-semibold"><i class="icon-stack-text"></i>&nbsp; Excess Cargo / New Form</span></h4>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
+
+<div ng-controller="ExcessCargonCtrl" ng-cloak class="ng-cloak" ng-init="Addinit()">
+
+    <form>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <h3 class="card-header" style="background-color:var( --dpw-bg-color) !important; color:#fff; padding:10px;">
+                        Excess Cargo Form
+                    </h3>
+                    <div class="card-body mt-3">
+                        <div class="row">
+
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Container</label><span class="text-danger">*</span>
+                                    <input type="text" ng-model="Ecargo.Cntr" ng-keyup="GetBrokerDetails(Ecargo.Cntr)" class="form-control" value="" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Container Location</label>
+                                    <input type="text" readonly ng-model="Ecargo.Loaction" class="form-control" value="" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+
+                                    <label>Broker Number</label>
+                                    <input type="text" ng-keyup="ValidateBroker(Ecargo.BrokerNumb)" ng-disabled="Validate.Number!=null&&Validate.Number!=''" id="BrokerNumb" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');" ng-model="Ecargo.BrokerNumb" @*ng-disabled="Ecargo.BrokerNumb!=null"*@ class="form-control" value="" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Broker  Name</label>
+                                    <input type="text" ng-disabled="Validate.Name!=null&&Validate.Name!=''" id="BrokerName" ng-model="Ecargo.BrokerName" @*ng-disabled="Ecargo.BrokerName!=null"*@ class="form-control" value="" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Type of Cargo</label><span class="text-danger">*</span>
+                                    <select ng-model="Ecargo.Type" id="selectElement" class="form-control select-clear">
+                                        <option value="" disabled selected>Select Type</option>
+                                        <option value="CARTON - CT">CARTON - CT</option>
+                                        <option value="PALLET - PL">PALLET - PL</option>
+                                        <option value="BUNDLE - BE">BUNDLE - BE</option>
+                                        <option value="PIECES - PCS">PIECES - PCS</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Quantity of Cargo</label><span class="text-danger">*</span>
+                                    <input class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" ng-model="Ecargo.Quantity" type="text" name="name" value="" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Cargo Status</label>
+                                    <input class="form-control" ng-model="Ecargo.Status" type="text" name="name" value="" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Cargo Delivered Truck No</label>
+                                    <input id="customInput" class="form-control" ng-model="Ecargo.TruckNo" type="text" name="name" value="" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="SignBox">
+                                    <h4 class="SignHeader">Container detained by <span class="pull-right" ng-click="Ecargo.Detained=null" ng-if="Ecargo.Detained!=null"><i class="icon-bin" aria-hidden="true"></i></span></h4>
+                                    <div class="Image-view" ng-if="Ecargo.Detained!=null">
+                                        @* <i class="color-red mi-close" title="Duty Officer Signature RE-WRITE" ng-click="Ecargo.Detained=null"></i>*@
+                                        <img src="{{Ecargo.Detained}}" ng-if="Ecargo.Detained!=null" width="100" height="100" />
+                                    </div>
+                                    <input type="button" ng-if="Ecargo.Detained==null" value="Signature" data-toggle="modal" data-target="#modal_small_Signagure" class="btn btn-secondary" id="sig-submitBtn">
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button class="btn btn-primary pull-right mr-2" ng-click="SubmitCargoForm(Ecargo)">Submit</button>
+                                <button class="btn btn-secondary pull-right mr-2" onclick="window.open('/Excesscargo/index','_self')">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+    <div id="modal_small_Signagure" data-bs-backdrop="static" data-bs-keyboard="false" class="modal fade" tabindex="-1">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="font-weight:bolder">Signature</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:center">
+                            <canvas id="sig-canvas" class="sig-canvas" title="Signature" width="400" height="200"></canvas><br />
+                            <button class="btn btn-secondary" id="sig-closeBtn" data-dismiss="modal">Close</button>
+                            <button class="btn btn-primary" ng-click="SaveSectionSignature()" data-dismiss="modal" id="sig-submitBtn">Save </button>
+                            <button class="btn btn-warning" id="sig-clearBtn">Clear Signature</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="@Url.Content("~/Scripts/crypto-js.min.js")"></script>
+<script>
+
+
+    const inputElement = document.getElementById('customInput');
+
+    inputElement.addEventListener('input', function (event) {
+        const inputValue = inputElement.value;
+        const sanitizedValue = inputValue.replace(/[^0-9A-Za-z]/g, '').toUpperCase();
+
+        if (sanitizedValue.length > 7) {
+            inputElement.value = sanitizedValue.substring(0, 7);
+        } else {
+            inputElement.value = sanitizedValue;
+        }
+    });
+
+    inputElement.addEventListener('keypress', function (event) {
+        const inputValue = event.key;
+
+        if (inputElement.value.length < 4 && !/\d/.test(inputValue)) {
+            event.preventDefault();
+        } else if (inputElement.value.length >= 4 && !/[A-Za-z]/.test(inputValue)) {
+            event.preventDefault();
+        }
+    });
+
+
+
+
+
+    (function () {
+        window.requestAnimFrame = (function (callback) {
+            return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimaitonFrame ||
+                function (callback) {
+                    window.setTimeout(callback, 1000 / 60);
+                };
+        })();
+
+        var canvas = document.getElementById("sig-canvas");
+        var ctx = canvas.getContext("2d");
+        ctx.strokeStyle = "#222222";
+        ctx.lineWidth = 1;
+
+        var drawing = false;
+        var mousePos = {
+            x: 0,
+            y: 0
+        };
+        var lastPos = mousePos;
+
+        canvas.addEventListener("mousedown", function (e) {
+            drawing = true;
+            lastPos = getMousePos(canvas, e);
+        }, false);
+
+        canvas.addEventListener("mouseup", function (e) {
+            drawing = false;
+        }, false);
+
+        canvas.addEventListener("mousemove", function (e) {
+            mousePos = getMousePos(canvas, e);
+        }, false);
+
+        // Add touch event support for mobile
+        canvas.addEventListener("touchstart", function (e) {
+
+        }, false);
+
+        canvas.addEventListener("touchmove", function (e) {
+            var touch = e.touches[0];
+            var me = new MouseEvent("mousemove", {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(me);
+        }, false);
+
+        canvas.addEventListener("touchstart", function (e) {
+            mousePos = getTouchPos(canvas, e);
+            var touch = e.touches[0];
+            var me = new MouseEvent("mousedown", {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(me);
+        }, false);
+
+        canvas.addEventListener("touchend", function (e) {
+            var me = new MouseEvent("mouseup", {});
+            canvas.dispatchEvent(me);
+        }, false);
+
+        function getMousePos(canvasDom, mouseEvent) {
+            var rect = canvasDom.getBoundingClientRect();
+            return {
+                x: mouseEvent.clientX - rect.left,
+                y: mouseEvent.clientY - rect.top
+            }
+        }
+
+        function getTouchPos(canvasDom, touchEvent) {
+            var rect = canvasDom.getBoundingClientRect();
+            return {
+                x: touchEvent.touches[0].clientX - rect.left,
+                y: touchEvent.touches[0].clientY - rect.top
+            }
+        }
+
+        function renderCanvas() {
+            if (drawing) {
+                ctx.moveTo(lastPos.x, lastPos.y);
+                ctx.lineTo(mousePos.x, mousePos.y);
+                ctx.stroke();
+                lastPos = mousePos;
+            }
+        }
+
+        // Prevent scrolling when touching the canvas
+        document.body.addEventListener("touchstart", function (e) {
+            if (e.target == canvas) {
+                e.preventDefault();
+            }
+        }, false);
+        document.body.addEventListener("touchend", function (e) {
+            if (e.target == canvas) {
+                e.preventDefault();
+            }
+        }, false);
+        document.body.addEventListener("touchmove", function (e) {
+            if (e.target == canvas) {
+                e.preventDefault();
+            }
+        }, false);
+
+        (function drawLoop() {
+            requestAnimFrame(drawLoop);
+            renderCanvas();
+        })();
+
+        function clearCanvas() {
+            canvas.width = canvas.width;
+        }
+
+        // Set up the UI
+        var clearBtn = document.getElementById("sig-clearBtn");
+        var submitBtn = document.getElementById("sig-submitBtn");
+        clearBtn.addEventListener("click", function (e) {
+            clearCanvas();
+        }, false);
+        submitBtn.addEventListener("click", function (e) {
+            var dataUrl = canvas.toDataURL();
+            //sigText.innerHTML = dataUrl;
+            //sigImage.setAttribute("src", dataUrl);
+        }, false);
+
+    })();
+</script>
+

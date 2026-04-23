@@ -1,0 +1,207 @@
+﻿@model ExamPortal.Web.Models.VerifyCodeViewModel
+@{
+    ViewBag.Title = "Verify Security Code";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>DPWorld Jeddah Exam - @ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="~/Content/css/icons/icomoon/styles.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" sizes="16x16" href="~/Content/images/favicon.ico">
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/bootstrap_limitless.min.css" rel="stylesheet" />
+    <link href="~/Content/css/layout.min.css" rel="stylesheet" />
+    <link href="~/Content/css/colors.min.css" rel="stylesheet" />
+
+    <style>
+        :root {
+            --dpw-primary-dark: #1E1450;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            background: linear-gradient(to bottom right, #1E1450 0%, #3b2a8d 50%, #5c4aa8 100%);
+        }
+
+        .page-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .LoginCard {
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .card-body {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+            .card-body .text-center img {
+                max-height: 80px;
+                width: auto;
+                margin-bottom: 15px;
+            }
+
+            .card-body .text-center h6 {
+                color: var(--dpw-primary-dark);
+                font-size: 1.3rem;
+                margin-bottom: 5px;
+            }
+
+        .form-control {
+            height: 48px;
+            font-size: 18px;
+            letter-spacing: 2px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #ccc;
+        }
+
+            .form-control:focus {
+                border-color: var(--dpw-primary-dark);
+                box-shadow: 0 0 0 0.2rem rgba(30, 20, 80, 0.25);
+            }
+
+        .btn-primary {
+            background-color: var(--dpw-primary-dark) !important;
+            border-color: var(--dpw-primary-dark) !important;
+            height: 48px;
+            font-weight: 600;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+        }
+
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-top: 15px;
+            color: #666;
+        }
+
+        .validation-summary-errors {
+            color: #d9534f;
+            background-color: #f2dede;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-content">
+        <div class="LoginCard">
+            @using (Html.BeginForm("VerifyCode", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("provider", Model.Provider)
+                @Html.Hidden("rememberMe", Model.RememberMe)
+
+                <div class="card mb-0">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <img src="~/Content/images/dpworldlogo.png" alt="DPWorld Logo" />
+                            <h6 class="font-weight-bold">Security Verification</h6>
+                            <span class="d-block text-muted">Please enter the code sent to your @Model.Provider.</span>
+                        </div>
+
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            @Html.ValidationSummary(true, "", new { @class = "validation-summary-errors" })
+                        }
+                        <div id="timer" style="font-size:16px; font-weight:bold;margin-bottom:10px;"></div>
+                        <div class="form-group">
+                            @Html.TextBoxFor(m => m.Code, new { @class = "form-control", placeholder = "· · · · · ·", maxlength = "6", autocomplete = "one-time-code" })
+                            @Html.ValidationMessageFor(m => m.Code, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox">
+                                @Html.CheckBoxFor(m => m.RememberBrowser, new { @class = "custom-control-input", id = "rememberBrowser" })
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary btn-block" id="submitbtn">
+                                Verify Code <i class="icon-shield-check ml-2"></i>
+                            </button>
+                            <input type="button" id="resendbtn" style="display:none"
+                                   class="btn btn-primary btn-block"
+                                   value="Resend" onclick="resendCode()" />
+                        </div>
+
+                        @*<div class="text-center">
+            <span class="text-muted small">Didn't receive a code?</span><br />
+            <a href="@Url.Action("SendCode", "Account", new { ReturnUrl = Model.ReturnUrl })" class="text-indigo-800 font-weight-semibold">Resend Provider Selection</a>
+        </div>*@
+                        <div class="text-center">
+                            <a href="@Url.Action("Login", "Account")" class="text-sm text-indigo-800">Back to Login</a>
+                        </div>
+                    </div>
+                </div>
+            }
+            <p class="footer-text">&copy; @DateTime.Now.Year DP World. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+     function resendCode() {
+        window.location.href = '@Url.Action(
+            "SendCode",
+            "Account",
+            new { returnUrl = @Model.ReturnUrl, rememberMe = @Model.RememberMe }
+        )';
+    }
+    debugger;
+    var createdAt = new Date("@Model.OtpCreateTime.ToString()");
+    var expirySeconds = '@Model.OtpExpiry';
+
+    var expiryTime = new Date(createdAt.getTime() + expirySeconds * 1000);
+
+    function updateTimer() {
+        var now = new Date();
+        var diff = expiryTime - now;
+
+        if (diff <= 0) {
+            document.getElementById("timer").innerText = "OTP expired. Please resend.";
+            document.getElementById("submitbtn").style.display = "none";
+            document.getElementById("resendbtn").style.display = "block";
+            return;
+        }
+
+
+        var seconds = Math.floor((diff / 1000) % 60);
+        var minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+        document.getElementById("timer").innerText =
+            "OTP expires in: " + minutes + "m " + seconds + "s";
+
+        setTimeout(updateTimer, 1000);
+    }
+
+    updateTimer();
+</script>

@@ -1,0 +1,48 @@
+﻿@model ExamPortal.Model.Features.FKL_Examinxation.Dashboard.GetAssignedOperatorDetailsResponse
+@{
+    Layout = "~/Views/Shared/_EmailLayoutUpdated.cshtml"; // Emails should not inherit website layout
+}
+<div style=" text-align:left;">
+    <b>Dear Runner Team,</b>
+
+    <p>
+        This is an automated notification regarding the assignment of Opertaor for container examination activities during the current shift.
+    </p>
+</div>
+
+<table border="1" style="border-collapse:collapse;width:100%">
+    <thead style="background-color: var( --dpw-bg-color)">
+        <tr style="background-color: var( --dpw-bg-color)">
+            <th style="background-color: var( --dpw-bg-color);color:white;">Container</th>
+            <th style="background-color: var( --dpw-bg-color);color:white;">Location</th>
+            <th style="background-color: var( --dpw-bg-color);color:white;">Activity</th>
+            <th style="background-color: var( --dpw-bg-color);color:white;">Opertaor EMPId</th>
+            <th style="background-color: var( --dpw-bg-color);color:white;">Opertaor Name</th>
+            <th style="background-color: var( --dpw-bg-color);color:white;">Opertaor Phone</th>
+        </tr>
+
+    </thead>
+    @foreach (var item in Model.li)
+    {
+        <tbody>
+            <tr>
+                <th rowspan="@(item.Operator.Count()+1)">@item.Cntr</th>
+                <th rowspan="@(item.Operator.Count()+1)">@item.Location</th>
+                <th rowspan="@(item.Operator.Count()+1)">@item.Activity</th>
+            </tr>
+            @foreach (var x in item.Operator)
+            {
+                <tr>
+
+                    <th>@x.OperatorEMPId</th>
+                    <th>@x.OperatorName</th>
+                    <th>@x.OperatorPhone</th>
+                </tr>
+
+            }
+
+        </tbody>
+    }
+
+
+</table>

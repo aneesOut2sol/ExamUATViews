@@ -1,0 +1,132 @@
+﻿@{
+    ViewBag.Title = "Account Locked";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>DPWorld Jeddah Exam - @ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="~/Content/css/icons/icomoon/styles.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" sizes="16x16" href="~/Content/images/favicon.ico">
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/bootstrap_limitless.min.css" rel="stylesheet" />
+    <link href="~/Content/css/layout.min.css" rel="stylesheet" />
+    <link href="~/Content/css/colors.min.css" rel="stylesheet" />
+
+    <style>
+        :root {
+            --dpw-primary-dark: #1E1450;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            background: linear-gradient(to bottom right, #1E1450 0%, #3b2a8d 50%, #5c4aa8 100%);
+        }
+
+        .page-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .LoginCard {
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .card-body {
+            background: #ffffff;
+            padding: 40px 30px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .lock-icon-container {
+            margin-bottom: 20px;
+        }
+
+            .lock-icon-container i {
+                font-size: 64px;
+                color: #d9534f; /* Alert Red */
+                padding: 20px;
+                background: rgba(217, 83, 79, 0.1);
+                border-radius: 50%;
+            }
+
+        .card-body h5 {
+            color: var(--dpw-primary-dark);
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .card-body p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .btn-primary {
+            background-color: var(--dpw-primary-dark) !important;
+            border-color: var(--dpw-primary-dark) !important;
+            height: 48px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+        }
+
+        .support-link {
+            display: block;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #5c4aa8;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-content">
+        <div class="LoginCard">
+            <div class="card mb-0">
+                <div class="card-body">
+                    <div class="lock-icon-container">
+                        <i class="icon-user-lock"></i>
+                    </div>
+
+                    <h5>Access Denied</h5>
+                    <p>
+                        This account has been temporarily locked due to multiple failed login attempts.
+                        Please contact your administrator to get your account access.
+                    </p>
+
+                    <div class="form-group">
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-primary btn-block">
+                            <i class="icon-arrow-left8 mr-2"></i> Return to Login
+                        </a>
+                    </div>                    
+                </div>
+            </div>
+            <p class="footer-text">&copy; @DateTime.Now.Year DP World. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

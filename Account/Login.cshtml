@@ -1,0 +1,388 @@
+﻿@using ExamPortal.Web.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Log in - DPW OPS";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>
+        DPWorld Jeddah Exam - Login
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="EXAM DpWorld">
+
+    <link href="~/Content/css/icons/icomoon/styles.min.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" sizes="16x16" href="~/Content/images/favicon.ico">
+    <link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/bootstrap_limitless.min.css" rel="stylesheet" />
+    <link href="~/Content/css/layout.min.css" rel="stylesheet" />
+    <link href="~/Content/css/colors.min.css" rel="stylesheet" />
+    <script src="~/Scripts/PasswordFields.js"></script>
+
+    <style>
+        @@keyframes loader {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loader {
+            animation: 0.7s loader linear infinite;
+        }
+        /* Define the primary color variable (Using the requested dark color for accents) */
+        :root {
+            --dpw-primary-dark: #1E1450; /* The requested dark indigo */
+        }
+
+        /* Full page background and centered content - NEW GRADIENT BACKGROUND */
+        html, body {
+            height: 100%;
+            margin: 0;
+            background: linear-gradient( to bottom right, #1E1450 0%, /* Deep Indigo */
+            #3b2a8d 50%, /* Mid Purple */
+            #5c4aa8 100% /* Medium Blue-Purple */
+            );
+        }
+
+        .page-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Login Card Styling */
+        .LoginCard {
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 0;
+            background: transparent;
+        }
+
+        /* Form Body Background - Set to white for high contrast */
+        .card-body {
+            background: #ffffff;
+            padding: 30px;
+        }
+
+            /* Branding and Messaging */
+            .card-body .text-center {
+                /* Ensures proper spacing for the logo and text */
+                margin-bottom: 20px;
+            }
+
+                .card-body .text-center h6 {
+                    color: var(--dpw-primary-dark);
+                    font-size: 1.5rem;
+                    margin-top: 15px; /* Spacing below the logo */
+                    margin-bottom: 5px;
+                }
+
+                /* Logo Styling */
+                .card-body .text-center img {
+                    max-height: 100px; /* Set a reasonable size for the logo */
+                    width: auto;
+                    margin-bottom: 5px;
+                }
+
+
+                .card-body .text-center span.d-block {
+                    color: #666;
+                    margin-bottom: 25px;
+                }
+
+        /* Form Controls */
+        .form-control {
+            border-radius: 4px;
+            height: 48px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+        }
+
+            .form-control:focus {
+                border-color: var(--dpw-primary-dark);
+                box-shadow: 0 0 0 0.2rem rgba(30, 20, 80, 0.25);
+            }
+
+        /* Feedback Icons */
+        .form-group-feedback-left .form-control {
+            padding-left: 3.5rem !important;
+        }
+
+        .form-control-feedback {
+            background: transparent;
+            color: var(--dpw-primary-dark);
+            border-right: 1px solid #ccc;
+            width: 3.0rem;
+            line-height: 48px;
+            height: 48px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            top: 0;
+        }
+
+        /* Primary Button Style (Using the requested dark color) */
+        .btn-primary {
+            background-color: var(--dpw-primary-dark) !important;
+            border-color: var(--dpw-primary-dark) !important;
+            height: 48px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+            .btn-primary:hover, .btn-primary:focus {
+                background-color: #100b33 !important; /* Slightly darker on hover */
+                border-color: #100b33 !important;
+            }
+
+        /* Error Messages */
+        .validation-summary-errors, .text-danger {
+            color: #d9534f !important;
+        }
+
+        .validation-summary-errors {
+            border: 1px solid #d9534f;
+            background-color: #f2dede;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        /* Footer text/link styling */
+        .pull-right {
+            color: var(--dpw-primary-dark);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            display: block;
+            text-align: right;
+        }
+
+        /* Footer Copyright/Branding */
+        .footer-text {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+        }
+    </style>
+    <style>
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+            color: rgb(30 20 80);
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+            .divider::before, .divider::after {
+                content: '';
+                flex: 1;
+                border-bottom: 1px solid rgb(187 194 205);
+            }
+
+            .divider span {
+                padding: 0 10px;
+            }
+    </style>
+</head>
+<body>
+    <div class="page-content">
+        <div class="LoginCard">
+            <div class="card mb-0">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <img src="~/Content/images/dpworldlogo.png" alt="DPWorld Logo" />
+
+                        <h6 class="mb-0 font-weight-bold">Welcome to Cargo Examination Portal</h6>
+                        <span class="d-block">Enter your login details to access the system.</span>
+                    </div>
+
+                    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form" }))
+                    {
+                        if (TempData["CustomError"] != null && TempData["CustomError"].ToString() != "")
+                        {
+                            <div class="validation-summary-errors">
+                                <ul>
+                                    <li>@TempData["CustomError"]</li>
+                                </ul>
+                            </div>
+                        }
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group form-group-feedback form-group-feedback-left">
+                            @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Login ID" })
+                            <div class="form-control-feedback">
+                                <i class="icon-user"></i>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group form-group-feedback form-group-feedback-left">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+                            <div class="form-control-feedback">
+                                <i class="icon-lock2"></i>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="~/Account/ForgotPassword" class="pull-right">Forgot password?</a>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <button type="submit" class="btn btn-primary btn-block" onclick="this.disabled=true;this.form.submit();this.innerHTML=`Processing... <i class='icon-spinner2 loader'></i>`" value="Log in">
+                                Sign in <i class="icon-circle-right2 ml-2"></i>
+                            </button>
+                        </div>
+                    }
+
+                    <div class="divider"><span>OR</span></div>
+
+                    <button class="btn btn-outline-primary btn-block" id="authenticateNFC_Btn" onclick="authenticateNFC()">
+                        <span>🛜</span> Login with NFC Badge
+                    </button>
+                    <div id="NFC_Status"></div>
+
+                    @using (Html.BeginForm("NFCLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" id="NFC_Tag_Id" name="tag_id" />
+
+                        <button type="submit" id="NFCLogin_Button" class="d-none">NFCLogin</button>
+
+                    }
+                </div>
+            </div>
+            <p class="footer-text">&copy; @DateTime.Now.Year DP World. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script src="~/Scripts/js/plugins/blockui.min.js"></script>
+    <script src="~/Scripts/js/plugins/uniform.min.js"></script>
+    <script src="~/Scripts/js/app.js"></script>
+    <script src="~/Scripts/js/plugins/login.js"></script>
+
+    <script>
+        async function authenticateNFC() {
+            const statusEl = document.getElementById('NFC_Status');
+            const authBtn = document.getElementById('authenticateNFC_Btn');
+
+            if (!("NDEFReader" in window)) {
+                statusEl.innerText = "Error: Web NFC unsupported.";
+                statusEl.style.color = "#ef4444";
+                return false;
+            }
+            else {
+
+                try {
+                    const ndef = new NDEFReader();
+                    await ndef.scan();
+
+                    authBtn.style.background = "rgba(139, 92, 246, 0.2)";
+                    authBtn.style.borderColor = "#8b5cf6";
+                    authBtn.style.color = "#8b5cf6";
+                    authBtn.innerHTML = "<span>🛜</span> Scanning...";
+                    statusEl.innerText = "Awaiting NFC tag...";
+
+                    //var tagId = "12345678";
+
+                    ndef.onreading = event => {
+                        let tagId = event.serialNumber;
+
+                        for (const record of event.message.records) {
+                            if (record.recordType === "text") {
+                                const decoder = new TextDecoder(record.encoding);
+                                tagId = decoder.decode(record.data);
+                                break;
+                            }
+                        }
+
+
+                        const resetBtn = () => {
+                            authBtn.style.background = "rgba(16, 185, 129, 0.1)";
+                            authBtn.style.borderColor = "#10b981";
+                            authBtn.style.color = "#10b981";
+                            authBtn.innerHTML = "<span>🛜</span> Login with NFC Badge";
+                        };
+
+
+                        verifyWithServer(tagId, statusEl, resetBtn);
+                    };
+                } catch (error) {
+                    authBtn.style.background = "rgba(16, 185, 129, 0.1)";
+                    authBtn.style.borderColor = "#10b981";
+                    authBtn.style.color = "#10b981";
+                    authBtn.innerHTML = "<span>🛜</span> Login with NFC Badge";
+
+                    statusEl.innerText = "Scan failed. Please try again.";
+                    statusEl.style.color = "#ef4444";
+                }
+            }
+        }
+
+        async function verifyWithServer(tag_id, statusEl, resetBtnCallback = null) {
+            statusEl.innerText = "Verifying with server...";
+            statusEl.style.color = "#8b5cf6";
+
+            try {
+
+                document.getElementById("NFC_Tag_Id").value = tag_id;
+                document.getElementById("NFCLogin_Button").click();
+
+
+                //const response = await fetch('/Account/NFCLogin', {
+                //    method: 'POST',
+                //    headers: { 'Content-Type': 'application/json' },
+                //    body: JSON.stringify({ tag_id: tag_id })
+                //});
+
+                //const result = await response.json();
+                //
+                //if (response.ok && result.status === 'success') {
+                //    //showSuccessScreen(userId);
+                //} else {
+                //    statusEl.innerText = result.message;
+                //    statusEl.style.color = "#ef4444";
+                //    if (resetBtnCallback) resetBtnCallback();
+                //}
+            } catch (err) {
+                authBtn.style.background = "rgba(16, 185, 129, 0.1)";
+                authBtn.style.borderColor = "#10b981";
+                authBtn.style.color = "#10b981";
+                authBtn.innerHTML = "<span>🛜</span> Login with NFC Badge";
+
+                statusEl.innerText = "Server connection failed.";
+                statusEl.style.color = "#ef4444";
+                //if (resetBtnCallback) resetBtnCallback();
+            }
+        }
+
+        //function showSuccessScreen(userId) {
+        //    document.getElementById('loginView').style.display = 'none';
+        //    document.getElementById('successView').style.display = 'block';
+        //    document.getElementById('displayUserId').innerText = userId;
+        //}
+    </script>
+</body>
+</html>

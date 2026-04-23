@@ -1,0 +1,117 @@
+﻿
+@{
+    ViewBag.Title = "RunnerTab";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/css/ExamCSS.css" rel="stylesheet" />
+
+<link href="~/Content/popup/jquery-confirm.min.css" rel="stylesheet" />
+<style>
+    .Indicator {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        font-weight: 700;
+        margin-bottom: 7px;
+    }
+    .LaborCard ul li {
+        list-style: none;
+        background: #ffffff;
+        padding: 10px 10px;
+        margin-bottom: 9px;
+        border-radius: 4px;
+        box-shadow: 5px 12px 25px 0px rgba(0, 0, 0, 0.1);
+        border: 1px dashed #120c3029;
+    }
+    .labourcount {
+    
+        float: right;
+        background: red;
+        color: white;
+        padding: 0px 6px;
+        border-radius: 50% !important;
+        position: relative;
+        right: 8px;
+    }
+    .LaborCard ul {
+        padding: 0px;
+        margin: 0px;
+    }
+</style>
+<!--Header-->
+<div ng-controller="LAV2_RunnerCtrl" ng-init="init()" class="ng-cloak" ng-cloak>
+    <div class="page-header border-bottom-0">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-stack-text mr-2"></i><span class="font-weight-semibold">Assigned Labor</span></h4>
+                <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+            </div>
+            <div class="page-title d-flex">
+
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <!---Block-->
+    <div class="card mt-2 mt-2" id="Block">
+        <div class="card-header" style=" background: var( --dpw-bg-color); color: white; padding: 8px;">
+            <h5 class="mt-2">Block</h5>
+        </div>
+        <div class=" card-body shadow">
+            <div class="row">
+                <div ng-show="BlockList!=null && BlockList.length>0" class="Cardtabs" ng-repeat="B in BlockList">
+                    <div class="Absoulte">
+                        <div class="CountBadge">{{B.Count}}</div>
+                        <br />
+                    </div>
+                    <button ng-click="OpenBlock(B.Block)" ng-class="{'active' : B.Block == CurrentBlock }" class="btn btn-primary Blocks" value="{{B.Block}}">
+                        <span>{{B.Block}}</span>
+                    </button>
+                </div>
+                <div class="mt-2" ng-show="BlockList==null || BlockList.length==0">
+                    No block found
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="accordion scrollerdiv" id="accordionExample" ng-show="!stringNullorEmpty(ContainerList)">
+        <div class="card Custom-Card m-0" ng-repeat="x in ContainerList | filter :search" style="overflow:visible">
+            <!---Container Header-->
+            <div class="" id="heading{{$index}}">
+                <div class="collapsible-link">
+                    <div class="row">
+
+                        <div class="col-md-5 col-lg-6 col-sm-6 col-xs-12" data-toggle="collapse" id="OpenDetails{{$index}}" data-target="#collapse{{$index}}" ng-click="GetContainerEvent($index,x.Cntr,x.ScanStatus,x.freight_kind)">
+                            <div style="display: inline-block; vertical-align: middle;">
+                                <img style="height:50px;" src="~/Content/images/container.png" />
+                            </div>
+                            <div style="display: inline-block; vertical-align: middle; margin-bottom: 4px; margin-left: 12px; font-family: 'Pilat Wide';">
+                                {{x.Cntr}}
+                                <div ng-show="x.Location!='' && x.Location!=null" style="font-size: 11px; color: #898989;">{{x.Location}} </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-lg-2 col-sm-2 col-xs-12 offset-4" data-toggle="collapse" id="OpenDetails{{$index}}" data-target="#collapse{{$index}}">
+                            <div>
+                                <div  class="labourcount">{{x.AssignedLabor-x.ArrivedLabor}}</div>
+                                <img title="Labors" src="~/Content/images/LabourIcon.png" ng-click="OpenArrivedModel(x)" style="height:40px;float:right" />
+
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("_LabourAssignmentModal")
+</div>
+
+
+
+

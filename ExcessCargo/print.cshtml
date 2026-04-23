@@ -1,0 +1,217 @@
+﻿@model  ExamPortal.Model.Features.AcitvityCapture.ExcessCargo.ExcessCargo
+@{
+    ViewBag.Title = "DWHVesselPrint";
+    Layout = null;
+    var Url = Request.Url.ToString();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Excess Cargo</title>
+    <link rel="icon" type="~/Content/images/favicon.ico" sizes="16x16" href="~/Content/images/favicon.ico">
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        @@page {
+            margin: 0;
+            size: A4;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        .mainBody {
+            padding: 0px 45px;
+        }
+
+        @@font-face {
+            font-family: 'pilatwide-demibold';
+            src: url('../../content/dpwfont/pilatwide-demibold.ttf') format('truetype');
+        }
+
+        @@font-face {
+            font-family: 'makdessi-light';
+            src: url('../../content/dpwfont/makdessi-light.ttf') format('truetype');
+        }
+
+        @@font-face {
+            font-family: 'makdessi-extrabold';
+            src: url('../../content/dpwfont/makdessi-extrabold.ttf') format('truetype');
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-bottom: 10px;
+            border: 2px solid #000000b8;
+        }
+
+        .contentTable tr td,
+        .contentTable tr th {
+            padding: 17px;
+        }
+
+        .buttonprint {
+            background: #777777;
+            border: none;
+            padding: 6px;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .buttonDownalod {
+            background: #2f2da8;
+            border: none;
+            padding: 6px;
+            border-radius: 4px;
+            color: white;
+        }
+    </style>
+</head>
+<body id="body">
+    <script src="https://rawgit.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+    <img style="width: 100%;" src="https://fileserver.dpworld.sa/UploadedFiles/ExamPortalOPS/20231227-638392547126573695-8068-dpwroldHeader.png" />
+    <div class="mainBody" style=" width: auto;">
+
+        <table style="width: 100%; border: 2px solid #000000b8;" border="1">
+            <tr>
+                <td style="font-family: pilatwide-demibold;font-size:8pt;text-align:center; width:45%; padding:4px;border:none;">
+                    JEDDAH CONTAINER TERMINAL
+                    <br />
+                    EXCESS CARGO DELIVERY NOTICE
+                    <br />
+                    Date:@DateTime.Now.ToString("dd/MM/yyyy")
+                </td>
+                <td style="width: 25%; border: none;"></td>
+                <td style="font-size: 9pt; font-family: makdessi-light; text-align: center; width: 30%; font-weight: bold; padding: 4px; border: none; ">
+                    محطة حاويات جدة<br />
+                    اشعار تسليم بضائع زائدة<br />
+                    <span style="font-family: pilatwide-demibold;font-size:8pt;">@DateTime.Now.ToString("dd/MM/yyyy")</span> : التاريخ
+                </td>
+            </tr>
+        </table>
+        <table class="contentTable" style="width:100%;border-collapse:collapse" border="1">
+            <tr>
+                <td style="width: 50%; text-align: center; font-family: pilatwide-demibold; font-size: 14pt; ">@Model.Container</td>
+                <th style="width:50%">
+                    <div style="float:left;font-family:pilatwide-demibold;font-size:9pt;">Container No</div>
+                    <div style="float: right; font-family: makdessi-extrabold; font-size: 11pt;">:رقم الحاوية</div>
+                </th>
+            </tr>
+            <tr>
+                <td style="width: 50%; text-align: center; font-family: pilatwide-demibold; font-size: 14pt; ">@Model.Loaction</td>
+                <th style="width:50%">
+                    <div style="float:left;font-family:pilatwide-demibold;font-size:9pt;">Cargo Location</div>
+                    <div style="float: right; font-family: makdessi-extrabold; font-size: 11pt;">:موقع البضاعة</div>
+                </th>
+            </tr>
+            <tr>
+                <td style="width: 50%; text-align: center; font-family: pilatwide-demibold; font-size: 14pt; ">@Model.Quantity , @Model.Type</td>
+                <th style="width:50%">
+                    <div style="float:left;font-family:pilatwide-demibold;font-size:9pt;">Cargo Type and Quantity</div>
+                    <div style="float: right; font-family: makdessi-extrabold; font-size: 11pt;">:نوع وكمية البضاعة</div>
+                </th>
+            </tr>
+            <tr>
+                <td style="width: 50%; text-align: center; font-family: pilatwide-demibold; font-size: 9pt; ">
+                    @Model.TruckNo
+                </td>
+                <th style="width:50%">
+                    <div style="float:left;font-family:pilatwide-demibold;font-size:9pt;">Delivery Truck No</div>
+                    <div style="float: right; font-family: makdessi-extrabold; font-size: 11pt;">:رقم لوحة الشاحنة</div>
+                </th>
+            </tr>
+            <tr>
+                <td style="width: 50%; text-align: center; font-family: pilatwide-demibold; font-size: 9pt; "></td>
+                <th style="width:50%">
+                    <div style="float:left;font-family:pilatwide-demibold;font-size:9pt;">Vessel name</div>
+                    <div style="float: right; font-family: makdessi-extrabold; font-size: 11pt;">:اسم السفينة</div>
+                </th>
+            </tr>
+            <tr>
+                <td rowspan="4" style="width:50%">
+                    <div style="text-align: center; font-family: makdessi-extrabold; font-size: 11pt; margin-bottom: 12px;">إقرار الاستلام</div>
+                    <div style="text-align: center; font-family: pilatwide-demibold; font-size: 9pt; margin-bottom: 20px;">I hereby confirm that I have received the entire shipment for the above-mentioned container, and DPW will not be held responsible for any missing cargo.</div>
+                    <div style=" font-family: 'makdessi-extrabold'; text-align: center; font-size: 10pt; font-weight: normal;"> أقر وأؤكد أنني استلمت الشحنة الخاصة بالحاوية اعلاه كاملة، ولن تتحمل شركة دي بي ورلد مسؤولية فقدان أي جزء من الشحنة المذكورة</div>
+                </td>
+                <th style="width:50%">
+                    <div style="float: right; font-family: makdessi-extrabold; font-size: 11pt;">:مندوب التاجر</div>
+                </th>
+            </tr>
+            <tr>
+                <th style="width:50%">
+                    <div style="float: right; font-family: makdessi-extrabold; font-size: 11pt;">:جهة العمل</div>
+                </th>
+            </tr>
+            <tr>
+                <th style="width:50%">
+                    <div style="float: right; font-family: makdessi-extrabold; font-size: 11pt;">:التوقيع</div>
+                </th>
+            </tr>
+            <tr>
+                <th style="width:50%">
+                    <div style="float: right; font-family: makdessi-extrabold; font-size: 11pt;">:رقم الجوال</div>
+                </th>
+            </tr>
+        </table>
+        <div>
+
+            <table style="width: 100%; border-collapse: collapse;" border="1">
+                <tr>
+                    <td style="text-align: right; font-family: makdessi-extrabold; font-size: 11pt;width:50%;padding: 14px;">:مشرف شركة دي بي ورلد في ساحات المعاينة</td>
+                    <td style="text-align: right; font-family: makdessi-extrabold; font-size: 11pt;width:50%;padding: 14px;">:المكرم / مراقب الأمن الجمركي</td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; font-family: makdessi-extrabold; font-size: 11pt;width:50%;padding: 14px;">  @Model.UpdatedBy : الاسم</td>
+                    <td style="text-align: right; font-family: makdessi-extrabold; font-size: 11pt;width:50%;padding: 14px;">
+                        :الاسم
+
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; font-family: makdessi-extrabold; font-size: 11pt;width:50%;padding: 14px;" rowspan="2">
+                        اﻟﺨﺘﻢ
+                        <center><img style=" height: 115px;" src="~/Content/images/ExcesscragoStamp.png" /></center>
+                    </td>
+                    <td style="text-align: right; font-family: makdessi-extrabold; font-size: 11pt;width:50%;padding: 14px;">:التوقيع</td>
+                </tr>
+                <tr>
+
+                    <td style="text-align: right; font-family: makdessi-extrabold; font-size: 11pt;width:50%;padding: 14px;">
+                        اﻟﺨﺘﻢ
+                    </td>
+                </tr>
+            </table>
+        </div>
+        @if (!Url.Contains("DownloadExcesscargo"))
+        {
+            <div id="buttondiv" style="width: auto; text-align: end; padding: 12px 2px;">
+                <button class="buttonDownalod" onclick="DownloadPage()"> Downalod  </button>
+                <button class="buttonprint" onclick="PrintPage()"> Print </button>
+            </div>
+        }
+    </div>
+</body>
+</html>
+<script>
+    function DownloadPage() {
+        document.getElementById('buttondiv').style.display = 'none';
+        window.open('/ExcessCargo/DownloadExcesscargo?Id=@DE.Infrastructure.Security.Encryption.Encrypt(Model.Id.ToString())', '_blank');
+        document.getElementById('buttondiv').style.display = 'block';
+    }
+   function PrintPage() {
+        document.getElementById('buttondiv').style.display = 'none';
+        window.print();
+        document.getElementById('buttondiv').style.display = 'block';
+    }
+</script>
+
+
+
+
+
+

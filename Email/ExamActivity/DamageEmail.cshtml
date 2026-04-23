@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewBag.Title = "DamageEmail";
+    Layout = "~/Views/Shared/_EmailLayoutUpdated.cshtml";
+}
+
+
+
+
+<style>
+    table {
+        border: none;
+        width: 100%;
+    }
+
+    .notification-content {
+        padding: 8px 16px;
+    }
+
+    td {
+        width: 100%;
+        text-align: center;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .english {
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    .arabic {
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .pilatwidefont {
+        font-family: 'Pilat Wide Light';
+    }
+</style>
+
+@if (Model.ReportName == "Damage")
+{
+    <table>
+        @*<tr>
+            <td class="notification-content english" style="font-family: 'Pilat Wide Light';width:50%;">
+                <div>
+                    Container @Model.Cntr under bayan (@Model.Bayan) was found in damaged condition.
+                    <a href="@Model.AttachmentUrl" target="_blank">View Report</a>
+                </div>
+            </td>
+            <td class="notification-content arabic" style="font-family: 'Makdessi Light';width:50% " dir="rtl" lang="ar">
+                الحاوية @Model.Cntr برقم بيان (@Model.Bayan)  وجدت البضاعة في حالة تلف ,  مرفق لكم التقرير
+            </td>
+        </tr>*@
+        <tr>
+            <td class="notification-content arabic" style="font-family: 'Makdessi Light'; width: 100%;" dir="rtl" lang="ar">
+                @Model.Message
+                <a href="@Model.AttachmentUrl">
+                    عرض التقرير
+                </a>
+            </td>
+        </tr>
+    </table>
+}
+
+@if (Model.ReportName == "BadStowage")
+{
+    <table>
+        <tr>
+            <td class="notification-content english" style="font-family: 'Pilat Wide Light';width:50%; ">
+                <div>
+                    Container @Model.Cntr under bayan (@Model.Bayan) was found in  bad stowage condition.
+                    <a href="@Model.AttachmentUrl" target="_blank">View Report</a>
+                </div>
+            </td>
+            <td class="notification-content arabic" style="font-family: 'Makdessi Light','Pilat Wide Light'; width: 50% " dir="rtl" lang="ar">
+                الحاوية @Model.Cntr برقم بيان (@Model.Bayan)  وجدت البضاعة في حالة سوء تستيف ,  مرفق لكم التقرير
+            </td>
+        </tr>
+    </table>
+}
+@if (Model.ReportName == "DifficultToStrip")
+{
+    <table>
+        <tr>
+            <td class="notification-content english" style="font-family: 'Pilat Wide Light';width:50%; ">
+                <div>
+                    Container @Model.Cntr under bayan (@Model.Bayan) was found in  bad stowage condition. Report attached <a href="@Model.AttachmentUrl" target="_blank">(file)</a>
+                </div>
+            </td>
+            <td class="notification-content arabic" style="font-family: 'Makdessi Light','Pilat Wide Light'; width: 50% " dir="rtl" lang="ar">
+                الحاوية @Model.Cntr برقم بيان (@Model.Bayan)  وجدت البضاعة في حالة صعوبة تفريغ , مرفق لكم التقرير
+                <a href="@Model.AttachmentUrl" target="_blank">(file)</a>
+            </td>
+        </tr>
+    </table>
+}

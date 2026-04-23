@@ -1,0 +1,208 @@
+﻿@*5.8 salman*@
+@{
+    ViewBag.Title = "Contractor Member";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .modal-body {
+        max-height: 70vh !important;
+        overflow: auto !important;
+    }
+
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .add-button {
+        background-color: var( --dpw-bg-color);
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+    }
+
+    .CloseModalBtn {
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        z-index: 99999999999 !important;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px !important;
+        padding: 8px;
+        cursor: pointer;
+        background: var( --dpw-bg-color);
+        z-index: 99999999999 !important;
+    }
+
+    .close {
+        display: none;
+    }
+
+    .CloseModalBtn .fa-times-circle-o {
+        color: #ffff !important;
+    }
+
+    .modal-content {
+        background-color: #f4f2fa !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+
+    .modal-title {
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+
+    .modal-footer {
+        border-top: none !important;
+        align-content: center;
+        text-align: center;
+    }
+</style>
+
+<div class="ng-cloak" ng-cloak ng-controller="ContractorSetupCtrl" ng-init="init()">
+    <!--Title-->
+    <div class="card mt-2 d-flex">
+        <div class="card-body">
+            <div class="header-row">
+                <h2>Contractor Setup</h2>
+            </div>
+        </div>
+    </div>
+    
+
+    <!--Grid-->
+    <div class="row">
+        <div id="tblrep" class="card table-card scrollbar">
+            <table class="table datatable-show-all text-center" id="table-id">
+                <thead>
+                    <tr class="table-card-head">
+                        <th>SR#</th>
+                        <th>Contractor</th>
+                        <th>Labors</th>
+                    </tr>
+                </thead>
+                <tbody class="ng-cloak" ng-cloak>
+                    <tr ng-repeat="item in ContractorList | filter:filter">
+                        <td>{{$index+1}}</td>
+                        <td>{{item.ContractorName}}</td>
+                        <td><span title="Members"class="cursor-pointer"><i class="icon-user" ng-click="OpenEditMember(item)"></i></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--Member-->
+    <div class="modal fade" id="MemberModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+            <div class="modal-content" style="overflow:visible !important">
+                <div class="CloseModalBtn" data-dismiss="modal">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{EditContractorData.ContractorName}}'s Members</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body">
+                            <form class="was-validated" id="contractorMemForm" autocomplete="off" name="contractorMemForm">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="Empid" class="form-label">Employee Id</label>
+                                        <div class="input-group has-validation">
+                                            <input type="text" class="form-control is-invalid" id="Empid" aria-describedby="inputGroupPrepend3 validationEmployeeIdFeedback"
+                                                   required placeholder="Enter employee Id "
+                                                   ng-model="AddNew.EmpId" onkeypress="return event.charCode>=48 && event.charCode<=57" value="">
+
+                                            <div id="validationEmployeeIdFeedback" class="invalid-feedback">
+                                                Please input valid employee id in numbers e.g,(1001,1002)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="Empname" class="form-label">Employee name</label>
+                                        <div class="input-group has-validation">
+                                            <input type="text" class="form-control is-invalid" id="Empname" aria-describedby="inputGroupPrepend3 validationEmployeenameFeedback"
+                                                   required placeholder="Enter employee name "
+                                                   ng-model="AddNew.Name" value="">
+
+                                            <div id="validationEmployeenameFeedback" class="invalid-feedback">
+                                                Please input valid employee name e.g(John Doe)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-primary pull-right" ng-click="AddMember(AddNew)" type="submit" ng-disabled="contractorMemForm.$invalid" ng-show="Action=='Add'">Add</button>
+                                        <button class="btn btn-primary pull-right" ng-click="UpdateMember(AddNew)" ng-show="Action=='Update'">Update</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                    <div>
+                        <input style=" width: 200px; margin-bottom: 10px;" type="text" placeholder="Search Member..." class="form-control pull-right" ng-model="filterMem" />
+                    </div>
+                    <div class="card table-card scrollbar">
+                        <table class="table datatable-show-all text-center" id="table-id">
+                            <thead style=" background: var( --dpw-bg-color); color: #fff;">
+                                <tr>
+                                    <th>Sr.No</th>
+                                    <th>EmpId</th>
+                                    <th>Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="x in EditContractorData.Members |filter:filterMem">
+                                    <td>{{$index+1}}</td>
+                                    <td>{{x.EmpId}}</td>
+                                    <td>{{x.Name}}</td>
+                                    <td>
+                                        <span title="Edit" ng-click="EditMember(x,$index)"><i class="icon-pencil"></i></span>
+                                        <span title="Delete" ng-click="DeleteMember($index)"><i class="icon-bin"></i></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                    
+                </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col-md-12" style="text-align:end;">
+                                <button class="btn btn-success" ng-click="SaveContractor(EditContractorData)">
+                                    Save
+                                </button>
+                                <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+   
+</div>
+

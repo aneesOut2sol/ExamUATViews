@@ -1,0 +1,831 @@
+﻿
+@{
+    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <style>
+        .modal-body {
+            max-height: 70vh !important;
+            overflow: auto !important;
+        }
+
+        .font-weight-normal {
+            font-weight: normal !important;
+        }
+
+        .text-start {
+            text-align: start !important;
+        }
+
+        .border-right {
+            border-right: 1px solid #ddd !important;
+        }
+
+        .LiveMonitering table {
+            width: 100%;
+        }
+
+        .LiveMonitering img {
+            height: 22px;
+        }
+
+        .LiveMonitering tr td {
+            text-decoration: underline;
+            font-weight: 600;
+            cursor: pointer !important;
+        }
+
+        .LiveMonitering tr td,
+        .LiveMonitering tr th {
+            text-align: center;
+            background: none !important;
+            padding: 8px 7px;
+            white-space: nowrap;
+        }
+
+        .pr-1 {
+            padding-right: 10px !important;
+        }
+
+
+        .card-footer {
+            background: #3c3c3c21;
+        }
+
+
+        .card-header {
+            background: var( --dpw-bg-color) !important;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+            border-radius: 12px;
+            padding: 13px 4px !IMPORTANT;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        .button {
+            background-color: #004A7F;
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+            border: none;
+            color: #FFFFFF;
+            cursor: pointer;
+            display: inline-block;
+            /* font-family: Arial; */
+            font-size: 12px;
+            padding: 6px 7px;
+            /* text-align: center; */
+            text-decoration: none;
+            -webkit-animation: glowing 1500ms infinite;
+            -moz-animation: glowing 1500ms infinite;
+            -o-animation: glowing 1500ms infinite;
+            animation: glowing 1500ms infinite;
+        }
+
+        @@-webkit-keyframes glowing {
+            0% {
+                background-color: #B20000;
+                -webkit-box-shadow: 0 0 3px #B20000;
+            }
+
+            50% {
+                background-color: #FF0000;
+                -webkit-box-shadow: 0 0 40px #FF0000;
+            }
+
+            100% {
+                background-color: #B20000;
+                -webkit-box-shadow: 0 0 3px #B20000;
+            }
+        }
+
+        @@-moz-keyframes glowing {
+            0% {
+                background-color: #B20000;
+                -moz-box-shadow: 0 0 1px #B20000;
+            }
+
+            50% {
+                background-color: #FF0000;
+                -moz-box-shadow: 0 0 35px #FF0000;
+            }
+
+            100% {
+                background-color: #B20000;
+                -moz-box-shadow: 0 0 2px #B20000;
+            }
+        }
+
+        @@-o-keyframes glowing {
+            0% {
+                background-color: #B20000;
+                box-shadow: 0 0 1px #B20000;
+            }
+
+            50% {
+                background-color: #FF0000;
+                box-shadow: 0 0 35px #FF0000;
+            }
+
+            100% {
+                background-color: #B20000;
+                box-shadow: 0 0 3px #B20000;
+            }
+        }
+
+        @@keyframes glowing {
+            0% {
+                background-color: #B20000;
+                box-shadow: 0 0 3px #B20000;
+            }
+
+            50% {
+                background-color: #FF0000;
+                box-shadow: 0 0 35px #FF0000;
+            }
+
+            100% {
+                background-color: #B20000;
+                box-shadow: 0 0 1px #B20000;
+            }
+        }
+
+        .value {
+            margin-left: 4px;
+        }
+
+        .icon-eye {
+            cursor: pointer;
+            float: inline-end;
+        }
+
+
+
+        .badge-active {
+            background-color: #e2e2e2 !important;
+            color: black;
+            font-weight: 700;
+        }
+
+        .DashboardDiv {
+            font-family: 'Pilat Wide';
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+
+
+        .col {
+            flex: 1 1 calc(25% - 20px);
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 10px 16px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            min-height: 350px;
+        }
+
+        .topheading {
+            background-color: var( --dpw-bg-color);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            font-weight: bold;
+        }
+
+        .topheading-warning {
+            background-color: var( --dpw-bg-color);
+            color: white;
+        }
+
+        .topheading-success {
+            background-color: var( --dpw-bg-color);
+            color: white;
+        }
+
+        .topheading-danger {
+            background-color: var( --dpw-bg-color);
+            color: white;
+        }
+
+        .card-body {
+            flex: 1;
+            padding: 20px;
+            background-color: #f9f9f9;
+            /* display: flex;*/
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .card-text {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 10px 0;
+        }
+
+        .section {
+            margin-top: 1rem;
+        }
+
+        .pull-right {
+            float: right;
+        }
+
+        @@media (max-width: 992px) {
+            .col {
+                flex: 1 1 calc(50% - 20px);
+            }
+        }
+
+        @@media (max-width: 600px) {
+            .col {
+                flex: 1 1 100%;
+            }
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /*  margin: 6px 0;*/
+        }
+
+        .right-side {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 60px;
+            justify-content: flex-end;
+        }
+
+        .value {
+            font-weight: bold;
+        }
+
+        .icon-eye {
+            display: inline-block;
+            width: 18px;
+            /*  height: 18px;*/
+            /*background: url('https://img.icons8.com/material-outlined/24/000000/visible.png') no-repeat center center;*/
+            background-size: contain;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 4px;
+            margin-left: 2px;
+            margin-right: -3px;
+        }
+
+            .icon-eye:hover {
+                transform: scale(1.2);
+            }
+
+        .CloseModalBtn {
+            background: var( --dpw-bg-color) !IMPORTANT;
+            color: #FFFFFF;
+            line-height: 25px;
+            position: absolute;
+            right: -12px;
+            text-align: center;
+            top: -10px;
+            width: 45px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 1px 1px 3px #000;
+            transition: all .3s;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 25px !important;
+            padding: 8px;
+            cursor: pointer;
+            z-index: 9999;
+        }
+
+        .Maincard .card-body {
+            padding: 1px 14px !important;
+            min-height: 220px;
+        }
+
+        .CursorPointer {
+            cursor: pointer !important;
+        }
+
+        .Maincard .cardHeading {
+            font-size: 16px;
+            font-weight: 800;
+            padding: 5px 9px;
+            border-bottom: 1px solid #ded7d7;
+        }
+
+        .Maincard .card-body ul {
+            margin-top: 10px;
+            padding-left: 7px;
+        }
+
+            .Maincard .card-body ul li {
+                padding: 3px 2px;
+                list-style: none;
+            }
+
+                .Maincard .card-body ul li span {
+                    float: right;
+                    text-decoration: underline;
+                    font-weight: 600;
+                    cursor: pointer;
+                }
+
+
+
+        .Maincard .card-footer {
+            background: #3c3c3c21;
+        }
+
+        .Maincard .card {
+            width: 100%;
+            border-radius: 7px;
+            overflow: hidden;
+            box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+        }
+
+        .Maincard .card-header {
+            background: var( --dpw-bg-color) !important;
+            color: white;
+            font-size: 15px;
+            font-family: 'Pilat Wide bold';
+            text-align: center;
+            padding: 10px 4px !IMPORTANT;
+        }
+
+        .Maincard .card-body ul li img {
+            height: 25px;
+        }
+
+        .Maincard .card-footer span {
+            float: right;
+        }
+
+        .Maincard .card-body .Activity {
+            padding: 4px 10px;
+            border-bottom: 1px solid #8080803d;
+        }
+
+        .text-decoration-underline {
+            text-decoration: underline;
+        }
+
+        .Maincard .card-footer img {
+            height: 22px;
+        }
+
+        .Maincard .card-footer div {
+            margin-bottom: 4px;
+        }
+
+
+        .card-footer {
+            background: #3c3c3c21;
+        }
+
+        .card-header.backgreen {
+            background: linear-gradient(179deg, #01492d, #09a266) !important;
+        }
+
+        .card-header.backred {
+            background: linear-gradient(181deg, #77092c, #ff004f) !important;
+        }
+
+        .card-header.backgray {
+            background: linear-gradient(0deg, #8f8e8e, #322f2f) !important;
+        }
+
+        .text-green {
+            color: green !important;
+        }
+
+        .text-red {
+            color: red !important;
+        }
+
+        .text-gray {
+            color: gray !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="ng-cloak DashboardDiv" ng-cloak ng-controller="FKL_ExaminationCtrl" ng-init="Dashboardinit()">
+        <div class="mt-3">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-text blur d-inline-block"><b>Forklift Assignment </b></h3>
+                    <button class="btn btn-primary pull-right mr-2" ng-click="AssignOperator()">Assign forklift operator</button>
+                    <button class="btn btn-primary pull-right mr-2" ng-click="sendMismatch()" >Send mismatch email</button>
+                </div>
+            </div>
+        </div>
+        <div class="container mt-4">
+            <div class="row p-0 m-0">
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12 col-xs-12 p-0 m-0 pr-1  Maincard">
+                    <div class="ChildCard">
+                        <div class="card">
+                            <div class="card-header">TI (To inspection)</div>
+                            <div class="card-body">
+                                <div class="cardHeading d-flex justify-content-between"> <b>Sizes</b><b>Cntr</b><b>Slots </b></div>
+                                
+                                <div class="">
+                                    <ul>
+                                        <li class="d-flex justify-content-between">
+                                            <div>20ft</div>
+                                            <div ng-click="OpenContainerDetails('20','Strip','TI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{TISummary.Strip20ft}}</div>
+                                            <div ng-click="OpenContainerDetails('20','Strip','TI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{TISummary.Strip20ft*2}}</div>
+                                        </li>
+                                        <li class="d-flex justify-content-between">
+                                            <div>40ft</div>
+                                            <div ng-click="OpenContainerDetails('40','Strip','TI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{TISummary.Strip40ft}}</div>
+                                            <div ng-click="OpenContainerDetails('40','Strip','TI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{TISummary.Strip40ft*4}}</div>
+                                        </li>
+                                        <li class="d-flex justify-content-between">
+                                            <div>45ft</div>
+                                            <div ng-click="OpenContainerDetails('45','Strip','TI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{TISummary.Strip45ft}}</div>
+                                            <div ng-click="OpenContainerDetails('45','Strip','TI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{TISummary.Strip45ft*4}}</div>
+                                        </li>
+                                        <li class="d-flex justify-content-between">
+                                            <div>Req. slots</div>
+                                            <div ng-click="OpenContainerDetails('45','Strip','TI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{(TISummary.Strip45ft*4)+(TISummary.Strip40ft*4)+(TISummary.Strip20ft*2)}}</div>
+                                            
+                                        </li>
+                                    </ul>
+                                    @*<ul>
+                                        <li> 20ft  <span ng-click="OpenContainerDetails('20','Strip','TI')">{{TISummary.Strip20ft}}</span></li>
+                                        <li> 40ft  <span ng-click="OpenContainerDetails('40','Strip','TI')">{{TISummary.Strip40ft}}</span></li>
+                                        <li> 45ft  <span ng-click="OpenContainerDetails('45','Strip','TI')">{{TISummary.Strip45ft}}</span></li>
+                                    </ul>*@
+                                </div>
+
+                            </div>
+                            <div class="card-footer">
+                                <div><img src="~/Content/images/container3.png" /> Total container <span>{{TITotalContainer}}</span></div>
+                                <div><img src="~/Content/images/LabourIcon.png" />   Required operator <span>{{TITotalOperator}}</span></div>
+                                <div><img src="~/Content/images/ForkLift.png" />   Available forklift <span>{{AvailableForklift}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12 col-xs-12 p-0 m-0 pr-1  Maincard">
+                    <div class="ChildCard">
+                        <div class="card">
+                            <div class="card-header">UI (Under inspection)</div>
+                            <div class="card-body">
+                                <div class="cardHeading d-flex justify-content-between"> <b>Sizes</b><b>Strip</b><b>Repack</b></div>
+                                <div class="">
+
+                                    <ul>
+                                        <li class="d-flex justify-content-between">
+                                            <div>20ft</div>
+                                            <div ng-click="OpenContainerDetails('20','Strip','UI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{UISummary.Strip20ft}}</div>
+                                            <div ng-click="OpenContainerDetails('20','Repack','UI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{UISummary.Stuff20ft}}</div>
+                                        </li>
+                                        <li class="d-flex justify-content-between">
+                                            <div>40ft</div>
+                                            <div ng-click="OpenContainerDetails('40','Strip','UI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{UISummary.Strip40ft}}</div>
+                                            <div ng-click="OpenContainerDetails('40','Repack','UI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{UISummary.Stuff40ft}}</div>
+                                        </li>
+                                        <li class="d-flex justify-content-between">
+                                            <div>45ft</div>
+                                            <div ng-click="OpenContainerDetails('45','Strip','UI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{UISummary.Strip45ft}}</div>
+                                            <div ng-click="OpenContainerDetails('45','Repack','UI')" class="cursor-pointer font-weight-bold text-decoration-underline">{{UISummary.Stuff45ft}}</div>
+                                        </li>
+                                    </ul>
+
+                                </div>
+
+                            </div>
+                            <div class="card-footer">
+                                <div><img src="~/Content/images/container3.png" /> Total container <span>{{UITotalContainer}}</span></div>
+                                <div><img src="~/Content/images/LabourIcon.png" />  Required operator <span>{{UITotalOperator}}</span></div>
+                                <div><img src="~/Content/images/ForkLift.png" />   Available forklift <span>{{AvailableForklift}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12 col-xs-12 p-0 m-0 pr-1  Maincard">
+                    <div class="ChildCard">
+                        <div class="card">
+                            <div class="card-header" ng-class="{ 'backgreen': CurrentshiftPlanned - UITotalOperator > 0, 'backgray': CurrentshiftPlanned - UITotalOperator == 0, 'backred': CurrentshiftPlanned - UITotalOperator < 0 }">ROSTER operator</div>
+                            <div class="card-body">
+                                <div class="cardHeading"> <b>Planned operator </b></div>
+                                <div class="">
+                                    <ul>
+                                        <li> Shift 1  <span ng-click="OpenLaborModelDetails('Planned','Shift1')">{{PlannedShift1}}</span></li>
+                                        <li> Shift 2  <span ng-click="OpenLaborModelDetails('Planned','Shift2')">{{PlannedShift2}}</span></li>
+                                        <li ng-class="{ 'text-green': PlannedShift1 - UITotalOperator > 0, 'text-gray': PlannedShift1 - UITotalOperator == 0, 'text-red': PlannedShift1 - UITotalOperator < 0 }" class="text-danger"> Target shift 1  <span>{{PlannedShift1-(UITotalOperator)}}</span></li>
+                                        <li ng-class="{ 'text-green': PlannedShift2 - UITotalOperator > 0, 'text-gray': PlannedShift2 - UITotalOperator == 0, 'text-red': PlannedShift2 - UITotalOperator < 0 }" class="text-danger"> Target shift 2  <span>{{PlannedShift2-(UITotalOperator)}}</span></li>
+                                        <li class="text-danger" ng-class="{ 'text-green': AvailableForklift-PlannedShift1   > 0, 'text-gray': AvailableForklift - PlannedShift1 == 0, 'text-red':  AvailableForklift- PlannedShift1 < 0 }">Forklift target shift 1<span>{{AvailableForklift-(PlannedShift1)}}</span></li>
+                                        <li class="text-danger" ng-class="{ 'text-green': AvailableForklift - PlannedShift2 > 0, 'text-gray': AvailableForklift - PlannedShift2 == 0, 'text-red': AvailableForklift - PlannedShift2 < 0 }">Forklift target shift 2<span>{{AvailableForklift-(PlannedShift2)}}</span></li>
+
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div class="card-footer">
+                                <div ng-class="{ 'text-green': (PlannedShift1 +PlannedShift2)  > UITotalOperator, 'text-gray': (PlannedShift1 +PlannedShift2) == UITotalOperator, 'text-red': (PlannedShift1 +PlannedShift2) < UITotalOperator }"><img src="~/Content/images/LabourIcon.png" style="filter:hue-rotate(153deg)" />Planned operator  <span>{{TotalPlannedOperator}}</span></div>
+                                <div><img src="~/Content/images/LabourIcon.png" />  Required operator<span>{{(UITotalOperator)}}</span></div>
+                                <div ng-style="(AvailableForklift - (PlannedShift1 + PlannedShift2)) > 0 ? {'color': 'green'} : (AvailableForklift - (PlannedShift1 + PlannedShift2)) < 0 ? {'color': 'red'} : {'color': 'gray'}"><img src="~/Content/images/ForkLift.png" />   Required forklift <span >{{AvailableForklift-(PlannedShift2+PlannedShift1)}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12 col-xs-12 p-0 m-0  Maincard">
+                    <div class="ChildCard">
+                        <div class="card">
+                            <div class="card-header" ng-class="{ 'backgreen': CurrentshiftLive - UITotalOperator > 0, 'backgray': CurrentshiftLive - UITotalOperator == 0, 'backred': CurrentshiftLive - UITotalOperator < 0 }">LIVE operator/resource</div>
+                            <div class="card-body">
+                                <div class="cardHeading"> <b>Available operator </b></div>
+                                <div class="">
+
+                                    <ul>
+                                        <li> Shift 1   <span ng-click="OpenLaborModelDetails('LIVE','Shift1')">{{LiveShift1}}</span></li>
+                                        <li> Shift 2  <span ng-click="OpenLaborModelDetails('LIVE','Shift2')">{{LiveShift2}}</span></li>
+                                        <li class="text-danger" ng-class="{ 'text-green': LiveShift1 - UITotalOperator > 0, 'text-gray': LiveShift1 - UITotalOperator == 0, 'text-red': LiveShift1 - UITotalOperator < 0 }"> Target shift 1  <span>{{LiveShift1-(UITotalOperator)}}</span></li>
+                                        <li class="text-danger" ng-class="{ 'text-green': LiveShift2 - UITotalOperator > 0, 'text-gray': LiveShift2 - UITotalOperator == 0, 'text-red': LiveShift2 - UITotalOperator < 0 }"> Target shift 2<span>{{LiveShift2-(UITotalOperator)}}</span></li>
+                                        <li class="text-danger" ng-class="{ 'text-green': AvailableForklift-LiveShift1   > 0, 'text-gray': AvailableForklift - LiveShift1 == 0, 'text-red':  AvailableForklift- LiveShift1 < 0 }">Forklift target shift 1<span>{{AvailableForklift-(LiveShift1)}}</span></li>
+                                        <li class="text-danger" ng-class="{ 'text-green': AvailableForklift - LiveShift2 > 0, 'text-gray': AvailableForklift - LiveShift2 == 0, 'text-red': AvailableForklift - LiveShift2 < 0 }">Forklift target shift 2<span>{{AvailableForklift-(LiveShift2)}}</span></li>
+                                        
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div class="card-footer">
+                                <div ng-class="{ 'text-green': (LiveShift1 +LiveShift2)  > (PlannedShift1+PlannedShift2), 'text-gray': (LiveShift1 +LiveShift2) == (PlannedShift1+PlannedShift2), 'text-red': (LiveShift1 +LiveShift2) < (PlannedShift1+PlannedShift2) }"><img src="~/Content/images/LabourIcon.png" style="filter:hue-rotate(153deg)" /> Available operator <span>{{TotalLiveOperator}}</span></div>
+                                <div><img src="~/Content/images/LabourIcon.png" />  Required operator<span>{{(UITotalOperator)}}</span></div>
+                                <div ng-style="(AvailableForklift - (LiveShift1 + LiveShift2)) > 0 ? {'color': 'green'} : (AvailableForklift - (LiveShift2 + LiveShift2)) < 0 ? {'color': 'red'} : {'color': 'gray'}"><img src="~/Content/images/ForkLift.png" />   Required forklift <span >{{AvailableForklift-(LiveShift2+LiveShift1)}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row p-0 m-0">
+                <div class="col-xl-6 col-lg-6 offset-lg-3 offset-xl-3 offset-md-3 col-md-6 col-sm-12 col-12 col-xs-12 p-0   Maincard">
+                    <div class="ChildCard w-100">
+                        <div class="card">
+                            <div class="card-header">Live monitoring</div>
+                            <div class="card-body">
+                                @*salman*@
+
+                                <div class="LiveMonitering">
+                                    <table>
+                                        <tr>
+                                            <td></td>
+                                            <th colspan="2">20ft</th>
+                                            <th colspan="2">40ft</th>
+                                            <th colspan="2">45ft</th>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td><img src="~/Content/images/container3.png" /></td>
+                                            <td><img src="~/Content/images/LabourIcon.png" /></td>
+                                            <td><img src="~/Content/images/container3.png" /></td>
+                                            <td><img src="~/Content/images/LabourIcon.png" /></td>
+                                            <td><img src="~/Content/images/container3.png" /></td>
+                                            <td><img src="~/Content/images/LabourIcon.png" /></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-start font-weight-normal">  Strip</th>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Strip.Container20)">{{AssignedDetails.Strip.Container20.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('labor',AssignedDetails.Strip.Operator20)" class="border-right">{{AssignedDetails.Strip.Operator20.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Strip.Container40)">{{AssignedDetails.Strip.Container40.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('labor',AssignedDetails.Strip.Operator40)" class="border-right">{{AssignedDetails.Strip.Operator40.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Strip.Container45)">{{AssignedDetails.Strip.Container45.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('labor',AssignedDetails.Strip.Operator45)" class="border-right">{{AssignedDetails.Strip.Operator45.length}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-start font-weight-normal">  Repack</th>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Stuff.Container20)">{{AssignedDetails.Stuff.Container20.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('labor',AssignedDetails.Stuff.Operator20)" class="border-right">{{AssignedDetails.Stuff.Operator20.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Stuff.Container40)">{{AssignedDetails.Stuff.Container40.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('labor',AssignedDetails.Stuff.Operator40)" class="border-right">{{AssignedDetails.Stuff.Operator40.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Stuff.Container45)">{{AssignedDetails.Stuff.Container45.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('labor',AssignedDetails.Stuff.Operator45)" class="border-right">{{AssignedDetails.Stuff.Operator45.length}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-start font-weight-normal">  Container bereaching the SLA</th>
+                                            <td>{{AssignedDetails.Delays.Container20.length}}</td>
+                                            <td class="border-right">{{AssignedDetails.Delays.Operator20.length}}</td>
+                                            <td>{{AssignedDetails.Delays.Container40.length}}</td>
+                                            <td class="border-right">{{AssignedDetails.Delays.Operator40.length}}</td>
+                                            <td>{{AssignedDetails.Delays.Container45.length}}</td>
+                                            <td class="border-right">{{AssignedDetails.Delays.Operator45.length}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-start font-weight-normal">  Completed container</th>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Completed.Container20)" colspan="2">{{AssignedDetails.Completed.Container20.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Completed.Container40)" colspan="2">{{AssignedDetails.Completed.Container40.length}}</td>
+                                            <td ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Completed.Container45)" colspan="2">{{AssignedDetails.Completed.Container45.length}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-start font-weight-normal text-danger">  Idle container</th>
+                                            <td class="text-danger" ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Idle.Cntr20)" colspan="2">{{AssignedDetails.Idle.Cntr20.length}}</td>
+                                            <td class="text-danger" ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Idle.Cntr40)" colspan="2">{{AssignedDetails.Idle.Cntr40.length}}</td>
+                                            <td class="text-danger" ng-click="ShowLiveAssignmentDetails('cntr',AssignedDetails.Idle.Cntr45)" colspan="2">{{AssignedDetails.Idle.Cntr45.length}}</td>
+
+                                        </tr>
+                                        <tr>
+                                            <th class="text-start font-weight-normal text-danger"> Idle operator</th>
+                                            <td class="text-danger" ng-click="ShowLiveAssignmentDetails('labor',IdleOperator)" colspan="6">{{IdleOperator.length}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-start font-weight-normal text-danger"> Missing  operator</th>
+                                            <td class="text-danger" ng-click="ShowLiveAssignmentDetails('labor',MissingOperator,true)" colspan="6">{{MissingOperator.length}}</td>
+                                        </tr>
+                                    </table>
+
+
+                                </div>
+
+                            </div>
+                            <div class="card-footer">
+                                <div><img src="~/Content/images/container3.png" /> Assigned container <span>{{TotalContainer}}</span></div>
+                                <div><img src="~/Content/images/LabourIcon.png" />  Assigned operator<span>{{TotalOperator}}</span></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!----------------------------------------------------------Modal---------------------------------------------------------->
+
+        <div class="modal fade" id="ContainerDetailModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:70%;">
+                <div class="modal-content">
+                    <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                        <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                        <i class="icon-cross"></i>
+                    </div>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Container details</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <label class="col-form-label ml-3">Search</label>
+                            <input type="text" ng-model="searchText" placeholder="Search..." style="width:58%;" class="form-control ml-3" />
+                        </div>
+                        <div>
+                            <div class="row">
+                                <div class="card table-card scrollbar">
+                                    <table class="table datatable-show-all text-center" style=" height: 30vh;">
+                                        <thead>
+                                            <tr class="table-card-head">
+                                                <th>SR#</th>
+                                                <th>Bayan #</th>
+                                                <th>Container #</th>
+                                                <th>Location</th>
+                                                <th>Custom inspection type</th>
+                                                <th>Custom inspection stage</th>
+                                                <th>Xray result</th>
+                                                <th>Package type</th>
+                                                <th>Size</th>
+                                                <th>Refeer</th>
+                                                <th>Elapsed hrs</th>
+                                                <th>Overall hrs</th>
+                                                <th>Catagory</th>
+                                                <th>Required operator</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="ng-cloak" ng-cloak>
+                                            <tr ng-repeat="Dtl in CntrModelData | filter:searchText">
+                                                <td>{{$index+1}}</td>
+                                                <td>{{Dtl.Bayan}}</td>
+                                                <td>{{Dtl.Cntr}}</td>
+                                                <td>{{Dtl.Location}}</td>
+                                                <td>{{Dtl.CustomsInspectionType}}</td>
+                                                <td>{{Dtl.CustomsStage}}</td>
+                                                <td>{{Dtl.XrayResult}}</td>
+                                                <td>{{Dtl.PackageType}}</td>
+                                                <td>{{Dtl.Size}}</td>
+                                                <td>{{Dtl.IsReefer?'Yes':'No'}}</td>
+                                                <td>{{Dtl.ElapsedHr}}</td>
+                                                <td>{{Dtl.OverAllHr}}</td>
+                                                <td>{{Dtl.Catgeory}}</td>
+                                                <td>
+                                                    <span>1</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!---------------------------------------------------------- Modal Body UI ---------------------------------------------------------->
+        <!----------------------------------------------------------Modal---------------------------------------------------------->
+        <div class="modal fade" id="LaborDetailModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:70%;">
+                <div class="modal-content">
+                    <div class="CloseModalBtn" data-dismiss="modal" aria-label="Close">
+                        <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                        <i class="icon-cross"></i>
+                    </div>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Labor details</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <label class="col-form-label ml-3">Search</label>
+                            <input type="text" ng-model="searchText" placeholder="Search..." style="width:58%;" class="form-control ml-3" />
+                        </div>
+                        <div>
+                            <div class="row">
+                                <div class="card table-card scrollbar">
+                                    <table class="table datatable-show-all text-center" style=" height: 30vh;">
+                                        <thead>
+                                            <tr class="table-card-head">
+                                                <th>SR#</th>
+                                                <th>Employee Code #</th>
+                                                <th>Employee Name #</th>
+                                                <th>Shift Type</th>
+                                                <th>Shift</th>
+                                                <th>Shift Start Time</th>
+                                                <th>Shift End Time</th>
+                                                <th>Clock In Time</th>
+                                                <th>Clock Out Time</th>
+                                                <th ng-show="ShowReasignment==true">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="ng-cloak" ng-cloak>
+                                            <tr ng-repeat="Dtl in LaborModelData | filter:searchText">
+                                                <td>{{$index+1}}</td>
+                                                <td>{{Dtl.employeeNumber}}</td>
+                                                <td>{{Dtl.employeeFullName}}</td>
+                                                <td>{{Dtl.shiftType}}</td>
+                                                <td>{{Dtl.Shift}}</td>
+                                                <td>{{Dtl.shiftStartTime | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                <td>{{Dtl.shiftEndTime   | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                <td>{{Dtl.clockInTime    | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                <td>{{Dtl.clockOutTime   | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                                <td><span title="Mark as arrive" ng-show="ShowReasignment==true" ng-click="MarkasArrive(Dtl.employeeNumber,Dtl.employeeFullName)"><i class="icon-user-check"></i></span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!---------------------------------------------------------- Modal Body UI ---------------------------------------------------------->
+    </div>
+</body>
+</html>
+<script src="~/Scripts/jquery.min.js"></script>
+<script>
+    //Hide Side Menu
+    window.onload = function () {
+        document.getElementById('minisidebar').className = 'sidebar-xs';
+        speechSynthesis.cancel();
+    };
+    window.onbeforeunload = function () {
+        speechSynthesis.pause();
+    };
+
+
+    
+
+</script>

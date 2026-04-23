@@ -1,0 +1,361 @@
+﻿
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /*    .modal-body {
+        max-height: 70vh !important;
+        overflow: auto !important;
+    }*/
+
+    span.badge.badge-Active {
+        background: #00946b;
+        color: white;
+    }
+
+    span.badge.badge-Working {
+        background: #013765;
+        color: white;
+    }
+
+    span.badge.badge-InActive {
+        background: #cd0202;
+        color: white;
+    }
+
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .add-button {
+        background-color: #1E1450;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+    }
+
+    .CloseModalBtn {
+        color: #FFFFFF;
+        line-height: 25px;
+        position: absolute;
+        right: -12px;
+        z-index: 99999999999 !important;
+        text-align: center;
+        top: -10px;
+        width: 45px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 3px #000;
+        transition: all .3s;
+        height: 45px;
+        border-radius: 50%;
+        font-size: 25px !important;
+        padding: 8px;
+        cursor: pointer;
+        background: #1E1450;
+        z-index: 99999999999 !important;
+    }
+
+    .close {
+        display: none;
+    }
+
+    .CloseModalBtn .fa-times-circle-o {
+        color: #ffff !important;
+    }
+
+    .modal-content {
+        background-color: #f4f2fa !important;
+        border-radius: 16px !important;
+        box-shadow: 0 2.8px 2.2px rgb(0 0 0 / 3%), 0 6.7px 5.3px rgb(0 0 0 / 5%), 0 12.5px 10px rgb(0 0 0 / 6%), 0 22.3px 17.9px rgb(0 0 0 / 7%), 0 41.8px 33.4px rgb(255 255 255 / 9%), 0 100px 80px rgb(255 255 255 / 12%);
+    }
+
+    .modal-header {
+        text-align: center;
+        border-bottom: none !important;
+        justify-content: center !important;
+    }
+
+    .modal-title {
+        font-weight: bolder !important;
+        font-size: 24px;
+        padding-top: 12px;
+        padding-bottom: 4px;
+        display: inline-block;
+    }
+
+    .modal-footer {
+        border-top: none !important;
+        align-content: center;
+        text-align: center;
+    }
+</style>
+
+<link href="~/Scripts/SlimSelect/slimselect.min.css" rel="stylesheet" />
+<script src="~/Scripts/SlimSelect/slimselect.min.js"></script>
+
+
+
+
+<div class="ng-cloak" ng-cloak ng-controller="HSCodeConfigCtrl" ng-init="init()">
+    <div class="card mt-2 d-flex">
+        <div class="card-body">
+            <div class="header-row">
+                <h2>HS code config</h2>
+                <div>
+                    <input type="button" class="btn btn-secondary" value="Filters" data-toggle="collapse" data-target="#demo" />
+                    <button class="add-button" ng-click="OpenAdd()"><i class="icon-add m-r-5 text-white"></i> Add</button>
+                    <button class="add-button" ng-click="OpenHScodegrouAdd()"><i class="icon-add m-r-5 text-white"></i> Setup HS code group </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Search Filter Code Start-->
+    <div class="card " id="demo">
+        <div class="card-body">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Global six digit</label>
+                            <input type="text" class="form-control" ng-model="Search.GlobalSixDigit" placeholder="Enter Global six digit" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Last six digit</label>
+                            <input type="text" class="form-control" ng-model="Search.LastSixDigit" placeholder="Enter Last six digit" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>HS code group</label>
+                            <input type="text" class="form-control" ng-model="Search.CodeGroup" placeholder="Enter HS code group" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Date From</label>
+                            <div id="sandbox-container">
+                                <div class="input-group date">
+                                    <input type="text" class="form-control  from" id="FromDate" placeholder="dd/mm/yyyy"><span class="input-group-addon"><i class="icon-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Date To</label>
+                            <div id="sandbox-container">
+                                <div class="input-group date">
+                                    <input type="text" class="form-control  from" id="ToDate" placeholder="dd/mm/yyyy"><span class="input-group-addon"><i class="icon-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-4">
+                        <button class="btn btn-reset pull-right mr-2" ng-click="ClearFilter(Search)">Clear</button>
+                        <button class="btn btn-primary pull-right mr-2" ng-click="SearchRecord(serach)">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="CounterCard">
+                <b>Total item: </b>  <span id="counts">{{(HSCodeList | filter :Search).length}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div id="tblrep" class="card table-card scrollbar">
+            <table class="table datatable-show-all text-center" id="table-id">
+                <thead>
+                    <tr class="table-card-head">
+                        <th>SR#</th>
+                        <th>Global 6 digit</th>
+                        <th>Last 6 digit</th>
+                        <th>English name</th>
+                        <th>Arabic name</th>
+                        <th>HS code group</th>
+                        <th>Created at</th>
+                        <th>Created by</th>
+                        <th>Updated at</th>
+                        <th>Updated by</th>
+                        <th>Action</th>
+
+                    </tr>
+                </thead>
+                <tbody class="ng-cloak" ng-cloak>
+                    <tr ng-repeat="item in HSCodeList | filter:Search">
+                        <td>{{$index+1}}</td>
+                        <td>{{item.GlobalSixDigit}}</td>
+                        <td>{{item.LastSixDigit}}</td>
+                        <td>{{item.EngName}}</td>
+                        <td>{{item.ArName}}</td>
+                        <td>{{item.CodeGroup}}</td>
+                        <td>{{item.CreatedAt | date:'dd/MM/yyyy hh:mm:ss'}}</td>
+                        <td>{{item.CreatedBy}}</td>
+                        <td>{{item.UpdatedAt | date:'dd/MM/yyyy hh:mm:ss'}}</td>
+                        <td>{{item.UpdatedBy}}</td>
+                        <td>
+                            <i class="icon-pencil" title="Click to Update" ng-click="EditHSCode(item,false)"></i>
+                            <i class="icon-bin" title="Click to Delete" ng-click="UpdateHSCode(item,true)"></i>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div>
+        <button class="btn btn-primary pull-right" ng-click="LoadMore()">Load more</button>
+    </div>
+    <!--modal-->
+    <div class="modal fade" id="AddHSCode" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="overflow:visible !important">
+                <div class="CloseModalBtn" data-dismiss="modal">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Add HS code</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class=" form-group">
+                                <label class="Starick">global 6 digit</label>
+                                <input type="text" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')" ng-model="HSCode.GlobalSixDigit" class="form-control" placeholder="Enter 6 global digit" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class=" form-group">
+                                <label class="Starick">Last 6 digit</label>
+                                <input type="text" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')" ng-model="HSCode.LastSixDigit" class="form-control" placeholder="Enter last 6 digit" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class=" form-group">
+                                <label class="">English name </label>
+                                <input type="text" class="form-control" ng-model="HSCode.EngName" placeholder="Enter english name" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class=" form-group">
+                                <label class="">Arabic name </label>
+                                <input type="text" class="form-control" ng-model="HSCode.ArName" placeholder="Enter arabic name" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="Starick">HS code group</label>
+                                <select id="HSCodeGroup" ng-model="HSCode.CodeGroup">
+                                    <option value="" selected hidden>Select HS code group</option>
+                                    <option ng-repeat="x in hsCodeGroups" value="{{x}}">{{x}}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-success" ng-click="AddHSCode(HSCode)">
+                                Submit
+                            </button>
+                            <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="EditHSCode" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" style="overflow:visible !important">
+                <div class="CloseModalBtn" data-dismiss="modal">
+                    <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <i class="icon-cross"></i>
+                </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit HS Code </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class=" form-group">
+                                <label class="Starick">global 6 digit</label>
+                                <input type="text" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')" ng-model="EditHSCodeData.GlobalSixDigit" class="form-control" placeholder="Enter 6 global digit" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class=" form-group">
+                                <label class="Starick">Last 6 digit</label>
+                                <input type="text" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')" ng-model="EditHSCodeData.LastSixDigit" class="form-control" placeholder="Enter last 6 digit" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class=" form-group">
+                                <label class="">English name </label>
+                                <input type="text" class="form-control" ng-model="EditHSCodeData.EngName" placeholder="Enter english name" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class=" form-group">
+                                <label class="">Arabic name </label>
+                                <input type="text" class="form-control" ng-model="EditHSCodeData.ArName" placeholder="Enter arabic name" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="Starick">HS code group </label>
+                                <select id="EditHSCodeGroup" ng-model="EditHSCodeData.CodeGroup">
+                                    <option ng-repeat="x in hsCodeGroups" ng-selected="x==EditHSCodeData.CodeGroup" value="{{x}}">{{x}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:end;">
+                            <button class="btn btn-success" ng-click="UpdateHSCode(EditHSCodeData)">
+                                Submit
+                            </button>
+                            <button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--modal-->
+</div>
+
+
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/DatePicker/bootstrap-datepicker.js"></script>
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.standalone.css" rel="stylesheet" />
+<link href="~/Scripts/DatePicker/bootstrap-datepicker.css" rel="stylesheet" />
+<script src="~/Scripts/DatePicker/CustomIntilizeJS.js"></script>
+<script>
+
+    var o = new SlimSelect({
+        select: '#HSCodeGroup',
+        placeholder: 'Select HS code group',
+        allowDeselectOption: true,
+        hideSelectedOption: true
+        //deselectLabel: '<span class="red">✖</span>',
+    });
+</script>

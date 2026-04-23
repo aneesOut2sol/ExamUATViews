@@ -1,0 +1,245 @@
+﻿
+<div class="modal fade bd-example-modal-lg" data-backdrop="static" data-keyboard="false" id="ContainerEvnets" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style=" min-width: 70%;">
+        <div class="modal-content" style="margin-top: 65px;">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">Event History - {{ContainerEvnets_ContainerNumber}}</h5>
+
+            </div>
+            <div class="modal-body">
+                <div class="windowmode">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="table-card-head">
+                                <th>
+                                    Apply Date
+                                    <span class="sort">
+                                        <i ng-show="(EventSortdesc==null||EventSortdesc==undefined) || EventSortdesc==false" ng-click="SortApplyDate('dsc')" class="icon-chevron-down"></i>
+                                        <i ng-show="EventSortdesc==true" ng-click="SortApplyDate('asc')" class="icon-chevron-up"></i>
+                                    </span>
+                                </th>
+                                <th>Event ID</th>
+                                <th>Recorder</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="x in ContainerDetails" ng-show="ContainerDetails.length>0">
+                                <td>{{x.ApplyDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                <td><b>{{x.EventName}}</b></td>
+                                <td>{{x.Recorder}}</td>
+                                <td>{{x.Notes}}</td>
+                            </tr>
+                            <tr ng-show="ContainerDetails.length==0||ContainerDetails==null">
+                                <td colspan="4">  No data available</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mobileview">
+
+                    <div class="card shadow m-0" ng-repeat="x in ContainerDetails" style="overflow:visible" ng-show="ContainerDetails.length>0">
+                        <table width="100%">
+                            <tbody>
+                                <tr>
+                                    <td style="text-align:center">
+                                        <img style="height:30px;" src="~/Content/images/output-onlinepngtools.png" />
+                                    </td>
+                                    <td>
+                                        <table width="100%">
+                                            <tr>
+                                                <td>Apply Date :</td>
+                                                <td>{{x.ApplyDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Event ID :
+                                                </td>
+                                                <td><b>{{x.EventName}}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Recorder :
+                                                </td>
+                                                <td>{{x.Recorder}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Notes : </td>
+                                                <td>{{x.Notes}}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div ng-show="ContainerDetails.length==0||ContainerDetails==null">
+                        No data available
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Send Email Modal Start-->
+<div class="modal fade bd-example-modal-lg" data-backdrop="static" data-keyboard="false" id="SendEmail" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style=" max-width: 478px; min-width: 0px;">
+        <div class="modal-content" style="margin-top: 65px;">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">Send email reports</h5>
+            </div>
+            <div class="modal-body">
+                <form autocomplete="off">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Date from</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control date" id="EmailfromDate" placeholder="DD/MM/YYYY HH:mm" />
+                                    <span class="input-group-append">
+                                        <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Date to</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control date" id="EmailtoDate" placeholder="DD/MM/YYYY HH:mm" />
+                                    <span class="input-group-append">
+                                        <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Emails</label>
+                                
+                                <select id="EmployeeData" multiple="multiple" ng-model="ReportsEmail">
+                                    <option value="{{item}}"  ng-repeat="item in EmployeeEmail track by $index">{{item}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        @*<div class="col-md-12" ng-show="CurrentCard=='UI (Under Inspection) Details'">
+                                <div class="form-group mb-0">
+                                    <input ng-checked="WTSC==true" ng-model="WTSC" type="checkbox" />
+                                    <label>Waiting Time SealCut</label>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input ng-checked="WTCI==true" ng-model="WTCI" type="checkbox" />
+                                    <label>Waiting Time Custom Inspection</label>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input ng-checked="CRIP==true" ng-model="CRIP" type="checkbox" />
+                                    <label>Cargo Repack In Progress</label>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input ng-checked="CSIP==true" ng-model="CSIP" type="checkbox" />
+                                    <label>Cargo Strip In Progress</label>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input ng-checked="WTAS==true" ng-model="WTAS" type="checkbox" />
+                                    <label>Waiting to Apply Seal</label>
+                                </div>
+                            </div>*@
+                        <div class="col-md-12" style="text-align:end">
+                            <button class="btn btn-primary" ng-click="SendEmailReport()">Send Email</button>
+                            @*<button class="btn btn-primary" ng-show="CurrentCard!='UI (Under Inspection) Details'" ng-click="SendEmailReport()">Send Email</button>
+                                <button class="btn btn-primary" ng-show="CurrentCard=='UI (Under Inspection) Details'" ng-click="SendEmailReportMultiple()">Send Email</button>*@
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--Send Email Modal End-->
+<!--DownloadExcel Modal Start-->
+<div class="modal fade bd-example-modal-lg" data-backdrop="static" data-keyboard="false" id="DownloadExcel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style=" max-width: 478px; min-width: 0px;">
+        <div class="modal-content" style="margin-top: 65px;">
+            <div class="CloseModalBtn" data-dismiss="modal">
+                <button class="close" data-dismiss="modal" aria-label="Close"></button>
+                <i class="icon-cross"></i>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">Export data to excel </h5>
+            </div>
+            <div class="modal-body">
+                <form autocomplete="off">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Date from</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control date" id="fromDate" placeholder="DD/MM/YYYY HH:mm" />
+                                    <span class="input-group-append">
+                                        <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Date to</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control date" id="toDate" placeholder="DD/MM/YYYY HH:mm" />
+                                    <span class="input-group-append">
+                                        <span class="input-group-text"><i class="icon-calendar"></i></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="col-md-12" ng-show="CurrentCard=='UI (Under Inspection) Details'">
+                                <div class="form-group mb-0">
+                                    <input ng-checked="WTSC==true" ng-model="WTSC" type="checkbox" />
+                                    <label>Waiting Time SealCut</label>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input ng-checked="WTCI==true" ng-model="WTCI" type="checkbox" />
+                                    <label>Waiting Time Custom Inspection</label>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input ng-checked="CRIP==true" ng-model="CRIP" type="checkbox" />
+                                    <label>Cargo Repack In Progress</label>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input ng-checked="CSIP==true" ng-model="CSIP" type="checkbox" />
+                                    <label>Cargo Strip In Progress</label>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input ng-checked="WTAS==true" ng-model="WTAS" type="checkbox" />
+                                    <label>Waiting to Apply Seal</label>
+                                </div>
+                            </div>*@
+                        <div class="col-md-12" style="text-align:end">
+                            <button class="btn btn-primary" ng-click="ExportExcel()">Export</button>
+                            @*<button class="btn btn-primary" ng-show="CurrentCard!='UI (Under Inspection) Details'" ng-click="ExportExcel()">Export</button>
+                                <button class="btn btn-primary" ng-show="CurrentCard=='UI (Under Inspection) Details'" ng-click="ExportExcelMultiple()">Export</button>*@
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--DownloadExcel Modal End-->

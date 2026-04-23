@@ -1,0 +1,455 @@
+﻿
+@{
+    ViewBag.Title = "LOCbyBayan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    .CountBadge {
+        position: relative;
+        z-index: 999;
+        color: #ffffff;
+        padding: 0px 5px;
+        background: #F44336;
+        border-radius: 10px;
+        float: right;
+        bottom: 10px;
+        left: 5px;
+        width: fit-content;
+        box-shadow: 1px 1px 5px -1px #000000cc;
+    }
+
+    .SearchForm .btn {
+        height: fit-content;
+        align-self: center;
+    }
+
+    .windowmode::-webkit-scrollbar-track, .mobileview::-webkit-scrollbar-track {
+        display: none !important;
+    }
+
+    tbody tr:nth-child(even) td {
+        background: none !important;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f7f7ff !important;
+    }
+
+    .table td, .table th {
+        border: none !important;
+    }
+
+    .table td, .table tr {
+        border: none;
+    }
+
+    .windowmode {
+        height: 450px;
+        overflow-y: scroll;
+        overflow-x: visible !important;
+        padding: 0px;
+        width: 100%;
+    }
+
+    .w-20 {
+        width: 20px !important;
+    }
+
+    .AuctionContainerPage i {
+        font-size: 22px !important;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    textarea {
+        width: 100%;
+    }
+
+    .AttachmentSection a {
+        text-decoration: none;
+        color: black;
+        cursor: pointer;
+    }
+
+        .AttachmentSection a:hover {
+            color: royalblue;
+            text-decoration: underline;
+        }
+
+
+    .LCLCard {
+        max-height: 500px;
+        overflow: auto;
+    }
+
+        .LCLCard th, .LCLCard td {
+            white-space: nowrap;
+        }
+
+    .jqueryConfrim .modal-content {
+        border-top: solid 7px #3498db;
+        border-radius: 6px !IMPORTANT;
+        background: white !important;
+    }
+
+    .jqueryConfrim .modal-header h5 {
+        font-size: 22px;
+    }
+
+    .jqueryConfrim .modal-header {
+        justify-content: center !important;
+    }
+
+    .jqueryConfrim .btn-primary {
+        background: #3498db;
+        padding: 5px 11px;
+        text-transform: uppercase;
+    }
+
+    .jqueryConfrim .btn-reset {
+        background: #363636;
+        padding: 5px 11px;
+        text-transform: uppercase;
+    }
+
+    @@keyframes zoomIn {
+        0% {
+            opacity: 0;
+            -webkit-transform: scale3d(.3, .3, .3);
+            transform: scale3d(.3, .3, .3);
+        }
+
+        50% {
+            opacity: 1;
+        }
+    }
+
+    .ZoominAnimate {
+        animation: zoomIn 0.2s linear;
+    }
+
+    #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #111111de;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+        display: none;
+        overflow: scroll;
+    }
+
+        #overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            transition: transform 0.5s ease;
+        }
+
+    #close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    ul.Damage_Images {
+        padding: 0px;
+        border: 1px solid #ececec;
+    }
+
+        ul.Damage_Images li .Icon span {
+            padding: 7px;
+            /*border: 1px solid #343434;*/
+            border-radius: 50%;
+            color: #6b6868 !important;
+        }
+
+        ul.Damage_Images li {
+            padding: 12px 18px;
+            list-style: none;
+            border-bottom: 1px solid #e8e8e8cf;
+            color: #6b6868 !important;
+        }
+
+    .CardHeaderLink {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .tab {
+        overflow: hidden;
+        /*border: 1px solid #ccc;
+      background-color: #f1f1f1;*/
+    }
+
+    .tabheading {
+        padding: 10px;
+        background: #00946b;
+        color: white;
+    }
+    /* Style the buttons inside the tab */
+    .tab button {
+        border-top-right-radius: 10px;
+        border-top-left-radius: 10px;
+        background: #e9e9e9;
+        padding: 15px;
+        /*float: left;*/
+        border: none;
+        outline: none;
+        cursor: pointer;
+        /*padding: 14px 16px;*/
+        transition: 0.3s;
+        font-size: 13px;
+    }
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #00946b;
+            color: white;
+            font-size: 13px;
+        }
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #00946b !important;
+            color: white;
+            font-size: 13px;
+        }
+
+    .tab button {
+        width: 100%;
+    }
+
+    /* Style the tab content */
+    .tabcontent {
+        display: none;
+        padding: 0px 10px;
+        /*border: 1px solid #ccc;*/
+        border-top: none;
+    }
+
+    input[type=radio] {
+        transform: scale(1.3);
+        accent-color: var( --dpw-bg-color);
+    }
+</style>
+<div ng-controller="LocBybayanCtrl" ng-cloak class="ng-cloak AuctionContainerPage" ng-init="init()">
+
+
+
+    <br />
+    <div class="page-header border-bottom-0 blur">
+        <div class="page-header-content header-elements-md-inline">
+            <!--Tab Code Start -->
+            <div class="tab">
+                <div class="row">
+                    <div class="CardHeaderLink  shadow-sm text-center ">
+                        <button class="tablinks active" id="searchBayan" ng-click="LoadTabs('searchBayan')"><i class="icon-task mr-2"></i> Bayan Level LOC Search </button>
+                    </div>
+                    <div class="CardHeaderLink  shadow-sm text-center ">
+                        <button class="tablinks" id="ListAll" ng-click="LoadTabs('ListAll')"><i class="icon-task mr-2"></i> Ignored Bayan List <span class="CountBadge">{{uniqueBayanCount}}</span></button>
+                    </div>
+                </div>
+            </div>
+            <!--Tab Code End -->
+        </div>
+    </div>
+
+    <br />
+    <div class="card" ng-show="Currenttab == 'searchBayan'">
+        <div class="card-body">
+            <form class="was-validated SearchForm" id="SearchFormSection" name="SearchFormSection">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label Starick">Select Bayan</label>
+                            <select data-placeholder="Please Select Bayan" class="form-control select-clear" id="BayanDD" ng-model="Search.Bayan" ng-change="CheckGridClearance(Search)" required data-fouc>
+                                <option></option>
+                                <option value="Other">Other</option>
+                                <option ng-repeat="Bayan in BayanLOV" value="{{Bayan}}">{{Bayan}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3" ng-if="Search.Bayan=='Other'">
+                        <div class="form-group">
+                            <label class="form-label Starick">Please enter bayan</label>
+                            <input type="text" required ng-model="Search.ManualBayan" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-3 mt-4">
+                        <button class="btn btn-primary mr-2" ng-disabled="SearchFormSection.$invalid" ng-click="SearchData(Search)">Search</button>
+                        <button class="btn btn-reset" ng-disabled="SearchFormSection.$invalid" ng-click="Reset()">Reset</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+
+    <div class="windowmode" ng-show="Currenttab == 'searchBayan'">
+        <div class="row">
+            <div class="col-md-3 offset-9">
+                <button class="btn btn-primary mb-2 pull-right" ng-show="RecordsList != undefined && RecordsList.length > 0" ng-click="ResendLOC(Search)">Send LOC to customs</button>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr class="table-card-head">
+                    <th class="w-20">S.No</th>
+                    <th>Bayan</th>
+                    <th>Unit Nbr</th>
+                    <th>Position</th>
+                    <th>Category</th>
+                    <th>ISN NO</th>
+                    <th>Strip%</th>
+                    <th>Action taken by </th>
+                    <th>Action taken time</th>
+                    <th>LOC Status</th>
+                    <th>Action</th>
+                    <th ng-if="ShowResendColumns()">Resend By</th>
+                    <th ng-if="ShowResendColumns()">Resend Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="RecordsList == undefined || RecordsList.length == 0" style=" border: 2px solid var( --dpw-bg-color)">
+                    <td colspan="12">
+                        No record found
+                    </td>
+                </tr>
+                <tr ng-repeat="item in RecordsList ">
+                    <td class="w-20">{{$index+1}}</td>
+                    <td class="autoCaps">{{item.Bayan}}</td>
+                    <td class="autoCaps">{{item.Cntr}}</td>
+                    <td class="autoCaps">{{item.Location}}</td>
+                    <td class="autoCaps">{{item.category}}</td>
+                    <td class="autoCaps">{{item.isnnumber}}</td>
+                    <td class="autoCaps">
+                        <span ng-if="item.StripPercentage != '' && item.StripPercentage != null">{{item.StripPercentage}}%</span>
+                        <span ng-if="item.StripPercentage == '' || item.StripPercentage == null">0%</span>
+                    </td>
+                    <td class="autoCaps">{{item.ApprovedBy}}</td>
+                    <td class="autoCaps">{{item.ApprovedTime | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                    <td class="autoCaps" ng-if="!ShowResendColumns()">
+                        <span class="badge badge-success" ng-if="item.LOCIgnored == false">Sent</span>
+                        <span class="badge badge-danger" ng-if="item.LOCIgnored == true">Ignored</span>
+                    </td>
+                    <td class="autoCaps" ng-if="ShowResendColumns()">
+                        <span class="badge badge-success" ng-if="item.ResendLOC == true">Sent</span>
+                        <span class="badge badge-danger" ng-if="item.ResendLOC == false">Failed</span>
+                    </td>
+                    <td class="autoCaps">
+                        <span class="badge badge-success" ng-if="item.Action == 'Approve'">Approved</span>
+                        <span class="badge badge-danger" ng-if="item.Action != 'Approve'">Rejected</span>
+                    </td>
+                    <td ng-if="ShowResendColumns()" class="autoCaps">{{item.ResendBy}}</td>
+                    <td ng-if="ShowResendColumns()" class="autoCaps">{{item.ResendTime | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+    <div class="windowmode" ng-show="Currenttab == 'ListAll'">
+        <div class="row">
+            <div class="col-md-3 offset-9">
+                <button class="btn btn-primary mb-2 pull-right" ng-show="ShowLOCBtnforpendinglst()" ng-click="ResendLOCList()">Send LOC to customs</button>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr class="table-card-head">
+                    <th class="w-20"></th>
+                    <th>Bayan</th>
+                    <th class="w-20">S.No</th>
+                    <th>Unit Nbr</th>
+                    <th>Position</th>
+                    <th>Category</th>
+                    <th>ISN NO</th>
+                    <th>Strip%</th>
+                    <th>Action taken by </th>
+                    <th>Action taken time</th>
+                    <th>LOC Status</th>
+                    <th>Action</th>
+                    <th ng-if="ShowResendColumns()">Resend By</th>
+                    <th ng-if="ShowResendColumns()">Resend Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="RecordsList == undefined || RecordsList.length == 0" style=" border: 2px solid var( --dpw-bg-color)">
+                    <td colspan="13">
+                        No record found
+                    </td>
+                </tr>
+                <tr ng-repeat="item in RecordsList ">
+                    <td rowspan="{{item.MergeCount}}" ng-show="item.ShowBayan">
+                        <div class="d-flex align-items-center">
+                            <input type="radio" name="LOCRadio" id="radio{{$index}}" ng-model="item.selected" ng-click="selectBayanforLOC($index)" />
+                        </div>
+                    </td>
+                    <td class="autoCaps" rowspan="{{item.MergeCount}}" ng-show="item.ShowBayan">{{item.Bayan}}</td>
+                    <td class="w-20">{{$index+1}}</td>
+                    <td class="autoCaps">{{item.Cntr}}</td>
+                    <td class="autoCaps">{{item.Location}}</td>
+                    <td class="autoCaps">{{item.category}}</td>
+                    <td class="autoCaps">{{item.isnnumber}}</td>
+                    <td class="autoCaps">
+                        <span ng-if="item.StripPercentage != '' && item.StripPercentage != null">{{item.StripPercentage}}%</span>
+                        <span ng-if="item.StripPercentage == '' || item.StripPercentage == null">0%</span>
+                    </td>
+                    <td class="autoCaps">{{item.ApprovedBy}}</td>
+                    <td class="autoCaps">{{item.ApprovedTime | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                    <td class="autoCaps" ng-if="!ShowResendColumns()">
+                        <span class="badge badge-success" ng-if="item.LOCIgnored == false">Sent</span>
+                        <span class="badge badge-danger" ng-if="item.LOCIgnored == true">Ignored</span>
+                    </td>
+                    <td class="autoCaps" ng-if="ShowResendColumns()">
+                        <span class="badge badge-success" ng-if="item.ResendLOC == true">Sent</span>
+                        <span class="badge badge-danger" ng-if="item.ResendLOC == false">Failed</span>
+                    </td>
+                    <td class="autoCaps">
+                        <span class="badge badge-success" ng-if="item.Action == 'Approve'">Approved</span>
+                        <span class="badge badge-danger" ng-if="item.Action != 'Approve'">Rejected</span>
+                    </td>
+                    <td ng-if="ShowResendColumns()" class="autoCaps">{{item.ResendBy}}</td>
+                    <td ng-if="ShowResendColumns()" class="autoCaps">{{item.ResendTime | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+
+
+
+
+
+
+</div>
+
+<script src="@Url.Content("~/Scripts/crypto-js.min.js")"></script>
+<script>
+
+    function copytoClipBoard(txt) {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(txt);
+            toastr.success("Copied to clipboard");
+        }
+    }
+
+    window.onload = function () {
+        document.getElementById('minisidebar').className = 'sidebar-xs';
+    };
+</script>
+
+
